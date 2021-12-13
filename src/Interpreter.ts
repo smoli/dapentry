@@ -38,6 +38,10 @@ export class Interpreter {
         return this._registers.getRegister(name);
     }
 
+    public setRegister(name: string, value: any): void {
+        this._registers.setRegister(name, value);
+    }
+
     public async run(): Promise<any> {
         let pc = 0;
 
@@ -48,7 +52,6 @@ export class Interpreter {
 
         this._executed = true;
     }
-
 
     public parse(program: string):void {
         const lines = program.split("\n").filter(s => s.trim().length > 0);

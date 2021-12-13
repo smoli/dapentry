@@ -5,6 +5,7 @@ interface RegisterMap {
 export class RegisterStore {
 
     private registers: RegisterMap = {}
+    private
 
 
     constructor() {
@@ -22,3 +23,4 @@ export class RegisterStore {
         return this.registers[name]
     }
 }
+
