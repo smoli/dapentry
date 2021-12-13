@@ -1,7 +1,9 @@
+import {RegisterStore} from "./RegisterStore";
+
 type Context = Node;
 
 interface ContextDictionary {
-    [index: string]: Context
+    [key: string]: Context
 }
 
 
@@ -9,7 +11,7 @@ export class Interpreter {
 
     private contexts:ContextDictionary = {};
 
-    private registers = {};
+    private registers:RegisterStore = new RegisterStore();
     private program = [];
 
     private executed: boolean = false;
@@ -27,4 +29,8 @@ export class Interpreter {
     public switchContext(name: string): void {
         this.context = this.contexts[name];
     }
+
+
+
+
 }
