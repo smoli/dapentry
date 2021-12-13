@@ -1,4 +1,4 @@
-import { Interpreter } from "./Interpreter";
+import { Interpreter } from "./interpreter/Interpreter";
 
 document.getElementById("ui").innerText = "UPDATE23"
 

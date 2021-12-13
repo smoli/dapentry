@@ -1,5 +1,5 @@
 import {Operation} from "../Operation";
-import {dbg} from "../dbg";
+import {dbg} from "../../dbg";
 
 export class Debug extends Operation {
 

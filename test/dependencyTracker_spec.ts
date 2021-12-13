@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {DependencyTracker} from "../src/DependencyTracker";
+import {DependencyTracker} from "../src/interpreter/DependencyTracker";
 
 
 describe('DependencyTracker', () => {

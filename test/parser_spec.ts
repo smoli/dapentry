@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {Parser, TokenTypes} from "../src/Parser";
+import {Parser, TokenTypes} from "../src/interpreter/Parser";
 
 describe('Parser', () => {
 

@@ -1,7 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 
-import {RegisterStore} from "../src/RegisterStore";
+import {RegisterStore} from "../src/interpreter/RegisterStore";
 
 describe('Register store',  ()  => {
 

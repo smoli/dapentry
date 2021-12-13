@@ -29,7 +29,6 @@ export class Interpreter {
 
 
     constructor() {
-
     }
 
     public addContext(name: string, context: Context): void {
