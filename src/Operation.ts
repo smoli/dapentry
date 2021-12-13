@@ -24,8 +24,7 @@ export class Operation {
         throw new Error(`No execute for "${this._opcode}"`);
     }
 
-    async update(changedRegisterName): Promise<any> {
-
+    async update(changedRegisterName: string, interpreter: Interpreter): Promise<any> {
     }
 
     toString(): string {

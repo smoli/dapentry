@@ -16,11 +16,17 @@ describe('DependencyTracker', () => {
 
         expect(t.getDependencies("one")).to.deep.equal([1, 2, "three"]);
         expect(t.getDependencies("three")).to.deep.equal(["three"]);
+        expect(t.getDependencies("four")).to.deep.equal([]);
 
         t.removeDependency("one", 12);
         expect(t.getDependencies("one")).to.deep.equal([1, 2, "three"]);
 
         t.removeDependency("one", 1);
         expect(t.getDependencies("one")).to.deep.equal([2, "three"]);
+
+        t.reset();
+        expect(t.getDependencies("one")).to.deep.equal([]);
+        expect(t.getDependencies("three")).to.deep.equal([]);
+        expect(t.getDependencies("four")).to.deep.equal([]);
     });
 });

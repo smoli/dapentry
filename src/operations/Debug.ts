@@ -10,9 +10,14 @@ export class Debug extends Operation {
         this._message = message;
     }
 
-    async execute(): Promise<any> {
+    async execute(interpreter): Promise<any> {
         this._executed = true;
         dbg(this._message.value);
+        interpreter.setRegister("debug.runtime", "DEBUG")
+    }
+
+    async update(registerName, interpreter) {
+        dbg(interpreter.getRegister(registerName));
     }
 
 

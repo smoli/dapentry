@@ -5,7 +5,11 @@ export class DependencyTracker {
     constructor() {
     }
 
-    addDependency(name: string, dependency: any): void {
+    public reset(): void {
+        this._depdendencies = {};
+    }
+
+    public addDependency(name: string, dependency: any): void {
         let bucket = this._depdendencies[name];
 
         if (!bucket) {
@@ -16,7 +20,7 @@ export class DependencyTracker {
         }
     }
 
-    removeDependency(name: string, dependency: any): void {
+    public removeDependency(name: string, dependency: any): void {
         if (this._depdendencies[name]) {
             const i = this._depdendencies[name].indexOf(dependency);
             if (i !== -1) {
@@ -25,8 +29,8 @@ export class DependencyTracker {
         }
     }
 
-    getDependencies(name): Array<any> {
-        return this._depdendencies[name];
+    public getDependencies(name): Array<any> {
+        return this._depdendencies[name] || [];
     }
 
 }

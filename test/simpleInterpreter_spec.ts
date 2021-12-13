@@ -24,4 +24,9 @@ describe('Interpreter', () => {
 
         expect(log.args[0][0]).to.equal('Hello World')
     });
+
+    after(() => {
+        // @ts-ignore
+        console.log.restore();
+    })
 });
