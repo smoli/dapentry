@@ -9,6 +9,7 @@ import {OperationFactory} from "./OperationFactory";
 import {Add} from "./operations/Add";
 import {Sub} from "./operations/Sub";
 import {Multiply} from "./operations/Multiply";
+import {Divide} from "./operations/Divide";
 
 type Context = Node;
 
@@ -40,6 +41,7 @@ export class Interpreter {
         this._operationFactory.addOperationClass("ADD", Add);
         this._operationFactory.addOperationClass("SUB", Sub);
         this._operationFactory.addOperationClass("MUL", Multiply);
+        this._operationFactory.addOperationClass("DIV", Divide);
     }
 
     public addContext(name: string, context: Context): void {
