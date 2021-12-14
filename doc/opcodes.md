@@ -9,12 +9,11 @@ Are all uppercase. Come at the beginning of the line.
 
 ### Literals
 
-Number and string literals are supported. Strings use double quotes. 
+Number and string literals are supported. Strings use double quotes.
 
 ### Registers
 
-Are arbitrary names. If it's not a number and not a string it's 
-a register.
+Are arbitrary names. If it's not a number and not a string it's a register.
 
 ## Labels
 
@@ -33,13 +32,15 @@ LABEL:
 
 ### General/Controlflow
 
- | Opcode | Parameters     | Description                       | 
-|--------|----------------|-----------------------------------|
- | LOAD   | target value   | load a value into target register |
-| JNZ    | test label     | jump to label if test is not zero |
- | DEBUG  | message        | write message to console          |
+| Opcode | Parameters           | Description                                   | 
+|--------|----------------------|-----------------------------------------------|
+| LOAD   | target value         | load a value into target register             |
+| JNZ    | test label           | jump to label if test is not zero             |
+| JNE    | test reference label | jump to label if test is not equal reference  |
+| DEBUG  | message              | write message to console                      |
 
 ### Math
+
 | Opcode | Parameters     | Description                       | 
 |--------|----------------|-----------------------------------|
 | ADD    | target op1 op2 | add two registers or values       |
