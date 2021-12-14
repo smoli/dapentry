@@ -6,7 +6,7 @@ export class Operation {
     protected _executed: boolean;
 
 
-    constructor(opcode) {
+    constructor(opcode, ..._params) {
         this._opcode = opcode;
         this._executed = false;
     }
