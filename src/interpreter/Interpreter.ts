@@ -5,6 +5,7 @@ import {Debug} from "./operations/Debug";
 import {Load} from "./operations/Load";
 import {Parser, TokenTypes} from "./Parser";
 import {DependencyTracker} from "./DependencyTracker";
+import {OperationFactory} from "./OperationFactory";
 
 type Context = Node;
 
@@ -26,9 +27,13 @@ export class Interpreter {
     private _dependencies: DependencyTracker = new DependencyTracker();
 
     private _currentInstruction: Operation = null;
+    private _operationFactory:OperationFactory;
 
 
     constructor() {
+        this._operationFactory = new OperationFactory();
+        this._operationFactory.addOperationClass("DEBUG", Debug);
+        this._operationFactory.addOperationClass("LOAD", Load)
     }
 
     public addContext(name: string, context: Context): void {
@@ -101,51 +106,9 @@ export class Interpreter {
             } else {
                 return new Parameter(token.type === TokenTypes.REGISTER, token.value, this);
             }
-        })
+        }).filter(p => !!p);
 
-        let operation = null;
-
-        switch (opcode) {
-
-            case "DEBUG":
-                operation = new Debug(opcode, parts[1]);
-                break;
-
-            case "LOAD":
-                operation = new Load(opcode, parts[1], parts[2])
-                break;
-
-            /* case "ADD":
-                 instruction =  new OPAdd(opcode, parts[1], parts[2], parts[3])
-                 break;
-
-             case "CIRCLE":
-                 instruction =  new OPCircle(opcode, parts[1], parts[2], parts[3], parts[4])
-                 break;
-
-             case "MOVEA":
-                 instruction =  new OPMoveA(opcode, parts[1], parts[2], parts[3])
-                 break;
-
-             case "MOVES":
-                 instruction =  new OPMoveS(opcode, parts[1], parts[2], parts[3])
-                 break;
-
-             case "TEXT":
-                 instruction =  new OPText(opcode, parts[1], parts[2], parts[3], parts[4])
-                 break;
-
-             case "CONTEXT":
-                 instruction = new OPSwitchContext(opcode, parts[1]);
-                 break;
-
-             case "INPUT":
-                 instruction = new OPInput(opcode, parts[1], parts[2], parts[3]);
-                 break;
- */
-            default:
-                throw new Error(`Unknown opcode "${opcode}".`)
-        }
+        let operation = this._operationFactory.create(opcode, ...parts);
 
         this._addDependencies(parts.filter(p => !!p && p.isRegister), operation);
 
