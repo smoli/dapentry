@@ -2,19 +2,19 @@ import {describe, it} from "mocha";
 import {expect} from "chai"
 import {Interpreter} from "../../../src/interpreter/Interpreter";
 
-describe('Add', () => {
+describe('Sub', () => {
 
-    it('Adds the value of two registers and writes the result into a register', async () => {
+    it('Subtracts the value of two registers and writes the result into a register', async () => {
         const program = `
             LOAD r1 10
-            LOAD r2 20  
-            ADD  r3 r1 r2          
+            LOAD r2 20          
+            SUB  r3 r1 r2  
         `;
 
         const i = new Interpreter();
         i.parse(program);
         await i.run();
 
-        expect(i.getRegister("r3")).to.equal(30);
+        expect(i.getRegister("r3")).to.equal(-10);
     });
 });
