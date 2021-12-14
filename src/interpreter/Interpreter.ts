@@ -8,6 +8,7 @@ import {DependencyTracker} from "./DependencyTracker";
 import {OperationFactory} from "./OperationFactory";
 import {Add} from "./operations/Add";
 import {Sub} from "./operations/Sub";
+import {Multiply} from "./operations/Multiply";
 
 type Context = Node;
 
@@ -35,9 +36,10 @@ export class Interpreter {
     constructor() {
         this._operationFactory = new OperationFactory();
         this._operationFactory.addOperationClass("DEBUG", Debug);
-        this._operationFactory.addOperationClass("LOAD", Load)
-        this._operationFactory.addOperationClass("ADD", Add)
-        this._operationFactory.addOperationClass("SUB", Sub)
+        this._operationFactory.addOperationClass("LOAD", Load);
+        this._operationFactory.addOperationClass("ADD", Add);
+        this._operationFactory.addOperationClass("SUB", Sub);
+        this._operationFactory.addOperationClass("MUL", Multiply);
     }
 
     public addContext(name: string, context: Context): void {
