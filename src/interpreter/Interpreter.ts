@@ -13,6 +13,7 @@ import {Divide} from "./operations/math/Divide";
 import {Exponentiate} from "./operations/math/Exponentiate";
 import {JumpWhenNotZero} from "./operations/JumpWhenNotZero";
 import {Label} from "./operations/Label";
+import {Decrement} from "./operations/math/Decrement";
 
 type Context = Node;
 
@@ -46,6 +47,7 @@ export class Interpreter {
         this._operationFactory.addOperationClass("LOAD", Load);
         this._operationFactory.addOperationClass("ADD", Add);
         this._operationFactory.addOperationClass("SUB", Sub);
+        this._operationFactory.addOperationClass("DEC", Decrement);
         this._operationFactory.addOperationClass("MUL", Multiply);
         this._operationFactory.addOperationClass("DIV", Divide);
         this._operationFactory.addOperationClass("EXP", Exponentiate);
