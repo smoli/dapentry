@@ -52,10 +52,25 @@ describe('Parser', () => {
     })
 
     it('parses labels as label tokens', () => {
-        const tokens = Parser.parseLine('LABEL:');
+        let tokens = Parser.parseLine('LABEL:');
 
         expect(tokens).to.deep.equal([
             { type: TokenTypes.LABEL, value: "LABEL"}
+        ]);
+
+        expect(() => {
+            Parser.parseLine('FAKE LABEL:');
+        }).to.throw;
+
+        expect(() => {
+            Parser.parseLine('LABEL: r1 299 "lkjh"');
+        }).to.throw;
+
+        tokens = Parser.parseLine('FAKE "SOME:THING"');
+
+        expect(tokens).to.deep.equal([
+            { type: TokenTypes.OPCODE, value: "FAKE"},
+            { type: TokenTypes.STRING, value: "SOME:THING"}
         ]);
 
     });
