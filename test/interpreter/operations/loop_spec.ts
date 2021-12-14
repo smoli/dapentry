@@ -12,7 +12,7 @@ describe('Loop', () => {
             LOAD r2 0       # Initial value
         LABEL:
             ADD  r2 r2 10   # Increment value
-            SUB  r1 r1 1    # Decrement loop counter
+            DEC  r1         # Decrement loop counter
             JNZ  r1 LABEL   # As long as loop counter is not zero jump            
         `;
 
