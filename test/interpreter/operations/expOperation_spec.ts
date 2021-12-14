@@ -8,7 +8,8 @@ describe('Exponentiante', () => {
         const program = `
             LOAD r1 2
             LOAD r2 8  
-            EXP  r3 r1 r2          
+            EXP  r3 r1 r2   
+            EXP  r4 r1 3      
         `;
 
         const i = new Interpreter();
@@ -16,5 +17,6 @@ describe('Exponentiante', () => {
         await i.run();
 
         expect(i.getRegister("r3")).to.equal(2 ** 8);
+        expect(i.getRegister("r4")).to.equal(2 ** 3);
     });
 });

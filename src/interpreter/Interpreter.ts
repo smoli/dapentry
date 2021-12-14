@@ -6,11 +6,11 @@ import {Load} from "./operations/Load";
 import {Parser, TokenTypes} from "./Parser";
 import {DependencyTracker} from "./DependencyTracker";
 import {OperationFactory} from "./OperationFactory";
-import {Add} from "./operations/Add";
-import {Sub} from "./operations/Sub";
-import {Multiply} from "./operations/Multiply";
-import {Divide} from "./operations/Divide";
-import {Exponentiate} from "./operations/Exponentiate";
+import {Add} from "./operations/math/Add";
+import {Sub} from "./operations/math/Sub";
+import {Multiply} from "./operations/math/Multiply";
+import {Divide} from "./operations/math/Divide";
+import {Exponentiate} from "./operations/math/Exponentiate";
 
 type Context = Node;
 

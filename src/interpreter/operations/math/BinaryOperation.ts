@@ -1,5 +1,5 @@
-import {Operation} from "../Operation";
-import {Parameter} from "../Parameter";
+import {Operation} from "../../Operation";
+import {Parameter} from "../../Parameter";
 
 export class BinaryOperation extends Operation {
 
