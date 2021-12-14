@@ -11,7 +11,6 @@ export class Debug extends Operation {
     }
 
     async execute(interpreter): Promise<any> {
-        this._executed = true;
         dbg(this._message.value);
         interpreter.setRegister("debug.runtime", "DEBUG")
     }
