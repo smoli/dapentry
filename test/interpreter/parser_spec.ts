@@ -50,4 +50,13 @@ describe('Parser', () => {
 
         expect(Parser.parseLine("# Comment with no code before")).to.deep.equal([])
     })
+
+    it('parses labels as label tokens', () => {
+        const tokens = Parser.parseLine('LABEL:');
+
+        expect(tokens).to.deep.equal([
+            { type: TokenTypes.LABEL, value: "LABEL"}
+        ]);
+
+    });
 });
