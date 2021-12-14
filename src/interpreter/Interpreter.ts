@@ -11,6 +11,8 @@ import {Sub} from "./operations/math/Sub";
 import {Multiply} from "./operations/math/Multiply";
 import {Divide} from "./operations/math/Divide";
 import {Exponentiate} from "./operations/math/Exponentiate";
+import {JumpWhenNotZero} from "./operations/JumpWhenNotZero";
+import {Label} from "./operations/Label";
 
 type Context = Node;
 
@@ -34,6 +36,9 @@ export class Interpreter {
     private _currentInstruction: Operation = null;
     private _operationFactory:OperationFactory;
 
+    private _programCounter:number  = 0;
+    private _labels:{ [key: string]: number} = {};
+
 
     constructor() {
         this._operationFactory = new OperationFactory();
@@ -44,6 +49,8 @@ export class Interpreter {
         this._operationFactory.addOperationClass("MUL", Multiply);
         this._operationFactory.addOperationClass("DIV", Divide);
         this._operationFactory.addOperationClass("EXP", Exponentiate);
+        this._operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
+        this._operationFactory.addOperationClass("___LBL___", Label);
     }
 
     public addContext(name: string, context: Context): void {
@@ -74,17 +81,30 @@ export class Interpreter {
     private resetExecution() {
         this._executed = false;
         this._currentInstruction = null;
+        this._programCounter = -1;
+        this._labels = {};
+    }
+
+    public gotoLabel(labelName) {
+        if (this._labels[labelName]) {
+            this._programCounter = this._labels[labelName];
+        } else {
+            throw new Error(`Unknown label "${labelName}`);
+        }
+    }
+
+    public setLabel(labelName) {
+        this._labels[labelName] = this._programCounter;
     }
 
     public async run(): Promise<any> {
         this.resetExecution();
-        let pc = 0;
 
         try {
-            while (pc < this._program.length) {
-                this._currentInstruction = this._program[pc];
-                await this._program[pc].execute(this)
-                pc++;
+            while (this._programCounter < this._program.length - 1) {
+                this._programCounter++;
+                this._currentInstruction = this._program[this._programCounter];
+                await this._currentInstruction.execute(this)
             }
         } catch (e) {
             throw e;
@@ -113,6 +133,9 @@ export class Interpreter {
             if (token.type === TokenTypes.OPCODE) {
                 opcode = token.value;
                 return null;
+            } else if (token.type === TokenTypes.LABEL) {
+                opcode = "___LBL___";
+                return new Parameter(false, token.value, null);
             } else {
                 return new Parameter(token.type === TokenTypes.REGISTER, token.value, this);
             }

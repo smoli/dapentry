@@ -5,15 +5,15 @@ import {Interpreter} from "../../../src/interpreter/Interpreter";
 
 describe('Loop', () => {
 
-    xit('can do...', async () => {
+    it('can do...', async () => {
 
         const code = `
-            LOAD r1 10
-            LOAD r2 0
-            LABEL:
-            ADD  r2 10
-            SUB  r1 1
-            JNZ  r1 LABEL
+            LOAD r1 10      # Loop counter
+            LOAD r2 0       # Initial value
+        LABEL:
+            ADD  r2 r2 10   # Increment value
+            SUB  r1 r1 1    # Decrement loop counter
+            JNZ  r1 LABEL   # As long as loop counter is not zero jump            
         `;
 
         const i = new Interpreter();

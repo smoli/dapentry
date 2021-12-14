@@ -24,8 +24,8 @@ Labels are the only token on a line. They end with a :
     LOAD r1 10
     LOAD r2 0
 LABEL:
-    ADD  r2 10
-    SUB  r1 1
+    ADD  r2 r2 10
+    SUB  r1 r1 1
     JNZ  r1 LABEL
 ```
 
