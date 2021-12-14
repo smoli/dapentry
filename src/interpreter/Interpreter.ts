@@ -6,6 +6,7 @@ import {Load} from "./operations/Load";
 import {Parser, TokenTypes} from "./Parser";
 import {DependencyTracker} from "./DependencyTracker";
 import {OperationFactory} from "./OperationFactory";
+import {Add} from "./operations/Add";
 
 type Context = Node;
 
@@ -34,6 +35,7 @@ export class Interpreter {
         this._operationFactory = new OperationFactory();
         this._operationFactory.addOperationClass("DEBUG", Debug);
         this._operationFactory.addOperationClass("LOAD", Load)
+        this._operationFactory.addOperationClass("ADD", Add)
     }
 
     public addContext(name: string, context: Context): void {

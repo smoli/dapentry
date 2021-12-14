@@ -26,8 +26,12 @@ export class Parser {
                 case "#":
                     if (value !== null && type !== TokenTypes.STRING) {
                         tokens.push({type: TokenTypes.OTHER, value});
-                    } else {
-                        value += c;
+                    } else if (type === TokenTypes.STRING) {
+                        if (value !== null) {
+                            value += c;
+                        } else {
+                            value = c
+                        }
                     }
                     break;
 
@@ -63,6 +67,10 @@ export class Parser {
             if (c === "#" && type !== TokenTypes.STRING) {
                 break;
             }
+        }
+
+        if (value && value.length) {
+            tokens.push({type: TokenTypes.OTHER, value})
         }
 
         return tokens.map((token, index) => {

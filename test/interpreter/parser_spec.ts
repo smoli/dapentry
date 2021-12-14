@@ -4,6 +4,19 @@ import {Parser, TokenTypes} from "../../src/interpreter/Parser";
 
 describe('Parser', () => {
 
+    it('turns a line of code into tokens', () => {
+        const code = `FAKE r1 123`;
+
+        const tokens = Parser.parseLine(code);
+
+        expect(tokens).to.deep.equal([
+            { type: TokenTypes.OPCODE, value: "FAKE" },
+            { type: TokenTypes.REGISTER, value: "r1" },
+            { type: TokenTypes.NUMBER, value: 123 }
+            ]);
+
+    });
+
     it('can parse code lines', () => {
 
         const code = `FAKE r1    "Hello World"      lkjh 123 "   KLJH123"`;
