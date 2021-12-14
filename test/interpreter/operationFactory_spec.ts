@@ -1,8 +1,8 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {OperationFactory} from "../src/interpreter/OperationFactory";
-import {Debug} from "../src/interpreter/operations/Debug";
-import {Operation} from "../src/interpreter/Operation";
+import {OperationFactory} from "../../src/interpreter/OperationFactory";
+import {Debug} from "../../src/interpreter/operations/Debug";
+import {Operation} from "../../src/interpreter/Operation";
 
 
 describe('Operation Factory', () => {

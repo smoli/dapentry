@@ -1,7 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {Interpreter} from "../src/interpreter/Interpreter";
-
+import {Interpreter} from "../../../src/interpreter/Interpreter";
 
 describe('Load', () => {
 
@@ -9,10 +8,10 @@ describe('Load', () => {
         const program = `
             LOAD r1 "Hello World"
             LOAD r2 1234            
-            LOAD r3 "Hello World"
-            LOAD r4 1234            
-            LOAD r5 "Hello World"
-            LOAD r6 1234            
+            LOAD r3 "Hello Country"
+            LOAD r4 2341            
+            LOAD r5 "Hello City"
+            LOAD r6 3412            
         `;
 
         const i = new Interpreter();
@@ -21,9 +20,9 @@ describe('Load', () => {
 
         expect(i.getRegister("r1")).to.equal("Hello World");
         expect(i.getRegister("r2")).to.equal(1234);
-        expect(i.getRegister("r3")).to.equal("Hello World");
-        expect(i.getRegister("r4")).to.equal(1234);
-        expect(i.getRegister("r5")).to.equal("Hello World");
-        expect(i.getRegister("r6")).to.equal(1234);
+        expect(i.getRegister("r3")).to.equal("Hello Country");
+        expect(i.getRegister("r4")).to.equal(2341);
+        expect(i.getRegister("r5")).to.equal("Hello City");
+        expect(i.getRegister("r6")).to.equal(3412);
     });
 });

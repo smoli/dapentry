@@ -1,6 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {Interpreter} from "../src/interpreter/Interpreter";
+import {Interpreter} from "../../../src/interpreter/Interpreter";
+
 const sinon = require("sinon");
 
 describe('Debug', () => {
