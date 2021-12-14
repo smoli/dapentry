@@ -10,6 +10,7 @@ import {Add} from "./operations/Add";
 import {Sub} from "./operations/Sub";
 import {Multiply} from "./operations/Multiply";
 import {Divide} from "./operations/Divide";
+import {Exponentiate} from "./operations/Exponentiate";
 
 type Context = Node;
 
@@ -42,6 +43,7 @@ export class Interpreter {
         this._operationFactory.addOperationClass("SUB", Sub);
         this._operationFactory.addOperationClass("MUL", Multiply);
         this._operationFactory.addOperationClass("DIV", Divide);
+        this._operationFactory.addOperationClass("EXP", Exponentiate);
     }
 
     public addContext(name: string, context: Context): void {
