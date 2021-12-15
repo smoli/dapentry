@@ -18,6 +18,7 @@ import {StackFrame} from "./StackFrame";
 import {PushStackFrame} from "./operations/PushStackFrame";
 import {PopStackFrame} from "./operations/PopStackFrame";
 import {Debug} from "./operations/Debug";
+import {Increment} from "./operations/math/Increment";
 
 type Context = Node;
 
@@ -55,6 +56,7 @@ export class Interpreter {
         this._operationFactory.addOperationClass("ADD", Add);
         this._operationFactory.addOperationClass("SUB", Sub);
         this._operationFactory.addOperationClass("DEC", Decrement);
+        this._operationFactory.addOperationClass("INC", Increment);
         this._operationFactory.addOperationClass("MUL", Multiply);
         this._operationFactory.addOperationClass("DIV", Divide);
         this._operationFactory.addOperationClass("EXP", Exponentiate);

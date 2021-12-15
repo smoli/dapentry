@@ -19,3 +19,21 @@ describe('Dec', () => {
         expect(i.getRegister("r1")).to.equal(7);
     });
 });
+
+describe('Inc', () => {
+
+    it('Adds one to a register and writes it back', async () => {
+        const program = `
+            LOAD r1 10
+            INC  r1    
+            INC  r1
+            INC  r1
+        `;
+
+        const i = new Interpreter();
+        i.parse(program);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(13);
+    });
+});
