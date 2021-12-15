@@ -1,15 +1,25 @@
-import {DependencyTracker} from "./DependencyTracker";
 import {RegisterStore} from "./RegisterStore";
 
 export class StackFrame {
 
-    private _dependencies: DependencyTracker = new DependencyTracker();
     private _registers: RegisterStore = new RegisterStore();
     private _parent: StackFrame = null;
 
 
     constructor(parent: StackFrame = null) {
         this._parent = parent;
+    }
+
+    public close(...registers:Array<string>): void {
+        if (this._parent) {
+            registers.forEach(name => {
+                if (!this._registers.hasRegister(name)) {
+                    this._registers.setRegister(name, this.getRegister(name))
+                }
+            })
+
+            this._parent = null;
+        }
     }
 
     getRegister(name: string): any {

@@ -6,7 +6,7 @@ export class Label extends Operation {
     private readonly _label: Parameter;
 
     constructor(opcode, label: Parameter) {
-        super(opcode);
+        super(opcode, label);
         this._label = label;
     }
 

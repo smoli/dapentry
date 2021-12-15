@@ -8,7 +8,7 @@ export class JumpWhenNotEqual extends Operation {
     private readonly _label: Parameter;
 
     constructor(opcode, test: Parameter, reference: Parameter, label: Parameter) {
-        super(opcode);
+        super(opcode, test, reference, label);
         this._test = test;
         this._reference = reference;
         this._label = label;

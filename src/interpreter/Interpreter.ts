@@ -41,10 +41,10 @@ export class Interpreter {
 
     private _currentInstruction: Operation = null;
     private _stopped: boolean = false;
-    private _operationFactory:OperationFactory;
+    private _operationFactory: OperationFactory;
 
-    private _programCounter:number  = 0;
-    private _labels:{ [key: string]: number} = {};
+    private _programCounter: number = 0;
+    private _labels: { [key: string]: number } = {};
 
 
     constructor() {
@@ -67,12 +67,17 @@ export class Interpreter {
         this._currentFrame = new StackFrame(this._currentFrame);
     }
 
+    public addOperation(opcode: string, OpClass: typeof Operation): void {
+        this._operationFactory.addOperationClass(opcode, OpClass);
+    }
+
     public pushStack() {
         this._stack.push(this._currentFrame);
         this._currentFrame = new StackFrame(this._currentFrame);
     }
 
     public popStack() {
+        this._currentFrame.close();
         this._currentFrame = this._stack.pop();
     }
 
@@ -85,6 +90,9 @@ export class Interpreter {
     }
 
     public getRegister(name: string): any {
+        if (this._currentInstruction) {
+            this._dependencies.addDependency(name, this._currentInstruction);
+        }
         return this._currentFrame.getRegister(name);
     }
 
@@ -95,7 +103,13 @@ export class Interpreter {
         } else if (this._executed) {
             const deps = this._dependencies.getDependencies(name);
 
+            const updatedClosures = [];
+
             deps.forEach(op => {
+                if (updatedClosures.indexOf(op.closure) === -1) {
+                    op.closure.setRegister(name, value);
+                    updatedClosures.push(op.closure);
+                }
                 op.update(name, this);
             })
         }
@@ -133,6 +147,7 @@ export class Interpreter {
             while (this._programCounter < this._program.length - 1) {
                 this._programCounter++;
                 this._currentInstruction = this._program[this._programCounter];
+                this._currentInstruction.setClosure(this._currentFrame);
                 await this._currentInstruction.execute(this);
 
                 if (this._stopped) {
@@ -183,9 +198,9 @@ export class Interpreter {
                 return null;
             } else if (token.type === TokenTypes.LABEL) {
                 opcode = "___LBL___";
-                return new Parameter(false, token.value, null);
+                return new Parameter(false, token.value);
             } else {
-                return new Parameter(token.type === TokenTypes.REGISTER, token.value, this);
+                return new Parameter(token.type === TokenTypes.REGISTER, token.value);
             }
         }).filter(p => !!p);
 

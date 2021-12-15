@@ -7,7 +7,7 @@ export class JumpWhenNotZero extends Operation {
     private readonly _label: Parameter;
 
     constructor(opcode, test: Parameter, label: Parameter) {
-        super(opcode);
+        super(opcode, test, label);
         this._test = test;
         this._label = label;
     }

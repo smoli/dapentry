@@ -1,12 +1,13 @@
 import {Operation} from "../Operation";
 import {dbg} from "../../dbg";
+import {Parameter} from "../Parameter";
 
 export class Log extends Operation {
 
-    private readonly _message: any;
+    private readonly _message: Parameter;
 
-    constructor(opcode, message) {
-        super(opcode);
+    constructor(opcode, message: Parameter) {
+        super(opcode, message);
         this._message = message;
     }
 

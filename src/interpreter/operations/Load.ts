@@ -7,13 +7,13 @@ export class Load extends Operation {
     private readonly _value: Parameter;
 
     constructor(opcode, target: Parameter, value: Parameter) {
-        super(opcode);
+        super(opcode, target, value);
         this._target = target;
         this._value = value;
     }
 
     async execute(interpreter): Promise<any> {
-        interpreter.setRegister(this._target.name, this._value.value);
+        this._target.value = this._value.value;
     }
 
 }

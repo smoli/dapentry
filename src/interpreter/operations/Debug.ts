@@ -2,11 +2,8 @@ import {Operation} from "../Operation";
 
 export class Debug extends Operation {
 
-    private readonly _message: any;
-
-    constructor(opcode, message) {
+    constructor(opcode) {
         super(opcode);
-        this._message = message;
     }
 
     async execute(interpreter): Promise<any> {
