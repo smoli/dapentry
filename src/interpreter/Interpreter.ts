@@ -74,12 +74,19 @@ export class Interpreter {
     }
 
     public pushStack() {
-        this._stack.push(this._currentFrame);
+        if (this._currentFrame) {
+            this._stack.push(this._currentFrame);
+        }
         this._currentFrame = new StackFrame(this._currentFrame);
     }
 
+    private _closeCurrentFrame(): void {
+        const usedRegisters = this._currentFrame.close();
+        usedRegisters.forEach(name => this._dependencies.addDependency(name, this._currentFrame));
+    }
+
     public popStack() {
-        this._currentFrame.close();
+        this._closeCurrentFrame();
         this._currentFrame = this._stack.pop();
     }
 
@@ -92,28 +99,18 @@ export class Interpreter {
     }
 
     public getRegister(name: string): any {
-        if (this._currentInstruction) {
-            this._dependencies.addDependency(name, this._currentInstruction);
-        }
         return this._currentFrame.getRegister(name);
     }
 
-    public setRegister(name: string, value: any): void {
+    public async updateRegister(name: string, value: any): Promise<any> {
         this._currentFrame.setRegister(name, value);
-        if (this._currentInstruction) {
-            this._dependencies.addDependency(name, this._currentInstruction);
-        } else if (this._executed) {
-            const deps = this._dependencies.getDependencies(name);
 
-            const updatedClosures = [];
+        if (this._executed) {
+            const deps: Array<StackFrame> = this._dependencies.getDependencies(name);
 
-            deps.forEach(op => {
-                if (updatedClosures.indexOf(op.closure) === -1) {
-                    op.closure.setRegister(name, value);
-                    updatedClosures.push(op.closure);
-                }
-                op.update(name, this);
-            })
+            for (const dep of deps) {
+                await dep.update(name, value, this);
+            }
         }
     }
 
@@ -124,7 +121,7 @@ export class Interpreter {
         this._labels = {};
         this._stack = [];
         this._stopped = false;
-        this._currentFrame = new StackFrame();
+        this._currentFrame = null;
     }
 
     public gotoLabel(labelName) {
@@ -141,7 +138,15 @@ export class Interpreter {
 
     public async run(): Promise<any> {
         this.resetExecution();
-        return this._run();
+        this.pushStack();
+        const result = await this._run();
+
+        // We do not pop the outer frame after our program is done,
+        // so we can access the final state after execution
+        // UNCLEAR: We will still only be able to access the outer frame
+        //          will this be enough?
+        this._closeCurrentFrame();
+        return result;
     }
 
     public async _run(): Promise<any> {
@@ -150,6 +155,10 @@ export class Interpreter {
                 this._programCounter++;
                 this._currentInstruction = this._program[this._programCounter];
                 this._currentInstruction.setClosure(this._currentFrame);
+
+                // This unrolls loops and may lead to large lists of operation references
+                this._currentFrame.addOperations(this._currentInstruction);
+                this._currentFrame.setCurrentInstruction(this._currentInstruction)
                 await this._currentInstruction.execute(this);
 
                 if (this._stopped) {
@@ -184,11 +193,6 @@ export class Interpreter {
         this._program = lines.map(l => this.parseLine(l));
     }
 
-    private _addDependencies(registers: Array<Parameter>, operation: Operation): void {
-        registers.forEach(r => {
-            this._dependencies.addDependency(r.name, operation);
-        });
-    }
 
     private parseLine(line: string): any {
         const tokens = Parser.parseLine(line);
@@ -206,11 +210,7 @@ export class Interpreter {
             }
         }).filter(p => !!p);
 
-        let operation = this._operationFactory.create(opcode, ...parts);
-
-        this._addDependencies(parts.filter(p => !!p && p.isRegister), operation);
-
-        return operation;
+        return this._operationFactory.create(opcode, ...parts);
     }
 
 

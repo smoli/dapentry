@@ -3,6 +3,7 @@ import {expect} from "chai"
 import {Interpreter} from "../../src/interpreter/Interpreter";
 import {Operation} from "../../src/interpreter/Operation";
 import {Parameter} from "../../src/interpreter/Parameter";
+const { performance } = require('perf_hooks');
 
 class TestOperation extends Operation {
 
@@ -41,7 +42,7 @@ function MakeTestOperation(handler) {
 
 describe('Updating after execution', () => {
 
-    it('lets some operations re execute', async () => {
+    it('lets some operations re execute (1)', async () => {
 
         const code = `
             LOAD r1 100
@@ -49,26 +50,25 @@ describe('Updating after execution', () => {
         `;
 
         const i = new Interpreter();
-        i.addOperation("TESTOP", MakeTestOperation(() => {
-        }))
+        i.addOperation("TESTOP", TestOperation)
         i.parse(code);
-        i.run()
-            .then(() => {
-                expect(i.getRegister("r2")).to.equal(100);
-                i.setRegister("r1", 200);
-                expect(i.getRegister("r2")).to.equal(200);
-            });
+        await i.run();
+        expect(i.getRegister("r2")).to.equal(100, "r2");
 
+        await i.updateRegister("r1", 200);
+        expect(i.getRegister("r2")).to.equal(200, "r2 after update of r1");
     });
 
-    it('lets some operations re execute', async () => {
+
+
+    it('lets some operations re execute (2)', async () => {
 
         const code = `
             LOAD r1 100
-            TESTOP r2 r1
+            TESTOP1 r2 r1
             PUSHSF
             DEC r1
-            TESTOP r3 r1
+            TESTOP2 r3 r1
             POPSF        
         `;
 
@@ -76,7 +76,8 @@ describe('Updating after execution', () => {
 
         let r3Value = null;
 
-        i.addOperation("TESTOP", MakeTestOperation(value => {
+        i.addOperation("TESTOP1", TestOperation)
+        i.addOperation("TESTOP2", MakeTestOperation(value => {
             r3Value = value;
         }));
 
@@ -85,11 +86,52 @@ describe('Updating after execution', () => {
         await i.run();
         expect(i.getRegister("r2")).to.equal(100);
 
-        await i.setRegister("r1", 200);
+        await i.updateRegister("r1", 200);
 
         expect(i.getRegister("r1")).to.equal(200);
         expect(i.getRegister("r2")).to.equal(200);
         expect(r3Value).to.equal(199);
+
+    });
+
+
+    it('lets some operations re execute (3)', async () => {
+
+        const code = `
+            LOAD r1 100
+            PUSHSF
+            LOAD it 1000
+          LOOP:
+            DEC it
+            ADD r1 r1 10
+            TESTOP r3 r1
+            JNZ it LOOP                           
+            POPSF
+        `;
+
+        const i = new Interpreter();
+
+        let r3Value = null;
+        let callCount = 0
+
+        i.addOperation("TESTOP", MakeTestOperation(value => {
+            r3Value = value;
+            callCount++;
+        }));
+
+        const start = performance.now();
+        i.parse(code);
+        await i.run();
+        const middle = performance.now();
+        await i.updateRegister("r1", 200);
+        const end = performance.now();
+
+        console.log("Initial run:", middle - start, "Update:", end - middle);
+
+        expect(i.getRegister("r1")).to.equal(200, "r1");
+        expect(r3Value).to.equal(10200, "r3Value");
+        expect(callCount).to.equal(1000, "callCount");
+
 
     });
 

@@ -36,7 +36,7 @@ describe('Log', () => {
 
         expect(log.args[0][0]).to.equal('Hello World');
 
-        i.setRegister("debug.runtime", "UPDATED")
+        i.updateRegister("debug.runtime", "UPDATED")
         expect(log.args[1][0]).to.equal('UPDATED');
     });
 

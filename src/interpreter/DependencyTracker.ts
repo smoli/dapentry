@@ -33,4 +33,8 @@ export class DependencyTracker {
         return this._depdendencies[name] || [];
     }
 
+    public get registerNames():Array<string> {
+        return Object.keys(this._depdendencies);
+    }
+
 }
