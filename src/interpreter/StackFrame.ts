@@ -10,6 +10,8 @@ export class StackFrame {
     private _operations: Array<Operation> = [];
     private _currentInstruction: Operation = null;
     private _dependencies: DependencyTracker = new DependencyTracker();
+    private _updating: boolean = false;
+    private _newDepsForUpdate: Array<string> = [];
 
 
     constructor(parent: StackFrame = null) {
@@ -44,24 +46,41 @@ export class StackFrame {
     private _addDependency(name: string): any {
         if (this._currentInstruction) {
             this._dependencies.addDependency(name, this._currentInstruction);
+        } else if (this._updating) {
+            this._newDepsForUpdate.push(name);
         }
     }
 
     public async update(name: string, value: any, interpreter: Interpreter): Promise<any> {
+        this._updating = true;
         this.setCurrentInstruction(null);
         this.setRegister(name, value);
 
-        const deps:Array<Operation> = this._dependencies.getDependencies(name);
+        const deps: Array<Operation> = this._dependencies.getDependencies(name);
 
-        for(const op of this._operations) {
-            if (deps.indexOf(op) !== -1) {
-                await op.update(name, interpreter);
+        try {
+            for (const op of this._operations) {
+                if (deps.indexOf(op) !== -1) {
+                    this._newDepsForUpdate = [];
+                    await op.update(name, interpreter);
+
+                    this._newDepsForUpdate.forEach(name => {
+                        const nd = this._dependencies.getDependencies(name)
+                        for (const n of nd) {
+                            if (deps.indexOf(n) === -1) {
+                                deps.push(n);
+                            }
+                        }
+                    });
+                    this._newDepsForUpdate = [];
+                }
             }
+        } catch (e) {
+            throw e;
+        } finally {
+            this._updating = false;
+            this._newDepsForUpdate = [];
         }
-
-        // for (const op of deps) {
-        //     await op.update(name, interpreter);
-        // }
     }
 
     public getRegister(name: string): any {

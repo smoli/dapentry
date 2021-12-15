@@ -27,6 +27,6 @@ frame lower on the stack are copied. The frame is then attached to all operation
 
 The VM keeps track of what operation within what stack frame accesses which register (read and write). This info can be
 used to update register values after the program is run. All operations depending on the updated register are
-re-executed.
+re-executed. It works recursively but is kind of inefficient.
 
-This is probably a stupid idea and doesn't work recursively atm.
+This is probably a stupid idea.

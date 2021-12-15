@@ -135,41 +135,30 @@ describe('Updating after execution', () => {
 
     });
 
-    it('lets some operations re execute (3)', async () => {
+    it('lets some operations re execute (4)', async () => {
 
         const code = `
             LOAD r1 100
-            PUSHSF
-            LOAD it 1000
-          LOOP:
-            DEC it
-            ADD r1 r1 10
-            TESTOP r3 r1
-            JNZ it LOOP                           
-            POPSF
+            ADD r2 r1 100
+            ADD r3 r2 100
+            ADD r4 r3 100
         `;
 
         const i = new Interpreter();
 
-        let r3Value = null;
-        let callCount = 0
-
-        i.addOperation("TESTOP", MakeTestOperation(value => {
-            r3Value = value;
-            callCount++;
-        }));
-
-        const start = performance.now();
         i.parse(code);
         await i.run();
-        const middle = performance.now();
+
+        expect(i.getRegister("r1")).to.equal(100, "r1");
+        expect(i.getRegister("r2")).to.equal(200, "r2");
+        expect(i.getRegister("r3")).to.equal(300, "r3");
+
         await i.updateRegister("r1", 200);
-        const end = performance.now();
 
-        console.log("Initial run:", middle - start, "Update:", end - middle);
+        expect(i.getRegister("r1")).to.equal(200, "r1 after update");
+        expect(i.getRegister("r2")).to.equal(300, "r2 after update");
+        expect(i.getRegister("r3")).to.equal(400, "r3 after update");
+        expect(i.getRegister("r4")).to.equal(500, "r4 after update");
 
-        expect(i.getRegister("r1")).to.equal(200, "r1");
-        expect(r3Value).to.equal(10200, "r3Value");
-        expect(callCount).to.equal(1000, "callCount");
     });
 });

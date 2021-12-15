@@ -36,20 +36,4 @@ export class Operation {
     toString(): string {
         return `Operation ${this._opcode}`;
     }
-
-    getRegister(name: string|Parameter): any {
-        if (typeof name === "string") {
-            return this._closure.getRegister(name)
-        } else {
-            return this._closure.getRegister(name.name)
-        }
-    }
-
-    setRegister(name: string|Parameter, value: any): void {
-        if (typeof name === "string") {
-            return this._closure.setRegister(name, value)
-        } else {
-            return this._closure.setRegister(name.name, value)
-        }
-    }
 }
