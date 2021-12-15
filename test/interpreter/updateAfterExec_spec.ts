@@ -3,7 +3,8 @@ import {expect} from "chai"
 import {Interpreter} from "../../src/interpreter/Interpreter";
 import {Operation} from "../../src/interpreter/Operation";
 import {Parameter} from "../../src/interpreter/Parameter";
-const { performance } = require('perf_hooks');
+
+const {performance} = require('perf_hooks');
 
 class TestOperation extends Operation {
 
@@ -58,7 +59,6 @@ describe('Updating after execution', () => {
         await i.updateRegister("r1", 200);
         expect(i.getRegister("r2")).to.equal(200, "r2 after update of r1");
     });
-
 
 
     it('lets some operations re execute (2)', async () => {
@@ -135,5 +135,41 @@ describe('Updating after execution', () => {
 
     });
 
+    it('lets some operations re execute (3)', async () => {
 
+        const code = `
+            LOAD r1 100
+            PUSHSF
+            LOAD it 1000
+          LOOP:
+            DEC it
+            ADD r1 r1 10
+            TESTOP r3 r1
+            JNZ it LOOP                           
+            POPSF
+        `;
+
+        const i = new Interpreter();
+
+        let r3Value = null;
+        let callCount = 0
+
+        i.addOperation("TESTOP", MakeTestOperation(value => {
+            r3Value = value;
+            callCount++;
+        }));
+
+        const start = performance.now();
+        i.parse(code);
+        await i.run();
+        const middle = performance.now();
+        await i.updateRegister("r1", 200);
+        const end = performance.now();
+
+        console.log("Initial run:", middle - start, "Update:", end - middle);
+
+        expect(i.getRegister("r1")).to.equal(200, "r1");
+        expect(r3Value).to.equal(10200, "r3Value");
+        expect(callCount).to.equal(1000, "callCount");
+    });
 });
