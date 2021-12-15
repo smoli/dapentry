@@ -16,7 +16,7 @@ export class Operation {
     public setClosure(closure: StackFrame) {
         this._closure = closure;
         this._parameters.forEach(p => {
-            if (p.isRegister) {
+            if (p && p.isRegister) {
                 p.setClosure(closure)
             }
         });

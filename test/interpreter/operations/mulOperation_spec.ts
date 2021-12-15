@@ -8,7 +8,9 @@ describe('Multiply', () => {
         const program = `
             LOAD r1 10
             LOAD r2 20  
-            MUL  r3 r1 r2          
+            MUL  r3 r1 r2      
+            
+            MUL r2 2    
         `;
 
         const i = new Interpreter();
@@ -16,5 +18,6 @@ describe('Multiply', () => {
         await i.run();
 
         expect(i.getRegister("r3")).to.equal(200);
+        expect(i.getRegister("r2")).to.equal(40);
     });
 });

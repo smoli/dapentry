@@ -44,10 +44,14 @@ LABEL:
 
 ### Math
 
-| Opcode | Parameters     | Description                       | 
-|--------|----------------|-----------------------------------|
-| ADD    | target op1 op2 | add two registers or values       |
-| SUB    | target op1 op2 | subtract two registers or values  |
-| MUL    | target op1 op2 | multiply two registers or values  |
-| DIV    | target op1 op2 | divide two registers or values    |
-| EXP    | target op1 op2 | calculate op1 ^ op2               |
+Binary operations like ADD, SUB, ... can take two or three arguments. 
+If three are given, then the result `arg2 op arg3` is store in `arg1`.
+If only two are given then the result of `arg1 op arg2` is stored in `arg1`
+
+| Opcode | Parameters         | Description                       | 
+|--------|--------------------|-----------------------------------|
+| ADD    | target op1 \[op2\] | add two registers or values       |
+| SUB    | target op1 \[op2\] | subtract two registers or values  |
+| MUL    | target op1 \[op2\] | multiply two registers or values  |
+| DIV    | target op1 \[op2\] | divide two registers or values    |
+| EXP    | target op1 \[op2\] | calculate op1 ^ op2               |

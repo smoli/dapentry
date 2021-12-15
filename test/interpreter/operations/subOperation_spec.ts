@@ -9,6 +9,8 @@ describe('Sub', () => {
             LOAD r1 10
             LOAD r2 20          
             SUB  r3 r1 r2  
+            
+            SUB  r2 10
         `;
 
         const i = new Interpreter();
@@ -16,5 +18,6 @@ describe('Sub', () => {
         await i.run();
 
         expect(i.getRegister("r3")).to.equal(-10);
+        expect(i.getRegister("r2")).to.equal(10);
     });
 });

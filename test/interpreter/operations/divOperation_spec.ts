@@ -8,7 +8,9 @@ describe('Divide', () => {
         const program = `
             LOAD r1 10
             LOAD r2 20  
-            DIV  r3 r1 r2          
+            DIV  r3 r1 r2    
+            
+            DIV  r2 10      
         `;
 
         const i = new Interpreter();
@@ -16,5 +18,6 @@ describe('Divide', () => {
         await i.run();
 
         expect(i.getRegister("r3")).to.equal(0.5);
+        expect(i.getRegister("r2")).to.equal(2);
     });
 });

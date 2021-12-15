@@ -8,3 +8,9 @@ node_modules/
 
 # Webpack build directory
 dist/
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/fileTemplates/Test_Mocha_Chai_Sinon.ts
+/.idea/untitled.iml
+/.idea/vcs.xml
