@@ -1,7 +1,7 @@
 import {Operation} from "../Operation";
 import {dbg} from "../../dbg";
 
-export class Debug extends Operation {
+export class Log extends Operation {
 
     private readonly _message: any;
 

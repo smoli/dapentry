@@ -1,6 +1,6 @@
 import {Parameter} from "./Parameter";
 import {Operation} from "./Operation";
-import {Debug} from "./operations/Debug";
+import {Log} from "./operations/Log";
 import {Load} from "./operations/Load";
 import {Parser, TokenTypes} from "./Parser";
 import {DependencyTracker} from "./DependencyTracker";
@@ -47,7 +47,7 @@ export class Interpreter {
 
     constructor() {
         this._operationFactory = new OperationFactory();
-        this._operationFactory.addOperationClass("DEBUG", Debug);
+        this._operationFactory.addOperationClass("DEBUG", Log);
         this._operationFactory.addOperationClass("LOAD", Load);
         this._operationFactory.addOperationClass("ADD", Add);
         this._operationFactory.addOperationClass("SUB", Sub);
