@@ -10,10 +10,6 @@ export class RegisterStore {
     constructor() {
     }
 
-    public reset(): void {
-        this._registers = {}
-    }
-
     public setRegister(name: string, value: any): void {
         this._registers[name] = value;
     }

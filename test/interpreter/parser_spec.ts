@@ -63,7 +63,7 @@ describe('Parser', () => {
         }).to.throw;
 
         expect(() => {
-            Parser.parseLine('LABEL: r1 299 "lkjh"');
+            Parser.parseLine('LABEL: r1 299 "lk#sdf:jh"');
         }).to.throw;
 
         tokens = Parser.parseLine('FAKE "SOME:THING"');

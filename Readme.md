@@ -17,7 +17,13 @@ in a browser.
 
 ## Tests
 
-'npm test'
+`npm test`
+
+## Test coverage
+
+`npm run coverage`
+
+Then open [coverage/index.html](coverage/index.html)
 
 ## Documentation
 

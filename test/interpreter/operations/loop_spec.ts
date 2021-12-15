@@ -121,4 +121,23 @@ describe('Loops are done using jumps', () => {
         expect(i.getRegister("r2")).to.equal(60);
 
     });
+
+    it('jumping to a non existent label will throw an error', async () => {
+
+        const code = `
+            LOAD r1 10      
+            LOAD r2 0       
+        LABEL:
+            ADD  r2 r2 10   
+            DEC  r1         
+            JNZ  r1 WRONGLABEL            
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        expect(() => {
+            i.run();
+        }).to.throw;
+
+    });
 });

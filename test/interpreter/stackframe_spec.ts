@@ -9,8 +9,10 @@ describe('Stackframes', () => {
 
         const code = `
             LOAD r1 10
+            LOAD r2 10
             PUSHSF
             DEC r1
+            ADD r1 r2
             POPSF            
         `;
 
