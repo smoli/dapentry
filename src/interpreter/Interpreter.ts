@@ -17,6 +17,7 @@ import {JumpWhenNotEqual} from "./operations/JumpWhenNotEqual";
 import {StackFrame} from "./StackFrame";
 import {PushStackFrame} from "./operations/PushStackFrame";
 import {PopStackFrame} from "./operations/PopStackFrame";
+import {Debug} from "./operations/Debug";
 
 type Context = Node;
 
@@ -39,6 +40,7 @@ export class Interpreter {
     private _dependencies: DependencyTracker = new DependencyTracker();
 
     private _currentInstruction: Operation = null;
+    private _stopped: boolean = false;
     private _operationFactory:OperationFactory;
 
     private _programCounter:number  = 0;
@@ -47,7 +49,8 @@ export class Interpreter {
 
     constructor() {
         this._operationFactory = new OperationFactory();
-        this._operationFactory.addOperationClass("DEBUG", Log);
+        this._operationFactory.addOperationClass("LOG", Log);
+        this._operationFactory.addOperationClass("DEBUG", Debug);
         this._operationFactory.addOperationClass("LOAD", Load);
         this._operationFactory.addOperationClass("ADD", Add);
         this._operationFactory.addOperationClass("SUB", Sub);
@@ -103,6 +106,9 @@ export class Interpreter {
         this._currentInstruction = null;
         this._programCounter = -1;
         this._labels = {};
+        this._stack = [];
+        this._stopped = false;
+        this._currentFrame = new StackFrame();
     }
 
     public gotoLabel(labelName) {
@@ -119,18 +125,40 @@ export class Interpreter {
 
     public async run(): Promise<any> {
         this.resetExecution();
+        return this._run();
+    }
 
+    public async _run(): Promise<any> {
         try {
             while (this._programCounter < this._program.length - 1) {
                 this._programCounter++;
                 this._currentInstruction = this._program[this._programCounter];
-                await this._currentInstruction.execute(this)
+                await this._currentInstruction.execute(this);
+
+                if (this._stopped) {
+                    return false;
+                }
             }
         } catch (e) {
-            throw e;
-        } finally {
             this._currentInstruction = null;
             this._executed = true;
+            throw e;
+        } finally {
+            if (!this._stopped) {
+                this._currentInstruction = null;
+                this._executed = true;
+            }
+        }
+    }
+
+    public stop(): void {
+        this._stopped = true;
+    }
+
+    public async resume(): Promise<any> {
+        if (this._stopped) {
+            this._stopped = false;
+            return this._run();
         }
     }
 
