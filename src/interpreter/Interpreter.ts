@@ -15,6 +15,8 @@ import {Label} from "./operations/Label";
 import {Decrement} from "./operations/math/Decrement";
 import {JumpWhenNotEqual} from "./operations/JumpWhenNotEqual";
 import {StackFrame} from "./StackFrame";
+import {PushStackFrame} from "./operations/PushStackFrame";
+import {PopStackFrame} from "./operations/PopStackFrame";
 
 type Context = Node;
 
@@ -55,14 +57,16 @@ export class Interpreter {
         this._operationFactory.addOperationClass("EXP", Exponentiate);
         this._operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
         this._operationFactory.addOperationClass("JNE", JumpWhenNotEqual);
+        this._operationFactory.addOperationClass("PUSHSF", PushStackFrame);
+        this._operationFactory.addOperationClass("POPSF", PopStackFrame);
         this._operationFactory.addOperationClass("___LBL___", Label);
 
-        this.pushStack();
+        this._currentFrame = new StackFrame(this._currentFrame);
     }
 
     public pushStack() {
-        this._currentFrame = new StackFrame();
         this._stack.push(this._currentFrame);
+        this._currentFrame = new StackFrame(this._currentFrame);
     }
 
     public popStack() {
