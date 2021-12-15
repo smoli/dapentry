@@ -6,11 +6,11 @@ import {Interpreter} from "../../src/interpreter/Interpreter";
 
 describe('Interpreter', () => {
 
-    it('can run a simple debug program', () => {
+    it('can run a simple program', () => {
         const code = `
         
         
-            DEBUG "Hello World"
+            LOG "Hello World"
             
             
             

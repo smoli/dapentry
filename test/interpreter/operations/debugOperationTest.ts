@@ -4,11 +4,11 @@ import {Interpreter} from "../../../src/interpreter/Interpreter";
 
 const sinon = require("sinon");
 
-describe('Debug', () => {
+describe('Log', () => {
 
     it('Writes to console', async () => {
         const program = `
-            DEBUG "Hello World"
+            LOG "Hello World"
         `;
 
 
@@ -24,7 +24,7 @@ describe('Debug', () => {
 
     it("Updates when debug.runtime is updated", async () => {
         const program = `
-            DEBUG "Hello World"            
+            LOG "Hello World"            
         `;
 
 
