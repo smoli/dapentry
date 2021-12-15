@@ -32,12 +32,15 @@ LABEL:
 
 ### General/Controlflow
 
-| Opcode | Parameters           | Description                                   | 
-|--------|----------------------|-----------------------------------------------|
-| LOAD   | target value         | load a value into target register             |
-| JNZ    | test label           | jump to label if test is not zero             |
-| JNE    | test reference label | jump to label if test is not equal reference  |
-| DEBUG  | message              | write message to console                      |
+| Opcode | Parameters           | Description                                                                        | 
+|--------|----------------------|------------------------------------------------------------------------------------|
+| LOAD   | target value         | load a value into target register                                                  |
+| JNZ    | test label           | jump to label if test is not zero                                                  |
+| JNE    | test reference label | jump to label if test is not equal reference                                       |
+| LOG    | message              | Write something on the console                                                     |
+| PUSHSF |                      | Push a new frame on the stack and make it the current stack frame                  |
+| POPSF  |                      | Pop the topmost frame from the stack and make it the current stack frame           |
+| DEBUG  |                      | stops execution without touching the instruction counter. Execution can be resumed |   
 
 ### Math
 
