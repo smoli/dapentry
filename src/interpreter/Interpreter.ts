@@ -19,6 +19,10 @@ import {PushStackFrame} from "./operations/PushStackFrame";
 import {PopStackFrame} from "./operations/PopStackFrame";
 import {Debug} from "./operations/Debug";
 import {Increment} from "./operations/math/Increment";
+import {JumpWhenLower} from "./operations/JumpWhenLower";
+import {JumpWhenLowerEqual} from "./operations/JumpWhenLowerEqual";
+import {JumpWhenGreater} from "./operations/JumpWhenGreater";
+import {JumpWhenGreaterEqual} from "./operations/JumpWhenGreaterEqual";
 
 type Context = Node;
 
@@ -62,6 +66,10 @@ export class Interpreter {
         this._operationFactory.addOperationClass("EXP", Exponentiate);
         this._operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
         this._operationFactory.addOperationClass("JNE", JumpWhenNotEqual);
+        this._operationFactory.addOperationClass("JLT", JumpWhenLower);
+        this._operationFactory.addOperationClass("JLE", JumpWhenLowerEqual);
+        this._operationFactory.addOperationClass("JGT", JumpWhenGreater);
+        this._operationFactory.addOperationClass("JGE", JumpWhenGreaterEqual);
         this._operationFactory.addOperationClass("PUSHSF", PushStackFrame);
         this._operationFactory.addOperationClass("POPSF", PopStackFrame);
         this._operationFactory.addOperationClass("___LBL___", Label);

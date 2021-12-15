@@ -17,7 +17,7 @@ Are arbitrary names. If it's not a number and not a string it's a register.
 
 ## Labels
 
-Labels are the only token on a line. They end with a :
+Labels are the only token on a line. They end with a `:`
 
 ```
     LOAD r1 10
@@ -28,15 +28,25 @@ LABEL:
     JNZ  r1 LABEL
 ```
 
+## Whitespace and comments
+
+Superfluous whitespace is ignored.
+
+Everything after `#` is ignored and thus can be used to create comments.
+
 ## Opcodes
 
 ### General/Controlflow
 
-| Opcode | Parameters           | Description                                                                        | 
+| Opcode | Arguments            | Description                                                                        | 
 |--------|----------------------|------------------------------------------------------------------------------------|
 | LOAD   | target value         | load a value into target register                                                  |
 | JNZ    | test label           | jump to label if test is not zero                                                  |
 | JNE    | test reference label | jump to label if test is not equal reference                                       |
+| JLT    | test reference label | jump to label if test is lower than reference                                      |
+| JLE    | test reference label | jump to label if test is lower or equal reference                                  |
+| JGT    | test reference label | jump to label if test is greater reference                                         |
+| JGE    | test reference label | jump to label if test is greater or equal reference                                |
 | LOG    | message              | Write something on the console                                                     |
 | PUSHSF |                      | Push a new frame on the stack and make it the current stack frame                  |
 | POPSF  |                      | Pop the topmost frame from the stack and make it the current stack frame           |
@@ -48,10 +58,12 @@ Binary operations like ADD, SUB, ... can take two or three arguments.
 If three are given, then the result `arg2 op arg3` is store in `arg1`.
 If only two are given then the result of `arg1 op arg2` is stored in `arg1`
 
-| Opcode | Parameters         | Description                       | 
-|--------|--------------------|-----------------------------------|
-| ADD    | target op1 \[op2\] | add two registers or values       |
-| SUB    | target op1 \[op2\] | subtract two registers or values  |
-| MUL    | target op1 \[op2\] | multiply two registers or values  |
-| DIV    | target op1 \[op2\] | divide two registers or values    |
-| EXP    | target op1 \[op2\] | calculate op1 ^ op2               |
+| Opcode | Arguments          | Description                      | 
+|--------|--------------------|----------------------------------|
+| ADD    | target op1 \[op2\] | add two registers or values      |
+| SUB    | target op1 \[op2\] | subtract two registers or values |
+| MUL    | target op1 \[op2\] | multiply two registers or values |
+| DIV    | target op1 \[op2\] | divide two registers or values   |
+| EXP    | target op1 \[op2\] | calculate op1 ^ op2              |
+| INC    | target             | increase target by one           |
+| DEC    | target             | decrease target by one           |
