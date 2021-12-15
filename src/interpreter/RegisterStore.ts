@@ -4,23 +4,26 @@ interface RegisterMap {
 
 export class RegisterStore {
 
-    private registers: RegisterMap = {}
-    private
+    private _registers: RegisterMap = {}
 
 
     constructor() {
     }
 
     public reset(): void {
-        this.registers = {}
+        this._registers = {}
     }
 
     public setRegister(name: string, value: any): void {
-        this.registers[name] = value;
+        this._registers[name] = value;
     }
 
     public getRegister(name: string): any {
-        return this.registers[name]
+        return this._registers[name]
+    }
+
+    public hasRegister(name: string): boolean {
+        return this._registers.hasOwnProperty(name);
     }
 }
 

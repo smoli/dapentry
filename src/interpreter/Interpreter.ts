@@ -1,4 +1,3 @@
-import {RegisterStore} from "./RegisterStore";
 import {Parameter} from "./Parameter";
 import {Operation} from "./Operation";
 import {Debug} from "./operations/Debug";
@@ -15,6 +14,7 @@ import {JumpWhenNotZero} from "./operations/JumpWhenNotZero";
 import {Label} from "./operations/Label";
 import {Decrement} from "./operations/math/Decrement";
 import {JumpWhenNotEqual} from "./operations/JumpWhenNotEqual";
+import {StackFrame} from "./StackFrame";
 
 type Context = Node;
 
@@ -27,7 +27,8 @@ export class Interpreter {
 
     private contexts: ContextDictionary = {};
 
-    private _registers: RegisterStore = new RegisterStore();
+    private _stack: Array<StackFrame> = [];
+    private _currentFrame: StackFrame;
     private _program: Array<Operation> = [];
 
     private _executed: boolean = false;
@@ -55,6 +56,17 @@ export class Interpreter {
         this._operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
         this._operationFactory.addOperationClass("JNE", JumpWhenNotEqual);
         this._operationFactory.addOperationClass("___LBL___", Label);
+
+        this.pushStack();
+    }
+
+    public pushStack() {
+        this._currentFrame = new StackFrame();
+        this._stack.push(this._currentFrame);
+    }
+
+    public popStack() {
+        this._currentFrame = this._stack.pop();
     }
 
     public addContext(name: string, context: Context): void {
@@ -66,11 +78,11 @@ export class Interpreter {
     }
 
     public getRegister(name: string): any {
-        return this._registers.getRegister(name);
+        return this._currentFrame.getRegister(name);
     }
 
     public setRegister(name: string, value: any): void {
-        this._registers.setRegister(name, value);
+        this._currentFrame.setRegister(name, value);
         if (this._currentInstruction) {
             this._dependencies.addDependency(name, this._currentInstruction);
         } else if (this._executed) {
