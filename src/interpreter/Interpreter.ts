@@ -123,14 +123,26 @@ export class Interpreter {
         }
     }
 
-    private resetExecution() {
+    private _resetExecution() {
         this._executed = false;
         this._currentInstruction = null;
         this._programCounter = -1;
-        this._labels = {};
+        this._labels = this._prepareLabels();
         this._stack = [];
         this._stopped = false;
         this._currentFrame = null;
+
+    }
+
+    private _prepareLabels(): { [key: string]: number } {
+        const ret = {};
+        this._program.forEach((op, i) => {
+            if (op instanceof Label) {
+                ret[op.label] = i;
+            }
+        });
+
+        return ret;
     }
 
     public gotoLabel(labelName) {
@@ -146,9 +158,11 @@ export class Interpreter {
     }
 
     public async run(): Promise<any> {
-        this.resetExecution();
+        this._resetExecution();
         this.pushStack();
         const result = await this._run();
+
+
 
         // We do not pop the outer frame after our program is done,
         // so we can access the final state after execution
