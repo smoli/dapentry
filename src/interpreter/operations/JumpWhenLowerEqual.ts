@@ -8,15 +8,32 @@ export class JumpWhenLowerEqual extends Operation {
     private readonly _label: Parameter;
 
     constructor(opcode, test: Parameter, reference: Parameter, label: Parameter) {
-        super(opcode, test, reference, label);
+        super(opcode);
         this._test = test;
         this._reference = reference;
         this._label = label;
     }
 
+
+    get test(): any {
+        return this._getParam(this._test);
+    }
+
+    set test(value: any) {
+        this._setParam(this._test, value);
+    }
+
+    get reference(): any {
+        return this._getParam(this._reference);
+    }
+
+    get label(): any {
+        return this._label.name
+    }
+
     async execute(interpreter): Promise<any> {
-        if (this._test.value <= this._reference.value) {
-            interpreter.gotoLabel(this._label.name);
+        if (this.test <= this.reference) {
+            interpreter.gotoLabel(this.label);
         }
     }
 

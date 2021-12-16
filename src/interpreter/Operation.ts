@@ -6,24 +6,30 @@ export class Operation {
 
     protected readonly _opcode: string;
     protected _closure: StackFrame;
-    protected _parameters: Array<Parameter>;
 
     constructor(opcode, ..._params: Array<Parameter>) {
         this._opcode = opcode;
-        this._parameters = _params;
     }
 
     public setClosure(closure: StackFrame) {
         this._closure = closure;
-        this._parameters.forEach(p => {
-            if (p && p.isRegister) {
-                p.setClosure(closure)
-            }
-        });
     }
 
     get closure(): StackFrame {
         return this._closure;
+    }
+
+
+    protected _getParam(param) {
+        if (param.isRegister) {
+            return this.closure.getRegister(param.name);
+        } else {
+            return param.value;
+        }
+    }
+
+    protected _setParam(param, value) {
+        return this.closure.setRegister(param.name, value);
     }
 
     async execute(interpreter: Interpreter): Promise<any> {

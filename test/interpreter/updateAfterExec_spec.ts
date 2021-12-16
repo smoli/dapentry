@@ -18,12 +18,24 @@ class TestOperation extends Operation {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        this._target.value = this._source.value;
+        this.target = this.source;
+    }
+
+    get target(): any {
+        return this._getParam(this._target);
+    }
+
+    set target(value: any) {
+        this._setParam(this._target, value);
+    }
+
+    get source(): any {
+        return this._getParam(this._source);
     }
 
     async update(changedRegisterName: string, interpreter: Interpreter): Promise<any> {
         if (changedRegisterName === this._source.name) {
-            this._target.value = this._source.value;
+            this.target = this.source;
 
         }
     }
@@ -35,7 +47,7 @@ function MakeTestOperation(handler) {
 
         async update(changedRegisterName: string, interpreter: Interpreter): Promise<any> {
             await super.update(changedRegisterName, interpreter);
-            handler(this._target.value)
+            handler(this.target)
         }
     }
 }

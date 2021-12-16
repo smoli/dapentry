@@ -7,16 +7,24 @@ export class Increment extends Operation {
     private readonly _target: Parameter;
 
     constructor(opcode, target: Parameter) {
-        super(opcode, target);
+        super(opcode);
         this._target = target;
     }
 
+    get target(): any {
+        return this._getParam(this._target);
+    }
+
+    set target(value: any) {
+        this._setParam(this._target, value);
+    }
+
     async execute(interpreter): Promise<any> {
-        this._target.value = this._target.value + 1;
+        this.target = this.target + 1;
     }
 
     async update(changedRegisterName: string, interpreter: Interpreter): Promise<any> {
-        this._target.value = this._target.value + 1;
+        this.target = this.target + 1;
     }
 
 }
