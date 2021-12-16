@@ -66,6 +66,7 @@ export class Interpreter {
         this._operationFactory.addOperationClass("MUL", Multiply);
         this._operationFactory.addOperationClass("DIV", Divide);
         this._operationFactory.addOperationClass("EXP", Exponentiate);
+        this._operationFactory.addOperationClass("JMP", Jump);
         this._operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
         this._operationFactory.addOperationClass("JNE", JumpWhenNotEqual);
         this._operationFactory.addOperationClass("JLT", JumpWhenLower);
