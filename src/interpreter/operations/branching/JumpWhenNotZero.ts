@@ -1,19 +1,16 @@
-import {Operation} from "../Operation";
-import {Parameter} from "../Parameter";
+import {Operation} from "../../Operation";
+import {Parameter} from "../../Parameter";
 
-export class JumpWhenLowerEqual extends Operation {
+export class JumpWhenNotZero extends Operation {
 
     private readonly _test: Parameter;
-    private readonly _reference: Parameter;
     private readonly _label: Parameter;
 
-    constructor(opcode, test: Parameter, reference: Parameter, label: Parameter) {
+    constructor(opcode, test: Parameter, label: Parameter) {
         super(opcode);
         this._test = test;
-        this._reference = reference;
         this._label = label;
     }
-
 
     get test(): any {
         return this._getParam(this._test);
@@ -23,16 +20,12 @@ export class JumpWhenLowerEqual extends Operation {
         this._setParam(this._test, value);
     }
 
-    get reference(): any {
-        return this._getParam(this._reference);
-    }
-
     get label(): any {
         return this._label.name
     }
 
     async execute(interpreter): Promise<any> {
-        if (this.test <= this.reference) {
+        if (Number(this.test) !== 0) {
             interpreter.gotoLabel(this.label);
         }
     }

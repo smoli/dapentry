@@ -3,7 +3,7 @@ import {expect} from "chai"
 import {Interpreter} from "../../../src/interpreter/Interpreter";
 
 
-describe('Loops are done using jumps', () => {
+describe('Branching is done using jumps', () => {
 
     it('e.g after testing for zero', async () => {
 

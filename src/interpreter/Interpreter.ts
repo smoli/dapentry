@@ -10,20 +10,21 @@ import {Sub} from "./operations/math/Sub";
 import {Multiply} from "./operations/math/Multiply";
 import {Divide} from "./operations/math/Divide";
 import {Exponentiate} from "./operations/math/Exponentiate";
-import {JumpWhenNotZero} from "./operations/JumpWhenNotZero";
+import {JumpWhenNotZero} from "./operations/branching/JumpWhenNotZero";
 import {Label} from "./operations/Label";
 import {Decrement} from "./operations/math/Decrement";
-import {JumpWhenNotEqual} from "./operations/JumpWhenNotEqual";
+import {JumpWhenNotEqual} from "./operations/branching/JumpWhenNotEqual";
 import {StackFrame} from "./StackFrame";
 import {PushStackFrame} from "./operations/PushStackFrame";
 import {PopStackFrame} from "./operations/PopStackFrame";
 import {Debug} from "./operations/Debug";
 import {Increment} from "./operations/math/Increment";
-import {JumpWhenLower} from "./operations/JumpWhenLower";
-import {JumpWhenLowerEqual} from "./operations/JumpWhenLowerEqual";
-import {JumpWhenGreater} from "./operations/JumpWhenGreater";
-import {JumpWhenGreaterEqual} from "./operations/JumpWhenGreaterEqual";
+import {JumpWhenLower} from "./operations/branching/JumpWhenLower";
+import {JumpWhenLowerEqual} from "./operations/branching/JumpWhenLowerEqual";
+import {JumpWhenGreater} from "./operations/branching/JumpWhenGreater";
+import {JumpWhenGreaterEqual} from "./operations/branching/JumpWhenGreaterEqual";
 import {Point2Parameter} from "./types/Point2Parameter";
+import {Jump} from "./operations/Jump";
 
 type Context = Node;
 

@@ -1,7 +1,7 @@
-import {Operation} from "../Operation";
-import {Parameter} from "../Parameter";
+import {Operation} from "../../Operation";
+import {Parameter} from "../../Parameter";
 
-export class JumpWhenGreaterEqual extends Operation {
+export class JumpWhenNotEqual extends Operation {
 
     private readonly _test: Parameter;
     private readonly _reference: Parameter;
@@ -33,7 +33,7 @@ export class JumpWhenGreaterEqual extends Operation {
 
 
     async execute(interpreter): Promise<any> {
-        if (this.test >= this.reference) {
+        if (this.test !== this.reference) {
             interpreter.gotoLabel(this.label);
         }
     }
