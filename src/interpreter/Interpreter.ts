@@ -23,6 +23,7 @@ import {JumpWhenLower} from "./operations/JumpWhenLower";
 import {JumpWhenLowerEqual} from "./operations/JumpWhenLowerEqual";
 import {JumpWhenGreater} from "./operations/JumpWhenGreater";
 import {JumpWhenGreaterEqual} from "./operations/JumpWhenGreaterEqual";
+import {Point2Parameter} from "./types/Point2Parameter";
 
 type Context = Node;
 
@@ -198,13 +199,15 @@ export class Interpreter {
 
     public parse(program: string): void {
         const lines = program.split("\n").filter(s => s.trim().length > 0);
-        this._program = lines.map(l => this.parseLine(l));
+        this._program = lines.map(l => this.parseLine(l)).filter(p => !!p);
     }
-
 
     private parseLine(line: string): any {
         const tokens = Parser.parseLine(line);
 
+
+        // TODO: We need a better way of post processing tokens
+        //       I suspect, we'll get more types of data (array, ...)
         let opcode = null;
         const parts = tokens.map(token => {
             if (token.type === TokenTypes.OPCODE) {
@@ -213,11 +216,19 @@ export class Interpreter {
             } else if (token.type === TokenTypes.LABEL) {
                 opcode = "___LBL___";
                 return new Parameter(false, token.value);
+            } else if (token.type === TokenTypes.POINT) {
+                return new Parameter(false, new Point2Parameter(
+                    new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
+                    new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
+                ))
             } else {
                 return new Parameter(token.type === TokenTypes.REGISTER, token.value);
             }
         }).filter(p => !!p);
 
+        if (!opcode) {
+            return null;
+        }
         return this._operationFactory.create(opcode, ...parts);
     }
 

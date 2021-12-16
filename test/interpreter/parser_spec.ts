@@ -10,10 +10,10 @@ describe('Parser', () => {
         const tokens = Parser.parseLine(code);
 
         expect(tokens).to.deep.equal([
-            { type: TokenTypes.OPCODE, value: "FAKE" },
-            { type: TokenTypes.REGISTER, value: "r1" },
-            { type: TokenTypes.NUMBER, value: 123 }
-            ]);
+            {type: TokenTypes.OPCODE, value: "FAKE"},
+            {type: TokenTypes.REGISTER, value: "r1"},
+            {type: TokenTypes.NUMBER, value: 123}
+        ]);
 
     });
 
@@ -24,12 +24,12 @@ describe('Parser', () => {
         const tokens = Parser.parseLine(code);
 
         expect(tokens).to.deep.equal([
-            { type: TokenTypes.OPCODE, value: "FAKE" },
-            { type: TokenTypes.REGISTER, value: "r1" },
-            { type: TokenTypes.STRING, value: "Hello World" },
-            { type: TokenTypes.REGISTER, value: "lkjh" },
-            { type: TokenTypes.NUMBER, value: 123 },
-            { type: TokenTypes.STRING, value: "   KLJH123" }
+            {type: TokenTypes.OPCODE, value: "FAKE"},
+            {type: TokenTypes.REGISTER, value: "r1"},
+            {type: TokenTypes.STRING, value: "Hello World"},
+            {type: TokenTypes.REGISTER, value: "lkjh"},
+            {type: TokenTypes.NUMBER, value: 123},
+            {type: TokenTypes.STRING, value: "   KLJH123"}
         ]);
     });
 
@@ -42,10 +42,10 @@ describe('Parser', () => {
         const tokens = Parser.parseLine(`SOME thing "With a # string" 123 # Comments go here`);
 
         expect(tokens).to.deep.equal([
-            { type: TokenTypes.OPCODE, value: "SOME" },
-            { type: TokenTypes.REGISTER, value: "thing" },
-            { type: TokenTypes.STRING, value: "With a # string" },
-            { type: TokenTypes.NUMBER, value: 123 }
+            {type: TokenTypes.OPCODE, value: "SOME"},
+            {type: TokenTypes.REGISTER, value: "thing"},
+            {type: TokenTypes.STRING, value: "With a # string"},
+            {type: TokenTypes.NUMBER, value: 123}
         ]);
 
         expect(Parser.parseLine("# Comment with no code before")).to.deep.equal([])
@@ -55,7 +55,7 @@ describe('Parser', () => {
         let tokens = Parser.parseLine('LABEL:');
 
         expect(tokens).to.deep.equal([
-            { type: TokenTypes.LABEL, value: "LABEL"}
+            {type: TokenTypes.LABEL, value: "LABEL"}
         ]);
 
         expect(() => {
@@ -69,9 +69,40 @@ describe('Parser', () => {
         tokens = Parser.parseLine('FAKE "SOME:THING"');
 
         expect(tokens).to.deep.equal([
-            { type: TokenTypes.OPCODE, value: "FAKE"},
-            { type: TokenTypes.STRING, value: "SOME:THING"}
+            {type: TokenTypes.OPCODE, value: "FAKE"},
+            {type: TokenTypes.STRING, value: "SOME:THING"}
         ]);
+
+    });
+
+    it('parses points', () => {
+        let tokens = Parser.parseLine('( 100 200 )');
+
+        expect(tokens).to.deep.equal([
+            {
+                type: TokenTypes.POINT, value: [
+                    {type: TokenTypes.NUMBER, value: 100},
+                    {type: TokenTypes.NUMBER, value: 200},
+                ]
+            }
+        ]);
+
+        tokens = Parser.parseLine('"A string with ( smack in ) the middle of it"');
+        expect(tokens).to.deep.equal([
+            {type: TokenTypes.STRING, value: "A string with ( smack in ) the middle of it"},
+        ]);
+
+        expect(() => Parser.parseLine("( 100 )"))
+            .to.throw;
+        expect(() => Parser.parseLine("()"))
+            .to.throw;
+        expect(() => Parser.parseLine("( 100 200 ("))
+            .to.throw;
+        expect(() => Parser.parseLine("( 100 200"))
+            .to.throw;
+        expect(() => Parser.parseLine("100 ) 100 200"))
+            .to.throw;
+
 
     });
 });

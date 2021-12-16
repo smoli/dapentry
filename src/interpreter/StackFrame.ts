@@ -93,7 +93,12 @@ export class StackFrame {
             }
         }
 
-        return this._registers.getRegister(name);
+        const r = this._registers.getRegister(name);
+        if (typeof r === "object" && "getValue" in r) {
+            return r.getValue(this);
+        } else {
+            return r;
+        }
     }
 
     public setRegister(name: string, value: any): void {

@@ -4,16 +4,27 @@ export enum TokenTypes {
     NUMBER,
     STRING,
     LABEL,
+    STARTPOINT,
+    ENDPOINT,
+    POINT,
     OTHER
 }
 
 export interface Token {
     type: TokenTypes,
-    value: number | string
+    value: number | string | Array<any>
 }
 
 export class Parser {
 
+    /**
+     * Parse a line
+     *
+     * TODO: This get ugly. Maybe create a grammar using
+     *          https://pegjs.org/
+     *
+     * @param line
+     */
     public static parseLine(line: string): Array<Token> {
         const tokens = [];
 
@@ -21,9 +32,69 @@ export class Parser {
 
         let type: TokenTypes = null;
 
+        let braceStack = [];
 
         for (let c of line) {
             switch (c) {
+
+                case "(":
+                    if (value !== null && type !== TokenTypes.STRING) {
+                        throw new Error("Unexpected character (");
+                    } else if (type === TokenTypes.STRING) {
+                        if (value !== null) {
+                            value += c;
+                        } else {
+                            value = c
+                        }
+                    } else {
+                        if (braceStack.length) {
+                            throw new Error("Closing Point with ) expected'")
+                        }
+                        tokens.push({ type: TokenTypes.STARTPOINT, value: "("});
+                        braceStack.push("(");
+                        value = null;
+                        type = null;
+                    }
+
+                    break;
+
+                case ")":
+
+                    if (type === TokenTypes.STRING) {
+                        if (value !== null) {
+                            value += c;
+                        } else {
+                            value = c
+                        }
+                    } else {
+                        if (braceStack.length === 0) {
+                            throw new Error("Closing Point without opening it'")
+                        }
+
+                        if (tokens.length < 2
+                            || tokens[tokens.length - 1].type === TokenTypes.STARTPOINT
+                            || tokens[tokens.length - 2].type === TokenTypes.STARTPOINT
+                        )  {
+                          throw new Error("Points consist of at least two coordinates")
+                        }
+
+                        const parts = [];
+                        let t = tokens.pop();
+                        while (t.type !== TokenTypes.STARTPOINT) {
+                            if (t.type === TokenTypes.OTHER) {
+                                t.type = TokenTypes.REGISTER;
+                            }
+                            parts.unshift(t);
+                            t = tokens.pop();
+                        }
+
+                        tokens.push({ type: TokenTypes.POINT, value: parts});
+                        braceStack.pop()
+                        value = null;
+                        type = null;
+                    }
+
+                    break;
 
                 case ":":
                     if (value !== null && type !== TokenTypes.STRING) {
@@ -57,7 +128,11 @@ export class Parser {
 
                 case " ":
                     if (type !== TokenTypes.STRING && value !== null) {
-                        tokens.push({type: TokenTypes.OTHER, value});
+                        if (!isNaN(Number(value))) {
+                            tokens.push({type: TokenTypes.NUMBER, value: Number(value)});
+                        } else {
+                            tokens.push({type: TokenTypes.OTHER, value});
+                        }
                         value = null;
                         type = null
                     } else if (type === TokenTypes.STRING) {
@@ -100,7 +175,7 @@ export class Parser {
 
         return tokens.map((token, index) => {
 
-            if (index === 0 && token.type !== TokenTypes.LABEL) {
+            if (index === 0 && token.type === TokenTypes.OTHER) {
                 token.type = TokenTypes.OPCODE;
             } else if (token.type === TokenTypes.OTHER) {
                 if (isNaN(token.value)) {
@@ -111,7 +186,6 @@ export class Parser {
                 }
             }
             return token;
-
         });
     }
 }
