@@ -22,6 +22,6 @@ describe('Point2', () => {
         expect(i.getRegister("r1").x).to.equal(100, "r1.x");
         expect(i.getRegister("r1").y).to.equal(200, "r1.y");
         expect(i.getRegister("r3").x).to.equal(50, "r3.x");
-        expect(i.getRegister("r3.y")).to.equal(100, "r3.y");
+        expect(i.getRegister("r3").y).to.equal(100, "r3.y");
     })
 });

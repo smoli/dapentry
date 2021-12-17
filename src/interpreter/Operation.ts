@@ -22,6 +22,9 @@ export class Operation {
 
     protected _getParam(param) {
         if (param.isRegister) {
+            if (param.components) {
+                return this.closure.getRegisterWithComponents(param.name, param.components);
+            }
             return this.closure.getRegister(param.name);
         } else {
             return param.value;
@@ -29,6 +32,9 @@ export class Operation {
     }
 
     protected _setParam(param, value) {
+        if (param.components) {
+            return this.closure.setRegisterWithComponents(param.name, param.components, value);
+        }
         return this.closure.setRegister(param.name, value);
     }
 

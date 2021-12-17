@@ -103,38 +103,37 @@ export class StackFrame {
         return ret;
     }
 
+    public getRegisterWithComponents(name: string, components: Array<string>) {
+        this._addDependency(name);
+
+        let ret = this._getRegisterBaseValue(name);
+        let l = 0;
+        while (l++ < components.length - 1) {
+            ret = ret[components[l]]
+        }
+        return ret[components[0]]
+    }
+
     public getRegister(name: string): any {
+        this._addDependency(name);
+        return this._getRegisterBaseValue(name);
+    }
 
-        const comps = name.split(".");
-        const baseName = comps.shift();
-
-        this._addDependency(baseName);
-
-        let ret = this._getRegisterBaseValue(baseName);
-        while(comps.length) {
-            ret = ret[comps.shift()]
+    public setRegisterWithComponents(name: string, components: Array<string>, value: any): void {
+        this._addDependency(name);
+        let newValueObject = this._getRegisterBaseValue(name);
+        let l = 0;
+        while (l++ < components.length - 1) {
+            newValueObject = newValueObject[components[l]]
         }
 
-        return ret
+        newValueObject[components[components.length - 1]] = value;
+        this._registers.setRegister(name, newValueObject);
     }
 
     public setRegister(name: string, value: any): void {
-
-        const comps = name.split(".");
-        const baseName = comps.shift();
-
-        this._addDependency(baseName);
-        if (comps.length) {
-            let newValueObject = this._getRegisterBaseValue(baseName);
-            while(comps.length > 1) {
-                newValueObject = newValueObject[comps.shift()]
-            }
-
-            newValueObject[comps[0]] = value;
-            this._registers.setRegister(baseName, newValueObject);
-        } else {
-            this._registers.setRegister(name, value);
-        }
+        this._addDependency(name);
+        this._registers.setRegister(name, value);
     }
 
 
