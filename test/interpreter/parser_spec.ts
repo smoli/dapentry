@@ -76,9 +76,11 @@ describe('Parser', () => {
     });
 
     it('parses points', () => {
-        let tokens = Parser.parseLine('( 100 200 )');
+        let tokens = Parser.parseLine('LOAD r1 ( 100 200 )');
 
         expect(tokens).to.deep.equal([
+            {type: TokenTypes.OPCODE, value: "LOAD"},
+            {type: TokenTypes.REGISTER, value: "r1"},
             {
                 type: TokenTypes.POINT, value: [
                     {type: TokenTypes.NUMBER, value: 100},
@@ -87,8 +89,10 @@ describe('Parser', () => {
             }
         ]);
 
-        tokens = Parser.parseLine('"A string with ( smack in ) the middle of it"');
+        tokens = Parser.parseLine('LOAD r1 "A string with ( smack in ) the middle of it"');
         expect(tokens).to.deep.equal([
+            {type: TokenTypes.OPCODE, value: "LOAD"},
+            {type: TokenTypes.REGISTER, value: "r1"},
             {type: TokenTypes.STRING, value: "A string with ( smack in ) the middle of it"},
         ]);
 
