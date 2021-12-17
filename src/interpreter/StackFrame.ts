@@ -2,6 +2,7 @@ import {RegisterStore} from "./RegisterStore";
 import {Operation} from "./Operation";
 import {DependencyTracker} from "./DependencyTracker";
 import {Interpreter} from "./Interpreter";
+import base = Mocha.reporters.base;
 
 export class StackFrame {
 
@@ -83,27 +84,57 @@ export class StackFrame {
         }
     }
 
-    public getRegister(name: string): any {
-        this._addDependency(name);
-        if (!this._registers.hasRegister(name)) {
+    private _getRegisterBaseValue(baseName: string): any {
+
+        let ret;
+        if (!this._registers.hasRegister(baseName)) {
             if (this._parent) {
-                return this._parent.getRegister(name)
+                ret = this._parent.getRegister(baseName)
             } else {
-                throw new Error(`Unknown register "${name}"`);
+                throw new Error(`Unknown register "${baseName}"`);
+            }
+        } else {
+            ret = this._registers.getRegister(baseName);
+            if (typeof ret === "object" && "getValue" in ret) {
+                ret = ret.getValue(this);
             }
         }
 
-        const r = this._registers.getRegister(name);
-        if (typeof r === "object" && "getValue" in r) {
-            return r.getValue(this);
-        } else {
-            return r;
+        return ret;
+    }
+
+    public getRegister(name: string): any {
+
+        const comps = name.split(".");
+        const baseName = comps.shift();
+
+        this._addDependency(baseName);
+
+        let ret = this._getRegisterBaseValue(baseName);
+        while(comps.length) {
+            ret = ret[comps.shift()]
         }
+
+        return ret
     }
 
     public setRegister(name: string, value: any): void {
-        this._addDependency(name);
-        this._registers.setRegister(name, value);
+
+        const comps = name.split(".");
+        const baseName = comps.shift();
+
+        this._addDependency(baseName);
+        if (comps.length) {
+            let newValueObject = this._getRegisterBaseValue(baseName);
+            while(comps.length > 1) {
+                newValueObject = newValueObject[comps.shift()]
+            }
+
+            newValueObject[comps[0]] = value;
+            this._registers.setRegister(baseName, newValueObject);
+        } else {
+            this._registers.setRegister(name, value);
+        }
     }
 
 

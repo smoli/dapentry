@@ -35,7 +35,7 @@ describe('Parser', () => {
 
     it('will return no tokens for an empty code', () => {
         expect(Parser.parseLine("")).to.deep.equal([])
-        expect(Parser.parseLine("                     ")).to.deep.equal([])
+        expect(Parser.parseLine("       \n\n\n\t\t\n\r       ")).to.deep.equal([])
     });
 
     it('will ignore all characters after #, except in strings', () => {

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -r ts-node/register --recursive test/**/*.ts",
+    "testArg": "mocha -r ts-node/register ",
     "coverage": "nyc npm run test",
+    "coverageArg": "nyc npm run testArg",
     "build": "webpack --config ./webpack.config.js",
     "watch": "webpack --config ./webpack.config.js --watch"
   },

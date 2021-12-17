@@ -20,7 +20,6 @@ export class Load extends Operation {
         this._setParam(this._target, value);
     }
 
-
     get value(): any {
         return this._getParam(this._value);
     }
@@ -28,7 +27,6 @@ export class Load extends Operation {
     set value(value: any) {
         this._setParam(this._value, value);
     }
-
 
     async execute(interpreter): Promise<any> {
         this.target = this.value;

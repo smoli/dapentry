@@ -1,15 +1,13 @@
 import {Parameter} from "../Parameter";
 
 export interface IInterpreterType {
-    type: "IInterpreterType";
     getValue(closure);
 }
 
 export class Point2Parameter implements IInterpreterType {
-    type: "IInterpreterType";
 
-    private _x:Parameter;
-    private _y:Parameter;
+    private readonly _x:Parameter;
+    private readonly _y:Parameter;
 
     constructor(x:Parameter, y:Parameter) {
         this._x = x;

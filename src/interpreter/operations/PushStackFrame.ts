@@ -1,5 +1,4 @@
 import {Operation} from "../Operation";
-import {Parameter} from "../Parameter";
 
 export class PushStackFrame extends Operation {
 
