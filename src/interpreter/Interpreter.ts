@@ -1,30 +1,11 @@
 import {Parameter} from "./Parameter";
 import {Operation} from "./Operation";
-import {Log} from "./operations/Log";
-import {Load} from "./operations/Load";
 import {Parser, TokenTypes} from "./Parser";
 import {DependencyTracker} from "./DependencyTracker";
-import {OperationFactory} from "./OperationFactory";
-import {Add} from "./operations/math/Add";
-import {Sub} from "./operations/math/Sub";
-import {Multiply} from "./operations/math/Multiply";
-import {Divide} from "./operations/math/Divide";
-import {Exponentiate} from "./operations/math/Exponentiate";
-import {JumpWhenNotZero} from "./operations/branching/JumpWhenNotZero";
+import {defaultOperationFactory, OperationFactory} from "./OperationFactory";
 import {Label} from "./operations/Label";
-import {Decrement} from "./operations/math/Decrement";
-import {JumpWhenNotEqual} from "./operations/branching/JumpWhenNotEqual";
 import {StackFrame} from "./StackFrame";
-import {PushStackFrame} from "./operations/PushStackFrame";
-import {PopStackFrame} from "./operations/PopStackFrame";
-import {Debug} from "./operations/Debug";
-import {Increment} from "./operations/math/Increment";
-import {JumpWhenLower} from "./operations/branching/JumpWhenLower";
-import {JumpWhenLowerEqual} from "./operations/branching/JumpWhenLowerEqual";
-import {JumpWhenGreater} from "./operations/branching/JumpWhenGreater";
-import {JumpWhenGreaterEqual} from "./operations/branching/JumpWhenGreaterEqual";
 import {Point2Parameter} from "./types/Point2Parameter";
-import {Jump} from "./operations/Jump";
 
 type Context = Node;
 
@@ -55,28 +36,7 @@ export class Interpreter {
 
 
     constructor() {
-        this._operationFactory = new OperationFactory();
-        this._operationFactory.addOperationClass("LOG", Log);
-        this._operationFactory.addOperationClass("DEBUG", Debug);
-        this._operationFactory.addOperationClass("LOAD", Load);
-        this._operationFactory.addOperationClass("ADD", Add);
-        this._operationFactory.addOperationClass("SUB", Sub);
-        this._operationFactory.addOperationClass("DEC", Decrement);
-        this._operationFactory.addOperationClass("INC", Increment);
-        this._operationFactory.addOperationClass("MUL", Multiply);
-        this._operationFactory.addOperationClass("DIV", Divide);
-        this._operationFactory.addOperationClass("EXP", Exponentiate);
-        this._operationFactory.addOperationClass("JMP", Jump);
-        this._operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
-        this._operationFactory.addOperationClass("JNE", JumpWhenNotEqual);
-        this._operationFactory.addOperationClass("JLT", JumpWhenLower);
-        this._operationFactory.addOperationClass("JLE", JumpWhenLowerEqual);
-        this._operationFactory.addOperationClass("JGT", JumpWhenGreater);
-        this._operationFactory.addOperationClass("JGE", JumpWhenGreaterEqual);
-        this._operationFactory.addOperationClass("PUSHSF", PushStackFrame);
-        this._operationFactory.addOperationClass("POPSF", PopStackFrame);
-        this._operationFactory.addOperationClass("___LBL___", Label);
-
+        this._operationFactory = defaultOperationFactory();
         this._currentFrame = new StackFrame(this._currentFrame);
     }
 
@@ -163,8 +123,6 @@ export class Interpreter {
         this._resetExecution();
         this.pushStack();
         const result = await this._run();
-
-
 
         // We do not pop the outer frame after our program is done,
         // so we can access the final state after execution
