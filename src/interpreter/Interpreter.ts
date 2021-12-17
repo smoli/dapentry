@@ -221,24 +221,33 @@ export class Interpreter {
     private parseLine(line: string): any {
         const tokens = Parser.parseLine(line);
 
-
-        // TODO: We need a better way of post processing tokens
-        //       I suspect, we'll get more types of data (array, ...)
         let opcode = null;
+
         const parts = tokens.map(token => {
-            if (token.type === TokenTypes.OPCODE) {
-                opcode = token.value;
-                return null;
-            } else if (token.type === TokenTypes.LABEL) {
-                opcode = "___LBL___";
-                return new Parameter(false, token.value);
-            } else if (token.type === TokenTypes.POINT) {
-                return new Parameter(false, new Point2Parameter(
-                    new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
-                    new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
-                ))
-            } else {
-                return new Parameter(token.type === TokenTypes.REGISTER, token.value);
+
+            switch(token.type) {
+                case TokenTypes.OPCODE:
+                    opcode = token.value;
+                    return null;
+
+                case TokenTypes.REGISTER:   //pass through
+                case TokenTypes.NUMBER:     //pass through
+                case TokenTypes.STRING:
+                    return new Parameter(token.type === TokenTypes.REGISTER, token.value)
+
+                case TokenTypes.LABEL:
+                    opcode = "___LBL___";
+                    return new Parameter(false, token.value);
+
+                case TokenTypes.POINT:
+                    return new Parameter(false, new Point2Parameter(
+                        new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
+                        new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
+                    ))
+
+                case TokenTypes.OTHER:
+                    break;
+
             }
         }).filter(p => !!p);
 
