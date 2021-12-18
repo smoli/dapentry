@@ -48,25 +48,35 @@ describe('Stackframes', () => {
     xit("enable us to do recursion", async () => {
 
         const code = `
-                PUSH r1 5                
-            FIB:
+                LOAD bx 5                
+            FACT:
                 PUSHSF
-                JEQ r1 1 ONE
-                JEQ r1 2 TWO
-                JMP ELSE    
-            ONE:
-                ADD r2 1
-                JMP NEXT
+                JGT bx 1 COMPUTE
                 
-            TWO:
-                ADD r2 2
-                JMP NEXT
-            
-            ELSE:
+            BACKFACT:                
+                LOAD r1                             
+            RET:
+                POPSF r1 
+                JMP END
                 
-                
-                
+            COMPUTE:
+                PUSHSF
+                DEC bx
+                JMP FACT
+                MUL r2 r1                               
+                POPSF r2
+                JMP BACKFACT
+              
+            END:
         `
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(1);
+        // @ts-ignore
+        console.log(i._stack)
 
 
     });

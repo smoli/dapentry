@@ -19,6 +19,7 @@ import {JumpWhenGreaterEqual} from "./operations/branching/JumpWhenGreaterEqual"
 import {PushStackFrame} from "./operations/PushStackFrame";
 import {PopStackFrame} from "./operations/PopStackFrame";
 import {Label} from "./operations/Label";
+import {SetPC} from "./operations/SetPC";
 
 export class OperationFactory {
 
@@ -57,6 +58,7 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("MUL", Multiply);
     operationFactory.addOperationClass("DIV", Divide);
     operationFactory.addOperationClass("EXP", Exponentiate);
+    operationFactory.addOperationClass("SETPC", SetPC);
     operationFactory.addOperationClass("JMP", Jump);
     operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
     operationFactory.addOperationClass("JNE", JumpWhenNotEqual);

@@ -14,6 +14,26 @@ interface ContextDictionary {
 }
 
 
+class GlobalStackFrame extends StackFrame {
+
+    private _data: { [key: string]: any } = {
+        pc: -1
+    }
+
+    getRegister(name: string): any {
+        return this._data[name]
+    }
+
+    getPC():number {
+        return this._data.pc
+    }
+
+    setPC(value: number) {
+        this._data.pc = value;
+    }
+
+}
+
 export class Interpreter {
 
     private contexts: ContextDictionary = {};
@@ -32,12 +52,13 @@ export class Interpreter {
     private _operationFactory: OperationFactory;
 
     private _programCounter: number = 0;
+    private _globals: GlobalStackFrame = new GlobalStackFrame();
     private _labels: { [key: string]: number } = {};
 
 
     constructor() {
         this._operationFactory = defaultOperationFactory();
-        this._currentFrame = new StackFrame(this._currentFrame);
+        this._currentFrame = this._globals;
     }
 
     public addOperation(opcode: string, OpClass: typeof Operation): void {
@@ -56,7 +77,7 @@ export class Interpreter {
         usedRegisters.forEach(name => this._dependencies.addDependency(name, this._currentFrame));
     }
 
-    public popStack(returnRegisterName:string = null, components:Array<string> = null) {
+    public popStack(returnRegisterName: string = null, components: Array<string> = null) {
         let returnValue;
         if (returnRegisterName) {
             if (components) {
@@ -109,7 +130,7 @@ export class Interpreter {
         this._labels = this._prepareLabels();
         this._stack = [];
         this._stopped = false;
-        this._currentFrame = null;
+        this._currentFrame = this._globals;
 
     }
 
@@ -127,6 +148,7 @@ export class Interpreter {
     public gotoLabel(labelName) {
         if (this._labels[labelName]) {
             this._programCounter = this._labels[labelName];
+            this._globals.setPC(this._programCounter);
         } else {
             throw new Error(`Unknown label "${labelName}`);
         }
@@ -149,10 +171,16 @@ export class Interpreter {
         return result;
     }
 
+    public setPC(value:number) {
+        this._globals.setPC(value);
+    }
+
     public async _run(): Promise<any> {
         try {
             while (this._programCounter < this._program.length - 1) {
+                this._programCounter = this._globals.getPC();
                 this._programCounter++;
+                this._globals.setPC(this._programCounter);
                 this._currentInstruction = this._program[this._programCounter];
                 this._currentInstruction.setClosure(this._currentFrame);
 
@@ -200,7 +228,7 @@ export class Interpreter {
 
         const parts = tokens.map(token => {
 
-            switch(token.type) {
+            switch (token.type) {
                 case TokenTypes.OPCODE:
                     opcode = token.value;
                     return null;

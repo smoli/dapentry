@@ -7,13 +7,9 @@ import {Interpreter} from "../../src/interpreter/Interpreter";
 describe('Interpreter', () => {
 
     it('can run a simple program', () => {
-        const code = `
-        
-        
+        const code = `               
             LOG "Hello World"
-            
-            
-            
+                                    
         `;
 
         const log = sinon.spy(console, "log")
@@ -22,11 +18,34 @@ describe('Interpreter', () => {
         i.parse(code);
         i.run();
 
-        expect(log.args[0][0]).to.equal('Hello World')
-    });
+        expect(log.args[0][0]).to.equal('Hello World');
 
-    after(() => {
         // @ts-ignore
         console.log.restore();
-    })
+    });
+
+    it('programs have access to the program counter', async () => {
+
+
+        const code = `
+                LOAD r1 200  # 0
+                LOAD r2 pc   # 1
+                DEC r1       # 2
+                SETPC 5      # 3  will affect pc before it is incremented               
+                DEC r1       # 4                  
+                DEC r1       # 5
+                LOAD r3 pc   # 6                      
+        `;
+
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(199)
+        expect(i.getRegister("r2")).to.equal(1)
+        expect(i.getRegister("r3")).to.equal(6)
+
+    });
+
 });
