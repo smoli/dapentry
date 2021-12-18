@@ -56,9 +56,26 @@ export class Interpreter {
         usedRegisters.forEach(name => this._dependencies.addDependency(name, this._currentFrame));
     }
 
-    public popStack() {
+    public popStack(returnRegisterName:string = null, components:Array<string> = null) {
+        let returnValue;
+        if (returnRegisterName) {
+            if (components) {
+                returnValue = this._currentFrame.getRegisterWithComponents(returnRegisterName, components)
+            } else {
+                returnValue = this._currentFrame.getRegister(returnRegisterName)
+            }
+        }
+
         this._closeCurrentFrame();
         this._currentFrame = this._stack.pop();
+
+        if (returnRegisterName) {
+            if (components) {
+                this._currentFrame.setRegisterWithComponents(returnRegisterName, components, returnValue);
+            } else {
+                this._currentFrame.setRegister(returnRegisterName, returnValue);
+            }
+        }
     }
 
     public addContext(name: string, context: Context): void {

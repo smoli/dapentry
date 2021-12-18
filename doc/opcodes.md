@@ -38,19 +38,19 @@ Everything after `#` is ignored and thus can be used to create comments.
 
 ### General/Controlflow
 
-| Opcode | Arguments            | Description                                                                        | 
-|--------|----------------------|------------------------------------------------------------------------------------|
-| LOAD   | target value         | load a value into target register                                                  |
-| JNZ    | test label           | jump to label if test is not zero                                                  |
-| JNE    | test reference label | jump to label if test is not equal reference                                       |
-| JLT    | test reference label | jump to label if test is lower than reference                                      |
-| JLE    | test reference label | jump to label if test is lower or equal reference                                  |
-| JGT    | test reference label | jump to label if test is greater reference                                         |
-| JGE    | test reference label | jump to label if test is greater or equal reference                                |
-| LOG    | message              | Write something on the console                                                     |
-| PUSHSF |                      | Push a new frame on the stack and make it the current stack frame                  |
-| POPSF  |                      | Pop the topmost frame from the stack and make it the current stack frame           |
-| DEBUG  |                      | stops execution without touching the instruction counter. Execution can be resumed |   
+| Opcode | Arguments            | Description                                                                                                                          | 
+|--------|----------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| LOAD   | target value         | load a value into target register                                                                                                    |
+| JNZ    | test label           | jump to label if test is not zero                                                                                                    |
+| JNE    | test reference label | jump to label if test is not equal reference                                                                                         |
+| JLT    | test reference label | jump to label if test is lower than reference                                                                                        |
+| JLE    | test reference label | jump to label if test is lower or equal reference                                                                                    |
+| JGT    | test reference label | jump to label if test is greater reference                                                                                           |
+| JGE    | test reference label | jump to label if test is greater or equal reference                                                                                  |
+| LOG    | message              | Write something on the console                                                                                                       |
+| PUSHSF |                      | Push a new frame on the stack and make it the current stack frame                                                                    |
+| POPSF  | \[return\]           | Pop the topmost frame from the stack and make it the current stack frame. Optionally one register to write data to the parent frame. |
+| DEBUG  |                      | stops execution without touching the instruction counter. Execution can be resumed                                                   |   
 
 ### Math
 

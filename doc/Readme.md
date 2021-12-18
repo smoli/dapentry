@@ -16,6 +16,8 @@ The vm uses "infinite" virtual registers. There is no concept of an accumulator.
 
 ## Stack frames
 
+It has no classic stack. It has stack frames instead.
+
 Stack frames are used to setup scopes. Use `PUSHSF` and `POPSF` to push and pop frames onto and from the stack. Access
 to registers on the top frame is delegated to frames lower on the stack, if the top frame does not store the requested
 register.
