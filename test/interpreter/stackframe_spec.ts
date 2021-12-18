@@ -45,40 +45,4 @@ describe('Stackframes', () => {
 
     })
 
-    xit("enable us to do recursion", async () => {
-
-        const code = `
-                LOAD bx 5                
-            FACT:
-                PUSHSF
-                JGT bx 1 COMPUTE
-                
-            BACKFACT:                
-                LOAD r1                             
-            RET:
-                POPSF r1 
-                JMP END
-                
-            COMPUTE:
-                PUSHSF
-                DEC bx
-                JMP FACT
-                MUL r2 r1                               
-                POPSF r2
-                JMP BACKFACT
-              
-            END:
-        `
-
-        const i = new Interpreter();
-        i.parse(code);
-        await i.run();
-
-        expect(i.getRegister("r1")).to.equal(1);
-        // @ts-ignore
-        console.log(i._stack)
-
-
-    });
-
 });

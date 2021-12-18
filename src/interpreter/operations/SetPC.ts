@@ -11,7 +11,7 @@ export class SetPC extends Operation {
     }
 
     async execute(interpreter): Promise<any> {
-        interpreter.setPC(this._label.value);
+        interpreter.setPC(this._getParam(this._label));
     }
 
 }

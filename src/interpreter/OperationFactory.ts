@@ -20,6 +20,9 @@ import {PushStackFrame} from "./operations/PushStackFrame";
 import {PopStackFrame} from "./operations/PopStackFrame";
 import {Label} from "./operations/Label";
 import {SetPC} from "./operations/SetPC";
+import {Call} from "./operations/Call";
+import {Return} from "./operations/Return";
+import {JumpWhenEqual} from "./operations/branching/JumpWhenEqual";
 
 export class OperationFactory {
 
@@ -60,7 +63,10 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("EXP", Exponentiate);
     operationFactory.addOperationClass("SETPC", SetPC);
     operationFactory.addOperationClass("JMP", Jump);
+    operationFactory.addOperationClass("CALL", Call);
+    operationFactory.addOperationClass("RET", Return);
     operationFactory.addOperationClass("JNZ", JumpWhenNotZero);
+    operationFactory.addOperationClass("JEQ", JumpWhenEqual);
     operationFactory.addOperationClass("JNE", JumpWhenNotEqual);
     operationFactory.addOperationClass("JLT", JumpWhenLower);
     operationFactory.addOperationClass("JLE", JumpWhenLowerEqual);

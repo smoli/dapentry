@@ -2,7 +2,6 @@ import {RegisterStore} from "./RegisterStore";
 import {Operation} from "./Operation";
 import {DependencyTracker} from "./DependencyTracker";
 import {Interpreter} from "./Interpreter";
-import base = Mocha.reporters.base;
 
 export class StackFrame {
 
@@ -33,6 +32,10 @@ export class StackFrame {
         }
 
         return registers;
+    }
+
+    set parent(parent: StackFrame) {
+        this._parent = parent;
     }
 
     public addOperations(...operations: Array<Operation>): void {

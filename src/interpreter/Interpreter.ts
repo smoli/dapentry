@@ -51,7 +51,6 @@ export class Interpreter {
     private _stopped: boolean = false;
     private _operationFactory: OperationFactory;
 
-    private _programCounter: number = 0;
     private _globals: GlobalStackFrame = new GlobalStackFrame();
     private _labels: { [key: string]: number } = {};
 
@@ -65,11 +64,17 @@ export class Interpreter {
         this._operationFactory.addOperationClass(opcode, OpClass);
     }
 
-    public pushStack() {
+    public pushStack(newFrame?: StackFrame) {
         if (this._currentFrame) {
             this._stack.push(this._currentFrame);
         }
-        this._currentFrame = new StackFrame(this._currentFrame);
+
+        if (newFrame) {
+            newFrame.parent = this._currentFrame;
+            this._currentFrame = newFrame;
+        } else {
+            this._currentFrame = new StackFrame(this._currentFrame);
+        }
     }
 
     private _closeCurrentFrame(): void {
@@ -77,24 +82,26 @@ export class Interpreter {
         usedRegisters.forEach(name => this._dependencies.addDependency(name, this._currentFrame));
     }
 
-    public popStack(returnRegisterName: string = null, components: Array<string> = null) {
+    public popStack(returnRegister: Parameter, receiveRegister: Parameter = null) {
         let returnValue;
-        if (returnRegisterName) {
-            if (components) {
-                returnValue = this._currentFrame.getRegisterWithComponents(returnRegisterName, components)
+        const lclReceiver = receiveRegister ? receiveRegister : returnRegister;
+
+        if (returnRegister) {
+            if (returnRegister.components) {
+                returnValue = this._currentFrame.getRegisterWithComponents(returnRegister.name, returnRegister.components)
             } else {
-                returnValue = this._currentFrame.getRegister(returnRegisterName)
+                returnValue = this._currentFrame.getRegister(returnRegister.name)
             }
         }
 
         this._closeCurrentFrame();
         this._currentFrame = this._stack.pop();
 
-        if (returnRegisterName) {
-            if (components) {
-                this._currentFrame.setRegisterWithComponents(returnRegisterName, components, returnValue);
+        if (lclReceiver) {
+            if (lclReceiver.components) {
+                this._currentFrame.setRegisterWithComponents(lclReceiver.name, lclReceiver.components, returnValue);
             } else {
-                this._currentFrame.setRegister(returnRegisterName, returnValue);
+                this._currentFrame.setRegister(lclReceiver.name, returnValue);
             }
         }
     }
@@ -126,7 +133,7 @@ export class Interpreter {
     private _resetExecution() {
         this._executed = false;
         this._currentInstruction = null;
-        this._programCounter = -1;
+        this.setPC(-1);
         this._labels = this._prepareLabels();
         this._stack = [];
         this._stopped = false;
@@ -147,15 +154,14 @@ export class Interpreter {
 
     public gotoLabel(labelName) {
         if (this._labels[labelName]) {
-            this._programCounter = this._labels[labelName];
-            this._globals.setPC(this._programCounter);
+            this._globals.setPC(this._labels[labelName]);
         } else {
             throw new Error(`Unknown label "${labelName}`);
         }
     }
 
     public setLabel(labelName) {
-        this._labels[labelName] = this._programCounter;
+        this._labels[labelName] = this.pc;
     }
 
     public async run(): Promise<any> {
@@ -175,13 +181,22 @@ export class Interpreter {
         this._globals.setPC(value);
     }
 
+    public get pc():number {
+        return this._globals.getPC();
+    }
+
     public async _run(): Promise<any> {
         try {
-            while (this._programCounter < this._program.length - 1) {
-                this._programCounter = this._globals.getPC();
-                this._programCounter++;
-                this._globals.setPC(this._programCounter);
-                this._currentInstruction = this._program[this._programCounter];
+            while (true) {
+                let programCounter = this._globals.getPC();
+                programCounter++;
+
+                if(programCounter >= this._program.length) {
+                    break;
+                }
+
+                this._globals.setPC(programCounter);
+                this._currentInstruction = this._program[programCounter];
                 this._currentInstruction.setClosure(this._currentFrame);
 
                 // This unrolls loops and may lead to large lists of operation references

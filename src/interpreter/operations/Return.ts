@@ -1,7 +1,8 @@
 import {Operation} from "../Operation";
 import {Parameter} from "../Parameter";
+import {FunctionStackFrame} from "../FunctionStackFrame";
 
-export class PopStackFrame extends Operation {
+export class Return extends Operation {
 
     private readonly _returnRegister:Parameter = null;
 
@@ -16,11 +17,17 @@ export class PopStackFrame extends Operation {
     }
 
     async execute(interpreter): Promise<any> {
+        if (!(this.closure instanceof FunctionStackFrame)) {
+            throw new Error("RET: This is not inside a called function")
+        }
+        const returnPoint = (this.closure as FunctionStackFrame).returnPoint;
+        const receiver = (this.closure as FunctionStackFrame).receiver;
         if (this._returnRegister) {
-            interpreter.popStack(this._returnRegister);
+            interpreter.popStack(this._returnRegister, receiver);
         } else {
             interpreter.popStack();
         }
+        interpreter.setPC(returnPoint);
     }
 
 }

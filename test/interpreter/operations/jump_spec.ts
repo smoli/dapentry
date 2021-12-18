@@ -11,7 +11,7 @@ describe('Jumps', () => {
             LOAD r1 10      
             JMP LABEL                   
             INC  r1
-        LABEL:
+        LABEL:            
             INC r1          
         `;
 
