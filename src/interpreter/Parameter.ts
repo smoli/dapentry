@@ -27,7 +27,7 @@ export class Parameter {
 
     get value(): any {
         if (this._isRegister) {
-            throw new Array(`Parameter "${this._valueOrName}" references a register`);
+            throw new Error(`Parameter "${this._valueOrName}" references a register`);
         }
         return this._valueOrName
     }
