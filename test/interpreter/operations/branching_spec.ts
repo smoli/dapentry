@@ -135,8 +135,8 @@ describe('Branching is done using jumps', () => {
 
         const i = new Interpreter();
         i.parse(code);
-        expect(() => {
-            i.run();
+        expect(async () => {
+            await i.run();
         }).to.throw;
 
     });
