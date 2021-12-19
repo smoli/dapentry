@@ -24,6 +24,20 @@ describe('Interpreter', () => {
         console.log.restore();
     });
 
+    it("can receive values to preload registers", async ()=> {
+       const code = `
+            ADD r2 r1 100
+       `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run({ r1: 100 });
+
+        expect(i.getRegister("r1")).to.equal(100);
+        expect(i.getRegister("r2")).to.equal(200);
+
+    });
+
     it('programs have access to the program counter', async () => {
 
 

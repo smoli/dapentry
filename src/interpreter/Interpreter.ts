@@ -7,13 +7,6 @@ import {Label} from "./operations/Label";
 import {StackFrame} from "./StackFrame";
 import {Point2Parameter} from "./types/Point2Parameter";
 
-type Context = Node;
-
-interface ContextDictionary {
-    [key: string]: Context
-}
-
-
 class GlobalStackFrame extends StackFrame {
 
     private _data: { [key: string]: any } = {
@@ -36,14 +29,11 @@ class GlobalStackFrame extends StackFrame {
 
 export class Interpreter {
 
-    private contexts: ContextDictionary = {};
-
     private _stack: Array<StackFrame> = [];
     private _currentFrame: StackFrame;
     private _program: Array<Operation> = [];
 
     private _executed: boolean = false;
-    private _context: Context = null;
 
     private _dependencies: DependencyTracker = new DependencyTracker();
 
@@ -111,14 +101,6 @@ export class Interpreter {
         }
     }
 
-    public addContext(name: string, context: Context): void {
-        this.contexts[name] = context;
-    }
-
-    public switchContext(name: string): void {
-        this._context = this.contexts[name];
-    }
-
     public getRegister(name: string): any {
         return this._currentFrame.getRegister(name);
     }
@@ -141,6 +123,7 @@ export class Interpreter {
         this._currentInstruction = null;
         this.setPC(-1);
         this._labels = this._prepareLabels();
+        this._globals = new GlobalStackFrame();
         this._stack = [];
         this._stopped = false;
         this._currentFrame = this._globals;
@@ -170,9 +153,17 @@ export class Interpreter {
         this._labels[labelName] = this.pc;
     }
 
-    public async run(): Promise<any> {
+    public async run(registers?: { [key: string]: any}): Promise<any> {
         this._resetExecution();
         this.pushStack();
+
+        if (registers) {
+            Object.keys(registers)
+                .forEach(name => {
+                    this._currentFrame.setRegister(name, registers[name])
+                })
+        }
+
         const result = await this._run();
 
         // We do not pop the outer frame after our program is done,
