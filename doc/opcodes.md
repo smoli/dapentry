@@ -44,7 +44,7 @@ Using labels and `CALL` and `RET` you can make function calls:
     END:
 ```
 
-Right now function calls **do not support update after execution**.
+Function calls do support update after execution.
 
 ### Recursion
 
@@ -82,6 +82,8 @@ Right now function calls **do not support update after execution**.
 ```
 
 This produces the 15th entry of the fibonacci sequence in `res`.
+
+Update after execution **does not support update after execution**.
 
 ## Whitespace and comments
 

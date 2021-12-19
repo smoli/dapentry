@@ -29,9 +29,10 @@ describe('Call and Return', () => {
 
         expect(i.getRegister("r1")).to.equal(103);
         expect(i.getRegister("r3")).to.equal(104);
-        //
-        // await i.updateRegister("r1", 200);
-        // expect(i.getRegister("r1")).to.equal(203);
+
+        await i.updateRegister("r1", 200);
+        expect(i.getRegister("r1")).to.equal(203);
+        expect(i.getRegister("r3")).to.equal(204);
 
     });
 
@@ -80,7 +81,7 @@ describe('Call and Return', () => {
         }
 
         expect(i.getRegister("res")).to.equal(fib(5));
-        //
+
         // await i.updateRegister("r1", 8);
         // expect(i.getRegister("res")).to.equal(fib(8));
 

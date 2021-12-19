@@ -1,5 +1,6 @@
 import {Operation} from "../Operation";
 import {Parameter} from "../Parameter";
+import {Interpreter} from "../Interpreter";
 
 export class PopStackFrame extends Operation {
 

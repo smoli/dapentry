@@ -83,6 +83,11 @@ export class Interpreter {
     }
 
     public popStack(returnRegister: Parameter, receiveRegister: Parameter = null) {
+
+        if (this._executed) {
+            return;
+        }
+
         let returnValue;
         const lclReceiver = receiveRegister ? receiveRegister : returnRegister;
 
@@ -125,7 +130,8 @@ export class Interpreter {
             const deps: Array<StackFrame> = this._dependencies.getDependencies(name);
 
             for (const dep of deps) {
-                await dep.update(name, value, this);
+                let lValue = this._currentFrame.getRegister(name);
+                await dep.update(name, lValue, this);
             }
         }
     }

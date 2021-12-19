@@ -7,7 +7,7 @@ export class StackFrame {
 
     private _registers: RegisterStore = new RegisterStore();
     private _parent: StackFrame = null;
-    private _operations: Array<Operation> = [];
+    protected _operations: Array<Operation> = [];
     private _currentInstruction: Operation = null;
     private _dependencies: DependencyTracker = new DependencyTracker();
     private _updating: boolean = false;
@@ -28,7 +28,7 @@ export class StackFrame {
                 }
             })
 
-            this._parent = null;
+            // this._parent = null;
         }
 
         return registers;
@@ -36,6 +36,10 @@ export class StackFrame {
 
     set parent(parent: StackFrame) {
         this._parent = parent;
+    }
+
+    get parent() {
+        return this._parent;
     }
 
     public addOperations(...operations: Array<Operation>): void {

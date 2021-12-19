@@ -1,5 +1,6 @@
 import {StackFrame} from "./StackFrame";
 import {Parameter} from "./Parameter";
+import {Interpreter} from "./Interpreter";
 
 export class FunctionStackFrame extends StackFrame {
 
@@ -20,4 +21,14 @@ export class FunctionStackFrame extends StackFrame {
         return this._receiver;
     }
 
+
+    async update(name: string, value: any, interpreter: Interpreter): Promise<any> {
+        this.setRegister(name, value);
+        for (const op of this._operations) {
+            const saveClosure = op.closure;
+            op.setClosure(this)
+            await op.update(name, interpreter);
+            op.setClosure(saveClosure);
+        }
+    }
 }
