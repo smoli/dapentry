@@ -22,5 +22,50 @@ describe('Array', () => {
         expect(i.getRegister("r1").length).to.equal(5);
         expect(i.getRegister("r1")[1]).to.equal(150);
         expect(i.getRegister("r2")).to.equal(300);
-    })
+    });
+
+    it("can be iterated over", async () => {
+        const code = `
+            LOAD a [1 2 3 4 5 6]
+            LOAD r 0
+                        
+            ITER i a
+          LABEL:
+            ADD r i.value
+            NEXT i
+            JINE i LABEL
+            MUL r 2                 
+       `;
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        await i.run();
+
+        expect(i.getRegister("r")).to.equal(2 * (1 + 2 + 3 + 4 + 5 + 6))
+
+    });
+
+    it("passed into the interpreter", async () => {
+        const code = `
+            LOAD r 0
+                        
+            ITER i a
+          LABEL:
+            ADD r i.value
+            NEXT i
+            JINE i LABEL
+            MUL r 2                 
+       `;
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        await i.run({
+            a: [1, 2, 3, 4, 5, 6]
+        });
+
+        expect(i.getRegister("r")).to.equal(2 * (1 + 2 + 3 + 4 + 5 + 6))
+
+    });
 });

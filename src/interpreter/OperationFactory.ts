@@ -23,6 +23,9 @@ import {SetPC} from "./operations/SetPC";
 import {Call} from "./operations/Call";
 import {Return} from "./operations/Return";
 import {JumpWhenEqual} from "./operations/branching/JumpWhenEqual";
+import {Iterator} from "./operations/Iterator";
+import {IteratorNext} from "./operations/IteratorNext";
+import {IteratorJumpWhenNotDone} from "./operations/IteratorJumpWhenNotDone";
 
 export class OperationFactory {
 
@@ -74,6 +77,9 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("JGE", JumpWhenGreaterEqual);
     operationFactory.addOperationClass("PUSHSF", PushStackFrame);
     operationFactory.addOperationClass("POPSF", PopStackFrame);
+    operationFactory.addOperationClass("ITER", Iterator);
+    operationFactory.addOperationClass("NEXT", IteratorNext);
+    operationFactory.addOperationClass("JINE", IteratorJumpWhenNotDone);
     operationFactory.addOperationClass("___LBL___", Label);
 
     return operationFactory;

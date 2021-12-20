@@ -1,5 +1,6 @@
 import {Parameter} from "../Parameter";
 import {IInterpreterType} from "./IInterpreterType";
+import {StackFrame} from "../StackFrame";
 
 export class ArrayParameter implements IInterpreterType {
 
@@ -15,6 +16,14 @@ export class ArrayParameter implements IInterpreterType {
         } else {
             return param.value;
         }
+    }
+
+    get length():number {
+        return this._value.length;
+    }
+
+    public getAtIndex(index:number, closure: StackFrame):any {
+        return this._getValue(this._value[index], closure);
     }
 
     public getValue(closure) {
