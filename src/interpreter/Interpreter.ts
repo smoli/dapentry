@@ -6,6 +6,7 @@ import {defaultOperationFactory, OperationFactory} from "./OperationFactory";
 import {Label} from "./operations/Label";
 import {StackFrame} from "./StackFrame";
 import {Point2Parameter} from "./types/Point2Parameter";
+import {ArrayParameter} from "./types/ArrayParameter";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -258,6 +259,26 @@ export class Interpreter {
                     return new Parameter(false, new Point2Parameter(
                         new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
                         new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
+                    ))
+
+                case TokenTypes.ARRAY:
+                    return new Parameter(false, new ArrayParameter(
+                        (token.value as Array<any>).map(token => {
+                            switch (token.type) {
+                                case TokenTypes.POINT:
+                                    return new Parameter(false, new Point2Parameter(
+                                        new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
+                                        new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
+                                    ))
+
+                                case TokenTypes.ARRAY:
+                                    return null;
+
+                                default:
+                                    return new Parameter(token.type === TokenTypes.REGISTER, token.value)
+                            }
+
+                        })
                     ))
 
                 case TokenTypes.OTHER:

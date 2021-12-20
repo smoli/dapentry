@@ -7,6 +7,7 @@ export enum TokenTypes {
     STRING,
     LABEL,
     POINT,
+    ARRAY,
     OTHER
 }
 
@@ -28,7 +29,7 @@ export class Parser {
 
 }
 
-pegParser = generate(`
+let grammar = `
 {
   function flatten(stuff) {
     return stuff.map(a => a.filter(a => a != null)).map(a => a[0]) ;
@@ -36,28 +37,29 @@ pegParser = generate(`
 }
   Expression "Expression"
       = exp:(Label/Operation/Comment) _ Comment? {
-      \treturn exp
+      return exp
       }
       
   Operation "Operation"
-  \t= exp:Opcode args:(_ ArgumentOrTuple)* {
-      \treturn [exp, ...flatten(args)]
+  = exp:Opcode args:(_ ArgumentOrTuple)* {
+      return [exp, ...flatten(args)]
       }
 
   ArgumentOrTuple "Argument or Tuple"
-      = aot:(Argument/Tuple) {
-      \treturn aot
+      = aot:(Argument/Tuple/Array) {
+      return aot
       }
 
   Argument "Argument"
       = arg:(Register/Number/String) {
-      \treturn arg
+      return arg
       }
 
-  Register "Register"
+
+   Register "Register"
       = reg:([a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9]*) {
-      \treturn {
-        \ttype: ${TokenTypes.REGISTER},
+      return {
+        type: "TT_REGISTER",
             value: text()
             }
       }
@@ -65,8 +67,8 @@ pegParser = generate(`
       
       
   Comment "Comment"
-  \t= "#" .* {
-    \treturn null
+  = "#" .* {
+    return null
     } 
 
   Number "Number"
@@ -74,38 +76,53 @@ pegParser = generate(`
         /*let n = num.join("");
         if (dot) n += "." + dot[1].join("");        
         if (sign) n = sign + n;*/
-        return { type: ${TokenTypes.NUMBER}, value: Number(text()) }
+        return { type: "TT_NUMBER", value: Number(text()) }
       }
       
   String "String"
-  \t =  '"' string:StringChars* '"' {
-     \treturn { type: ${TokenTypes.STRING}, value: string.join("") }
+   =  '"' string:StringChars* '"' {
+     return { type: "TT_STRING", value: string.join("") }
      }
      
   StringChars
-  \t= [^'"'\\n]
+  = [^'"'\\n]
 
   Tuple "Tuple"
       = "("_ args:(_ Argument)* _ ")" {
-      \treturn { type: ${TokenTypes.POINT}, value: flatten(args) }
+      return { type: "TT_POINT", value: flatten(args) }
+      }
+      
+      
+      
+  Array "Array"
+      = "["_ args:(_ ArgumentOrTuple)* _ "]" {
+      return { type: "TT_ARRAY", value: flatten(args) }
       }
       
   Opcode "Opcode"
       = [A-Z][A-Z0-9]+ {
-      	return { type: ${TokenTypes.OPCODE}, value: text() }
+      	return { type: "TT_OPCODE", value: text() }
       }
 
   Label "Label"
       = label:([A-Z0-9]+)":" {
-      \treturn [{
-        \ttype: ${TokenTypes.LABEL},
+      return [{
+        type: "TT_LABEL",
             value: label.join("")
         }]
       }     
 
   _ "whitespace"
-    = [\\t ]* {
-    \treturn null
+    = [\t ]* {
+    return null
     }
     
-`)
+`
+
+Object.keys(TokenTypes)
+    .forEach(key => {
+        grammar = grammar.replace(new RegExp(`"TT_${TokenTypes[key]}"`, "g"), key)
+    })
+
+
+pegParser = generate(grammar)
