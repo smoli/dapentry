@@ -25,9 +25,4 @@ export class Log extends Operation {
         this.closure.setRegister("debug-runtime", "DEBUG")
     }
 
-    async update(registerName, interpreter) {
-        dbg(interpreter.getRegister(registerName));
-    }
-
-
 }

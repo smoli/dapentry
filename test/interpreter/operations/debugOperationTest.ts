@@ -27,7 +27,6 @@ describe('Log', () => {
             LOG "Hello World"            
         `;
 
-
         const log = sinon.spy(console, "log")
 
         const i = new Interpreter();
@@ -35,9 +34,6 @@ describe('Log', () => {
         await i.run();
 
         expect(log.args[0][0]).to.equal('Hello World');
-
-        await i.updateRegister("debug-runtime", "UPDATED")
-        expect(log.args[1][0]).to.equal('UPDATED');
     });
 
     afterEach(() => {

@@ -73,4 +73,27 @@ describe('Array', () => {
         expect(i.getRegister("r")).to.equal(2 * (1 + 2 + 3 + 4 + 5 + 6))
 
     });
+
+    xit("iterator value in point", async () => {
+        const code = `
+            LOAD ar [1 2 3]
+            
+            ITER i ar
+           LOOP:
+            LOAD r1 (i.value 1)
+            LOAD r2 i.value
+            NEXT i
+            JINE i LOOP
+            
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        await i.run();
+
+        expect(i.getRegister("r1").x).to.equal(3)
+        expect(i.getRegister("r2")).to.equal(3)
+
+    })
 });

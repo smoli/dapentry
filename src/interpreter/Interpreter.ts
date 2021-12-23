@@ -1,7 +1,6 @@
 import {Parameter} from "./Parameter";
 import {Operation} from "./Operation";
 import {Parser, TokenTypes} from "./Parser";
-import {DependencyTracker} from "./DependencyTracker";
 import {defaultOperationFactory, OperationFactory} from "./OperationFactory";
 import {Label} from "./operations/Label";
 import {StackFrame} from "./StackFrame";
@@ -36,8 +35,6 @@ export class Interpreter {
 
     private _executed: boolean = false;
 
-    private _dependencies: DependencyTracker = new DependencyTracker();
-
     private _currentInstruction: Operation = null;
     private _stopped: boolean = false;
     private _operationFactory: OperationFactory;
@@ -68,11 +65,6 @@ export class Interpreter {
         }
     }
 
-    private _closeCurrentFrame(): void {
-        const usedRegisters = this._currentFrame.close();
-        usedRegisters.forEach(name => this._dependencies.addDependency(name, this._currentFrame));
-    }
-
     public popStack(returnRegister: Parameter, receiveRegister: Parameter = null) {
 
         if (this._executed) {
@@ -90,7 +82,6 @@ export class Interpreter {
             }
         }
 
-        this._closeCurrentFrame();
         this._currentFrame = this._stack.pop();
 
         if (lclReceiver) {
@@ -104,19 +95,6 @@ export class Interpreter {
 
     public getRegister(name: string): any {
         return this._currentFrame.getRegister(name);
-    }
-
-    public async updateRegister(name: string, value: any): Promise<any> {
-        this._currentFrame.setRegister(name, value);
-
-        if (this._executed) {
-            const deps: Array<StackFrame> = this._dependencies.getDependencies(name);
-
-            for (const dep of deps) {
-                let lValue = this._currentFrame.getRegister(name);
-                await dep.update(name, lValue, this);
-            }
-        }
     }
 
     private _resetExecution() {
@@ -165,14 +143,11 @@ export class Interpreter {
                 })
         }
 
-        const result = await this._run();
-
         // We do not pop the outer frame after our program is done,
         // so we can access the final state after execution
         // UNCLEAR: We will still only be able to access the outer frame
         //          will this be enough?
-        this._closeCurrentFrame();
-        return result;
+        return await this._run();
     }
 
     public setPC(value:number) {
@@ -196,10 +171,6 @@ export class Interpreter {
                 this._globals.setPC(programCounter);
                 this._currentInstruction = this._program[programCounter];
                 this._currentInstruction.setClosure(this._currentFrame);
-
-                // This unrolls loops and may lead to large lists of operation references
-                this._currentFrame.addOperations(this._currentInstruction);
-                this._currentFrame.setCurrentInstruction(this._currentInstruction)
                 await this._currentInstruction.execute(this);
 
                 if (this._stopped) {
