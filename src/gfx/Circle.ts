@@ -13,7 +13,7 @@ export class Circle extends Operation {
     }
 
     get center():any {
-        return this._getParam(this._center)
+        return this._center.finalized(this.closure)
     }
 
     set center(value) {
