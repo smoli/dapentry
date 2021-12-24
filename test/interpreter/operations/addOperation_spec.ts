@@ -32,4 +32,20 @@ describe('Add', () => {
         expect(i.getRegister("r1")).to.equal(30);
 
     });
+
+    it("concatenates strings", async () => {
+
+        const code = `
+            LOAD a "Hello "
+            LOAD b "world!"
+            ADD  a b
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("a")).to.equal("Hello world!");
+
+    })
 });
