@@ -205,6 +205,30 @@ export class Interpreter {
         this._program = lines.map(l => this.parseLine(l)).filter(p => !!p);
     }
 
+    private makeParameter(token): Parameter {
+        switch (token.type) {
+
+            case TokenTypes.REGISTER:   //pass through
+            case TokenTypes.NUMBER:     //pass through
+            case TokenTypes.STRING:
+                return new Parameter(token.type === TokenTypes.REGISTER, token.value)
+
+            case TokenTypes.POINT:
+                return new Point2Parameter(
+                    new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
+                    new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
+                )
+
+            case TokenTypes.ARRAY:
+                return new ArrayParameter(
+                    (token.value as Array<any>).map(token => this.makeParameter(token))
+                )
+
+            case TokenTypes.OTHER:
+                break;
+        }
+    }
+
     private parseLine(line: string): any {
         const tokens = Parser.parseLine(line);
 
@@ -217,44 +241,12 @@ export class Interpreter {
                     opcode = token.value;
                     return null;
 
-                case TokenTypes.REGISTER:   //pass through
-                case TokenTypes.NUMBER:     //pass through
-                case TokenTypes.STRING:
-                    return new Parameter(token.type === TokenTypes.REGISTER, token.value)
-
                 case TokenTypes.LABEL:
                     opcode = "___LBL___";
                     return new Parameter(false, token.value);
 
-                case TokenTypes.POINT:
-                    return new Parameter(false, new Point2Parameter(
-                        new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
-                        new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
-                    ))
-
-                case TokenTypes.ARRAY:
-                    return new Parameter(false, new ArrayParameter(
-                        (token.value as Array<any>).map(token => {
-                            switch (token.type) {
-                                case TokenTypes.POINT:
-                                    return new Parameter(false, new Point2Parameter(
-                                        new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
-                                        new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
-                                    ))
-
-                                case TokenTypes.ARRAY:
-                                    return null;
-
-                                default:
-                                    return new Parameter(token.type === TokenTypes.REGISTER, token.value)
-                            }
-
-                        })
-                    ))
-
-                case TokenTypes.OTHER:
-                    break;
-
+                default:
+                    return this.makeParameter(token)
             }
         }).filter(p => !!p);
 

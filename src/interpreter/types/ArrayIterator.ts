@@ -4,13 +4,14 @@ import {ArrayParameter} from "./ArrayParameter";
 
 export interface IteratorState { index: number; value: any; done: boolean }
 
-export class ArrayIterator implements IInterpreterType {
+export class ArrayIterator extends Parameter {
 
     private _array: ArrayParameter;
     private _index: number;
     private _max: number;
 
     constructor(value:ArrayParameter) {
+        super(false, null)
         this._array = value;
         this._index = 0;
         this._max = this._array.length
@@ -44,8 +45,9 @@ export class ArrayIterator implements IInterpreterType {
         return this.atIndex(this._index);
     }
 
-    public getValue(closure): IteratorState {
-        return this;
+    finalized(closure): any {
+        return this.value
     }
+
 
 }

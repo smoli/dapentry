@@ -21,7 +21,9 @@ describe('Array', () => {
 
         expect(i.getRegister("r1").length).to.equal(5);
         expect(i.getRegister("r1")[1]).to.equal(150);
+        expect(i.getRegister("r1")[4]).to.equal(500);
         expect(i.getRegister("r2")).to.equal(300);
+
     });
 
     it("can be iterated over", async () => {
@@ -74,7 +76,7 @@ describe('Array', () => {
 
     });
 
-    xit("iterator value in point", async () => {
+    it("iterator value in point", async () => {
         const code = `
             LOAD ar [1 2 3]
             

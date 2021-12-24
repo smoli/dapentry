@@ -25,6 +25,23 @@ export class Parameter {
         return this._isRegister
     }
 
+    finalized(closure): any {
+        let r;
+        if (this._isRegister) {
+            r = closure.getRegister(this._valueOrName)
+        } else {
+            r = this._valueOrName;
+        }
+        if (this.components) {
+            if (this.components) {
+                for (const c of this.components) {
+                    r = r[c]
+                }
+            }
+        }
+        return r;
+    }
+
     get value(): any {
         if (this._isRegister) {
             throw new Error(`Parameter "${this._valueOrName}" references a register`);

@@ -1,28 +1,27 @@
 import {Parameter} from "../Parameter";
-import {IInterpreterType} from "./IInterpreterType";
 
-export class Point2Parameter implements IInterpreterType {
+export class Point2Parameter extends Parameter{
 
-    private readonly _x: Parameter;
-    private readonly _y: Parameter;
+    private _x: Parameter;
+    private _y: Parameter;
 
     constructor(x: Parameter, y: Parameter) {
+        super(false, null)
         this._x = x;
         this._y = y;
     }
 
-    protected _getValue(param: Parameter, closure): any {
-        if (param.isRegister) {
-            return closure.getRegister(param.name)
-        } else {
-            return param.value;
+    get value(): any {
+        return {
+            x: this._x,
+            y: this._y
         }
     }
 
-    public getValue(closure) {
+    finalized(closure): any {
         return {
-            x: this._getValue(this._x, closure),
-            y: this._getValue(this._y, closure)
+            x: this._x.finalized(closure),
+            y: this._y.finalized(closure)
         }
     }
 

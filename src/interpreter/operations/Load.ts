@@ -17,19 +17,19 @@ export class Load extends Operation {
     }
 
     set target(value: any) {
-        this._setParam(this._target, value);
+        this._setParam(this._target, this._finalizeValue(value));
     }
 
-    get value(): any {
-        return this._getParam(this._value);
+    private _finalizeValue(value: Parameter):any {
+        return value.finalized(this._closure);
     }
 
     set value(value: any) {
-        this._setParam(this._value, value);
+        this._setParam(this._value, this._finalizeValue(value));
     }
 
     async execute(interpreter): Promise<any> {
-        this.target = this.value;
+        this.target = this._value;
     }
 
 }

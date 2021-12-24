@@ -1,12 +1,12 @@
 import {Parameter} from "../Parameter";
-import {IInterpreterType} from "./IInterpreterType";
 import {StackFrame} from "../StackFrame";
 
-export class ArrayParameter implements IInterpreterType {
+export class ArrayParameter extends Parameter {
 
     private _value: Array<any> = []
 
     constructor(value:Array<any>) {
+        super(false, null)
         this._value = value;
     }
 
@@ -26,8 +26,12 @@ export class ArrayParameter implements IInterpreterType {
         return this._getValue(this._value[index], closure);
     }
 
-    public getValue(closure) {
-        return this._value.map(p => this._getValue(p, closure));
+    get value(): any {
+        return this._value;
+    }
+
+    finalized(closure): any {
+        return this._value.map(v => v.finalized(closure))
     }
 
 }
