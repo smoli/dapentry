@@ -14,13 +14,11 @@ describe('Call and Return', () => {
                 CALL FUNC                
                 CALL FUNC                
                 CALL r3 FUNC                
-                JMP END
+                HALT
                 
              FUNC:
                 INC r1
                 RET r1                                
-                
-             END:
         `
 
         const i = new Interpreter();
@@ -36,7 +34,7 @@ describe('Call and Return', () => {
             
             LOAD r1 5
             CALL res FIB 
-            JMP END
+            HALT
             
             FIB:
                 JEQ r1 0 ZERO
@@ -60,8 +58,6 @@ describe('Call and Return', () => {
                     
                     ADD r3 r4
                     RET r3
-            
-          END:
         
         `;
 

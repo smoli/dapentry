@@ -43,6 +43,7 @@ export class Interpreter {
     private _labels: { [key: string]: number } = {};
 
 
+
     constructor() {
         this._operationFactory = defaultOperationFactory();
         this._currentFrame = this._globals;
@@ -148,6 +149,10 @@ export class Interpreter {
         // UNCLEAR: We will still only be able to access the outer frame
         //          will this be enough?
         return await this._run();
+    }
+
+    public halt():void {
+        this.setPC(this._program.length);
     }
 
     public setPC(value:number) {

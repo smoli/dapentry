@@ -26,6 +26,7 @@ import {JumpWhenEqual} from "./operations/branching/JumpWhenEqual";
 import {Iterator} from "./operations/Iterator";
 import {IteratorNext} from "./operations/IteratorNext";
 import {IteratorJumpWhenNotDone} from "./operations/IteratorJumpWhenNotDone";
+import {Halt} from "./operations/Halt";
 
 export class OperationFactory {
 
@@ -80,6 +81,7 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("ITER", Iterator);
     operationFactory.addOperationClass("NEXT", IteratorNext);
     operationFactory.addOperationClass("JINE", IteratorJumpWhenNotDone);
+    operationFactory.addOperationClass("HALT", Halt);
     operationFactory.addOperationClass("___LBL___", Label);
 
     return operationFactory;
