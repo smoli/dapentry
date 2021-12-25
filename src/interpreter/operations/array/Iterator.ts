@@ -1,6 +1,6 @@
-import {Operation} from "../Operation";
-import {Parameter} from "../Parameter";
-import {ArrayIterator} from "../types/ArrayIterator";
+import {Operation} from "../../Operation";
+import {Parameter} from "../../Parameter";
+import {ArrayIterator} from "../../types/ArrayIterator";
 
 export class Iterator extends Operation {
 

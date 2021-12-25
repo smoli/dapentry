@@ -16,7 +16,6 @@ describe('Array', () => {
 
         const i = new Interpreter();
         i.parse(code);
-
         await i.run();
 
         expect(i.getRegister("r1").length).to.equal(5);
@@ -24,6 +23,22 @@ describe('Array', () => {
         expect(i.getRegister("r1")[4]).to.equal(500);
         expect(i.getRegister("r2")).to.equal(300);
 
+    });
+
+    it("can have items added to it", async () => {
+        const code = `
+            LOAD r1 [100 200 300 400]
+            LOAD r2 500
+            APP r1 r2
+            APP r1 550
+            APP r1 600 650                        
+        `
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.deep.equal([100, 200, 300, 400, 500, 550, 600, 650])
     });
 
     it("can be iterated over", async () => {
