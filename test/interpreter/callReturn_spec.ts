@@ -10,15 +10,17 @@ describe('Call and Return', () => {
 
         const code = `
                 LOAD r1 100
-                CALL FUNC                
-                CALL FUNC                
-                CALL FUNC                
+                CALL r1 FUNC                
+                CALL r1 FUNC                
+                CALL r1 FUNC                
                 CALL r3 FUNC                
                 HALT
                 
              FUNC:
-                INC r1
-                RET r1                                
+                LOAD local 0
+                ADD local r1
+                INC local                
+                RET local                             
         `
 
         const i = new Interpreter();

@@ -67,15 +67,13 @@ export class Interpreter {
     }
 
     public popStack(returnRegister: Parameter, receiveRegister: Parameter = null) {
-
         if (this._executed) {
             return;
         }
 
         let returnValue;
-        const lclReceiver = receiveRegister ? receiveRegister : returnRegister;
 
-        if (returnRegister) {
+        if (returnRegister && receiveRegister) {
             if (returnRegister.components) {
                 returnValue = this._currentFrame.getRegisterWithComponents(returnRegister.name, returnRegister.components)
             } else {
@@ -85,11 +83,11 @@ export class Interpreter {
 
         this._currentFrame = this._stack.pop();
 
-        if (lclReceiver) {
-            if (lclReceiver.components) {
-                this._currentFrame.setRegisterWithComponents(lclReceiver.name, lclReceiver.components, returnValue);
+        if (receiveRegister) {
+            if (receiveRegister.components) {
+                this._currentFrame.setRegisterWithComponents(receiveRegister.name, receiveRegister.components, returnValue);
             } else {
-                this._currentFrame.setRegister(lclReceiver.name, returnValue);
+                this._currentFrame.setRegister(receiveRegister.name, returnValue);
             }
         }
     }
