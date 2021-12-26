@@ -13,7 +13,15 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'babel-loader',
                 exclude: /node_modules/,
-            }
+            },
+            {
+                test:    /\.elm$/,
+                exclude: [/elm-stuff/, /node_modules/],
+                loader:  'elm-webpack-loader',
+                options: {
+                    verbose: true
+                }
+            },
         ]
     },
     resolve: {

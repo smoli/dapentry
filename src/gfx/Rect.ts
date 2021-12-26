@@ -37,7 +37,7 @@ export class Rect extends Operation {
         this._setParam(this._width, value)
     }
 
-    get drawing():Node {
+    get drawing():Array<any> {
         return this._getParam(this._drawing);
     }
 
@@ -47,6 +47,16 @@ export class Rect extends Operation {
 
     async execute(interpreter: Interpreter): Promise<any> {
 
+        this.drawing.push({
+            t:"rect",
+            x: this.p1.x,
+            y: this.p1.y,
+            p1: this.width,
+            p2: this.height,
+            p3: 0
+        })
+
+/*
         const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         rect.setAttribute("x", this.p1.x)
         rect.setAttribute("y", this.p1.y)
@@ -56,6 +66,7 @@ export class Rect extends Operation {
         this._setParam(this._target, rect);
 
         this.drawing.appendChild(rect)
+*/
 
     }
 
