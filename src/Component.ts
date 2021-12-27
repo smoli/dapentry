@@ -1,5 +1,7 @@
 import UIComponent from "sap/ui/core/UIComponent";
 import { support } from "sap/ui/Device";
+import {asTest} from "./ASTest";
+import {Interpreter} from "./runtime/interpreter/Interpreter";
 
 
 /**
@@ -16,6 +18,15 @@ export default class Component extends UIComponent {
     public init() : void {
         // call the base component's init function
         super.init();
+
+        const i = new Interpreter();
+        const code = `
+            LOG "Hello World"
+        `;
+
+        i.parse(code);
+        i.run().then();
+
     }
 
     /**

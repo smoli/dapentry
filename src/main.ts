@@ -1,4 +1,6 @@
-import { Interpreter } from "./interpreter/Interpreter";
+import {Interpreter} from "./runtime/interpreter/Interpreter";
+import {Circle} from "./runtime/gfx/Circle";
+import {Rect} from "./runtime/gfx/Rect";
 
 document.getElementById("ui").innerText = "UPDATE23"
 
