@@ -2,7 +2,7 @@
   "_version": "1.12.0",
 
   "sap.app": {
-    "id": "ui5.typescript.helloworld",
+    "id": "sts.drawable",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "title": "UI5 TypeScript Hello World",
@@ -30,8 +30,37 @@
   },
 
   "sap.ui5": {
+    "routing": {
+      "config": {
+        "routerClass": "sap.f.routing.Router",
+        "viewType": "XML",
+        "viewPath": "sts.drawable.view",
+        "controlId": "fcl"
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "default",
+          "target": ["structure", "canvas"],
+          "layout": "TwoColumnsMidExpanded"
+        }
+      ],
+      "targets": {
+        "structure": {
+          "viewName": "structure",
+          "viewId": "structure",
+          "controlAggregation": "beginColumnPages"
+        },
+        "canvas": {
+          "viewName": "canvas",
+          "viewId": "canvas",
+          "controlAggregation": "midColumnPages"
+        }
+      }
+    },
+
     "rootView": {
-      "viewName": "ui5.typescript.helloworld.view.App",
+      "viewName": "sts.drawable.view.App",
       "type": "XML",
       "async": true,
       "id": "app"
@@ -55,10 +84,6 @@
     },
 
     "models": {
-
-    },
-
-    "routing": {
 
     }
   }

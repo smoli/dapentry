@@ -1,11 +1,10 @@
 import UIComponent from "sap/ui/core/UIComponent";
 import { support } from "sap/ui/Device";
-import {asTest} from "./ASTest";
 import {Interpreter} from "./runtime/interpreter/Interpreter";
 
 
 /**
- * @namespace ui5.typescript.helloworld
+ * @namespace sts.drawable
  */
 export default class Component extends UIComponent {
 
@@ -18,6 +17,8 @@ export default class Component extends UIComponent {
     public init() : void {
         // call the base component's init function
         super.init();
+
+        this.getRouter().initialize();
 
         const i = new Interpreter();
         const code = `
