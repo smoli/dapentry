@@ -36,6 +36,8 @@ export function state(id:string, data:any = null):IState {
         statePool[id] = r;
     }
 
+    r.data = data;
+
     return r;
 }
 

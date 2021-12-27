@@ -37,12 +37,12 @@ describe('State machine', () => {
     it("provides a state factory function that pools states by id", () =>  {
 
         const a = state("A", 23);
-        const b = state("A", 42)
+        const b = state("A", 42);
 
         expect(a.id).to.equal("A");
-        expect(a.data).to.equal(23);
+        expect(a.data).to.equal(42);    // Data is updated
         expect(b.id).to.equal("A");
-        expect(b.data).to.equal(23);
+        expect(b.data).to.equal(42);
         expect(a).to.equal(b)
 
     })

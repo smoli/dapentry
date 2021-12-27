@@ -41,7 +41,7 @@
         {
           "pattern": "",
           "name": "default",
-          "target": ["structure", "canvas"],
+          "target": ["structure", "drawing"],
           "layout": "TwoColumnsMidExpanded"
         }
       ],
@@ -51,9 +51,9 @@
           "viewId": "structure",
           "controlAggregation": "beginColumnPages"
         },
-        "canvas": {
-          "viewName": "canvas",
-          "viewId": "canvas",
+        "drawing": {
+          "viewName": "drawing",
+          "viewId": "drawing",
           "controlAggregation": "midColumnPages"
         }
       }

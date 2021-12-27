@@ -110,10 +110,8 @@ const renderer = {
 
 
     render(rm, control: Drawing) {
-        const root = H("svg", control);
-
-        root.append("span").text("Drawing")
-
+        const root = H("div", control);
+        root.appendControl(control.getAggregation("_svg"));
         root.render(rm)
     }
 }

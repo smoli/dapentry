@@ -1,0 +1,11 @@
+<mvc:View
+        controllerName="sts.drawable.controller.Drawing"
+        displayBlock="true"
+        xmlns="sap.m"
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns:sts="sts.drawable.controls"
+>
+    <Page>
+        <sts:Drawing id="drawing" newObject="onNewObject" objects="{drawingViewModel>/objects}"/>
+    </Page>
+</mvc:View>
