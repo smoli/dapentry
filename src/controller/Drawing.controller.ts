@@ -1,7 +1,5 @@
 import Controller from "sap/ui/core/mvc/Controller";
-import AppComponent from "../Component";
 import JSONModel from "sap/ui/model/json/JSONModel";
-import {GRCircle} from "../controls/Objects/GrObject";
 import Drawing from "../controls/Drawing";
 
 /**
@@ -12,7 +10,7 @@ export default class App extends Controller {
     public onInit() : void {
 
         const viewModel = new JSONModel({
-            objects: [new GRCircle(100, 100, 50)]
+            objects: []
         });
 
         this.getView().setModel(viewModel, "drawingViewModel")
