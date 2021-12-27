@@ -16,3 +16,4 @@ dist/
 /.idea/vcs.xml
 /.nyc_output/
 /coverage/
+/src/controls/*.tsinterface.ts
