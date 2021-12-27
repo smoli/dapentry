@@ -1,5 +1,9 @@
 {
+  "ignore": [
+    "**/*.d.ts"
+  ],
   "presets": [
+    "transform-ui5",
     "@babel/typescript",
     [
       "@babel/env",
@@ -9,7 +13,7 @@
     ]
   ],
   "plugins": [
-    "@babel/transform-runtime",
+
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-proposal-class-properties"
   ]
