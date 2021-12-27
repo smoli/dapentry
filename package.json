@@ -28,6 +28,7 @@
     "@types/chai": "^4.3.0",
     "@types/jquery": "^3.5.1",
     "@types/mocha": "^9.0.0",
+    "@types/node": "^17.0.5",
     "@types/openui5": "^1.97.0",
     "@types/qunit": "^2.5.4",
     "babel-preset-transform-ui5": "^7.0.5",
