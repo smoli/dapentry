@@ -40,7 +40,6 @@ export function state(id:string, data:any = null):IState {
 }
 
 
-
 export class StateMachine {
     private readonly _transitions: { [key: string]: { [key: (string|number|symbol)]: IState }} = {}
 
