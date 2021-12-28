@@ -1,6 +1,13 @@
 GFXBCTS
 =======
 
+How to build
+
+`npm run start`
+
+Maybe you need to do that twice in order to work
+
+
 A simple bytcode VM written in typescipt.
 
 ## How to run

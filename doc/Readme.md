@@ -4,7 +4,7 @@ What is this
 This is an experimental bytecode vm. It is a register-machine.
 
 It has some [opcodes](opcodes.md) that can be used. New operations are fairly simple to implement. See
-[../src/interpreter/operations](../src/interpreter/operations)
+[../src/interpreter/operations](../src/runtime/interpreter/operations)
 for examples.
 
 After you have implemented a new operation, either register it in the constructor of

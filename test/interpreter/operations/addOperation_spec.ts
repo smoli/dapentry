@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {Interpreter} from "../../../src/interpreter/Interpreter";
+import {Interpreter} from "../../../src/runtime/interpreter/Interpreter";
 
 describe('Add', () => {
 

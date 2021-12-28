@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Drawable</title>
+
+  <style>
+
+    svg {
+      border: 1px solid lightgreen;
+      outline: none;
+    }
+
+    svg circle, svg rect {
+      stroke-width: 2;
+      stroke: coral;
+      fill: coral;
+      fill-opacity: 0.2;
+    }
+
+    svg g .boundingBox {
+      stroke-width: 3;
+      stroke: lightseagreen;
+      fill: none !important;
+    }
+
+  </style>
+
+  <script id="sap-ui-bootstrap"
+          src="resources/sap-ui-core.js"
+          data-sap-ui-libs="sap.ui.core,sap.ui.unified,sap.m,sap.f"
+          data-sap-ui-resourceroots='{
+				"sts.drawable": "./"
+			}'
+          data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+          data-sap-ui-compatVersion="edge"
+          data-sap-ui-async="true"
+          data-sap-ui-theme="sap_fiori_3"
+          data-sap-ui-xx-waitForTheme="true"
+          data-sap-ui-xx-supportedLanguages="en,de">
+  </script>
+
+</head>
+
+<body class="sapUiBody">
+<div data-sap-ui-component data-name="sts.drawable" data-id="container" data-settings='{"id" : "sts.drawable"}'></div>
+</body>
+</html>

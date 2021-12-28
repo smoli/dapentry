@@ -16,4 +16,5 @@ dist/
 /.idea/vcs.xml
 /.nyc_output/
 /coverage/
-elm-stuff/
+/src/controls/*.tsinterface.ts
+/doc/reference/

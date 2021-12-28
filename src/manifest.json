@@ -1,0 +1,90 @@
+{
+  "_version": "1.12.0",
+
+  "sap.app": {
+    "id": "sts.drawable",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "title": "UI5 TypeScript Hello World",
+    "description": "UI5 TypeScript Hello World",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "ach": "set-ach"
+  },
+
+  "sap.fiori": {
+
+  },
+
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+
+  "sap.ui5": {
+    "routing": {
+      "config": {
+        "routerClass": "sap.f.routing.Router",
+        "viewType": "XML",
+        "viewPath": "sts.drawable.view",
+        "controlId": "fcl"
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "default",
+          "target": ["structure", "drawing"],
+          "layout": "TwoColumnsMidExpanded"
+        }
+      ],
+      "targets": {
+        "structure": {
+          "viewName": "structure",
+          "viewId": "structure",
+          "controlAggregation": "beginColumnPages"
+        },
+        "drawing": {
+          "viewName": "drawing",
+          "viewId": "drawing",
+          "controlAggregation": "midColumnPages"
+        }
+      }
+    },
+
+    "rootView": {
+      "viewName": "sts.drawable.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+
+    "dependencies": {
+      "minUI5Version": "1.97.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.ui.unified": {},
+        "sap.m": {}
+      }
+    },
+
+    "handleValidation": true,
+
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+
+    "models": {
+
+    }
+  }
+}
