@@ -1,5 +1,6 @@
 export enum InteractionEvents {
     Click,
+    AlternateClick,
     MouseDown,
     MouseUp,
     MouseMove,
@@ -17,5 +18,7 @@ export interface InteractionEventData {
     buttons: boolean,
     ctrl: boolean,
     shift: boolean,
-    alt: boolean
+    alt: boolean,
+    key: string,
+    keyCode: number
 }

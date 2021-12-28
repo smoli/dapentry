@@ -61,7 +61,7 @@ export default class Drawing extends Control {
         this._containerId = this._makeId("container");
 
         this.setAggregation("_svg", new HTML({
-            content: `<svg id="${this._containerId}" style="height: 90vh; width: 100%"></svg>`
+            content: `<svg id="${this._containerId}" style="height: 90vh; width: 100%" tabindex="1000000000"></svg>`
         }));
     }
 
@@ -103,6 +103,7 @@ export default class Drawing extends Control {
         this._svg.on("mouseenter", this._interActionMouseEnter.bind(this))
         this._svg.on("mousemove", this._interActionMouseMove.bind(this))
         this._svg.on("click", this._interActionClick.bind(this))
+        this._svg.on("keyup", this._interActionKeyDown.bind(this))
     }
 
     update() {
@@ -129,6 +130,7 @@ export default class Drawing extends Control {
             dx: d3Ev.movementX,
             dy: d3Ev.movementY,
             alt: d3Ev.altKey, button: d3Ev.button, buttons: d3Ev.buttons, ctrl: d3Ev.ctrlKey, shift: d3Ev.shiftKey,
+            key: d3Ev.key, keyCode: d3Ev.keyCode
         };
 
         const tool = (this._interactionState.state.data as DrawCircle);
@@ -138,8 +140,9 @@ export default class Drawing extends Control {
             const result = tool.result;
             this._interactionLayer.select("*").remove();
             tool.reset();
-
             this.fireNewObject({ object: result })
+        } else if (interactionEvent == InteractionEvents.Cancel) {
+            this._interactionLayer.select("*").remove();
         }
     }
 
@@ -164,7 +167,17 @@ export default class Drawing extends Control {
     }
 
     private _interActionClick() {
-        this._pumpToTool(InteractionEvents.Click)
+        if (d3.event.button != 0) {
+            this._pumpToTool(InteractionEvents.AlternateClick)
+        } else {
+            this._pumpToTool(InteractionEvents.Click)
+        }
+    }
+
+    private _interActionKeyDown() {
+        if (d3.event.keyCode === 27) {
+            this._pumpToTool(InteractionEvents.Cancel);
+        }
     }
 
 }
