@@ -1,4 +1,4 @@
-import {GRCircle, GrObject, ObjectType} from "./GrObject";
+import {GRCircle, GrObject, GRRectangle, ObjectType} from "./GrObject";
 import {ObjectRenderer} from "./ObjectRenderer";
 
 export class SvgObjectRenderer extends ObjectRenderer {
@@ -16,8 +16,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
             case ObjectType.Circle:
                 this.renderCircle(object as GRCircle);
                 break;
+
             case ObjectType.Rectangle:
+                this.renderRectangle(object as GRRectangle);
                 break;
+
             case ObjectType.Ellipse:
                 break;
             case ObjectType.Square:
@@ -44,6 +47,15 @@ export class SvgObjectRenderer extends ObjectRenderer {
         c.attr("cx", circle.x);
         c.attr("cy", circle.y);
         c.attr("r", circle.r);
+    }
+
+    renderRectangle(rectangle: GRRectangle) {
+        const r = this.getObjectOrCreate(rectangle, "rect");
+
+        r.attr("x", rectangle.x - rectangle.w / 2);
+        r.attr("y", rectangle.y - rectangle.h / 2);
+        r.attr("width", rectangle.w);
+        r.attr("height", rectangle.h);
     }
 
 }

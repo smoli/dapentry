@@ -7,7 +7,8 @@ import {DrawCircle} from "./Tools/DrawCircle";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {ObjectRenderer} from "./Objects/ObjectRenderer";
 import {SvgObjectRenderer} from "./Objects/SvgObjectRenderer";
-import {GRCircle, GrObject} from "./Objects/GrObject";
+import {GrObject} from "./Objects/GrObject";
+import {DrawRectangle} from "./Tools/DrawRectangle";
 
 
 enum States {
@@ -68,7 +69,7 @@ export default class Drawing extends Control {
         this._interactionState = new StateMachine();
         this._interactionState.add(state(States.Drawing_NoTool), "ToolSelectCircle", state(States.Drawing_Tool));
 
-        const tool = new DrawCircle(this._interactionLayer);
+        const tool = new DrawRectangle(this._interactionLayer);
         tool.reset();
         this._interactionState.start(state(States.Drawing_Tool, tool))
     }
@@ -110,7 +111,7 @@ export default class Drawing extends Control {
 
     private _renderAll(): void {
         this.getObjects().forEach(obj => {
-            this._objectRenderer.render(obj as GRCircle);
+            this._objectRenderer.render(obj as GrObject);
         });
     }
 
