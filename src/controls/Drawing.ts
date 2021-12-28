@@ -9,6 +9,7 @@ import {ObjectRenderer} from "./Objects/ObjectRenderer";
 import {SvgObjectRenderer} from "./Objects/SvgObjectRenderer";
 import {GrObject} from "./Objects/GrObject";
 import {DrawRectangle} from "./Tools/DrawRectangle";
+import {Selection} from "d3";
 
 
 enum States {
@@ -33,10 +34,10 @@ enum Events {
 export default class Drawing extends Control {
 
     private _containerId: string;
-    private _svg: any;
-    private _renderLayer: any;
-    private _helperLayer: any;
-    private _interactionLayer: any;
+    private _svg: Selection<any>;
+    private _renderLayer: Selection<any>;
+    private _helperLayer: Selection<any>;
+    private _interactionLayer: Selection<any>;
 
     private _interactionState: StateMachine;
 
@@ -163,7 +164,9 @@ export default class Drawing extends Control {
                         break;
                 }
                 tool.reset();
+                tool.selection = this._selection;
                 this._interactionState.state.data = tool;
+                tool.initialize();
                 break;
 
             case States.Drawing_NoTool:

@@ -4,10 +4,10 @@ import {GRCircle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
 
 enum States {
-    DrawCircle_Wait = "DrawCircle.Wait",
-    DrawCircle_DragRadius = "DrawCircle.DragRadius",
-    DrawCircle_FirstPoint = "DrawCircle.FirstPoint",
-    DrawCircle_Done = "DrawCircle.Done",
+    Wait = "DrawCircle.Wait",
+    DragRadius = "DrawCircle.DragRadius",
+    CenterPoint = "DrawCircle.CenterPoint",
+    Done = "DrawCircle.Done",
 }
 
 
@@ -15,12 +15,12 @@ export class DrawCircle extends Tool {
     private _circle:GRCircle;
 
     constructor(renderer) {
-        super(renderer, States.DrawCircle_Wait, States.DrawCircle_Done)
+        super(renderer, States.Wait, States.Done)
 
-        this._state.add(state(States.DrawCircle_Wait), InteractionEvents.Click, state(States.DrawCircle_FirstPoint));
-        this._state.add(state(States.DrawCircle_FirstPoint), InteractionEvents.MouseMove, state(States.DrawCircle_DragRadius));
-        this._state.add(state(States.DrawCircle_DragRadius), InteractionEvents.MouseMove, state(States.DrawCircle_DragRadius));
-        this._state.add(state(States.DrawCircle_DragRadius), InteractionEvents.Click, state(States.DrawCircle_Done));
+        this._state.add(state(States.Wait), InteractionEvents.Click, state(States.CenterPoint));
+        this._state.add(state(States.CenterPoint), InteractionEvents.MouseMove, state(States.DragRadius));
+        this._state.add(state(States.DragRadius), InteractionEvents.MouseMove, state(States.DragRadius));
+        this._state.add(state(States.DragRadius), InteractionEvents.Click, state(States.Done));
     }
 
     public reset() {
@@ -37,17 +37,17 @@ export class DrawCircle extends Tool {
         this._state.next(interactionEvent);
 
         switch (this._state.state.id) {
-            case States.DrawCircle_FirstPoint:
+            case States.CenterPoint:
                 this._circle = new GRCircle(eventData.x, eventData.y, 0)
                 this._renderer.renderCircle(this._circle);
                 break;
 
-            case States.DrawCircle_DragRadius:
+            case States.DragRadius:
                 this._circle.r = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
                 this._renderer.renderCircle(this._circle);
                 break;
 
-            case States.DrawCircle_Done:
+            case States.Done:
                 this._circle.r = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
         }
 

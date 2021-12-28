@@ -2,6 +2,18 @@ import {BoundingBox, GRCircle, GrObject, GRRectangle, ObjectType} from "./GrObje
 import {ObjectClickCallback, ObjectRenderer} from "./ObjectRenderer";
 import {Selection} from "d3";
 
+enum ToolClasses {
+    object = "grObject",
+    handle = "transformationHandle",
+    boundingBox = "boundingBox"
+}
+
+enum ToolClassSelectors {
+    object = ".grObject",
+    handle = ".transformationHandle",
+    boundingBox = ".boundingBox"
+}
+
 
 /**
  * Renderer using SVG. This uses d3 (3.4) for rendering.
@@ -42,9 +54,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
 
         if (selected) {
-            svgObjc.attr("style", "stroke: green !important")
+            this.renderBoundingBox(object)
         } else {
-            svgObjc.attr("style", "")
+            this.removeBoundingBox(object);
         }
     }
 
@@ -53,11 +65,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * create it using the `svgTag`.
      *
      * Every object will be wrapped in a group. The group will be returned.
-     * In order to access the object you can use the class `grObject` via a selection.
+     * In order to access the object you can use the class `ToolClassSelectors.object` via a selection.
      *
      * ```
      *      const g = this.getObjectOrCreate(someObject, "sometag");
-     *      const svgObjectRepresentation = g.select(".grObject");
+     *      const svgObjectRepresentation = g.select(ToolClassSelectors.object);
      * ```
      *
      * @param object
@@ -65,20 +77,39 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @protected
      */
     protected getObjectOrCreate(object: GrObject, svgTag: string): Selection<any> {
-        let svgObject = this._layer.select("#" + object.id);
+        let svgGroup = this._layer.select("#" + object.id);
 
-        if (svgObject.empty()) {
-            svgObject = this._layer.append(svgTag).attr("id", object.id);
+        if (svgGroup.empty()) {
+            svgGroup = this._layer.append("g").attr("id", object.id);
+
+            const svgObject = svgGroup.append(svgTag).attr("class", ToolClasses.object);
+
             svgObject.on("click", () => {
                 this._fireSelect(object);
             });
         }
 
-        return svgObject;
+        return svgGroup;
+    }
+
+    /**
+     * Get object from layer. This returns the group.
+     *
+     * @see getObjectOrCreate
+     * @param object
+     * @protected
+     */
+    protected getObject(object:GrObject): Selection<any> {
+        let svgGroup = this._layer.select("#" + object.id);
+        if (svgGroup.empty()) {
+            return null;
+        }
+
+        return svgGroup;
     }
 
     renderCircle(circle: GRCircle) {
-        const c = this.getObjectOrCreate(circle, "circle");
+        const c = this.getObjectOrCreate(circle, "circle").select(ToolClassSelectors.object);
 
         c.attr("cx", circle.x);
         c.attr("cy", circle.y);
@@ -88,7 +119,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     renderRectangle(rectangle: GRRectangle) {
-        const r = this.getObjectOrCreate(rectangle, "rect");
+        const r = this.getObjectOrCreate(rectangle, "rect").select(ToolClassSelectors.object);
 
         r.attr("x", rectangle.x - rectangle.w / 2);
         r.attr("y", rectangle.y - rectangle.h / 2);
@@ -100,7 +131,25 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
     renderBoundingBox(object:GrObject) {
+        const g = this.getObject(object);
+        if (g) {
+            g.selectAll(ToolClassSelectors.boundingBox).remove();
 
+            const bb = object.boundingBox;
+
+            g.append("rect")
+                .attr("x", bb.x - bb.w / 2)
+                .attr("y", bb.y - bb.h / 2)
+                .attr("width", bb.w)
+                .attr("height", bb.h)
+                .attr("class", ToolClasses.boundingBox);
+        }
     }
 
+    public removeBoundingBox(object: GrObject) {
+        const g = this.getObject(object);
+        if (g) {
+            g.selectAll(ToolClassSelectors.boundingBox).remove();
+        }
+    }
 }

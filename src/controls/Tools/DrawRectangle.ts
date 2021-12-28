@@ -4,10 +4,10 @@ import {GRRectangle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
 
 enum States {
-    DrawRect_Wait = "DrawRect.Wait",
-    DrawRect_FirstPoint = "DrawRect.FirstPoint",
-    DrawRect_Drag = "DrawRect.Drag",
-    DrawRect_Done = "DrawRect.Done",
+    Wait = "DrawRect.Wait",
+    FirstPoint = "DrawRect.FirstPoint",
+    DragSize = "DrawRect.DragSize",
+    Done = "DrawRect.Done",
 }
 
 export class DrawRectangle extends Tool {
@@ -17,12 +17,12 @@ export class DrawRectangle extends Tool {
     private _y1:number;
 
     constructor(renderer) {
-        super(renderer, States.DrawRect_Wait, States.DrawRect_Done);
+        super(renderer, States.Wait, States.Done);
 
-        this._state.add(state(States.DrawRect_Wait), InteractionEvents.Click, state(States.DrawRect_FirstPoint));
-        this._state.add(state(States.DrawRect_FirstPoint), InteractionEvents.MouseMove, state(States.DrawRect_Drag));
-        this._state.add(state(States.DrawRect_Drag), InteractionEvents.MouseMove, state(States.DrawRect_Drag));
-        this._state.add(state(States.DrawRect_Drag), InteractionEvents.Click, state(States.DrawRect_Done));
+        this._state.add(state(States.Wait), InteractionEvents.Click, state(States.FirstPoint));
+        this._state.add(state(States.FirstPoint), InteractionEvents.MouseMove, state(States.DragSize));
+        this._state.add(state(States.DragSize), InteractionEvents.MouseMove, state(States.DragSize));
+        this._state.add(state(States.DragSize), InteractionEvents.Click, state(States.Done));
     }
 
     public reset() {
@@ -42,15 +42,15 @@ export class DrawRectangle extends Tool {
         this._state.next(interactionEvent);
 
         switch (this._state.state.id) {
-            case States.DrawRect_FirstPoint:
+            case States.FirstPoint:
                 this._x1 = eventData.x
                 this._y1 = eventData.y
                 this._rect = new GRRectangle(eventData.x, eventData.y, 0, 0);
                 this._renderer.renderRectangle(this._rect);
                 break;
 
-            case States.DrawRect_Done: // pass through
-            case States.DrawRect_Drag:
+            case States.Done: // pass through
+            case States.DragSize:
                 calcRect = this._calculateRect(eventData.x, eventData.y)
                 this._rect.x = calcRect.x1 + calcRect.w / 2;
                 this._rect.y = calcRect.y1 + calcRect.h / 2;
