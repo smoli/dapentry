@@ -1,5 +1,5 @@
 import {GRCircle, GrObject, GRRectangle, ObjectType} from "./GrObject";
-import {ObjectRenderer} from "./ObjectRenderer";
+import {ObjectClickCallback, ObjectRenderer} from "./ObjectRenderer";
 
 
 /**
@@ -9,8 +9,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     protected _layer;
 
-    constructor(layer) {
-        super();
+    constructor(layer, onObjectClick:ObjectClickCallback = null) {
+        super(onObjectClick);
         this._layer = layer;
     }
 
@@ -19,14 +19,17 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._layer.select("*").remove();
     }
 
-    render(object: GrObject) {
+    render(object: GrObject, selected: boolean) {
+
+        let svgObjc;
+
         switch (object.type) {
             case ObjectType.Circle:
-                this.renderCircle(object as GRCircle);
+                svgObjc = this.renderCircle(object as GRCircle);
                 break;
 
             case ObjectType.Rectangle:
-                this.renderRectangle(object as GRRectangle);
+                svgObjc = this.renderRectangle(object as GRRectangle);
                 break;
 
             case ObjectType.Ellipse:
@@ -35,7 +38,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 break;
             case ObjectType.Line:
                 break;
+        }
 
+        if (selected) {
+            svgObjc.attr("style", "stroke: green !important")
+        } else {
+            svgObjc.attr("style", "")
         }
     }
 
@@ -43,7 +51,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
         let svgObject = this._layer.select("#" + object.id);
 
         if (svgObject.empty()) {
-            svgObject = this._layer.append(svgTag).attr("id", object.id)
+            svgObject = this._layer.append(svgTag).attr("id", object.id);
+            svgObject.on("click", () => {
+                this._fireSelect(object);
+            });
         }
 
         return svgObject;
@@ -55,6 +66,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         c.attr("cx", circle.x);
         c.attr("cy", circle.y);
         c.attr("r", circle.r);
+
+        return c;
     }
 
     renderRectangle(rectangle: GRRectangle) {
@@ -64,6 +77,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         r.attr("y", rectangle.y - rectangle.h / 2);
         r.attr("width", rectangle.w);
         r.attr("height", rectangle.h);
+
+        return r;
     }
 
 }

@@ -13,12 +13,14 @@ import {DrawRectangle} from "./Tools/DrawRectangle";
 
 enum States {
     Drawing_NoTool = "Drawing.NoTool",
-    Drawing_Tool = "Drawing.Tool"
+    Drawing_DrawingTool = "Drawing.DrawingTool",
+    Drawing_SelectionTool = "Drawing.SelectionTool"
 }
 
 enum Events {
     ToolCircle,
     ToolRect,
+    ToolSelect,
     Cancel
 }
 
@@ -40,6 +42,8 @@ export default class Drawing extends Control {
 
     private _objectRenderer:ObjectRenderer;
     private _interactionRenderer:ObjectRenderer;
+
+    private _selection:Array<GrObject>;
 
     static readonly metadata = {
         properties: {
@@ -72,13 +76,22 @@ export default class Drawing extends Control {
         this.setAggregation("_svg", new HTML({
             content: `<svg id="${this._containerId}" style="height: 90vh; width: 100%" tabindex="1000000000"></svg>`
         }));
+
+        this._selection = [];
     }
 
     private _initializeInteractionState() {
         this._interactionState = new StateMachine();
-        this._interactionState.add(state(States.Drawing_NoTool), Events.ToolCircle, state(States.Drawing_Tool));
-        this._interactionState.add(state(States.Drawing_NoTool), Events.ToolRect, state(States.Drawing_Tool));
-        this._interactionState.add(state(States.Drawing_Tool), Events.Cancel, state(States.Drawing_NoTool));
+        this._interactionState.add(state(States.Drawing_NoTool), Events.ToolCircle, state(States.Drawing_DrawingTool));
+        this._interactionState.add(state(States.Drawing_NoTool), Events.ToolRect, state(States.Drawing_DrawingTool));
+        this._interactionState.add(state(States.Drawing_SelectionTool), Events.ToolCircle, state(States.Drawing_DrawingTool));
+        this._interactionState.add(state(States.Drawing_SelectionTool), Events.ToolRect, state(States.Drawing_DrawingTool));
+
+        this._interactionState.add(state(States.Drawing_DrawingTool), Events.Cancel, state(States.Drawing_NoTool));
+
+        this._interactionState.add(state(States.Drawing_NoTool), Events.ToolSelect, state(States.Drawing_SelectionTool));
+        this._interactionState.add(state(States.Drawing_DrawingTool), Events.ToolSelect, state(States.Drawing_SelectionTool));
+
         this._interactionState.start(state(States.Drawing_NoTool));
     }
 
@@ -86,8 +99,8 @@ export default class Drawing extends Control {
         super.onAfterRendering(oEvent);
         this._svg = d3.select(this.getDomRef()).select("svg")
         this._setupLayers();
-        this._objectRenderer = new SvgObjectRenderer(this._renderLayer);
-        this._interactionRenderer = new SvgObjectRenderer(this._interactionLayer)
+        this._objectRenderer = new SvgObjectRenderer(this._renderLayer, this._onObjectClick.bind(this));
+        this._interactionRenderer = new SvgObjectRenderer(this._interactionLayer);
         this._renderAll();
         this._initializeInteractionState();
     }
@@ -121,7 +134,7 @@ export default class Drawing extends Control {
 
     private _renderAll(): void {
         this.getObjects().forEach(obj => {
-            this._objectRenderer.render(obj as GrObject);
+            this._objectRenderer.render(obj as GrObject, this._selection.indexOf(obj) !== -1);
         });
     }
 
@@ -130,7 +143,7 @@ export default class Drawing extends Control {
         this._interactionState.next(event);
 
         switch(this._interactionState.state.id) {
-            case States.Drawing_Tool:
+            case States.Drawing_DrawingTool:
                 let tool;
                 switch (event) {
                     case Events.ToolCircle:
@@ -154,7 +167,7 @@ export default class Drawing extends Control {
 
     private _pumpToTool(interactionEvent: InteractionEvents) {
 
-        if (this._interactionState.state.id !== States.Drawing_Tool) {
+        if (this._interactionState.state.id !== States.Drawing_DrawingTool) {
             return;
         }
 
@@ -219,7 +232,26 @@ export default class Drawing extends Control {
         } else if (d3.event.key == "r") {
             this._pumpToTool(InteractionEvents.Cancel);
             this._updateState(Events.ToolRect);
+        } else if (d3.event.key == "s") {
+            this._pumpToTool(InteractionEvents.Cancel);
+            this._updateState(Events.ToolSelect);
         }
+    }
+
+    private _onObjectClick(object:GrObject) {
+        if (this._interactionState.state.id !== States.Drawing_SelectionTool) {
+            return;
+        }
+
+        const i = this._selection.indexOf(object)
+        if (i === -1) {
+            //Single select
+            this._selection = [object];
+            // this._selection.push(object);
+        } else {
+            this._selection.splice(i, 1);
+        }
+        this._renderAll();
     }
 
 }
