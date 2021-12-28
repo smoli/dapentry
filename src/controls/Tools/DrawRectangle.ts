@@ -1,6 +1,7 @@
 import {state, StateMachine} from "../../runtime/tools/StateMachine";
 import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
 import {GRRectangle} from "../Objects/GrObject";
+import {Tool} from "./Tool";
 
 enum States {
     DrawRect_Wait = "DrawRect.Wait",
@@ -9,11 +10,8 @@ enum States {
     DrawRect_Done = "DrawRect.Done",
 }
 
+export class DrawRectangle extends Tool {
 
-export class DrawRectangle {
-
-    private _interactionLayer;
-    private _state: StateMachine;
     private _rect;
     private _x1: number;
     private _y1: number;
@@ -21,9 +19,7 @@ export class DrawRectangle {
     private _h: number;
 
     constructor(interactionLayer) {
-        this._interactionLayer = interactionLayer
-
-        this._state = new StateMachine();
+        super(interactionLayer, States.DrawRect_Wait, States.DrawRect_Done);
 
         this._state.add(state(States.DrawRect_Wait), InteractionEvents.Click, state(States.DrawRect_FirstPoint));
         this._state.add(state(States.DrawRect_FirstPoint), InteractionEvents.MouseMove, state(States.DrawRect_Drag));
@@ -31,13 +27,9 @@ export class DrawRectangle {
         this._state.add(state(States.DrawRect_Drag), InteractionEvents.Click, state(States.DrawRect_Done));
     }
 
-    public get isDone(): boolean {
-        return this._state.state.id === States.DrawRect_Done;
-    }
-
     public reset() {
+        super.reset();
         this._rect = null;
-        this._state.start(state(States.DrawRect_Wait))
     }
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {

@@ -1,6 +1,7 @@
-import {state, StateMachine} from "../../runtime/tools/StateMachine";
+import {state} from "../../runtime/tools/StateMachine";
 import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
 import {GRCircle} from "../Objects/GrObject";
+import {Tool} from "./Tool";
 
 enum States {
     DrawCircle_Wait = "DrawCircle.Wait",
@@ -10,19 +11,14 @@ enum States {
 }
 
 
-export class DrawCircle {
-
-    private _interactionLayer;
-    private _state: StateMachine;
+export class DrawCircle extends Tool {
     private _circle;
     private _cx: number;
     private _cy: number;
     private _r: number;
 
     constructor(interactionLayer) {
-        this._interactionLayer = interactionLayer
-
-        this._state = new StateMachine();
+        super(interactionLayer, States.DrawCircle_Wait, States.DrawCircle_Done)
 
         this._state.add(state(States.DrawCircle_Wait), InteractionEvents.Click, state(States.DrawCircle_FirstPoint));
         this._state.add(state(States.DrawCircle_FirstPoint), InteractionEvents.MouseMove, state(States.DrawCircle_DragRadius));
@@ -30,13 +26,9 @@ export class DrawCircle {
         this._state.add(state(States.DrawCircle_DragRadius), InteractionEvents.Click, state(States.DrawCircle_Done));
     }
 
-    public get isDone(): boolean {
-        return this._state.state.id === States.DrawCircle_Done;
-    }
-
     public reset() {
+        super.reset();
         this._circle = null;
-        this._state.start(state(States.DrawCircle_Wait))
     }
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
