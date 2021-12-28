@@ -35,8 +35,11 @@ export default class Drawing extends Control {
     private _renderLayer: any;
     private _helperLayer: any;
     private _interactionLayer: any;
+
     private _interactionState: StateMachine;
+
     private _objectRenderer:ObjectRenderer;
+    private _interactionRenderer:ObjectRenderer;
 
     static readonly metadata = {
         properties: {
@@ -84,6 +87,7 @@ export default class Drawing extends Control {
         this._svg = d3.select(this.getDomRef()).select("svg")
         this._setupLayers();
         this._objectRenderer = new SvgObjectRenderer(this._renderLayer);
+        this._interactionRenderer = new SvgObjectRenderer(this._interactionLayer)
         this._renderAll();
         this._initializeInteractionState();
     }
@@ -130,10 +134,10 @@ export default class Drawing extends Control {
                 let tool;
                 switch (event) {
                     case Events.ToolCircle:
-                        tool = new DrawCircle(this._interactionLayer);
+                        tool = new DrawCircle(this._interactionRenderer);
                         break;
                     case Events.ToolRect:
-                        tool = new DrawRectangle(this._interactionLayer);
+                        tool = new DrawRectangle(this._interactionRenderer);
                         break;
                     case Events.Cancel:
                         break;
@@ -170,11 +174,11 @@ export default class Drawing extends Control {
         const done = tool.update(interactionEvent, ed);
         if (done) {
             const result = tool.result;
-            this._interactionLayer.select("*").remove();
+            this._interactionRenderer.clear();
             tool.reset();
             this.fireNewObject({ object: result })
         } else if (interactionEvent == InteractionEvents.Cancel) {
-            this._interactionLayer.select("*").remove();
+            this._interactionRenderer.clear();
         }
     }
 

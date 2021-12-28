@@ -12,13 +12,10 @@ enum States {
 
 
 export class DrawCircle extends Tool {
-    private _circle;
-    private _cx: number;
-    private _cy: number;
-    private _r: number;
+    private _circle:GRCircle;
 
-    constructor(interactionLayer) {
-        super(interactionLayer, States.DrawCircle_Wait, States.DrawCircle_Done)
+    constructor(renderer) {
+        super(renderer, States.DrawCircle_Wait, States.DrawCircle_Done)
 
         this._state.add(state(States.DrawCircle_Wait), InteractionEvents.Click, state(States.DrawCircle_FirstPoint));
         this._state.add(state(States.DrawCircle_FirstPoint), InteractionEvents.MouseMove, state(States.DrawCircle_DragRadius));
@@ -41,23 +38,17 @@ export class DrawCircle extends Tool {
 
         switch (this._state.state.id) {
             case States.DrawCircle_FirstPoint:
-                this._cx = eventData.x;
-                this._cy = eventData.y;
-
-                this._circle = this._interactionLayer.append("circle")
-                    .attr("cx", eventData.x)
-                    .attr("cy", eventData.y)
-                    .attr("r", 0)
+                this._circle = new GRCircle(eventData.x, eventData.y, 0)
+                this._renderer.renderCircle(this._circle);
                 break;
 
             case States.DrawCircle_DragRadius:
-                const r = Math.sqrt((eventData.x - this._cx) ** 2 + (eventData.y - this._cy) ** 2);
-                this._circle.attr("r", r)
+                this._circle.r = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                this._renderer.renderCircle(this._circle);
                 break;
 
             case States.DrawCircle_Done:
-                this._r = Math.sqrt((eventData.x - this._cx) ** 2 + (eventData.y - this._cy) ** 2);
-
+                this._circle.r = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
         }
 
         return this.isDone;
@@ -67,7 +58,7 @@ export class DrawCircle extends Tool {
         if (!this.isDone) {
             return null;
         } else {
-            return new GRCircle(this._cx, this._cy, this._r);
+            return this._circle;
         }
     }
 

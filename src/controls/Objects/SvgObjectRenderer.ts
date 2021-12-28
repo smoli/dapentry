@@ -1,6 +1,10 @@
 import {GRCircle, GrObject, GRRectangle, ObjectType} from "./GrObject";
 import {ObjectRenderer} from "./ObjectRenderer";
 
+
+/**
+ * Renderer using SVG. This uses d3 (3.4) for rendering.
+ */
 export class SvgObjectRenderer extends ObjectRenderer {
 
     protected _layer;
@@ -10,6 +14,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._layer = layer;
     }
 
+
+    clear() {
+        this._layer.select("*").remove();
+    }
 
     render(object: GrObject) {
         switch (object.type) {
