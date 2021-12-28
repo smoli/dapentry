@@ -1,7 +1,8 @@
 import {state} from "../../runtime/tools/StateMachine";
-import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GRCircle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
+import {RenderLayer} from "../Objects/ObjectRenderer";
 
 enum States {
     Wait = "DrawCircle.Wait",
@@ -39,12 +40,12 @@ export class DrawCircle extends Tool {
         switch (this._state.state.id) {
             case States.CenterPoint:
                 this._circle = new GRCircle(eventData.x, eventData.y, 0)
-                this._renderer.renderCircle(this._circle);
+                this._renderer.renderCircle(RenderLayer.Interaction, this._circle);
                 break;
 
             case States.DragRadius:
                 this._circle.r = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
-                this._renderer.renderCircle(this._circle);
+                this._renderer.renderCircle(RenderLayer.Interaction, this._circle);
                 break;
 
             case States.Done:

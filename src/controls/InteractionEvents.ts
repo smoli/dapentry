@@ -10,6 +10,7 @@ export enum InteractionEvents {
 }
 
 export interface InteractionEventData {
+    interactionEvent: InteractionEvents,
     x: number,
     y: number,
     dx: number,

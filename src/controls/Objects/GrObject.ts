@@ -141,7 +141,7 @@ export class GRCircle extends GrObject {
     }
 
     get boundingBox(): BoundingBox {
-        return { ...super.boundingBox, w: this._r, h: this._r };
+        return { ...super.boundingBox, w: this._r * 2, h: this._r * 2 };
     }
 }
 

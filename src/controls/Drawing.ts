@@ -5,7 +5,7 @@ import d3 from "sap/ui/thirdparty/d3";
 import {state, StateMachine} from "../runtime/tools/StateMachine";
 import {DrawCircle} from "./Tools/DrawCircle";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
-import {ObjectRenderer} from "./Objects/ObjectRenderer";
+import {ObjectRenderer, RenderLayer} from "./Objects/ObjectRenderer";
 import {SvgObjectRenderer} from "./Objects/SvgObjectRenderer";
 import {GrObject} from "./Objects/GrObject";
 import {DrawRectangle} from "./Tools/DrawRectangle";
@@ -35,14 +35,10 @@ export default class Drawing extends Control {
 
     private _containerId: string;
     private _svg: Selection<any>;
-    private _renderLayer: Selection<any>;
-    private _helperLayer: Selection<any>;
-    private _interactionLayer: Selection<any>;
 
     private _interactionState: StateMachine;
 
     private _objectRenderer:ObjectRenderer;
-    private _interactionRenderer:ObjectRenderer;
 
     private _selection:Array<GrObject>;
 
@@ -103,10 +99,9 @@ export default class Drawing extends Control {
     public onAfterRendering(oEvent: jQuery.Event) {
         super.onAfterRendering(oEvent);
         this._svg = d3.select(this.getDomRef()).select("svg")
-        this._setupLayers();
-        this._objectRenderer = new SvgObjectRenderer(this._renderLayer, this._onObjectClick.bind(this));
-        this._interactionRenderer = new SvgObjectRenderer(this._interactionLayer);
+        this._objectRenderer = new SvgObjectRenderer(this._svg, this._onObjectClick.bind(this));
         this._renderAll();
+        this._setupMouseEvents();
         this._initializeInteractionState();
     }
 
@@ -114,16 +109,7 @@ export default class Drawing extends Control {
         return `${this.getId()}--${suffix}`;
     }
 
-    private _setupLayers(): void {
-        // Interactive drawingLayer
-        this._interactionLayer = this._svg.append("g").attr("id", this._makeId("interaction"));
-
-        // Helper/Snapping/Controlpoint layer
-        this._helperLayer = this._svg.append("g").attr("id", this._makeId("helper"));
-
-        // RenderLayer
-        this._renderLayer = this._svg.append("g").attr("id", this._makeId("render"));
-
+    private _setupMouseEvents(): void {
         this._svg.on("mousedown", this._interActionMouseDown.bind(this))
         this._svg.on("mouseup", this._interActionMouseUp.bind(this))
         this._svg.on("mouseleave", this._interActionMouseLeave.bind(this))
@@ -135,7 +121,7 @@ export default class Drawing extends Control {
 
     update(clearAllFirst:boolean = false) {
         if (clearAllFirst) {
-            this._objectRenderer.clear();
+            this._objectRenderer.clear(RenderLayer.Objects);
         }
         this._renderAll();
     }
@@ -155,10 +141,10 @@ export default class Drawing extends Control {
                 let tool;
                 switch (event) {
                     case Events.ToolCircle:
-                        tool = new DrawCircle(this._interactionRenderer);
+                        tool = new DrawCircle(this._objectRenderer);
                         break;
                     case Events.ToolRect:
-                        tool = new DrawRectangle(this._interactionRenderer);
+                        tool = new DrawRectangle(this._objectRenderer);
                         break;
                     case Events.Cancel:
                         break;
@@ -184,6 +170,7 @@ export default class Drawing extends Control {
         const d3Ev = d3.event;
         const d3MEv = d3.mouse(this._svg.node());
         const ed: InteractionEventData = {
+            interactionEvent,
             x: d3MEv[0],
             y: d3MEv[1],
             dx: d3Ev.movementX,
@@ -197,11 +184,11 @@ export default class Drawing extends Control {
         const done = tool.update(interactionEvent, ed);
         if (done) {
             const result = tool.result;
-            this._interactionRenderer.clear();
+            this._objectRenderer.clear(RenderLayer.Interaction);
             tool.reset();
             this.fireNewObject({ object: result })
         } else if (interactionEvent == InteractionEvents.Cancel) {
-            this._interactionRenderer.clear();
+            this._objectRenderer.clear(RenderLayer.Interaction);
         }
     }
 

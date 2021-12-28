@@ -1,7 +1,8 @@
-import {state, StateMachine} from "../../runtime/tools/StateMachine";
-import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
+import {state} from "../../runtime/tools/StateMachine";
+import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GRRectangle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
+import {RenderLayer} from "../Objects/ObjectRenderer";
 
 enum States {
     Wait = "DrawRect.Wait",
@@ -46,7 +47,7 @@ export class DrawRectangle extends Tool {
                 this._x1 = eventData.x
                 this._y1 = eventData.y
                 this._rect = new GRRectangle(eventData.x, eventData.y, 0, 0);
-                this._renderer.renderRectangle(this._rect);
+                this._renderer.renderRectangle(RenderLayer.Interaction, this._rect);
                 break;
 
             case States.Done: // pass through
@@ -56,7 +57,7 @@ export class DrawRectangle extends Tool {
                 this._rect.y = calcRect.y1 + calcRect.h / 2;
                 this._rect.w = calcRect.w;
                 this._rect.h = calcRect.h;
-                this._renderer.renderRectangle(this._rect);
+                this._renderer.renderRectangle(RenderLayer.Interaction, this._rect);
                 break;
 
         }
