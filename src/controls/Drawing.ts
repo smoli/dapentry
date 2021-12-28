@@ -16,6 +16,12 @@ enum States {
     Drawing_Tool = "Drawing.Tool"
 }
 
+enum Events {
+    ToolCircle,
+    ToolRect,
+    Cancel
+}
+
 /**
  *
  * See https://github.com/SAP-samples/ui5-typescript-helloworld/tree/custom-controls
@@ -67,11 +73,10 @@ export default class Drawing extends Control {
 
     private _initializeInteractionState() {
         this._interactionState = new StateMachine();
-        this._interactionState.add(state(States.Drawing_NoTool), "ToolSelectCircle", state(States.Drawing_Tool));
-
-        const tool = new DrawRectangle(this._interactionLayer);
-        tool.reset();
-        this._interactionState.start(state(States.Drawing_Tool, tool))
+        this._interactionState.add(state(States.Drawing_NoTool), Events.ToolCircle, state(States.Drawing_Tool));
+        this._interactionState.add(state(States.Drawing_NoTool), Events.ToolRect, state(States.Drawing_Tool));
+        this._interactionState.add(state(States.Drawing_Tool), Events.Cancel, state(States.Drawing_NoTool));
+        this._interactionState.start(state(States.Drawing_NoTool));
     }
 
     public onAfterRendering(oEvent: jQuery.Event) {
@@ -114,6 +119,33 @@ export default class Drawing extends Control {
         this.getObjects().forEach(obj => {
             this._objectRenderer.render(obj as GrObject);
         });
+    }
+
+
+    private _updateState(event:Events) {
+        this._interactionState.next(event);
+
+        switch(this._interactionState.state.id) {
+            case States.Drawing_Tool:
+                let tool;
+                switch (event) {
+                    case Events.ToolCircle:
+                        tool = new DrawCircle(this._interactionLayer);
+                        break;
+                    case Events.ToolRect:
+                        tool = new DrawRectangle(this._interactionLayer);
+                        break;
+                    case Events.Cancel:
+                        break;
+                }
+                tool.reset();
+                this._interactionState.state.data = tool;
+                break;
+
+            case States.Drawing_NoTool:
+                this._interactionState.state.data = null;
+        }
+
     }
 
     private _pumpToTool(interactionEvent: InteractionEvents) {
@@ -177,6 +209,12 @@ export default class Drawing extends Control {
     private _interActionKeyDown() {
         if (d3.event.keyCode === 27) {
             this._pumpToTool(InteractionEvents.Cancel);
+        } else if (d3.event.key == "c") {
+            this._pumpToTool(InteractionEvents.Cancel);
+            this._updateState(Events.ToolCircle);
+        } else if (d3.event.key == "r") {
+            this._pumpToTool(InteractionEvents.Cancel);
+            this._updateState(Events.ToolRect);
         }
     }
 
