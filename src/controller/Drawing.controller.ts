@@ -20,8 +20,19 @@ export default class App extends Controller {
         return this.getView().getModel("drawingViewModel") as JSONModel;
     }
 
-    protected _updateDrawing() {
-        (this.byId("drawing") as Drawing).update();
+    protected _updateDrawing(clearAllFirst:boolean = false) {
+        (this.byId("drawing") as Drawing).update(clearAllFirst);
+    }
+
+    onObjectDeleted(event) {
+        const o = this.viewModel().getProperty("/objects");
+        const i = o.indexOf(event.getParameter("object"));
+        if (i !== -1) {
+            o.splice(i, 1);
+        }
+        this.viewModel().setProperty("/objects", o);
+        this._updateDrawing(true);
+
     }
 
     onNewObject(event) {

@@ -1,5 +1,6 @@
-import {GRCircle, GrObject, GRRectangle, ObjectType} from "./GrObject";
+import {BoundingBox, GRCircle, GrObject, GRRectangle, ObjectType} from "./GrObject";
 import {ObjectClickCallback, ObjectRenderer} from "./ObjectRenderer";
+import {Selection} from "d3";
 
 
 /**
@@ -7,16 +8,16 @@ import {ObjectClickCallback, ObjectRenderer} from "./ObjectRenderer";
  */
 export class SvgObjectRenderer extends ObjectRenderer {
 
-    protected _layer;
+    protected _layer:Selection<any>;
 
-    constructor(layer, onObjectClick:ObjectClickCallback = null) {
+    constructor(layer:Selection<any>, onObjectClick:ObjectClickCallback = null) {
         super(onObjectClick);
         this._layer = layer;
     }
 
 
     clear() {
-        this._layer.select("*").remove();
+        this._layer.selectAll("*").remove();
     }
 
     render(object: GrObject, selected: boolean) {
@@ -47,7 +48,23 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
-    protected getObjectOrCreate(object: GrObject, svgTag: string): any {
+    /**
+     * Get svg entity for object from the layer. If it does not exist yet,
+     * create it using the `svgTag`.
+     *
+     * Every object will be wrapped in a group. The group will be returned.
+     * In order to access the object you can use the class `grObject` via a selection.
+     *
+     * ```
+     *      const g = this.getObjectOrCreate(someObject, "sometag");
+     *      const svgObjectRepresentation = g.select(".grObject");
+     * ```
+     *
+     * @param object
+     * @param svgTag
+     * @protected
+     */
+    protected getObjectOrCreate(object: GrObject, svgTag: string): Selection<any> {
         let svgObject = this._layer.select("#" + object.id);
 
         if (svgObject.empty()) {
@@ -79,6 +96,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
         r.attr("height", rectangle.h);
 
         return r;
+    }
+
+
+    renderBoundingBox(object:GrObject) {
+
     }
 
 }

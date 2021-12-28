@@ -53,6 +53,10 @@ export default class Drawing extends Control {
         events: {
             newObject: {
                 object: "any"
+            },
+
+            objectDeleted: {
+                object: "any"
             }
         },
 
@@ -128,7 +132,10 @@ export default class Drawing extends Control {
         this._svg.on("keyup", this._interActionKeyDown.bind(this))
     }
 
-    update() {
+    update(clearAllFirst:boolean = false) {
+        if (clearAllFirst) {
+            this._objectRenderer.clear();
+        }
         this._renderAll();
     }
 
@@ -224,7 +231,9 @@ export default class Drawing extends Control {
     }
 
     private _interActionKeyDown() {
-        if (d3.event.keyCode === 27) {
+        if (d3.event.code === "Delete") {
+            this._deleteSelection();
+        } else if (d3.event.keyCode === 27) {
             this._pumpToTool(InteractionEvents.Cancel);
         } else if (d3.event.key == "c") {
             this._pumpToTool(InteractionEvents.Cancel);
@@ -252,6 +261,12 @@ export default class Drawing extends Control {
             this._selection.splice(i, 1);
         }
         this._renderAll();
+    }
+
+    private _deleteSelection() {
+        if (this._selection.length === 1) {
+            this.fireObjectDeleted({ object: this._selection[0] })
+        }
     }
 
 }

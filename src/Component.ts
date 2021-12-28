@@ -1,9 +1,16 @@
+/**
+ * Component module
+ *
+ * @module
+ */
+
 import UIComponent from "sap/ui/core/UIComponent";
 import { support } from "sap/ui/Device";
 import {Interpreter} from "./runtime/interpreter/Interpreter";
 
 
 /**
+ * App component
  * @namespace sts.drawable
  */
 export default class Component extends UIComponent {
@@ -14,6 +21,9 @@ export default class Component extends UIComponent {
 
     private contentDensityClass : string;
 
+    /**
+     * Initialize component.
+     */
     public init() : void {
         // call the base component's init function
         super.init();

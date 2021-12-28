@@ -17,3 +17,4 @@ dist/
 /.nyc_output/
 /coverage/
 /src/controls/*.tsinterface.ts
+/doc/reference/
