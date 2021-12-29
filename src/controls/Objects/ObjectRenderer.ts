@@ -19,7 +19,7 @@
  * @module
  */
 
-import {GRCircle, GrObject, GRRectangle} from "./GrObject";
+import {GRCircle, GrObject, GRRectangle, Point2D} from "./GrObject";
 import {InteractionEventData} from "../InteractionEvents";
 
 /**
@@ -115,7 +115,7 @@ export abstract class ObjectRenderer {
      * @param onMouseEvent      callback that is called when the user interacts with the handle.
      * @param data              arbitrary data that is passed to the callback.
      */
-    public abstract renderHandle(object: GrObject, x: number, y: number, onMouseEvent: HandleMouseCallBack, data?: any): void;
+    public abstract renderHandle(object: GrObject, p:Point2D, onMouseEvent: HandleMouseCallBack, data?: any): void;
 
     /**
      * Remove all handles from the object's representation.

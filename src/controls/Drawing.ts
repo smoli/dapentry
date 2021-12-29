@@ -10,7 +10,7 @@ import {SvgObjectRenderer} from "./Objects/SvgObjectRenderer";
 import {GrObject} from "./Objects/GrObject";
 import {DrawRectangle} from "./Tools/DrawRectangle";
 import {Selection} from "d3";
-import {TransformationTool} from "./Tools/TransformationTool";
+import {MoveTool} from "./Tools/MoveTool";
 import {Tool} from "./Tools/Tool";
 
 
@@ -26,7 +26,7 @@ enum States {
 enum ToolNames {
     Circle,
     Rectangle,
-    Transform,
+    Move,
     None
 }
 
@@ -45,9 +45,9 @@ enum Events {
     ToolRect,
 
     /**
-     * Transformation tool was selected
+     * Move tool was selected
      */
-    ToolTransform,
+    ToolMove,
 
     /**
      * Tool was cancelled
@@ -113,18 +113,18 @@ export default class Drawing extends Control {
     private _initializeInteractionState() {
         this._interactionState = new StateMachine();
         this._interactionState.add(state(States.NoTool), Events.ToolCircle, state(States.DrawingTool));
-        this._interactionState.add(state(States.NoTool), Events.ToolTransform, state(States.ManipulationTool));
+        this._interactionState.add(state(States.NoTool), Events.ToolMove, state(States.ManipulationTool));
 
         this._interactionState.add(state(States.NoTool), Events.ToolRect, state(States.DrawingTool));
         this._interactionState.add(state(States.ManipulationTool), Events.ToolCircle, state(States.DrawingTool));
         this._interactionState.add(state(States.ManipulationTool), Events.ToolRect, state(States.DrawingTool));
-        this._interactionState.add(state(States.ManipulationTool), Events.ToolTransform, state(States.ManipulationTool));
+        this._interactionState.add(state(States.ManipulationTool), Events.ToolMove, state(States.ManipulationTool));
 
         this._interactionState.add(state(States.DrawingTool), Events.Cancel, state(States.NoTool));
         this._interactionState.add(state(States.ManipulationTool), Events.Cancel, state(States.NoTool));
 
-        this._interactionState.add(state(States.NoTool), Events.ToolTransform, state(States.ManipulationTool));
-        this._interactionState.add(state(States.DrawingTool), Events.ToolTransform, state(States.ManipulationTool));
+        this._interactionState.add(state(States.NoTool), Events.ToolMove, state(States.ManipulationTool));
+        this._interactionState.add(state(States.DrawingTool), Events.ToolMove, state(States.ManipulationTool));
 
         this._interactionState.start(state(States.NoTool));
     }
@@ -136,7 +136,7 @@ export default class Drawing extends Control {
         this._renderAll();
         this._setupMouseEvents();
         this._initializeInteractionState();
-        this._updateState(Events.ToolTransform);
+        this._updateState(Events.ToolMove);
     }
 
     private _makeId(suffix: string): string {
@@ -188,8 +188,8 @@ export default class Drawing extends Control {
                 tool = new DrawRectangle(this._objectRenderer);
                 break;
 
-            case ToolNames.Transform:
-                tool = new TransformationTool(this._objectRenderer);
+            case ToolNames.Move:
+                tool = new MoveTool(this._objectRenderer);
                 break;
 
             case ToolNames.None:
@@ -230,8 +230,8 @@ export default class Drawing extends Control {
 
             case States.ManipulationTool:
                 switch (event) {
-                    case Events.ToolTransform:
-                        this._switchTool(ToolNames.Transform)
+                    case Events.ToolMove:
+                        this._switchTool(ToolNames.Move)
                         break;
                 }
                 break;
@@ -314,7 +314,7 @@ export default class Drawing extends Control {
         } else if (d3.event.key === "r") {
             this._updateState(Events.ToolRect);
         } else if (d3.event.key === "s") {
-            this._updateState(Events.ToolTransform);
+            this._updateState(Events.ToolMove);
         }
     }
 

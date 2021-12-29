@@ -3,6 +3,7 @@ import JSONModel from "sap/ui/model/json/JSONModel";
 import {Interpreter} from "./runtime/interpreter/Interpreter";
 import {GfxCircle} from "./runtime/gfx/GfxCircle";
 import {GfxRect} from "./runtime/gfx/GfxRect";
+import {GfxMove} from "./runtime/gfx/GfxMove";
 
 export class ComponentController {
     private _component: Component;
@@ -15,6 +16,7 @@ export class ComponentController {
 
         this._interpreter.addOperation("CIRCLE", GfxCircle);
         this._interpreter.addOperation("RECT", GfxRect);
+        this._interpreter.addOperation("MOVE", GfxMove);
 
         const appModel = new JSONModel({
             code: [],

@@ -36,6 +36,12 @@ export interface BoundingBox {
     h: number
 }
 
+
+export interface Point2D {
+    x:number,
+    y:number
+}
+
 export abstract class GrObject {
 
     private _name:string;
@@ -121,6 +127,61 @@ export abstract class GrObject {
     get boundingBox():BoundingBox {
         return { x: this._x, y: this._y, w: 0, h: 0 };
     }
+
+
+    /**
+     * Point at the center of the object relative to the
+     * object's origin.
+     */
+    get center():Point2D  {
+        return { x: 0, y: 0 };
+    }
+
+    /**
+     * Point at the bottom center of the object.
+     * Relative to the object's origin.
+     */
+    get bottom():Point2D {
+        return { x: 0, y: this.boundingBox.h / 2 };
+    }
+
+    /**
+     * Point at the left center of the object relative
+     * to the object's origin.
+     */
+    get left():Point2D {
+        return { x:  -this.boundingBox.w / 2, y: 0 };
+    }
+
+    /**
+     * Point at the top center of the object relative to
+     * the object's origin.
+     */
+    get top():Point2D {
+        return { x: 0, y: -this.boundingBox.h / 2 };
+    }
+
+    /**
+     * Point at the right center of the object relative
+     * to the object's origin.
+     */
+    get right():Point2D {
+        return { x: this.boundingBox.w / 2, y: 0 };
+    }
+
+    /**
+     * Get distinctive points of the object. These can be
+     * used for snapping and other things.
+     */
+    get pointsOfInterest():{[key: string]: Point2D } {
+        return {
+            center: this.center,
+            top: this.top,
+            bottom: this.bottom,
+            left: this.left,
+            right: this.right
+        }
+    }
 }
 
 export class GRCircle extends GrObject {
@@ -143,6 +204,8 @@ export class GRCircle extends GrObject {
     get boundingBox(): BoundingBox {
         return { ...super.boundingBox, w: this._r * 2, h: this._r * 2 };
     }
+
+
 }
 
 export class GRRectangle extends GrObject {

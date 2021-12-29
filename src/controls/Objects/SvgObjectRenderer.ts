@@ -1,6 +1,6 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {GRCircle, GrObject, GRRectangle, ObjectType} from "./GrObject";
+import {GRCircle, GrObject, GRRectangle, ObjectType, Point2D} from "./GrObject";
 import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, RenderLayer} from "./ObjectRenderer";
 import {Selection} from "d3";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
@@ -212,12 +212,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
-    public renderHandle(object: GrObject, x: number, y: number, onMouseEvent: HandleMouseCallBack, data?: any) {
+    public renderHandle(object: GrObject, p:Point2D, onMouseEvent: HandleMouseCallBack, data?: any) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             const handle = g.append("circle")
-                .attr("cx", x)
-                .attr("cy", y)
+                .attr("cx", p.x)
+                .attr("cy", p.y)
                 .attr("r", HANDLE_RADIUS)
                 .classed(ToolClasses.handle, true);
 
