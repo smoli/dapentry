@@ -46,6 +46,7 @@ export abstract class Tool {
         return this._state.state.id === this._doneStateId;
     }
 
+
     /**
      * Set the selection.
      * This is a noop by default. Tools need to implement this if they need the selection
@@ -61,6 +62,20 @@ export abstract class Tool {
      */
     public initialize():void {
         return;
+    }
+
+    /**
+     * Use this to tear down anything you need before the tool is deactivated
+     */
+    public finish():void {
+        return;
+    }
+
+    /**
+     * Abort tool. This does not deactivate the tool.
+     */
+    public cancel():void {
+        this.reset();
     }
 
     /**

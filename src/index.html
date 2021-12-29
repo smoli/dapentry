@@ -6,6 +6,11 @@
 
   <style>
 
+    #svgDefinitions {
+      position: absolute;
+      left: -1000vw;
+    }
+
     svg {
       border: 1px solid lightgreen;
       outline: none;
@@ -24,9 +29,16 @@
       fill: none !important;
     }
 
-    svg g .transformationHandle {
-      background: rgb(255,255,255);
-      background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(45,248,253,1) 100%);
+    circle.transformationHandle {
+      /*
+      stroke-width: 3;
+      stroke: lightseagreen;
+      fill: white !important;
+      */
+      fill-opacity: 1;
+      stroke-width: 1;
+      stroke: #3f3f3f;
+      fill:url(#handleGradient);
     }
 
   </style>
@@ -48,6 +60,20 @@
 </head>
 
 <body class="sapUiBody">
+
+<svg
+        id="svgDefinitions"
+        xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <radialGradient id="handleGradient" cx="30%" cy="30%" r="78.2842712474619%" >
+      <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1.00" />
+      <stop offset="65%" style="stop-color:rgb(213,211,211);stop-opacity:1.00" />
+    </radialGradient>
+  </defs>
+
+</svg>
+
 <div data-sap-ui-component data-name="sts.drawable" data-id="container" data-settings='{"id" : "sts.drawable"}'></div>
 </body>
 </html>

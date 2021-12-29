@@ -6,6 +6,10 @@
         xmlns:sts="sts.drawable.controls"
 >
     <Page>
-        <sts:Drawing id="drawing" newObject="onNewObject"  objectDeleted="onObjectDeleted" objects="{drawingViewModel>/objects}"/>
+        <sts:Drawing id="drawing"
+                     newObject="onNewObject"
+                     objectDeleted="onObjectDeleted"
+                     objects="{drawingViewModel>/objects}"
+        />
     </Page>
 </mvc:View>

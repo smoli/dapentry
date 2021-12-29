@@ -1,6 +1,7 @@
 import Controller from "sap/ui/core/mvc/Controller";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Drawing from "../controls/Drawing";
+import {GRRectangle} from "../controls/Objects/GrObject";
 
 /**
  * @namespace sts.drawable.controller
@@ -10,7 +11,8 @@ export default class App extends Controller {
     public onInit() : void {
 
         const viewModel = new JSONModel({
-            objects: []
+            currentTool: "",
+            objects: [new GRRectangle(400, 300, 200, 100)]
         });
 
         this.getView().setModel(viewModel, "drawingViewModel")

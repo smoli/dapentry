@@ -17,27 +17,29 @@ enum ToolClassSelectors {
     boundingBox = ".boundingBox"
 }
 
+const HANDLE_RADIUS: string = "7px";
+
 
 /**
  * Renderer using SVG. This uses d3 (3.4) for rendering.
  */
 export class SvgObjectRenderer extends ObjectRenderer {
 
-    protected _objectLayer:Selection<any>;
-    protected _interactionLayer:Selection<any>;
+    protected _objectLayer: Selection<any>;
+    protected _interactionLayer: Selection<any>;
 
-    constructor(container: Selection<any>, onObjectClick:ObjectClickCallback = null) {
+    constructor(container: Selection<any>, onObjectClick: ObjectClickCallback = null) {
         super(onObjectClick);
         this._setupLayers(container);
     }
 
-    protected _setupLayers(container: Selection<any>):void {
+    protected _setupLayers(container: Selection<any>): void {
         this._objectLayer = container.append("g");
         this._interactionLayer = container.append("g");
     }
 
 
-    clear(layer:RenderLayer) {
+    clear(layer: RenderLayer) {
         if (layer === RenderLayer.Objects) {
             this._objectLayer.selectAll("*").remove();
         } else if (layer === RenderLayer.Interaction) {
@@ -90,7 +92,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param svgTag
      * @protected
      */
-    protected getObjectOrCreate(layer:Selection<any>, object: GrObject, svgTag: string): Selection<any> {
+    protected getObjectOrCreate(layer: Selection<any>, object: GrObject, svgTag: string): Selection<any> {
         let svgGroup = layer.select("#" + object.id);
 
         if (svgGroup.empty()) {
@@ -114,7 +116,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param object
      * @protected
      */
-    protected getObject(layer:Selection<any>, object:GrObject): Selection<any> {
+    protected getObject(layer: Selection<any>, object: GrObject): Selection<any> {
         let svgGroup = layer.select("#" + object.id);
         if (svgGroup.empty()) {
             return null;
@@ -123,7 +125,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return svgGroup;
     }
 
-    protected getLayer(layer:RenderLayer):Selection<any> {
+    protected getLayer(layer: RenderLayer): Selection<any> {
         if (layer === RenderLayer.Objects) {
             return this._objectLayer;
         } else if (layer === RenderLayer.Interaction) {
@@ -131,44 +133,72 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
-    protected _renderCircle(layer:Selection<any>, circle: GRCircle) {
-        const c = this.getObjectOrCreate(layer, circle, "circle").select(ToolClassSelectors.object);
+    /**
+     * Render circle on layer
+     * @param layer
+     * @param circle
+     * @protected
+     */
+    protected _renderCircle(layer: Selection<any>, circle: GRCircle) {
+        const o = this.getObjectOrCreate(layer, circle, "circle")
+        const c = o.select(ToolClassSelectors.object);
 
-        c.attr("cx", circle.x);
-        c.attr("cy", circle.y);
+        c.attr("cx", 0);
+        c.attr("cy", 0);
         c.attr("r", circle.r);
+        o.attr("transform", this._createTransform(circle));
 
         return c;
     }
-    renderCircle(layer:RenderLayer, circle: GRCircle) {
+
+    renderCircle(layer: RenderLayer, circle: GRCircle) {
         return this._renderCircle(this.getLayer(layer), circle);
     }
 
-    protected _renderRectangle(layer:Selection<any>, rectangle: GRRectangle) {
-        const r = this.getObjectOrCreate(layer, rectangle, "rect").select(ToolClassSelectors.object);
+    /**
+     * Render rectangle on layer
+     * @param layer
+     * @param rectangle
+     * @protected
+     */
+    protected _renderRectangle(layer: Selection<any>, rectangle: GRRectangle) {
+        const o = this.getObjectOrCreate(layer, rectangle, "rect");
 
-        r.attr("x", rectangle.x - rectangle.w / 2);
-        r.attr("y", rectangle.y - rectangle.h / 2);
+        const r = o.select(ToolClassSelectors.object);
+        r.attr("x", -rectangle.w / 2);
+        r.attr("y", -rectangle.h / 2);
         r.attr("width", rectangle.w);
         r.attr("height", rectangle.h);
+        o.attr("transform", this._createTransform(rectangle));
 
         return r;
     }
-    renderRectangle(layer:RenderLayer, rectangle: GRRectangle) {
+
+    renderRectangle(layer: RenderLayer, rectangle: GRRectangle) {
         return this._renderRectangle(this.getLayer(layer), rectangle);
     }
 
+    protected _createTransform(object: GrObject): string {
+        // Scale -> translate -> rotate
 
-    renderBoundingRepresentation(object:GrObject) {
+        return `translate(${object.x} ${object.y})`;
+    }
+
+    renderBoundingRepresentation(object: GrObject) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.selectAll(ToolClassSelectors.boundingBox).remove();
+            const c = g.selectAll(ToolClassSelectors.boundingBox);
+
+            if (!c.empty()) {
+                // Already drawing a bounding representation
+                return;
+            }
 
             const bb = object.boundingBox;
 
             g.append("rect")
-                .attr("x", bb.x - bb.w / 2)
-                .attr("y", bb.y - bb.h / 2)
+                .attr("x", -bb.w / 2)
+                .attr("y",  -bb.h / 2)
                 .attr("width", bb.w)
                 .attr("height", bb.h)
                 .classed(ToolClasses.boundingBox, true);
@@ -182,34 +212,31 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
-    public renderHandle(object: GrObject, x:number, y: number, onMouseEvent:HandleMouseCallBack, data?:any) {
+    public renderHandle(object: GrObject, x: number, y: number, onMouseEvent: HandleMouseCallBack, data?: any) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            const px = object.x + x;
-            const py = object.y + y;
-
             const handle = g.append("circle")
-                .attr("cx", px)
-                .attr("cy", py)
-                .attr("r", "10px")
+                .attr("cx", x)
+                .attr("cy", y)
+                .attr("r", HANDLE_RADIUS)
                 .classed(ToolClasses.handle, true);
 
             this._attachHandleMouseEvents(object, handle, onMouseEvent, data);
         }
     }
 
-    public removeAllHandles(object):void {
+    public removeAllHandles(object): void {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             g.selectAll(ToolClassSelectors.handle).remove();
         }
     }
 
-    private _attachHandleMouseEvents(object:GrObject, svgObject:Selection<any>, handler:HandleMouseCallBack, data:any = null):void {
+    private _attachHandleMouseEvents(object: GrObject, svgObject: Selection<any>, handler: HandleMouseCallBack, data: any = null): void {
 
         function makeEvent(interactionEvent) {
             const d3Ev = d3.event;
-            const d3MEv = d3.mouse(svgObject);
+            const d3MEv = d3.mouse(svgObject.node());
             const ed: InteractionEventData = {
                 interactionEvent,
                 x: d3MEv[0],
