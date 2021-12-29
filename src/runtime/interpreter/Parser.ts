@@ -19,7 +19,6 @@ export class Parser {
 }
 
 
-
 function peg$subclass(child, parent) {
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
@@ -172,8 +171,8 @@ function peg$parse(input, options) {
             return arg
         },
         peg$c8 = peg$otherExpectation("Register"),
-        peg$c9 = /^[a-zA-Z]/,
-        peg$c10 = peg$classExpectation([["a", "z"], ["A", "Z"]], false, false),
+        peg$c9 = /^[$a-zA-Z]/,
+        peg$c10 = peg$classExpectation(["$", ["a", "z"], ["A", "Z"]], false, false),
         peg$c11 = /^[a-zA-Z0-9.]/,
         peg$c12 = peg$classExpectation([["a", "z"], ["A", "Z"], ["0", "9"], "."], false, false),
         peg$c13 = /^[a-zA-Z0-9]/,

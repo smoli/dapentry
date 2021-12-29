@@ -1,0 +1,18 @@
+<mvc:View
+        controllerName="sts.drawable.controller.Style"
+        displayBlock="true"
+        xmlns="sap.m"
+        xmlns:l="sap.ui.layout"
+        xmlns:unified="sap.ui.unified"
+        xmlns:mvc="sap.ui.core.mvc">
+
+    <Page>
+<!--        <Text text="lkjh" />-->
+        <VBox items="{appModel>/selection}">
+            <items>
+                <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}" change="onColorChange"/>
+            </items>
+        </VBox>
+    </Page>
+
+</mvc:View>

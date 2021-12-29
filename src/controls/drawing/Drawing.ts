@@ -2,7 +2,7 @@ import Control from "sap/ui/core/Control";
 import HTML from "sap/ui/core/HTML";
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {state, StateMachine} from "../runtime/tools/StateMachine";
+import {state, StateMachine} from "../../runtime/tools/StateMachine";
 import {DrawCircle} from "./Tools/DrawCircle";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {ObjectRenderer, RenderLayer} from "./Objects/ObjectRenderer";
@@ -81,6 +81,10 @@ export default class Drawing extends Control {
                 code: "string"
             },
 
+            selectionChange: {
+                selection: "any"
+            },
+
             objectDeleted: {
                 object: "any"
             }
@@ -137,6 +141,21 @@ export default class Drawing extends Control {
         this._setupMouseEvents();
         this._initializeInteractionState();
         this._updateState(Events.ToolMove);
+
+        const b = this.getBinding("objects");
+
+        b.attachChange(() => {
+            debugger;
+        })
+        b.attachRefresh(() => {
+            debugger;
+        })
+        b.attachDataReceived(() => {
+            debugger;
+        })
+        b.attachAggregatedDataStateChange(() => {
+            debugger;
+        })
     }
 
     private _makeId(suffix: string): string {
@@ -291,6 +310,7 @@ export default class Drawing extends Control {
     }
 
     private _interActionMouseEnter() {
+        (this._svg.node() as HTMLElement).focus();
         this._pumpToTool(InteractionEvents.MouseEnter)
     }
 
@@ -336,6 +356,8 @@ export default class Drawing extends Control {
         if (this._currentTool) {
             this._currentTool.selection = this._selection;
         }
+
+        this.fireSelectionChange({ selection: this._selection });
     }
 
     private _deleteSelection() {

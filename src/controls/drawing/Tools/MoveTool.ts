@@ -2,7 +2,7 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject} from "../Objects/GrObject";
-import {state} from "../../runtime/tools/StateMachine";
+import {state} from "../../../runtime/tools/StateMachine";
 
 
 enum States {
@@ -68,6 +68,7 @@ export class MoveTool extends Tool {
 
     set selection(value: Array<GrObject>) {
         this.finish();
+        this.reset();
         this._selection = value;
         this.initialize();
     }

@@ -1,3 +1,5 @@
+import {Style} from "./StyleManager";
+
 export enum ObjectType {
     Circle,
     Rectangle,
@@ -43,13 +45,13 @@ export interface Point2D {
 }
 
 export abstract class GrObject {
-
     private _name:string;
     private _x:number;
     private _y:number;
     private _scaleX:number = 1;
     private _scaleY:number = 1;
     private _rotation:number = 0;
+    private _style:Style = null;
 
     private readonly _type:ObjectType;
 
@@ -58,7 +60,7 @@ export abstract class GrObject {
         this._y = y;
         this._type = type;
 
-        this._makeName()
+        this._makeName();
     }
 
     get type(): ObjectType {
@@ -79,6 +81,19 @@ export abstract class GrObject {
 
     set name(value: string) {
         this._name = value;
+    }
+
+    get style(): Style {
+        return this._style;
+    }
+
+    set style(value: Style) {
+        this._style = value;
+    }
+
+    set fillColor(value: string) {
+        this._style.fillColor = value;
+        this._style.strokeColor = value;
     }
 
     get y(): number {

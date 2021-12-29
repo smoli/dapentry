@@ -1,4 +1,4 @@
-import {state, StateMachine} from "../../runtime/tools/StateMachine";
+import {state, StateMachine} from "../../../runtime/tools/StateMachine";
 import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject} from "../Objects/GrObject";

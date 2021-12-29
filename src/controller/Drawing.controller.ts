@@ -1,6 +1,6 @@
 import Controller from "sap/ui/core/mvc/Controller";
 import JSONModel from "sap/ui/model/json/JSONModel";
-import Drawing from "../controls/Drawing";
+import Drawing from "../controls/drawing/Drawing";
 import {ComponentController} from "../ComponentController";
 import Component from "../Component";
 
@@ -18,16 +18,16 @@ export default class DrawingController extends Controller {
         this.getView().setModel(viewModel, "drawingViewModel")
     }
 
+    onAfterRendering() {
+        this.getComponentController().drawing = this.byId("drawing") as Drawing;
+    }
+
     private viewModel():JSONModel {
         return this.getView().getModel("drawingViewModel") as JSONModel;
     }
 
     getComponentController():ComponentController {
         return (this.getOwnerComponent() as Component).getComponentController();
-    }
-
-    protected _updateDrawing(clearAllFirst:boolean = false) {
-        (this.byId("drawing") as Drawing).update(clearAllFirst);
     }
 
     onObjectDeleted(event) {
@@ -37,12 +37,13 @@ export default class DrawingController extends Controller {
             o.splice(i, 1);
         }
         this.viewModel().setProperty("/objects", o);
-        this._updateDrawing(true);
+    }
 
+    onSelectionChange(event) {
+        this.getComponentController().setSelection(event.getParameter("selection"));
     }
 
     async onNewOperation(event) {
         await this.getComponentController().addOperation(event.getParameter("code"));
-        this._updateDrawing();
     }
 }

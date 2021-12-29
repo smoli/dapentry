@@ -3,12 +3,13 @@
         displayBlock="true"
         xmlns="sap.m"
         xmlns:mvc="sap.ui.core.mvc"
-        xmlns:sts="sts.drawable.controls"
+        xmlns:sts="sts.drawable.controls.drawing"
 >
     <Page>
         <sts:Drawing id="drawing"
                      newOperation="onNewOperation"
                      objectDeleted="onObjectDeleted"
+                     selectionChange="onSelectionChange"
                      objects="{appModel>/drawing}"
         />
     </Page>

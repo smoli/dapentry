@@ -145,7 +145,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         c.attr("cx", 0);
         c.attr("cy", 0);
-        c.attr("r", circle.r);
+        c.attr("r", circle.r)
+        c.attr("style", this._createStyle(circle));
         o.attr("transform", this._createTransform(circle));
 
         return c;
@@ -168,7 +169,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         r.attr("x", -rectangle.w / 2);
         r.attr("y", -rectangle.h / 2);
         r.attr("width", rectangle.w);
-        r.attr("height", rectangle.h);
+        r.attr("height", rectangle.h)
+        r.attr("style", this._createStyle(rectangle));
         o.attr("transform", this._createTransform(rectangle));
 
         return r;
@@ -182,6 +184,13 @@ export class SvgObjectRenderer extends ObjectRenderer {
         // Scale -> translate -> rotate
 
         return `translate(${object.x} ${object.y})`;
+    }
+
+    protected _createStyle(object: GrObject): string {
+        if (!object.style) {
+            return "";
+        }
+        return `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}`;
     }
 
     renderBoundingRepresentation(object: GrObject) {

@@ -1,4 +1,4 @@
-import {state} from "../../runtime/tools/StateMachine";
+import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GRCircle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
@@ -64,6 +64,6 @@ export class DrawCircle extends Tool {
     }
 
     public get code():string {
-        return `CIRCLE drawing ${this._circle.name} "${this._circle.name}" (${this._circle.x} ${this._circle.y}) ${this._circle.r}`
+        return `CIRCLE $drawing ${this._circle.name} "${this._circle.name}" $styles.default (${this._circle.x} ${this._circle.y}) ${this._circle.r}`
     }
 }

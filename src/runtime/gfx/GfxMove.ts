@@ -1,7 +1,7 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
-import {GrObject} from "../../controls/Objects/GrObject";
+import {GrObject} from "../../controls/drawing/Objects/GrObject";
 
 export class GfxMove extends Operation {
     private readonly _object: Parameter;

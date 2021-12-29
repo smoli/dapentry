@@ -1,12 +1,24 @@
 <mvc:View
         displayBlock="true"
         xmlns="sap.m"
+        xmlns:l="sap.ui.layout"
         xmlns:mvc="sap.ui.core.mvc">
 
-    <VBox items="{appModel>/code}">
-        <items>
-           <Text text="{appModel>}" />
-        </items>
-    </VBox>
+    <Page>
+        <l:Splitter orientation="Vertical">
+            <l:contentAreas>
+                <VBox></VBox>
+                <VBox items="{appModel>/segmentedCode}">
+                    <items>
+                        <HBox items="{appModel>}">
+                            <items>
+                                <Input value="{appModel>value}" />
+                            </items>
+                        </HBox>
+                    </items>
+                </VBox>
+            </l:contentAreas>
+        </l:Splitter>
+    </Page>
 
 </mvc:View>

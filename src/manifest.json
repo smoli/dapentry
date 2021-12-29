@@ -41,20 +41,25 @@
         {
           "pattern": "",
           "name": "default",
-          "target": ["structure", "drawing"],
-          "layout": "TwoColumnsMidExpanded"
+          "target": ["structure", "drawing", "style"],
+          "layout": "ThreeColumnsMidExpanded"
         }
       ],
       "targets": {
         "structure": {
-          "viewName": "structure",
+          "viewName": "Structure",
           "viewId": "structure",
           "controlAggregation": "beginColumnPages"
         },
         "drawing": {
-          "viewName": "drawing",
+          "viewName": "Drawing",
           "viewId": "drawing",
           "controlAggregation": "midColumnPages"
+        },
+        "style": {
+          "viewName": "Style",
+          "viewId": "style",
+          "controlAggregation": "endColumnPages"
         }
       }
     },
