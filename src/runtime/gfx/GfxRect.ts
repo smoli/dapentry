@@ -31,8 +31,7 @@ export class GfxRect extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const r = new GRRectangle(this.p1.x, this.p1.y, this.width, this.height);
-        r.name = this.name;
+        const r = GRRectangle.create(this.name, this.p1.x, this.p1.y, this.width, this.height);
         r.style = this.style;
         this.target = r;
         this.drawing.push(r);

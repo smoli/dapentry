@@ -46,7 +46,7 @@ export class DrawRectangle extends Tool {
             case States.FirstPoint:
                 this._x1 = eventData.x
                 this._y1 = eventData.y
-                this._rect = new GRRectangle(eventData.x, eventData.y, 0, 0);
+                this._rect = GRRectangle.create(null, eventData.x, eventData.y, 0, 0);
                 this._renderer.renderRectangle(RenderLayer.Interaction, this._rect);
                 break;
 

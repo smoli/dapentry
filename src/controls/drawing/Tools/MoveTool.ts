@@ -8,12 +8,11 @@ import {state} from "../../../runtime/tools/StateMachine";
 enum States {
     Wait = "MoveTool.Wait",
     Done = "MoveTool.Done",
-    CenterHandle = "MoveTool.CenterHandle"
+    Handle = "MoveTool.Handle"
 }
 
 enum Events {
-    CenterDown = "MoveTool.CenterDown",
-    CenterUp = "MoveTool.CenterUp"
+    HandleDown = "MoveTool.CenterDown"
 }
 
 enum Handle {
@@ -33,8 +32,8 @@ export class MoveTool extends Tool {
     constructor(renderer: ObjectRenderer) {
         super(renderer, States.Wait, States.Done);
 
-        this._state.add(state(States.Wait), Events.CenterDown, state(States.CenterHandle));
-        this._state.add(state(States.CenterHandle), InteractionEvents.MouseUp, state(States.Done));
+        this._state.add(state(States.Wait), Events.HandleDown, state(States.Handle));
+        this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));
     }
 
     finish() {
@@ -57,12 +56,12 @@ export class MoveTool extends Tool {
         this._renderer.renderBoundingRepresentation(this._object);
     }
 
-    protected _onHandleEvent(object: GrObject, eventData: InteractionEventData, data: any): void {
+    protected _onHandleEvent(object: GrObject, eventData: InteractionEventData): void {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             this._ox = this._object.x;
             this._oy = this._object.y;
-            this._state.next(Events.CenterDown);
+            this._state.next(Events.HandleDown);
         }
     }
 
@@ -95,7 +94,7 @@ export class MoveTool extends Tool {
                 this._renderer.render(this._object, true);
                 return true;
 
-            case States.CenterHandle:
+            case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._object.x += eventData.dx;
                     this._object.y += eventData.dy;

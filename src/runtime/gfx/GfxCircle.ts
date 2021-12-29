@@ -31,8 +31,7 @@ export class GfxCircle extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const c = new GRCircle(this.center.x, this.center.y, this.radius)
-        c.name = this.name;
+        const c = GRCircle.create(this.name, this.center.x, this.center.y, this.radius)
         c.style = this.style;
         this.target = c;
 

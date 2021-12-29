@@ -44,7 +44,17 @@ export interface Point2D {
     y:number
 }
 
+
+/**
+ * Base class for graphical objects that are displayed on the drawing.
+ *
+ * The instances are pooled by their name.
+ */
 export abstract class GrObject {
+
+    private static _instanceCounter:number = 0;
+    private static _pool: {[key:string]:GrObject} = {}
+
     private _name:string;
     private _x:number;
     private _y:number;
@@ -52,15 +62,32 @@ export abstract class GrObject {
     private _scaleY:number = 1;
     private _rotation:number = 0;
     private _style:Style = null;
+    private _instanceCount = GrObject._instanceCounter++;
 
     private readonly _type:ObjectType;
 
-    protected constructor(type:ObjectType, x:number, y:number) {
+    protected constructor(type:ObjectType, name:string, x:number, y:number) {
+        this._name = name;
         this._x = x;
         this._y = y;
         this._type = type;
 
-        this._makeName();
+        if (name === null) {
+            this._makeName();
+        }
+    }
+
+    protected static getPoolInstance(name:string) {
+        return name && GrObject._pool[name];
+    }
+
+    protected static setPoolInstance(object:GrObject):GrObject {
+        GrObject._pool[object.name] = object;
+        return object;
+    }
+
+    get instanceCount(): number {
+        return this._instanceCount;
     }
 
     get type(): ObjectType {
@@ -77,10 +104,6 @@ export abstract class GrObject {
 
     get name(): string {
         return this._name;
-    }
-
-    set name(value: string) {
-        this._name = value;
     }
 
     get style(): Style {
@@ -203,9 +226,20 @@ export class GRCircle extends GrObject {
 
     private _r:number
 
-    constructor(x:number, y:number, r:number) {
-        super(ObjectType.Circle, x, y);
+    protected constructor(name:string, x:number, y:number, r:number) {
+        super(ObjectType.Circle, name, x, y);
         this._r = r;
+    }
+
+    public static create(name:string, x:number, y:number, r:number):GRCircle {
+        const i = GrObject.getPoolInstance(name) as GRCircle;
+        if (!i) {
+            return GrObject.setPoolInstance(new GRCircle(name, x, y, r)) as GRCircle;
+        }
+        i.x = x;
+        i.y = y;
+        i.r = r;
+        return i;
     }
 
     get r(): number {
@@ -228,10 +262,22 @@ export class GRRectangle extends GrObject {
     private _w:number;
     private _h:number;
 
-    constructor(x:number, y:number, w:number, h:number) {
-        super(ObjectType.Rectangle, x, y);
+    protected constructor(name: string, x:number, y:number, w:number, h:number) {
+        super(ObjectType.Rectangle, name, x, y);
         this._w = w;
         this._h = h;
+    }
+
+    public static create(name: string, x:number, y:number, w:number, h:number) {
+        const i = GrObject.getPoolInstance(name) as GRRectangle;
+        if (!i) {
+            return GrObject.setPoolInstance(new GRRectangle(name, x, y, w, h)) as GRRectangle;
+        }
+        i.x = x;
+        i.y = y;
+        i.w = w;
+        i.h = h;
+        return i;
     }
 
     get h(): number {
@@ -259,10 +305,23 @@ export class GREllipse extends GrObject {
     private _w:number;
     private _h:number;
 
-    constructor(x:number, y:number, w:number, h:number) {
-        super(ObjectType.Ellipse, x, y);
+    protected constructor(name: string, x:number, y:number, w:number, h:number) {
+        super(ObjectType.Ellipse, name, x, y);
         this._w = w;
         this._h = h;
+    }
+
+    public static create(name: string, x:number, y:number, w:number, h:number) {
+        const i = GrObject.getPoolInstance(name) as GREllipse;
+        if (!i) {
+            return GrObject.setPoolInstance(new GREllipse(name, x, y, w, h)) as GREllipse
+        }
+        i.x = x;
+        i.y = y;
+        i.w = w;
+        i.h = h;
+
+        return i;
     }
 
     get h(): number {

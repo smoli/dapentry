@@ -94,17 +94,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
      */
     protected getObjectOrCreate(layer: Selection<any>, object: GrObject, svgTag: string): Selection<any> {
         let svgGroup = layer.select("#" + object.id);
-
         if (svgGroup.empty()) {
             svgGroup = layer.append("g").attr("id", object.id);
 
             const svgObject = svgGroup.append(svgTag).attr("class", ToolClasses.object);
-
             svgObject.on("click", () => {
                 this._fireSelect(object);
             });
         }
-
+        // svgGroup.selectAll("text").remove();
+        // svgGroup.append("text").text(object.instanceCount)
         return svgGroup;
     }
 
@@ -145,8 +144,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         c.attr("cx", 0);
         c.attr("cy", 0);
-        c.attr("r", circle.r)
-        c.attr("style", this._createStyle(circle));
+        c.attr("r", circle.r);
+
+        this._createStyle(c, circle);
+
         o.attr("transform", this._createTransform(circle));
 
         return c;
@@ -169,8 +170,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
         r.attr("x", -rectangle.w / 2);
         r.attr("y", -rectangle.h / 2);
         r.attr("width", rectangle.w);
-        r.attr("height", rectangle.h)
-        r.attr("style", this._createStyle(rectangle));
+        r.attr("height", rectangle.h);
+        this._createStyle(r, rectangle);
+
         o.attr("transform", this._createTransform(rectangle));
 
         return r;
@@ -186,11 +188,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return `translate(${object.x} ${object.y})`;
     }
 
-    protected _createStyle(object: GrObject): string {
+    protected _createStyle(elem: Selection<any>, object: GrObject): void {
         if (!object.style) {
-            return "";
+            return
         }
-        return `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}`;
+        elem.attr("style", `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}`);
     }
 
     renderBoundingRepresentation(object: GrObject) {
@@ -207,7 +209,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
             g.append("rect")
                 .attr("x", -bb.w / 2)
-                .attr("y",  -bb.h / 2)
+                .attr("y", -bb.h / 2)
                 .attr("width", bb.w)
                 .attr("height", bb.h)
                 .classed(ToolClasses.boundingBox, true);
@@ -221,7 +223,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
-    public renderHandle(object: GrObject, p:Point2D, onMouseEvent: HandleMouseCallBack, data?: any) {
+    public renderHandle(object: GrObject, p: Point2D, onMouseEvent: HandleMouseCallBack, data?: any) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             const handle = g.append("circle")

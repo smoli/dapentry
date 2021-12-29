@@ -39,7 +39,7 @@ export class DrawCircle extends Tool {
 
         switch (this._state.state.id) {
             case States.CenterPoint:
-                this._circle = new GRCircle(eventData.x, eventData.y, 0)
+                this._circle = GRCircle.create(null, eventData.x, eventData.y, 0);
                 this._renderer.renderCircle(RenderLayer.Interaction, this._circle);
                 break;
 
