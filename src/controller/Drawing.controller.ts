@@ -1,18 +1,18 @@
 import Controller from "sap/ui/core/mvc/Controller";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Drawing from "../controls/Drawing";
-import {GRRectangle} from "../controls/Objects/GrObject";
+import {ComponentController} from "../ComponentController";
+import Component from "../Component";
 
 /**
  * @namespace sts.drawable.controller
  */
-export default class App extends Controller {
+export default class DrawingController extends Controller {
 
     public onInit() : void {
 
         const viewModel = new JSONModel({
-            currentTool: "",
-            objects: [new GRRectangle(400, 300, 200, 100)]
+            currentTool: ""
         });
 
         this.getView().setModel(viewModel, "drawingViewModel")
@@ -20,6 +20,10 @@ export default class App extends Controller {
 
     private viewModel():JSONModel {
         return this.getView().getModel("drawingViewModel") as JSONModel;
+    }
+
+    getComponentController():ComponentController {
+        return (this.getOwnerComponent() as Component).getComponentController();
     }
 
     protected _updateDrawing(clearAllFirst:boolean = false) {
@@ -37,10 +41,8 @@ export default class App extends Controller {
 
     }
 
-    onNewObject(event) {
-        const o = this.viewModel().getProperty("/objects");
-        o.push(event.getParameter("object"));
-        this.viewModel().setProperty("/objects", o);
+    async onNewObject(event) {
+        await this.getComponentController().addObject(event.getParameter("object"));
         this._updateDrawing();
     }
 }

@@ -35,7 +35,7 @@ enum ToolNames {
  */
 enum Events {
     /**
-     * Circle tool was selected
+     * GfxCircle tool was selected
      */
     ToolCircle,
 

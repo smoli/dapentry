@@ -203,8 +203,16 @@ export class Interpreter {
         }
     }
 
-    public parse(program: string): void {
-        const lines = program.split("\n").filter(s => s.trim().length > 0);
+    public parse(program: (string| Array<string>)): void {
+
+        let lines;
+        if (typeof program === "string") {
+            lines = program.split("\n");
+        } else {
+            lines = program;
+        }
+        lines = lines.filter(s => s.trim().length > 0)
+
         this._program = lines.map(l => this.parseLine(l)).filter(p => !!p);
     }
 
