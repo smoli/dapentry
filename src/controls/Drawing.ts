@@ -20,14 +20,12 @@ import {Tool} from "./Tools/Tool";
 enum States {
     NoTool = "Drawing.NoTool",
     DrawingTool = "Drawing.DrawingTool",
-    SelectionTool = "Drawing.SelectionTool",
     ManipulationTool = "Drawing.ManipulationTool"
 }
 
 enum ToolNames {
     Circle,
     Rectangle,
-    Select,
     Transform,
     None
 }
@@ -45,11 +43,6 @@ enum Events {
      * Rectangle tool was selected
      */
     ToolRect,
-
-    /**
-     * Selection tool was selected
-     */
-    ToolSelect,
 
     /**
      * Transformation tool was selected
@@ -123,15 +116,15 @@ export default class Drawing extends Control {
         this._interactionState.add(state(States.NoTool), Events.ToolTransform, state(States.ManipulationTool));
 
         this._interactionState.add(state(States.NoTool), Events.ToolRect, state(States.DrawingTool));
-        this._interactionState.add(state(States.SelectionTool), Events.ToolCircle, state(States.DrawingTool));
-        this._interactionState.add(state(States.SelectionTool), Events.ToolRect, state(States.DrawingTool));
-        this._interactionState.add(state(States.SelectionTool), Events.ToolTransform, state(States.ManipulationTool));
+        this._interactionState.add(state(States.ManipulationTool), Events.ToolCircle, state(States.DrawingTool));
+        this._interactionState.add(state(States.ManipulationTool), Events.ToolRect, state(States.DrawingTool));
+        this._interactionState.add(state(States.ManipulationTool), Events.ToolTransform, state(States.ManipulationTool));
 
         this._interactionState.add(state(States.DrawingTool), Events.Cancel, state(States.NoTool));
         this._interactionState.add(state(States.ManipulationTool), Events.Cancel, state(States.NoTool));
 
-        this._interactionState.add(state(States.NoTool), Events.ToolSelect, state(States.SelectionTool));
-        this._interactionState.add(state(States.DrawingTool), Events.ToolSelect, state(States.SelectionTool));
+        this._interactionState.add(state(States.NoTool), Events.ToolTransform, state(States.ManipulationTool));
+        this._interactionState.add(state(States.DrawingTool), Events.ToolTransform, state(States.ManipulationTool));
 
         this._interactionState.start(state(States.NoTool));
     }
@@ -143,6 +136,7 @@ export default class Drawing extends Control {
         this._renderAll();
         this._setupMouseEvents();
         this._initializeInteractionState();
+        this._updateState(Events.ToolTransform);
     }
 
     private _makeId(suffix: string): string {
@@ -192,9 +186,6 @@ export default class Drawing extends Control {
                 break;
             case ToolNames.Rectangle:
                 tool = new DrawRectangle(this._objectRenderer);
-                break;
-
-            case ToolNames.Select:
                 break;
 
             case ToolNames.Transform:
@@ -276,6 +267,7 @@ export default class Drawing extends Control {
             }
             this._objectRenderer.clear(RenderLayer.Interaction);
             tool.reset();
+            this._selection = [];
             this.fireNewObject({ object: result })
         } else if (interactionEvent == InteractionEvents.Cancel) {
             this._objectRenderer.clear(RenderLayer.Interaction);
@@ -312,7 +304,9 @@ export default class Drawing extends Control {
 
     private _interActionKeyDown() {
         if (d3.event.code === "Delete") {
-            this._deleteSelection();
+            if (this._interactionState.state.id !== States.DrawingTool) {
+                this._deleteSelection();
+            }
         } else if (d3.event.keyCode === 27) {
             this._updateState(Events.Cancel);
         } else if (d3.event.key === "c") {
@@ -320,15 +314,12 @@ export default class Drawing extends Control {
         } else if (d3.event.key === "r") {
             this._updateState(Events.ToolRect);
         } else if (d3.event.key === "s") {
-            this._updateState(Events.ToolSelect);
-        } else if (d3.event.key === "t") {
             this._updateState(Events.ToolTransform);
         }
     }
 
     private _onObjectClick(object:GrObject) {
-        if (this._interactionState.state.id !== States.SelectionTool &&
-            this._interactionState.state.id !== States.ManipulationTool) {
+        if (this._interactionState.state.id !== States.ManipulationTool) {
             return;
         }
 

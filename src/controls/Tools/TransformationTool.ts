@@ -18,7 +18,7 @@ enum Events {
 
 export class TransformationTool extends Tool {
 
-    protected _selection: Array<GrObject>;
+    protected _selection: Array<GrObject> = [];
 
     constructor(renderer: ObjectRenderer) {
         super(renderer, States.Wait, States.Done);
@@ -29,10 +29,16 @@ export class TransformationTool extends Tool {
 
     finish() {
         super.finish();
+        if (!this._object) {
+            return;
+        }
         this._renderer.removeAllHandles(this._object);
     }
 
     initialize() {
+        if (!this._object) {
+            return;
+        }
         const bb = this._object.boundingBox;
         this._renderer.renderHandle(this._object, 0, 0, this._onHandleEvent.bind(this), "Center");
         // this._renderer.renderHandle(this._object, -bb.w / 2, 0, this._onHandleEvent.bind(this), "Left");
@@ -53,29 +59,19 @@ export class TransformationTool extends Tool {
     }
 
     set selection(value: Array<GrObject>) {
-        let wasActive = false;
-        if (this._selection && this._selection.length) {
-            this.finish();
-            wasActive = true;
-        }
-
+        this.finish();
         this._selection = value;
-        if (value.length != 1) {
-            throw new Error("Tool only works on 1 object atm.")
-        }
-
-        if (wasActive) {
-            this.initialize();
-        }
-
+        this.initialize();
     }
 
     protected get _object(): GrObject {
-        return this._selection[0];
+        return this._selection.length && this._selection[0];
     }
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
-
+        if (!this._object) {
+            return false;
+        }
         if (this._state.state.id === States.CenterHandle) {
             if (interactionEvent === InteractionEvents.MouseMove) {
                 this._object.x += eventData.dx;
