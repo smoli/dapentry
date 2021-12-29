@@ -116,6 +116,13 @@ export abstract class GrObject {
 
     set fillColor(value: string) {
         this._style.fillColor = value;
+    }
+
+    set fillOpacity(value: number) {
+        this._style.fillOpacity = value;
+    }
+
+    set strokeColor(value: string) {
         this._style.strokeColor = value;
     }
 

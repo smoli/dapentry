@@ -19,7 +19,7 @@ export default class StyleController extends Controller {
 
         if (selection && selection.length) {
             const code = selection.map(object => {
-                return `FILL ${object.name} "${event.getParameter("hex")}"`;
+                return `FILL ${object.name} "${event.getParameter("hex")}" ${event.getParameter("alpha")}`;
             });
             this.getComponentController().addOperations(code);
         }
