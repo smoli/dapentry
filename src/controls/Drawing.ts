@@ -35,7 +35,7 @@ enum ToolNames {
  */
 enum Events {
     /**
-     * Circle tool was selected
+     * GfxCircle tool was selected
      */
     ToolCircle,
 
@@ -77,8 +77,8 @@ export default class Drawing extends Control {
         },
 
         events: {
-            newObject: {
-                object: "any"
+            newOperation: {
+                code: "string"
             },
 
             objectDeleted: {
@@ -261,14 +261,14 @@ export default class Drawing extends Control {
 
         const done = tool.update(interactionEvent, ed);
         if (done) {
-            const result = tool.result;
-            if(!result) {
+            const code = tool.code;
+            if(!code) {
                 return;
             }
             this._objectRenderer.clear(RenderLayer.Interaction);
             tool.reset();
             this._selection = [];
-            this.fireNewObject({ object: result })
+            this.fireNewOperation({ code })
         } else if (interactionEvent == InteractionEvents.Cancel) {
             this._objectRenderer.clear(RenderLayer.Interaction);
         }

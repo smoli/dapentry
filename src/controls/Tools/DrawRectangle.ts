@@ -81,4 +81,8 @@ export class DrawRectangle extends Tool {
         }
     }
 
+    get code(): string {
+        return `RECT drawing ${this._rect.name} "${this._rect.name}" (${this._rect.x} ${this._rect.y}) ${this._rect.w} ${this._rect.h}`
+    }
+
 }

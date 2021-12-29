@@ -7,9 +7,9 @@
 >
     <Page>
         <sts:Drawing id="drawing"
-                     newObject="onNewObject"
+                     newOperation="onNewOperation"
                      objectDeleted="onObjectDeleted"
-                     objects="{drawingViewModel>/objects}"
+                     objects="{appModel>/drawing}"
         />
     </Page>
 </mvc:View>

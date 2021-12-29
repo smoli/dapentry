@@ -24,6 +24,17 @@ describe('Interpreter', () => {
         console.log.restore();
     });
 
+    it('can take an array of strings as a program', async () => {
+       const code = ['LOAD r1 100', 'ADD r1 10'];
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(110);
+
+    });
+
     it("can receive values to preload registers", async ()=> {
        const code = `
             ADD r2 r1 100

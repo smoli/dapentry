@@ -99,4 +99,9 @@ export abstract class Tool {
      */
     public abstract get result(): any;
 
+    /**
+     * Returns the VM code to reproduce the tools action as performed by the user.
+     */
+    public abstract get code():string;
+
 }

@@ -6,7 +6,7 @@
 
 import UIComponent from "sap/ui/core/UIComponent";
 import { support } from "sap/ui/Device";
-import {Interpreter} from "./runtime/interpreter/Interpreter";
+import {ComponentController} from "./ComponentController";
 
 
 /**
@@ -20,24 +20,20 @@ export default class Component extends UIComponent {
     };
 
     private contentDensityClass : string;
+    private _appController: ComponentController;
 
     /**
      * Initialize component.
      */
     public init() : void {
-        // call the base component's init function
         super.init();
-
         this.getRouter().initialize();
+        this._appController = new ComponentController(this);
+    }
 
-        const i = new Interpreter();
-        const code = `
-            LOG "Hello World"
-        `;
 
-        i.parse(code);
-        i.run().then();
-
+    getComponentController(): ComponentController {
+        return this._appController;
     }
 
     /**

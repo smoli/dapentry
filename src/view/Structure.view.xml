@@ -3,5 +3,10 @@
         xmlns="sap.m"
         xmlns:mvc="sap.ui.core.mvc">
 
-    <Text text="structure" />
+    <VBox items="{appModel>/code}">
+        <items>
+           <Text text="{appModel>}" />
+        </items>
+    </VBox>
+
 </mvc:View>

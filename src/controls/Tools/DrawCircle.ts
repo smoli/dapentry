@@ -63,4 +63,7 @@ export class DrawCircle extends Tool {
         }
     }
 
+    public get code():string {
+        return `CIRCLE drawing ${this._circle.name} "${this._circle.name}" (${this._circle.x} ${this._circle.y}) ${this._circle.r}`
+    }
 }
