@@ -1,0 +1,28 @@
+<mvc:View
+        controllerName="sts.drawable.controller.DataEditor"
+        displayBlock="true"
+        xmlns="sap.m"
+        xmlns:f="sap.ui.layout.form"
+        xmlns:mvc="sap.ui.core.mvc">
+
+    <VBox class="sapUiNoMargin">
+
+        <VBox class="sapUiNoMargin" items="{appModel>/data}" alignItems="Start">
+            <HBox class="sapUiNoMargin" justifyContent="Center" alignItems="Center">
+                <Button type="Transparent" text="-" press="onDeleteDataField"/>
+                <Text text="{appModel>name} = " class="sapUiNoMarginTop sapUiNoMarginBottom"/>
+<!--                <Text text="{appModel>value}" class="sapUiNoMargin" />-->
+                <Input value="{appModel>value}" class="sapUiNoMargin"  type="Number">
+                    <layoutData>
+                        <FlexItemData growFactor="0"/>
+                    </layoutData>
+                </Input>
+                <Button type="Transparent" text="+"/>
+            </HBox>
+
+
+        </VBox>
+        <Button text="+" press="onNewDataField"/>
+    </VBox>
+
+</mvc:View>

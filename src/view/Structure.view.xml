@@ -7,11 +7,12 @@
     <Page>
         <l:Splitter orientation="Vertical">
             <l:contentAreas>
-                <VBox items="{appModel>/code}">
-                    <items>
-                        <Text text="{appModel>}" />
-                    </items>
+
+                <VBox>
+
+                <mvc:XMLView viewName="sts.drawable.view.DataEditor" />
                 </VBox>
+
                 <VBox items="{appModel>/segmentedCode}">
                     <items>
                         <HBox items="{appModel>}">
