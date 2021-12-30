@@ -249,6 +249,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public renderHandle(object: GrObject, p: Point2D, onMouseEvent: HandleMouseCallBack, data?: any) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
+            console.log(p, data)
             const handle = g.append("circle")
                 .attr("cx", p.x)
                 .attr("cy", p.y)

@@ -394,7 +394,7 @@ export class GrLine extends GrObject {
         return {
             "start": { x: this.x1, y: this.y1 },
             "end": { x: this.x2, y: this.y2 },
-            "center": { x: this.x, y: this.y }
+            "center": { x: 0, y: 0 }
         }
     }
 
