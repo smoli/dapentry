@@ -2,7 +2,7 @@ import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
-import {GRRectangle} from "../../controls/drawing/Objects/GrObject";
+import {GrRectangle} from "../../controls/drawing/Objects/GrObject";
 
 export class GfxRect extends GfxObject {
 
@@ -31,7 +31,7 @@ export class GfxRect extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const r = GRRectangle.create(this.name, this.p1.x, this.p1.y, this.width, this.height);
+        const r = GrRectangle.create(this.name, this.p1.x, this.p1.y, this.width, this.height);
         r.style = this.style;
         this.target = r;
         this.drawing.push(r);

@@ -1,7 +1,7 @@
 import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
-import {GRCircle, Point2D} from "../../controls/drawing/Objects/GrObject";
+import {GrCircle, Point2D} from "../../controls/drawing/Objects/GrObject";
 import {GfxObject} from "./GfxObject";
 
 export class GfxCircle extends GfxObject {
@@ -31,7 +31,7 @@ export class GfxCircle extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const c = GRCircle.create(this.name, this.center.x, this.center.y, this.radius)
+        const c = GrCircle.create(this.name, this.center.x, this.center.y, this.radius)
         c.style = this.style;
         this.target = c;
 

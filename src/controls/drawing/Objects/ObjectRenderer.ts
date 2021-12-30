@@ -19,7 +19,7 @@
  * @module
  */
 
-import {GRCircle, GrObject, GRRectangle, Point2D} from "./GrObject";
+import {GrCircle, GrLine, GrObject, GrRectangle, Point2D} from "./GrObject";
 import {InteractionEventData} from "../InteractionEvents";
 
 /**
@@ -82,20 +82,29 @@ export abstract class ObjectRenderer {
      * @param layer
      * @param circle
      */
-    public abstract renderCircle(layer: RenderLayer, circle: GRCircle): void;
+    public abstract renderCircle(layer: RenderLayer, circle: GrCircle): void;
 
     /**
      * Render a rectangle on the given layer.
      * @param layer
      * @param rect
      */
-    public abstract renderRectangle(layer:RenderLayer, rect: GRRectangle): void;
+    public abstract renderRectangle(layer:RenderLayer, rect: GrRectangle): void;
+
+    /**
+     * Render a line on the given layer.
+     * @param layer
+     * @param line
+     */
+    public abstract renderLine(layer:RenderLayer, line: GrLine): void;
 
     /**
      * Render the bounding representation for an object on the object layer
      * @param object
      */
     public abstract renderBoundingRepresentation(object: GrObject): void;
+
+
 
     /**
      * Remove bounding representation from object representation on the object layer

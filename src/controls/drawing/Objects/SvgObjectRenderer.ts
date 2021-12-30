@@ -1,6 +1,6 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {GRCircle, GrObject, GRRectangle, ObjectType, Point2D} from "./GrObject";
+import {GrCircle, GrLine, GrObject, GrRectangle, ObjectType, Point2D} from "./GrObject";
 import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, RenderLayer} from "./ObjectRenderer";
 import {Selection} from "d3";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
@@ -53,11 +53,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         switch (object.type) {
             case ObjectType.Circle:
-                svgObjc = this._renderCircle(this._objectLayer, object as GRCircle);
+                svgObjc = this._renderCircle(this._objectLayer, object as GrCircle);
                 break;
 
             case ObjectType.Rectangle:
-                svgObjc = this._renderRectangle(this._objectLayer, object as GRRectangle);
+                svgObjc = this._renderRectangle(this._objectLayer, object as GrRectangle);
                 break;
 
             case ObjectType.Ellipse:
@@ -65,6 +65,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
             case ObjectType.Square:
                 break;
             case ObjectType.Line:
+                svgObjc = this._renderLine(this._objectLayer, object as GrLine);
                 break;
         }
 
@@ -138,7 +139,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param circle
      * @protected
      */
-    protected _renderCircle(layer: Selection<any>, circle: GRCircle) {
+    protected _renderCircle(layer: Selection<any>, circle: GrCircle) {
         const o = this.getObjectOrCreate(layer, circle, "circle")
         const c = o.select(ToolClassSelectors.object);
 
@@ -153,7 +154,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return c;
     }
 
-    renderCircle(layer: RenderLayer, circle: GRCircle) {
+    renderCircle(layer: RenderLayer, circle: GrCircle) {
         return this._renderCircle(this.getLayer(layer), circle);
     }
 
@@ -163,7 +164,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param rectangle
      * @protected
      */
-    protected _renderRectangle(layer: Selection<any>, rectangle: GRRectangle) {
+    protected _renderRectangle(layer: Selection<any>, rectangle: GrRectangle) {
         const o = this.getObjectOrCreate(layer, rectangle, "rect");
 
         const r = o.select(ToolClassSelectors.object);
@@ -178,8 +179,30 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return r;
     }
 
-    renderRectangle(layer: RenderLayer, rectangle: GRRectangle) {
+    renderRectangle(layer: RenderLayer, rectangle: GrRectangle) {
         return this._renderRectangle(this.getLayer(layer), rectangle);
+    }
+
+
+
+    private _renderLine(layer: d3.Selection<any>, line: GrLine) {
+        const o = this.getObjectOrCreate(layer, line, "line");
+
+        console.log(line.x1 + line.x, line.y1 + line.y, line.x2 + line.x, line.y2 + line.y);
+        const l = o.select(ToolClassSelectors.object);
+        l.attr("x1", line.x1);
+        l.attr("y1", line.y1);
+        l.attr("x2", line.x2);
+        l.attr("y2", line.y2);
+        this._createStyle(l, line);
+
+        o.attr("transform", this._createTransform(line));
+
+        return l;
+    }
+
+    renderLine(layer: RenderLayer, line: GrLine) {
+        return this._renderLine(this.getLayer(layer), line);
     }
 
     protected _createTransform(object: GrObject): string {
@@ -271,4 +294,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
             handler(object, makeEvent(InteractionEvents.Click), data)
         });
     }
+
+
 }

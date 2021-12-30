@@ -12,6 +12,7 @@ import {DrawRectangle} from "./Tools/DrawRectangle";
 import {Selection} from "d3";
 import {MoveTool} from "./Tools/MoveTool";
 import {Tool} from "./Tools/Tool";
+import {DrawLine} from "./Tools/DrawLine";
 
 
 /**
@@ -26,6 +27,7 @@ enum States {
 enum ToolNames {
     Circle,
     Rectangle,
+    Line,
     Move,
     None
 }
@@ -43,6 +45,11 @@ enum Events {
      * Rectangle tool was selected
      */
     ToolRect,
+
+    /**
+     * Line tool was selected
+     */
+    ToolLine,
 
     /**
      * Move tool was selected
@@ -117,18 +124,21 @@ export default class Drawing extends Control {
     private _initializeInteractionState() {
         this._interactionState = new StateMachine();
         this._interactionState.add(state(States.NoTool), Events.ToolCircle, state(States.DrawingTool));
-        this._interactionState.add(state(States.NoTool), Events.ToolMove, state(States.ManipulationTool));
-
+        this._interactionState.add(state(States.NoTool), Events.ToolLine, state(States.DrawingTool));
         this._interactionState.add(state(States.NoTool), Events.ToolRect, state(States.DrawingTool));
+
+        this._interactionState.add(state(States.NoTool), Events.ToolMove, state(States.ManipulationTool));
+        this._interactionState.add(state(States.DrawingTool), Events.ToolMove, state(States.ManipulationTool));
+
         this._interactionState.add(state(States.ManipulationTool), Events.ToolCircle, state(States.DrawingTool));
         this._interactionState.add(state(States.ManipulationTool), Events.ToolRect, state(States.DrawingTool));
+        this._interactionState.add(state(States.ManipulationTool), Events.ToolLine, state(States.DrawingTool));
+
         this._interactionState.add(state(States.ManipulationTool), Events.ToolMove, state(States.ManipulationTool));
 
         this._interactionState.add(state(States.DrawingTool), Events.Cancel, state(States.NoTool));
         this._interactionState.add(state(States.ManipulationTool), Events.Cancel, state(States.NoTool));
 
-        this._interactionState.add(state(States.NoTool), Events.ToolMove, state(States.ManipulationTool));
-        this._interactionState.add(state(States.DrawingTool), Events.ToolMove, state(States.ManipulationTool));
 
         this._interactionState.start(state(States.NoTool));
     }
@@ -207,6 +217,10 @@ export default class Drawing extends Control {
                 tool = new DrawRectangle(this._objectRenderer);
                 break;
 
+            case ToolNames.Line:
+                tool = new DrawLine(this._objectRenderer);
+                break;
+
             case ToolNames.Move:
                 tool = new MoveTool(this._objectRenderer);
                 break;
@@ -225,7 +239,7 @@ export default class Drawing extends Control {
 
 
     private _updateState(event:Events) {
-        console.log("State transition requested", Events[event], event);
+
         this._interactionState.next(event);
 
         switch(this._interactionState.state.id) {
@@ -243,6 +257,9 @@ export default class Drawing extends Control {
                     case Events.ToolRect:
                         this._switchTool(ToolNames.Rectangle);
                         break;
+                    case Events.ToolLine:
+                        this._switchTool(ToolNames.Line);
+                        break;
                 }
 
                 break;
@@ -258,7 +275,6 @@ export default class Drawing extends Control {
     }
 
     private _pumpToTool(interactionEvent: InteractionEvents) {
-        console.log("Pumping", InteractionEvents[interactionEvent], interactionEvent)
         if (this._interactionState.state.id !== States.DrawingTool && this._interactionState.state.id !== States.ManipulationTool) {
             return;
         }
@@ -274,8 +290,6 @@ export default class Drawing extends Control {
             alt: d3Ev.altKey, button: d3Ev.button, buttons: d3Ev.buttons, ctrl: d3Ev.ctrlKey, shift: d3Ev.shiftKey,
             key: d3Ev.key, keyCode: d3Ev.keyCode
         };
-        console.log("\t", ed);
-
         const tool = this._currentTool;
 
         const done = tool.update(interactionEvent, ed);
@@ -335,6 +349,8 @@ export default class Drawing extends Control {
             this._updateState(Events.ToolRect);
         } else if (d3.event.key === "s") {
             this._updateState(Events.ToolMove);
+        } else if (d3.event.key === "l") {
+            this._updateState(Events.ToolLine);
         }
     }
 

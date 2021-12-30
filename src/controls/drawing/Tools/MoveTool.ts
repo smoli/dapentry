@@ -12,16 +12,9 @@ enum States {
 }
 
 enum Events {
-    HandleDown = "MoveTool.CenterDown"
+    HandleDown = "MoveTool.HandleDown"
 }
 
-enum Handle {
-    Center,
-    Left,
-    Right,
-    Top,
-    Bottom
-}
 
 export class MoveTool extends Tool {
 
@@ -48,11 +41,15 @@ export class MoveTool extends Tool {
         if (!this._object) {
             return;
         }
-        this._renderer.renderHandle(this._object, this._object.center, this._onHandleEvent.bind(this), Handle.Center);
-        this._renderer.renderHandle(this._object, this._object.left, this._onHandleEvent.bind(this), Handle.Left);
-        this._renderer.renderHandle(this._object, this._object.right, this._onHandleEvent.bind(this), Handle.Right);
-        this._renderer.renderHandle(this._object, this._object.top, this._onHandleEvent.bind(this), Handle.Top);
-        this._renderer.renderHandle(this._object, this._object.bottom, this._onHandleEvent.bind(this), Handle.Bottom);
+
+        const poi = this._object.pointsOfInterest;
+
+        Object.keys(poi)
+            .forEach(name => {
+                this._renderer.renderHandle(this._object, poi[name], this._onHandleEvent.bind(this), name);
+
+            })
+
         this._renderer.renderBoundingRepresentation(this._object);
     }
 

@@ -1,6 +1,6 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {GRRectangle} from "../Objects/GrObject";
+import {GrRectangle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 
@@ -13,7 +13,7 @@ enum States {
 
 export class DrawRectangle extends Tool {
 
-    private _rect:GRRectangle;
+    private _rect:GrRectangle;
     private _x1:number;
     private _y1:number;
 
@@ -46,7 +46,7 @@ export class DrawRectangle extends Tool {
             case States.FirstPoint:
                 this._x1 = eventData.x
                 this._y1 = eventData.y
-                this._rect = GRRectangle.create(null, eventData.x, eventData.y, 0, 0);
+                this._rect = GrRectangle.create(null, eventData.x, eventData.y, 0, 0);
                 this._renderer.renderRectangle(RenderLayer.Interaction, this._rect);
                 break;
 

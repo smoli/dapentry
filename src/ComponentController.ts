@@ -9,6 +9,7 @@ import {StyleManager} from "./controls/drawing/Objects/StyleManager";
 import {GfxFill} from "./runtime/gfx/GfxFill";
 import {GrObject} from "./controls/drawing/Objects/GrObject";
 import Drawing from "./controls/drawing/Drawing";
+import {GfxLine} from "./runtime/gfx/GfxLine";
 
 export class ComponentController {
     private _component: Component;
@@ -23,6 +24,7 @@ export class ComponentController {
 
         this._interpreter.addOperation("CIRCLE", GfxCircle);
         this._interpreter.addOperation("RECT", GfxRect);
+        this._interpreter.addOperation("LINE", GfxLine);
         this._interpreter.addOperation("MOVE", GfxMove);
         this._interpreter.addOperation("FILL", GfxFill);
 

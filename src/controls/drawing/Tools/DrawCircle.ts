@@ -1,6 +1,6 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {GRCircle} from "../Objects/GrObject";
+import {GrCircle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 
@@ -13,7 +13,7 @@ enum States {
 
 
 export class DrawCircle extends Tool {
-    private _circle:GRCircle;
+    private _circle:GrCircle;
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done)
@@ -39,7 +39,7 @@ export class DrawCircle extends Tool {
 
         switch (this._state.state.id) {
             case States.CenterPoint:
-                this._circle = GRCircle.create(null, eventData.x, eventData.y, 0);
+                this._circle = GrCircle.create(null, eventData.x, eventData.y, 0);
                 this._renderer.renderCircle(RenderLayer.Interaction, this._circle);
                 break;
 
