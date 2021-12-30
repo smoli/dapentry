@@ -14,7 +14,6 @@ export default class StyleController extends Controller {
     }
 
     onColorChange(event) {
-
         const selection = this.getComponentController().getSelection();
 
         if (selection && selection.length) {
@@ -23,7 +22,16 @@ export default class StyleController extends Controller {
             });
             this.getComponentController().addOperations(code);
         }
+    }
 
+    onStrokeWidthChange(event) {
+        const selection = this.getComponentController().getSelection();
 
+        if (selection && selection.length) {
+            const code = selection.map(object => {
+                return `STROKE ${object.name} ${event.getParameter("value")}`;
+            });
+            this.getComponentController().addOperations(code);
+        }
     }
 }

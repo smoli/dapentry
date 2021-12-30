@@ -215,7 +215,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         if (!object.style) {
             return
         }
-        elem.attr("style", `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}`);
+        elem.attr("style", `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}; stroke-width: ${object.style.strokeWidth}`);
     }
 
     renderBoundingRepresentation(object: GrObject) {

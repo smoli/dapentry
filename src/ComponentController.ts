@@ -7,9 +7,10 @@ import {GfxMove} from "./runtime/gfx/GfxMove";
 import {Parser} from "./runtime/interpreter/Parser";
 import {StyleManager} from "./controls/drawing/Objects/StyleManager";
 import {GfxFill} from "./runtime/gfx/GfxFill";
-import {GrObject} from "./controls/drawing/Objects/GrObject";
+import {GrObject, ObjectType} from "./controls/drawing/Objects/GrObject";
 import Drawing from "./controls/drawing/Drawing";
 import {GfxLine} from "./runtime/gfx/GfxLine";
+import {GfxStroke} from "./runtime/gfx/GfxStroke";
 
 export class ComponentController {
     private _component: Component;
@@ -27,6 +28,7 @@ export class ComponentController {
         this._interpreter.addOperation("LINE", GfxLine);
         this._interpreter.addOperation("MOVE", GfxMove);
         this._interpreter.addOperation("FILL", GfxFill);
+        this._interpreter.addOperation("STROKE", GfxStroke);
 
         const appModel = new JSONModel({
             code: [],
@@ -107,7 +109,7 @@ export class ComponentController {
             s = selection.map(object => {
                 return {
                     "name": object.name,
-                    "type": object.type,
+                    "type": ObjectType[object.type],
                     "style": {...object.style},
                     object
                 }

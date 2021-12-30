@@ -10,7 +10,17 @@
 <!--        <Text text="lkjh" />-->
         <VBox items="{appModel>/selection}">
             <items>
+                <VBox>
                 <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}" change="onColorChange"/>
+                <Slider value="{appModel>style/strokeWidth}" width="100%"
+                        min="{= ${appModel>type} === 'Line' ? 1 : 0 }"
+                        max="25"
+                        showAdvancedTooltip="true"
+                        showHandleTooltip="false"
+                        inputsAsTooltips="true"
+                        change="onStrokeWidthChange"
+                        class="sapUiMediumMarginBottom" />
+                </VBox>
             </items>
         </VBox>
     </Page>

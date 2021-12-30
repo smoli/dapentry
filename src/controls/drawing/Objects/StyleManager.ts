@@ -4,6 +4,7 @@ export interface Style {
     fillColor:string;
     strokeColor:string;
     fillOpacity:number;
+    strokeWidth:number;
 }
 
 
@@ -17,7 +18,8 @@ export class StyleManager {
         this._styles["default"] = {
             fillColor: "coral",
             strokeColor: "coral",
-            fillOpacity: 0.2
+            fillOpacity: 0.2,
+            strokeWidth: 2
         }
     }
 
