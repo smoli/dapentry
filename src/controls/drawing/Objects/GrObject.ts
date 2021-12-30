@@ -8,6 +8,22 @@ export enum ObjectType {
     Line
 }
 
+
+/**
+ * Point of interest identifier
+ */
+export enum POI {
+    center,
+    top,
+    left,
+    bottom,
+    right,
+    start,
+    end
+}
+
+export type POIMap = {[key in POI]?: Point2D };
+
 let objCounter = 1;
 function getObjectName(prefix:string):string {
     return prefix + objCounter++;
@@ -222,14 +238,28 @@ export abstract class GrObject {
      * Get distinctive points of the object. These can be
      * used for snapping and other things.
      */
-    get pointsOfInterest():{[key: string]: Point2D } {
+    get pointsOfInterest():POIMap {
         return {
-            center: this.center,
-            top: this.top,
-            bottom: this.bottom,
-            left: this.left,
-            right: this.right
+            [POI.center]: this.center,
+            [POI.top]: this.top,
+            [POI.bottom]: this.bottom,
+            [POI.left]: this.left,
+            [POI.right]: this.right
         }
+    }
+
+    /**
+     * Move the POI of an object. How this behaves depends
+     * on the implementation of the object type. By default
+     * (this implementation) the whole object is moved by
+     * moving its center.
+     *
+     * @param poi           The point of interest to move
+     * @param vector        The vector to move the POI by
+     */
+    public movePOI(poi:POI, vector:Point2D):void {
+        this._x += vector.x;
+        this._y += vector.y;
     }
 }
 

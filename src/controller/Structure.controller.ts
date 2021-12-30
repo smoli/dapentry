@@ -18,7 +18,7 @@ const StatementConfig = {
     "RECT": [Do.text, Do.hidden, Do.text, Do.hidden, Do.hidden, Do.edit, Do.edit, Do.edit],
     "LINE": [Do.text, Do.hidden, Do.text, Do.hidden, Do.hidden, Do.edit, Do.edit],
     "FILL": [Do.text, Do.text, Do.edit],
-    "MOVE": [Do.text, Do.text, Do.edit]
+    "MOVE": [Do.text, Do.text, Do.text, Do.edit]
 }
 
 
@@ -32,8 +32,8 @@ export default class StructureController extends BaseController {
         const firstToken = tokens[0];
 
         if (!firstToken) {
+            console.log("NO FIRST TOKEN", tokens || null)
             return new Text({ text: "NO FIRST TOKEN!"});
-            console.log("NO FIRST TOKEN", tokens)
         }
 
         const config = StatementConfig[firstToken.value] || [Do.text];

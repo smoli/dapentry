@@ -1,7 +1,7 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject} from "../Objects/GrObject";
+import {GrObject, POI, POIMap} from "../Objects/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
 
 
@@ -19,6 +19,9 @@ enum Events {
 export class MoveTool extends Tool {
 
     protected _selection: Array<GrObject> = [];
+    protected _activeObject:GrObject;
+    protected _activePOI:POI;
+
     private _ox: number;
     private _oy: number;
 
@@ -35,30 +38,35 @@ export class MoveTool extends Tool {
             return;
         }
         this._renderer.removeAllHandles(this._object);
+        this._activePOI = null;
+        this._activeObject = null;
     }
 
     initialize() {
         if (!this._object) {
             return;
         }
+        this._activePOI = null;
+        this._activeObject = null;
 
-        const poi = this._object.pointsOfInterest;
+        const poi:POIMap = this._object.pointsOfInterest;
 
         Object.keys(poi)
-            .forEach(name => {
-                this._renderer.renderHandle(this._object, poi[name], this._onHandleEvent.bind(this), name);
-
+            .forEach(poiId => {
+                this._renderer.renderHandle(this._object, poi[poiId], this._onHandleEvent.bind(this), poiId);
             })
 
         this._renderer.renderBoundingRepresentation(this._object);
     }
 
-    protected _onHandleEvent(object: GrObject, eventData: InteractionEventData): void {
+    protected _onHandleEvent(object: GrObject, eventData: InteractionEventData, poiId): void {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             this._ox = this._object.x;
             this._oy = this._object.y;
             this._state.next(Events.HandleDown);
+            this._activeObject = object;
+            this._activePOI = poiId;
         }
     }
 
@@ -93,8 +101,7 @@ export class MoveTool extends Tool {
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
-                    this._object.x += eventData.dx;
-                    this._object.y += eventData.dy;
+                    this._activeObject.movePOI(this._activePOI, { x: eventData.dx, y: eventData.dy })
                     this._renderer.render(this._object, true);
                 }
                 break;
@@ -113,7 +120,7 @@ export class MoveTool extends Tool {
         const dy = this._object.y - this._oy;
 
         if (dx !== 0 && dy !== 0) {
-            return `MOVE ${this._object.name} (${dx} ${dy})`
+            return `MOVE ${this._object.name} "${POI[this._activePOI]}" (${dx} ${dy})`
         } else {
             return null;
         }

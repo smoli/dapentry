@@ -1,4 +1,4 @@
-import {GrObject, ObjectType, Point2D} from "./GrObject";
+import {GrObject, ObjectType, POI, POIMap, Point2D} from "./GrObject";
 
 export class GrLine extends GrObject {
     private _x2: number;
@@ -81,12 +81,19 @@ export class GrLine extends GrObject {
         this.updateCenter();
     }
 
-    get pointsOfInterest(): { [p: string]: Point2D } {
-        return {
-            "start": {x: this.x1, y: this.y1},
-            "end": {x: this.x2, y: this.y2},
-            "center": {x: 0, y: 0}
-        }
+    get start(): Point2D {
+        return {x: this.x1, y: this.y1}
     }
 
+    get end(): Point2D {
+        return {x: this.x2, y: this.y2}
+    }
+
+    get pointsOfInterest(): POIMap {
+        return {
+            [POI.start]: this.start,
+            [POI.end]: this.end,
+            [POI.center]: { x: 0, y: 0 }
+        }
+    }
 }
