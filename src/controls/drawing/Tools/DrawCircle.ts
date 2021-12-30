@@ -1,8 +1,8 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {GrCircle} from "../Objects/GrObject";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
+import {GrCircle} from "../Objects/GrCircle";
 
 enum States {
     Wait = "DrawCircle.Wait",

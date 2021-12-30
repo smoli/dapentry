@@ -1,8 +1,9 @@
 import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
-import {GrCircle, Point2D} from "../../controls/drawing/Objects/GrObject";
+import {Point2D} from "../../controls/drawing/Objects/GrObject";
 import {GfxObject} from "./GfxObject";
+import {GrCircle} from "../../controls/drawing/Objects/GrCircle";
 
 export class GfxCircle extends GfxObject {
     private readonly _center: Point2Parameter;

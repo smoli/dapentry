@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GrLine} from "../../../src/controls/drawing/Objects/GrObject";
+import {GrLine} from "../../../src/controls/drawing/Objects/GrLine";
 
 
 describe('GrLIne', () => {

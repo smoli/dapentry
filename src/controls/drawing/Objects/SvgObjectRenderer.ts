@@ -1,9 +1,12 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {GrCircle, GrLine, GrObject, GrRectangle, ObjectType, Point2D} from "./GrObject";
+import {GrObject, ObjectType, Point2D} from "./GrObject";
 import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, RenderLayer} from "./ObjectRenderer";
 import {Selection} from "d3";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
+import {GrCircle} from "./GrCircle";
+import {GrRectangle} from "./GrRectangle";
+import {GrLine} from "./GrLine";
 
 enum ToolClasses {
     object = "grObject",
