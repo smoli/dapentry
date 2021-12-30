@@ -1,4 +1,5 @@
 <mvc:View
+        controllerName="sts.drawable.controller.Structure"
         displayBlock="true"
         xmlns="sap.m"
         xmlns:l="sap.ui.layout"
@@ -9,18 +10,11 @@
             <l:contentAreas>
 
                 <VBox>
-
                 <mvc:XMLView viewName="sts.drawable.view.DataEditor" />
                 </VBox>
 
-                <VBox items="{appModel>/segmentedCode}">
-                    <items>
-                        <HBox items="{appModel>}">
-                            <items>
-                                <Input value="{appModel>value}" />
-                            </items>
-                        </HBox>
-                    </items>
+                <VBox items="{ path: 'appModel>/segmentedCode',
+                               factory: '.codeSegmentFactory' }">
                 </VBox>
             </l:contentAreas>
         </l:Splitter>

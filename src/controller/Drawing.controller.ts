@@ -1,13 +1,11 @@
-import Controller from "sap/ui/core/mvc/Controller";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Drawing from "../controls/drawing/Drawing";
-import {ComponentController} from "../ComponentController";
-import Component from "../Component";
+import BaseController from "./BaseController";
 
 /**
  * @namespace sts.drawable.controller
  */
-export default class DrawingController extends Controller {
+export default class DrawingController extends BaseController {
 
     public onInit() : void {
 
@@ -24,10 +22,6 @@ export default class DrawingController extends Controller {
 
     private viewModel():JSONModel {
         return this.getView().getModel("drawingViewModel") as JSONModel;
-    }
-
-    getComponentController():ComponentController {
-        return (this.getOwnerComponent() as Component).getComponentController();
     }
 
     onObjectDeleted(event) {
