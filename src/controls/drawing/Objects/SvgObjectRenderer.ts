@@ -1,8 +1,8 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {GrObject, ObjectType, POI, Point2D} from "./GrObject";
+import {GrObject, ObjectType, Point2D} from "./GrObject";
 import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, POICallback, RenderLayer} from "./ObjectRenderer";
-import {Selection, svg} from "d3";
+import {Selection} from "d3";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
@@ -119,8 +119,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         Object.values(object.pointsOfInterest)
             .forEach((poi, i) => {
                 const c = svgGroup.append("circle")
-                    .attr("cx", object.x + poi.x)
-                    .attr("cy", object.y + poi.y)
+                    .attr("cx", poi.x)
+                    .attr("cy", poi.y)
                     .attr("r", HANDLE_RADIUS)
                     .classed(ToolClasses.poi, true);
 
@@ -308,8 +308,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         if (g) {
             console.log(p, data)
             const handle = g.append("circle")
-                .attr("cx", p.x)
-                .attr("cy", p.y)
+                .attr("cx", p.x - object.x)
+                .attr("cy", p.y - object.y)
                 .attr("r", HANDLE_RADIUS)
                 .classed(ToolClasses.handle, true);
 

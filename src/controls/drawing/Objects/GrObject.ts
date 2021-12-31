@@ -199,7 +199,7 @@ export abstract class GrObject {
      * object's origin.
      */
     get center():Point2D  {
-        return { x: 0, y: 0 };
+        return { x: this._x, y: this._y };
     }
 
     /**
@@ -207,7 +207,7 @@ export abstract class GrObject {
      * Relative to the object's origin.
      */
     get bottom():Point2D {
-        return { x: 0, y: this.boundingBox.h / 2 };
+        return { x: this._x, y: this._y + this.boundingBox.h / 2 };
     }
 
     /**
@@ -215,7 +215,7 @@ export abstract class GrObject {
      * to the object's origin.
      */
     get left():Point2D {
-        return { x:  -this.boundingBox.w / 2, y: 0 };
+        return { x:  this._x - this.boundingBox.w / 2, y: this._y };
     }
 
     /**
@@ -223,7 +223,7 @@ export abstract class GrObject {
      * the object's origin.
      */
     get top():Point2D {
-        return { x: 0, y: -this.boundingBox.h / 2 };
+        return { x: this._x, y: this._y -this.boundingBox.h / 2 };
     }
 
     /**
@@ -231,7 +231,7 @@ export abstract class GrObject {
      * to the object's origin.
      */
     get right():Point2D {
-        return { x: this.boundingBox.w / 2, y: 0 };
+        return { x: this._x + this.boundingBox.w / 2, y: this._y };
     }
 
     /**

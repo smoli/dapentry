@@ -37,14 +37,7 @@ export class GfxMove extends Operation {
     get vector(): any {
         if (this._targetObject) {
             const p = this.object.pointsOfInterest[this.poi];
-
-            p.x += this.object.x;
-            p.y += this.object.y;
-
             const t = this.targetObject.pointsOfInterest[this.targetPoi];
-            t.x += this.targetObject.x;
-            t.y += this.targetObject.y;
-
             return { x: t.x - p.x, y: t.y - p.y }
         } else {
             return this._vector.finalized(this.closure);

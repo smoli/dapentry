@@ -82,18 +82,18 @@ export class GrLine extends GrObject {
     }
 
     get start(): Point2D {
-        return {x: this.x1, y: this.y1}
+        return {x: this._x + this.x1, y: this._y + this.y1}
     }
 
     get end(): Point2D {
-        return {x: this.x2, y: this.y2}
+        return {x: this._x + this.x2, y: this._y + this.y2}
     }
 
     get pointsOfInterest(): POIMap {
         return {
             [POI.start]: this.start,
             [POI.end]: this.end,
-            [POI.center]: { x: 0, y: 0 }
+            [POI.center]: this.center
         }
     }
 }

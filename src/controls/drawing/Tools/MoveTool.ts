@@ -42,8 +42,7 @@ export class MoveTool extends Tool {
             return;
         }
         this._renderer.removeAllHandles(this._object);
-        this._movingPOI = null;
-        this._movingObject = null;
+        this._movingPOI = this._movingObject = this._snappingObject = this._snappingPOI = this._snapPoint = null;
     }
 
     initialize() {
@@ -77,8 +76,6 @@ export class MoveTool extends Tool {
                     this._snappingObject = object;
                     this._snappingPOI = poiId;
                     this._snapPoint = this._snappingObject.pointsOfInterest[this._snappingPOI]
-                    this._snapPoint.x += this._snappingObject.x;
-                    this._snapPoint.y += this._snappingObject.y;
                 } else {
                     this._snapPoint = this._snappingPOI = this._snappingObject = null;
                 }
@@ -105,8 +102,8 @@ export class MoveTool extends Tool {
         this._state.next(interactionEvent);
 
         if (this._snapPoint) {
-            eventData.dx = this._snapPoint.x - (this._movingObject.x + this._movingPOIPoint.x)
-            eventData.dy = this._snapPoint.y - (this._movingObject.y + this._movingPOIPoint.y)
+            eventData.dx = this._snapPoint.x - this._object.pointsOfInterest[this._movingPOI].x;
+            eventData.dy = this._snapPoint.y - this._object.pointsOfInterest[this._movingPOI].y;
         }
 
         switch (this._state.state.id as States) {
@@ -118,6 +115,7 @@ export class MoveTool extends Tool {
                 this._object.y += eventData.dy;
                 this._renderer.render(this._object, true);
                 this._renderer.enablePOI(false);
+                this._snapPoint = null;
                 return true;
 
             case States.Handle:
