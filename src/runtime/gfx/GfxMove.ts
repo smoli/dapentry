@@ -6,20 +6,24 @@ import {GrObject, POI} from "../../controls/drawing/Objects/GrObject";
 export class GfxMove extends Operation {
     private readonly _object: Parameter;
     private _vector: Point2Parameter;
-    private _targetObject: Parameter;
+    private readonly _targetObject: Parameter;
     private _targetPoi: Parameter;
     private _poi: Parameter;
 
 
-    constructor(opcode: string, object: Parameter, poi: Parameter, vectorOrObject: Point2Parameter | Parameter, targetPoi: Parameter) {
+    constructor(opcode: string, object: Parameter, poiOrVector: Point2Parameter | Parameter, vectorOrObject: Point2Parameter | Parameter, targetPoi: Parameter) {
         super(opcode);
 
         this._object = object;
-        this._poi = poi;
 
-        if (vectorOrObject instanceof Point2Parameter) {
+        if (poiOrVector instanceof Point2Parameter) {
+            this._poi = new Parameter(false, POI[POI.center]);
+            this._vector = poiOrVector;
+        } else if (vectorOrObject instanceof Point2Parameter) {
+            this._poi = poiOrVector;
             this._vector = vectorOrObject;
         } else {
+            this._poi = poiOrVector;
             this._targetObject = vectorOrObject;
             this._targetPoi = targetPoi;
         }
