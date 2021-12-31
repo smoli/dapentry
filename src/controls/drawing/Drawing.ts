@@ -190,6 +190,7 @@ export default class Drawing extends Control {
     }
 
     private _renderAll(): void {
+        this._objectRenderer.reset();
         this.getObjects().forEach(obj => {
             this._objectRenderer.render(obj as GrObject, this._selection.indexOf(obj) !== -1);
         });

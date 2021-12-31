@@ -35,6 +35,7 @@ export class ComponentController {
             segmentedCode: [],
             data: [],
             drawing: [],
+            poi: [],
             selection: []
         });
         component.setModel(appModel, "appModel");

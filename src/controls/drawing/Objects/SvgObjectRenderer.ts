@@ -1,8 +1,8 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {GrObject, ObjectType, Point2D} from "./GrObject";
-import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, RenderLayer} from "./ObjectRenderer";
-import {Selection} from "d3";
+import {GrObject, ObjectType, POI, Point2D} from "./GrObject";
+import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, POICallback, RenderLayer} from "./ObjectRenderer";
+import {Selection, svg} from "d3";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
@@ -11,12 +11,14 @@ import {GrLine} from "./GrLine";
 enum ToolClasses {
     object = "grObject",
     handle = "transformationHandle",
+    poi = "pointOfInterest",
     boundingBox = "boundingBox"
 }
 
 enum ToolClassSelectors {
     object = ".grObject",
     handle = ".transformationHandle",
+    poi = ".pointOfInterest",
     boundingBox = ".boundingBox"
 }
 
@@ -28,8 +30,11 @@ const HANDLE_RADIUS: string = "7px";
  */
 export class SvgObjectRenderer extends ObjectRenderer {
 
+    protected _renderedObjects: Array<GrObject>;
     protected _objectLayer: Selection<any>;
+    protected _infoLayer: Selection<any>;
     protected _interactionLayer: Selection<any>;
+    private _poiRenderingEnabled: boolean;
 
     constructor(container: Selection<any>, onObjectClick: ObjectClickCallback = null) {
         super(onObjectClick);
@@ -38,9 +43,14 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     protected _setupLayers(container: Selection<any>): void {
         this._objectLayer = container.append("g");
+        this._infoLayer = container.append("g");
         this._interactionLayer = container.append("g");
     }
 
+
+    reset() {
+        this._renderedObjects = [];
+    }
 
     clear(layer: RenderLayer) {
         if (layer === RenderLayer.Objects) {
@@ -53,6 +63,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     render(object: GrObject, selected: boolean) {
 
         let svgObjc;
+        this._renderedObjects.push(object);
 
         switch (object.type) {
             case ObjectType.Circle:
@@ -77,6 +88,52 @@ export class SvgObjectRenderer extends ObjectRenderer {
         } else {
             this.removeBoundingRepresentation(object);
         }
+
+    }
+
+
+    enablePOI(enabled: boolean,  poiCallback: POICallback, except: Array<GrObject>) {
+        if (this._poiRenderingEnabled) {
+            this._infoLayer.selectAll("*").remove();
+        } else {
+            this._renderedObjects.forEach(o => {
+                if (except.indexOf(o) === -1) {
+                    this.renderPOI(o, poiCallback)
+                }
+            });
+        }
+        this._poiRenderingEnabled = enabled;
+    }
+
+    protected renderPOI(object: GrObject, poiCallback: POICallback) {
+        this._objectLayer.selectAll("*").classed("noPointerEvents", false);
+
+        let svgGroup = this._infoLayer.select("#" + object.id + "-info");
+        if (!svgGroup.empty()) {
+            svgGroup.selectAll("*").remove();
+        } else {
+            svgGroup = this._infoLayer.append("g").attr("id", object.id + "-info")
+        }
+
+        const poiIds = Object.keys(object.pointsOfInterest);
+        Object.values(object.pointsOfInterest)
+            .forEach((poi, i) => {
+                const c = svgGroup.append("circle")
+                    .attr("cx", object.x + poi.x)
+                    .attr("cy", object.y + poi.y)
+                    .attr("r", HANDLE_RADIUS)
+                    .classed(ToolClasses.poi, true);
+
+                if (poiCallback) {
+                    c.on("mouseenter", () => {
+                        poiCallback(object, poiIds[i], true)
+                    })
+                    c.on("mouseleave", () => {
+                        poiCallback(object, poiIds[i], false)
+                    })
+                }
+            })
+
     }
 
     /**
@@ -106,8 +163,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 this._fireSelect(object);
             });
         }
-        // svgGroup.selectAll("text").remove();
-        // svgGroup.append("text").text(object.instanceCount)
         return svgGroup;
     }
 
@@ -185,7 +240,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
     renderRectangle(layer: RenderLayer, rectangle: GrRectangle) {
         return this._renderRectangle(this.getLayer(layer), rectangle);
     }
-
 
 
     private _renderLine(layer: d3.Selection<any>, line: GrLine) {

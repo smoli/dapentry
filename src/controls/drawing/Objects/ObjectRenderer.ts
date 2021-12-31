@@ -19,7 +19,7 @@
  * @module
  */
 
-import {GrObject, Point2D} from "./GrObject";
+import {GrObject, POI, Point2D} from "./GrObject";
 import {InteractionEventData} from "../InteractionEvents";
 import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
@@ -32,7 +32,7 @@ import {GrLine} from "./GrLine";
  */
 export type ObjectClickCallback = (object: GrObject) => void;
 
-
+export type POICallback = (object:GrObject, poiId:string, hit:boolean) => void;
 
 /**
  * Callback signature for functions that are invoked when an a handle (e.g. for resizing) on an
@@ -65,6 +65,8 @@ export abstract class ObjectRenderer {
             this._objectClickCallback(object);
         }
     }
+
+    public abstract reset():void;
 
     /**
      * Render an object on the `Object`-layer.
@@ -134,6 +136,8 @@ export abstract class ObjectRenderer {
      * @param object
      */
     public abstract removeAllHandles(object): void;
+
+    public abstract enablePOI(enabled:boolean, poiCallback?: POICallback, except?:Array<GrObject>):void;
 }
 
 
