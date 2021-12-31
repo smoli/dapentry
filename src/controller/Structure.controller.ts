@@ -30,6 +30,17 @@ const StatementConfig = {
 export default class StructureController extends BaseController {
 
 
+    onCodelineSelectionChange(event) {
+        const item = event.getParameter("listItem");
+        const selected:boolean = event.getParameter("selected");
+
+        if (!selected) {
+            this.getComponentController().setSelectedCodeLine()
+        } else {
+            this.getComponentController().setSelectedCodeLine(item.getBindingContext("appModel").getObject());
+        }
+    }
+
     getTextIdForTokens(tokens:Array<Token>):string {
         const firstToken = tokens[0];
 
@@ -49,6 +60,9 @@ export default class StructureController extends BaseController {
 
             case 'STROKE':
                 return "opStroke";
+
+            case "ROTATE":
+                return "opRotate";
 
             case 'MOVE':
                 if (tokens.length === 3) {

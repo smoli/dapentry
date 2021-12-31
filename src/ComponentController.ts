@@ -27,12 +27,14 @@ export class ComponentController {
         this._interpreter.addOperation("RECT", GfxRect);
         this._interpreter.addOperation("LINE", GfxLine);
         this._interpreter.addOperation("MOVE", GfxMove);
+        this._interpreter.addOperation("ROTATE", GfxRotate);
         this._interpreter.addOperation("FILL", GfxFill);
         this._interpreter.addOperation("STROKE", GfxStroke);
 
         const appModel = new JSONModel({
             code: [],
             segmentedCode: [],
+            selectedCodeLine: null,
             data: [],
             drawing: [],
             poi: [],
@@ -42,14 +44,35 @@ export class ComponentController {
         this.preloadDemoCode();
     }
 
+    public setSelectedCodeLine(line?) {
+        if (!line) {
+            this.getAppModel().setProperty("/selectedCodeLine", null);
+        } else {
+            this.getAppModel().setProperty("/selectedCodeLine", line);
+        }
+    }
+
+    protected getDataFromDataFields() {
+        const scope = {};
+        const d = this.getAppModel().getProperty("/data");
+
+        for (const field of d) {
+            scope[field.name] = field.value;
+        }
+
+        return scope;
+    }
+
 
     protected async runCode(): Promise<any> {
         const c = this.getAppModel().getProperty("/code");
 
+        const data = this.getDataFromDataFields();
         this._interpreter.parse(c);
         return this._interpreter.run({
             "$drawing": this.getAppModel().getProperty("/drawing"),
-            "$styles": this._styleManager.styles
+            "$styles": this._styleManager.styles,
+            ...data
         });
     }
 
@@ -87,20 +110,20 @@ export class ComponentController {
         this.getAppModel().setProperty("/code", c);
         this.updateSegmentedCodeLine(index, code);
         await this.runCode();
-        this._updateDrawing();
+        this.updateDrawing();
     }
 
     async addOperation(code: string) {
         this.addCodeLine(code);
         await this.runCode();
-        this._updateDrawing();
+        this.updateDrawing();
     }
 
     async addOperations(code: Array<string>) {
         code.forEach(c => this.addCodeLine(c));
         if (this._drawing) {
             await this.runCode();
-            this._updateDrawing();
+            this.updateDrawing();
         }
     }
 
@@ -109,8 +132,14 @@ export class ComponentController {
      * @param clearAllFirst
      * @protected
      */
-    protected _updateDrawing(clearAllFirst: boolean = false) {
+    protected updateDrawing(clearAllFirst: boolean = false) {
         this._drawing.update(clearAllFirst);
+    }
+
+    public updateAll() {
+        this.runCode().then(() => {
+            this.updateDrawing();
+        });
     }
 
     /**
@@ -121,7 +150,7 @@ export class ComponentController {
     public set drawing(value: Drawing) {
         this._drawing = value;
         this.runCode().then(() => {
-            this._updateDrawing();
+            this.updateDrawing();
         });
     }
 
@@ -147,103 +176,79 @@ export class ComponentController {
     }
 
     protected preloadDemoCode(): void {
-        const code = `RECT $drawing Rectangle1 "Rectangle1" $styles.default (323.5 497.5) 201 861
-FILL Rectangle1 "#526fff" 1
-FILL Rectangle1 "#526fff" 0.64
-RECT $drawing Rectangle3 "Rectangle3" $styles.default (321.5 797) 81 232
-FILL Rectangle3 "#fff652" 0.64
-FILL Rectangle3 "#fff652" 0.86
-MOVE Rectangle3 (2 16)
-RECT $drawing Rectangle4 "Rectangle4" $styles.default (338.5 224.5) 45 103
-FILL Rectangle4 "#fff652" 0.86
-MOVE Rectangle4 (35 -2)
-RECT $drawing Rectangle5 "Rectangle5" $styles.default (301 267) 42 102
-FILL Rectangle5 "#6952ff" 0.86
-FILL Rectangle5 "#0a0a0b" 0.86
-MOVE Rectangle5 (-8 -45)
-RECT $drawing Rectangle6 "Rectangle6" $styles.default (471 942.5) 938 23
-FILL Rectangle6 "#7aff52" 0.86
-STROKE Rectangle6 0
-LINE $drawing Line7 "Line7" $styles.default (179 926) (180 846)
-FILL Line7 "#52ff5a" 0.86
-FILL Line7 "#05710a" 0.86
-FILL Line7 "#079c0f" 0.86
-CIRCLE $drawing Circle8 "Circle8" $styles.default (180 845) 11.180339887498949
-FILL Line7 "#9c9c07" 0.86
-FILL Line7 "#ebeb19" 0.86
-FILL Line7 "#19eb32" 0.86
-FILL Circle8 "#e75a27" 0.86
-FILL Circle8 "#e72a27" 0.86
-FILL Circle8 "#e81511" 0.86
-FILL Circle8 "#dee811" 0.86
-CIRCLE $drawing Circle10 "Circle10" $styles.default (175 829) 14.866068747318506
-CIRCLE $drawing Circle11 "Circle11" $styles.default (198 835) 11.704699910719626
-CIRCLE $drawing Circle12 "Circle12" $styles.default (192 858) 12.041594578792296
-CIRCLE $drawing Circle13 "Circle13" $styles.default (172 862) 10.816653826391969
-CIRCLE $drawing Circle14 "Circle14" $styles.default (160 847) 8.06225774829855
-FILL Circle10 "#ff5a52" 0.86
-FILL Circle10 "#ea251a" 0.86
-FILL Circle11 "#ff5a52" 0.86
-FILL Circle11 "#e63c33" 0.86
-FILL Circle12 "#ff5a52" 0.86
-FILL Circle12 "#d7271d" 0.86
-FILL Circle13 "#ff5452" 0.86
-FILL Circle13 "#d92926" 0.86
-FILL Circle14 "#ff5a52" 0.86
-FILL Circle14 "#e12d23" 0.86
-RECT $drawing Rectangle15 "Rectangle15" $styles.default (525.5 733) 195 388
-RECT $drawing Rectangle16 "Rectangle16" $styles.default (681.5 824.5) 115 205
-RECT $drawing Rectangle17 "Rectangle17" $styles.default (825.5 657) 167 534
-FILL Rectangle15 "#ffb752" 0.86
-RECT $drawing Rectangle18 "Rectangle18" $styles.default (463.5 855) 71 138
-FILL Rectangle18 "#52ff66" 0.86
-FILL Rectangle18 "#15701f" 0.86
-FILL Rectangle18 "#1d9f2c" 0.86
-FILL Rectangle18 "#22b934" 0.86
-RECT $drawing Rectangle20 "Rectangle20" $styles.default (555.5 609.5) 45 57
-FILL Rectangle20 "#52ceff" 0.86
-FILL Rectangle20 "#62cbf4" 0.86
-FILL Rectangle16 "#ee52ff" 0.86
-FILL Rectangle16 "#fff352" 0.86
-RECT $drawing Rectangle22 "Rectangle22" $styles.default (716.5 902.5) 23 43
-FILL Rectangle22 "#ff5283" 0.86
-FILL Rectangle22 "#e70d4b" 0.86
-FILL Rectangle22 "#e7320d" 0.86
-FILL Rectangle22 "#e24a2c" 0.86
-FILL Rectangle22 "#f0350f" 0.86
-FILL Rectangle22 "#d83413" 0.86
-FILL Rectangle22 "#f43610" 0.86
-FILL Rectangle22 "#f24421" 0.86
-CIRCLE $drawing Circle23 "Circle23" $styles.default (660 790) 19.4164878389476
-CIRCLE $drawing Circle24 "Circle24" $styles.default (709 793) 19.1049731745428
-FILL Circle23 "#0c0909" 0.86
-FILL Circle24 "#150d0a" 0.86
-FILL Rectangle17 "#ff52ff" 0.86
-RECT $drawing Rectangle25 "Rectangle25" $styles.default (841 849.5) 84 141
-FILL Rectangle25 "#52fff6" 0.86
-CIRCLE $drawing Circle26 "Circle26" $styles.default (812 837) 7.211102550927978
-FILL Circle26 "#fcff52" 0.86
-RECT $drawing Rectangle28 "Rectangle28" $styles.default (796.5 485.5) 45 69
-FILL Rectangle28 "#52b7ff" 0.86
-FILL Rectangle28 "#a0d0f3" 0.86
-RECT $drawing Rectangle29 "Rectangle29" $styles.default (863 483) 32 68
-FILL Rectangle29 "#52cbff" 0.86
-FILL Rectangle29 "#b1daec" 0.86
-CIRCLE $drawing Circle30 "Circle30" $styles.default (910 17) 63.324560795950255
-FILL Circle30 "#eeff52" 0.86
-LINE $drawing Line31 "Line31" $styles.default (887 79) (845 201)
-LINE $drawing Line32 "Line32" $styles.default (858 54) (776 107)
-LINE $drawing Line33 "Line33" $styles.default (849 27) (718 39)
-LINE $drawing Line34 "Line34" $styles.default (917 81) (890 218)
-FILL Line33 "#f3ff52" 0.86
-FILL Line32 "#fffc52" 0.86
-FILL Line31 "#ffff52" 0.86
-FILL Line34 "#fcff52" 0.86
-STROKE Line34 9
-STROKE Line34 6
-STROKE Line31 6
-STROKE Line32 6
-STROKE Line33 6`;
+        const code = `RECT $drawing Rectangle1 "Rectangle1" $styles.default (151.5 568) 111 110
+ROTATE Rectangle1 0.4855458300081347
+ROTATE Rectangle1 0.4855458300081347
+ROTATE Rectangle1 41.89397290438357
+FILL Rectangle1 "#ff5d52" 1
+FILL Rectangle1 "#ff8e52" 1
+FILL Rectangle1 "#ff6952" 1
+FILL Rectangle1 "#f42a0b" 1
+RECT $drawing Rectangle2 "Rectangle2" $styles.default (374 634) 120 118
+FILL Rectangle2 "#ffba52" 1
+FILL Rectangle2 "#ffb452" 1
+FILL Rectangle2 "#f49110" 1
+FILL Rectangle2 "#f48a10" 1
+FILL Rectangle2 "#f4d910" 1
+FILL Rectangle2 "#f4a010" 1
+FILL Rectangle2 "#f4ce10" 1
+FILL Rectangle2 "#f4a410" 1
+ROTATE Rectangle2 39.207203504967836
+FILL Rectangle2 "#f0f410" 1
+MOVE Rectangle2 "center" (-59 -78)
+RECT $drawing Rectangle3 "Rectangle3" $styles.default (537 605.5) 122 117
+FILL Rectangle3 "#52ff66" 1
+FILL Rectangle3 "#25f83e" 1
+ROTATE Rectangle3 42.90984084628932
+MOVE Rectangle3 "center" (-54 -59)
+RECT $drawing Rectangle4 "Rectangle4" $styles.default (681.5 739) 127 122
+FILL Rectangle4 "#52d7ff" 1
+FILL Rectangle4 "#46b6d8" 1
+FILL Rectangle4 "#45c6ed" 1
+ROTATE Rectangle4 43.667780146130355
+MOVE Rectangle4 "center" (-21 -122)
+ROTATE Rectangle4 31.345214141715672
+MOVE Rectangle4 "center" (-4 -93)
+CIRCLE $drawing Circle5 "Circle5" $styles.default (787 469) 97.20082304178294
+FILL Circle5 "#ff52eb" 1
+CIRCLE $drawing Circle6 "Circle6" $styles.default (792 522) 20
+FILL Circle6 "#070403" 1
+FILL Circle6 "#311e17" 1
+CIRCLE $drawing Circle7 "Circle7" $styles.default (751 427) 12.806248474865697
+CIRCLE $drawing Circle8 "Circle8" $styles.default (824 431) 13.601470508735444
+FILL Circle7 "#5252ff" 1
+FILL Circle7 "#1616df" 1
+FILL Circle8 "#525dff" 1
+FILL Circle8 "#222ed3" 1
+FILL Circle8 "#0e1dec" 1
+RECT $drawing Rectangle9 "Rectangle9" $styles.default (470.5 174.5) 919 57
+FILL Rectangle9 "#742b11" 1
+LINE $drawing Line11 "Line11" $styles.default (92 299) (189 333)
+MOVE Line11 "end" (1 -7)
+ROTATE Line11 -17.17545145318105
+FILL Line11 "#f1d1c5" 1
+FILL Line11 "#e9b39f" 1
+FILL Line11 "#e3a087" 1
+LINE $drawing Line12 "Line12" $styles.default (286 348) (400 352)
+LINE $drawing Line13 "Line13" $styles.default (469 286) (600 285)
+LINE $drawing Line14 "Line14" $styles.default (568 382) (678 382)
+STROKE Line11 10
+STROKE Line11 6
+FILL Line12 "#e4b2a0" 1
+FILL Line12 "#d09680" 1
+STROKE Line12 6
+FILL Line13 "#daa490" 1
+STROKE Line13 6
+STROKE Line14 6
+FILL Line14 "#e49f86" 1
+CIRCLE $drawing Circle16 "Circle16" $styles.default (75 746) 12.083045973594572
+CIRCLE $drawing Circle17 "Circle17" $styles.default (96 753) 13.601470508735444
+CIRCLE $drawing Circle18 "Circle18" $styles.default (118 746) 12.806248474865697
+CIRCLE $drawing Circle19 "Circle19" $styles.default (144 742) 13.45362404707371
+FILL Circle16 "#52fcff" 1
+FILL Circle17 "#52f6ff" 1
+FILL Circle18 "#52fffc" 1
+FILL Circle19 "#52fcff" 1`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }

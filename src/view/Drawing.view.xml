@@ -3,14 +3,18 @@
         displayBlock="true"
         xmlns="sap.m"
         xmlns:mvc="sap.ui.core.mvc"
-        xmlns:sts="sts.drawable.controls.drawing"
+        xmlns:drawing="sts.drawable.controls.drawing"
+        xmlns:operation="sts.drawable.controls.operation"
 >
     <Page>
-        <sts:Drawing id="drawing"
-                     newOperation="onNewOperation"
-                     objectDeleted="onObjectDeleted"
-                     selectionChange="onSelectionChange"
-                     objects="{appModel>/drawing}"
-        />
+        <VBox>
+            <operation:OperationEditor tokens="{appModel>/selectedCodeLine/tokens}" change="onCodeLineChanged"/>
+            <drawing:Drawing id="drawing"
+                             newOperation="onNewOperation"
+                             objectDeleted="onObjectDeleted"
+                             selectionChange="onSelectionChange"
+                             objects="{appModel>/drawing}"
+            />
+        </VBox>
     </Page>
 </mvc:View>

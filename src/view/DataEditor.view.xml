@@ -2,7 +2,6 @@
         controllerName="sts.drawable.controller.DataEditor"
         displayBlock="true"
         xmlns="sap.m"
-        xmlns:f="sap.ui.layout.form"
         xmlns:mvc="sap.ui.core.mvc">
 
     <VBox class="sapUiNoMargin">
@@ -12,7 +11,7 @@
                 <Button type="Transparent" text="-" press="onDeleteDataField"/>
                 <Text text="{appModel>name} = " class="sapUiNoMarginTop sapUiNoMarginBottom"/>
 <!--                <Text text="{appModel>value}" class="sapUiNoMargin" />-->
-                <Input value="{appModel>value}" class="sapUiNoMargin"  type="Number">
+                <Input value="{appModel>value}" class="sapUiNoMargin"  type="Number" change="onFieldValueChanged">
                     <layoutData>
                         <FlexItemData growFactor="0"/>
                     </layoutData>

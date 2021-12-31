@@ -40,4 +40,8 @@ export default class DrawingController extends BaseController {
     async onNewOperation(event) {
         await this.getComponentController().addOperation(event.getParameter("code"));
     }
+
+    onCodeLineChanged(event) {
+        this.getComponentController().updateOperation(this.getAppModel().getProperty("/selectedCodeLine/index"), event.getParameter("code"))
+    }
 }

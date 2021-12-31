@@ -14,7 +14,14 @@
                 </VBox>
 
 
-                <List items="{ path: 'appModel>/segmentedCode',
+           <!--     <VBox items="{ path: 'appModel>/segmentedCode' }">
+                    <sts:OperationEditor tokens="{appModel>tokens}" />
+                </VBox>
+-->
+                <List
+                        mode="SingleSelectMaster"
+                        selectionChange="onCodelineSelectionChange"
+                        items="{ path: 'appModel>/segmentedCode',
                                factory: '.codeDescriptionFactory' }">
                 </List>
             </l:contentAreas>

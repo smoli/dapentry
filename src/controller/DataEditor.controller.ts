@@ -29,4 +29,8 @@ export default class DataEditorController extends BaseController {
         d = d.filter(d => d.name !== nameToDelete);
         this.getAppModel().setProperty("/data", d);
     }
+
+    onFieldValueChanged() {
+        this.getComponentController().updateAll();
+    }
 }

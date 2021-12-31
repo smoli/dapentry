@@ -185,7 +185,7 @@ export abstract class GrObject {
 
     /**
      * Return the bounding box of the object.
-     * This is unrotated and unscaled.
+     * This is not rotated and not scaled.
      *
      * @return Bounding box
      */
@@ -250,7 +250,7 @@ export abstract class GrObject {
 
     /**
      * Move the POI of an object. How this behaves depends
-     * on the implementation of the object type. By default
+     * on the implementation of the object type. By default,
      * (this implementation) the whole object is moved by
      * moving its center.
      *

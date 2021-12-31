@@ -1,94 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Drawable</title>
+    <meta charset="utf-8">
+    <title>Drawable</title>
 
-  <style>
+    <style>
 
-    #svgDefinitions {
-      position: absolute;
-      left: -1000vw;
-    }
+        #svgDefinitions {
+            position: absolute;
+            left: -1000vw;
+        }
 
-    svg {
-      border: 1px solid lightgreen;
-      outline: none;
-    }
+        svg {
+            border: 1px solid lightgreen;
+            outline: none;
+        }
 
-    svg circle, svg rect {
-      stroke-width: 2;
-      stroke: coral;
-      fill: coral;
-      fill-opacity: 0.2;
-    }
+        svg circle, svg rect {
+            stroke-width: 2;
+            stroke: coral;
+            fill: coral;
+            fill-opacity: 0.2;
+        }
 
-    line {
-      stroke-width: 2;
-      stroke: coral;
-    }
+        line {
+            stroke-width: 2;
+            stroke: coral;
+        }
 
-    svg g .boundingBox {
-      stroke-width: 3;
-      stroke: lightseagreen;
-      fill: none !important;
-    }
+        svg g .boundingBox {
+            stroke-width: 3;
+            stroke: lightseagreen;
+            fill: none !important;
+        }
 
-    circle.transformationHandle {
-      /*
-      stroke-width: 3;
-      stroke: lightseagreen;
-      fill: white !important;
-      */
-      fill-opacity: 1;
-      stroke-width: 1;
-      stroke: #3f3f3f;
-      fill:url(#handleGradient);
-    }
+        circle.transformationHandle {
+            fill-opacity: 1;
+            stroke-width: 1;
+            stroke: #3f3f3f;
+            fill: url(#handleGradient);
+        }
 
-    noPointerEvents {
-      pointer-events: none;
-    }
+        noPointerEvents {
+            pointer-events: none;
+        }
 
-    circle.pointOfInterest {
-      fill: #4da6ff;
-      fill-opacity: 0.2;
-      stroke: #4da6ff;
-      stroke-width: 1;
-    }
+        circle.pointOfInterest {
+            fill: #4da6ff;
+            fill-opacity: 0.2;
+            stroke: #4da6ff;
+            stroke-width: 1;
+        }
 
+    </style>
 
-
-    .stsCodeSegmentText,
-    .stsCodeSegmentText * {
-      text-wrap: none;
-    }
-
-    .stsTransparentInput input:focus {
-      background: white;
-    }
-
-    .stsTransparentInput > div {
-      border: none;
-      background: inherit;
-
-    }
-
-  </style>
-
-  <script id="sap-ui-bootstrap"
-          src="resources/sap-ui-core.js"
-          data-sap-ui-libs="sap.ui.core,sap.ui.unified,sap.m,sap.f"
-          data-sap-ui-resourceroots='{
+    <script id="sap-ui-bootstrap"
+            src="resources/sap-ui-core.js"
+            data-sap-ui-libs="sap.ui.core,sap.ui.unified,sap.m,sap.f"
+            data-sap-ui-resourceroots='{
 				"sts.drawable": "./"
 			}'
-          data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
-          data-sap-ui-compatVersion="edge"
-          data-sap-ui-async="true"
-          data-sap-ui-theme="sap_fiori_3"
-          data-sap-ui-xx-waitForTheme="true"
-          data-sap-ui-xx-supportedLanguages="en,de">
-  </script>
+            data-sap-ui-oninit="module:sap/ui/core/ComponentSupport"
+            data-sap-ui-compatVersion="edge"
+            data-sap-ui-async="true"
+            data-sap-ui-theme="sap_fiori_3"
+            data-sap-ui-xx-waitForTheme="true"
+            data-sap-ui-xx-supportedLanguages="en,de">
+    </script>
 
 </head>
 
@@ -97,13 +75,13 @@
 <svg
         id="svgDefinitions"
         xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <radialGradient id="handleGradient" cx="30%" cy="30%" r="78.2842712474619%" >
-      <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1.00" />
-      <stop offset="65%" style="stop-color:rgb(213,211,211);stop-opacity:1.00" />
-    </radialGradient>
-  </defs>
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <radialGradient id="handleGradient" cx="30%" cy="30%" r="78.2842712474619%">
+            <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1.00"/>
+            <stop offset="65%" style="stop-color:rgb(213,211,211);stop-opacity:1.00"/>
+        </radialGradient>
+    </defs>
 
 </svg>
 

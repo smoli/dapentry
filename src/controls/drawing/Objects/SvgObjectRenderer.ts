@@ -117,12 +117,14 @@ export class SvgObjectRenderer extends ObjectRenderer {
             svgGroup = this._infoLayer.append("g").attr("id", object.id + "-info")
         }
 
+        svgGroup.attr("transform", this._createTransform(object))
+
         const poiIds = Object.keys(object.pointsOfInterest);
         Object.values(object.pointsOfInterest)
             .forEach((poi, i) => {
                 const c = svgGroup.append("circle")
-                    .attr("cx", poi.x)
-                    .attr("cy", poi.y)
+                    .attr("cx", poi.x - object.x)
+                    .attr("cy", poi.y - object.y)
                     .attr("r", HANDLE_RADIUS)
                     .classed(ToolClasses.poi, true);
 
