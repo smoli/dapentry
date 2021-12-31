@@ -95,7 +95,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
     enablePOI(enabled: boolean,  poiCallback: POICallback, except: Array<GrObject>) {
         if (this._poiRenderingEnabled) {
             this._infoLayer.selectAll("*").remove();
-        } else {
+        }
+
+        if (enabled) {
             this._renderedObjects.forEach(o => {
                 if (except.indexOf(o) === -1) {
                     this.renderPOI(o, poiCallback)
