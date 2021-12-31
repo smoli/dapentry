@@ -4,7 +4,7 @@ import Text from "sap/m/Text";
 import {Token, TokenTypes} from "../runtime/interpreter/Parser";
 import HBox from "sap/m/HBox";
 import Input from "sap/m/Input";
-import {FlexAlignItems, InputType} from "sap/m/library";
+import {FlexAlignItems, FlexJustifyContent, InputType} from "sap/m/library";
 
 
 enum Do {
@@ -26,6 +26,69 @@ const StatementConfig = {
  * @namespace sts.drawable.controller
  */
 export default class StructureController extends BaseController {
+
+
+    getTextIdForTokens(tokens:Array<Token>):string {
+        const firstToken = tokens[0];
+
+        switch (firstToken.value) {
+
+            case 'RECT':
+                return "opRectangle";
+
+            case 'CIRCLE':
+                return "opCircleCR";
+
+            case 'LINE':
+                return "opLine";
+
+            case 'FILL':
+                return "opFill";
+
+            case 'STROKE':
+                return "opStroke";
+
+            case 'MOVE':
+                if (tokens.length === 3) {
+                    return "opMoveByCenter"
+                } else if (tokens.length === 4) {
+                    return "opMoveBy"
+                } else {
+                    return "opMoveTo"
+                }
+
+            default:
+                return firstToken.value as string;
+        }
+    }
+
+    codeDescriptionFactory(id, context): Control {
+        const tokens: Array<Token> = context.getObject("tokens");
+        const firstToken = tokens[0];
+
+        if (!firstToken) {
+            console.log("NO FIRST TOKEN", tokens || null)
+            return new Text(id, {text: "NO FIRST TOKEN!"});
+        }
+
+        const tokenTexts = tokens.map((t:Token) => {
+            switch (t.type) {
+                case TokenTypes.NUMBER:
+                    return (t.value as number).toFixed(2);
+
+                case TokenTypes.POINT:
+                    return `(${t.value[0].value}, ${t.value[1].value})`;
+
+                default:
+                    return t.value;
+            }
+        });
+
+        return new Text(id, {
+            text: this.getResourceText(this.getTextIdForTokens(tokens), ...tokenTexts)
+        });
+    }
+
 
     codeSegmentFactory(id, context): Control {
         const tokens: Token = context.getObject("tokens");

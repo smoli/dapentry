@@ -39,7 +39,7 @@ export class ComponentController {
             selection: []
         });
         component.setModel(appModel, "appModel");
-        // this.preloadDemoCode();
+        this.preloadDemoCode();
     }
 
 

@@ -14,7 +14,7 @@
                 </VBox>
 
                 <VBox items="{ path: 'appModel>/segmentedCode',
-                               factory: '.codeSegmentFactory' }">
+                               factory: '.codeDescriptionFactory' }">
                 </VBox>
             </l:contentAreas>
         </l:Splitter>
