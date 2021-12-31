@@ -13,9 +13,10 @@
                 <mvc:XMLView viewName="sts.drawable.view.DataEditor" />
                 </VBox>
 
-                <VBox items="{ path: 'appModel>/segmentedCode',
+
+                <List items="{ path: 'appModel>/segmentedCode',
                                factory: '.codeDescriptionFactory' }">
-                </VBox>
+                </List>
             </l:contentAreas>
         </l:Splitter>
     </Page>

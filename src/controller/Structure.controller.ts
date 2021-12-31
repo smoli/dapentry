@@ -5,6 +5,8 @@ import {Token, TokenTypes} from "../runtime/interpreter/Parser";
 import HBox from "sap/m/HBox";
 import Input from "sap/m/Input";
 import {FlexAlignItems, FlexJustifyContent, InputType} from "sap/m/library";
+import DisplayListItem from "sap/m/DisplayListItem";
+import CustomListItem from "sap/m/CustomListItem";
 
 
 enum Do {
@@ -84,9 +86,12 @@ export default class StructureController extends BaseController {
             }
         });
 
-        return new Text(id, {
-            text: this.getResourceText(this.getTextIdForTokens(tokens), ...tokenTexts)
+        const t = this.getResourceText(this.getTextIdForTokens(tokens), ...tokenTexts);
+
+        return new CustomListItem(id, {
+            content: [new Text({ text: t })]
         });
+
     }
 
 
