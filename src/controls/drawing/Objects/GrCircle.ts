@@ -2,11 +2,11 @@ import {BoundingBox, GrObject, ObjectType} from "./GrObject";
 
 export class GrCircle extends GrObject {
 
-    private _r: number
+    private _radius: number
 
     protected constructor(name: string, x: number, y: number, r: number) {
         super(ObjectType.Circle, name, x, y);
-        this._r = r;
+        this._radius = r;
     }
 
     public static create(name: string, x: number, y: number, r: number): GrCircle {
@@ -16,20 +16,20 @@ export class GrCircle extends GrObject {
         }
         i.x = x;
         i.y = y;
-        i.r = r;
+        i.radius = r;
         return i;
     }
 
-    get r(): number {
-        return this._r;
+    get radius(): number {
+        return this._radius;
     }
 
-    set r(value: number) {
-        this._r = value;
+    set radius(value: number) {
+        this._radius = value;
     }
 
     get boundingBox(): BoundingBox {
-        return {...super.boundingBox, w: this._r * 2, h: this._r * 2};
+        return {...super.boundingBox, w: this._radius * 2, h: this._radius * 2};
     }
 
 

@@ -44,12 +44,12 @@ export class DrawCircle extends Tool {
                 break;
 
             case States.DragRadius:
-                this._circle.r = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
                 this._renderer.renderCircle(RenderLayer.Interaction, this._circle);
                 break;
 
             case States.Done:
-                this._circle.r = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
         }
 
         return this.isDone;
@@ -64,6 +64,6 @@ export class DrawCircle extends Tool {
     }
 
     public get code():string {
-        return `CIRCLE $drawing ${this._circle.name} "${this._circle.name}" $styles.default (${this._circle.x} ${this._circle.y}) ${this._circle.r}`
+        return `CIRCLE $drawing ${this._circle.name} "${this._circle.name}" $styles.default (${this._circle.x} ${this._circle.y}) ${this._circle.radius}`
     }
 }

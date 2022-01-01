@@ -55,8 +55,8 @@ export class DrawRectangle extends Tool {
                 calcRect = this._calculateRect(eventData.x, eventData.y)
                 this._rect.x = calcRect.x1 + calcRect.w / 2;
                 this._rect.y = calcRect.y1 + calcRect.h / 2;
-                this._rect.w = calcRect.w;
-                this._rect.h = calcRect.h;
+                this._rect.width = calcRect.w;
+                this._rect.height = calcRect.h;
                 this._renderer.renderRectangle(RenderLayer.Interaction, this._rect);
                 break;
 
@@ -82,7 +82,7 @@ export class DrawRectangle extends Tool {
     }
 
     get code(): string {
-        return `RECT $drawing ${this._rect.name} "${this._rect.name}" $styles.default (${this._rect.x} ${this._rect.y}) ${this._rect.w} ${this._rect.h}`
+        return `RECT $drawing ${this._rect.name} "${this._rect.name}" $styles.default (${this._rect.x} ${this._rect.y}) ${this._rect.width} ${this._rect.height}`
     }
 
 }

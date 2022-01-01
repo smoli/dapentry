@@ -2,13 +2,13 @@ import {BoundingBox, GrObject, ObjectType} from "./GrObject";
 
 export class GrRectangle extends GrObject {
 
-    private _w: number;
-    private _h: number;
+    private _width: number;
+    private _height: number;
 
     protected constructor(name: string, x: number, y: number, w: number, h: number) {
         super(ObjectType.Rectangle, name, x, y);
-        this._w = w;
-        this._h = h;
+        this._width = w;
+        this._height = h;
     }
 
     public static create(name: string, x: number, y: number, w: number, h: number) {
@@ -18,28 +18,28 @@ export class GrRectangle extends GrObject {
         }
         i.x = x;
         i.y = y;
-        i.w = w;
-        i.h = h;
+        i.width = w;
+        i.height = h;
         return i;
     }
 
-    get h(): number {
-        return this._h;
+    get height(): number {
+        return this._height;
     }
 
-    set h(value: number) {
-        this._h = value;
+    set height(value: number) {
+        this._height = value;
     }
 
-    get w(): number {
-        return this._w;
+    get width(): number {
+        return this._width;
     }
 
-    set w(value: number) {
-        this._w = value;
+    set width(value: number) {
+        this._width = value;
     }
 
     get boundingBox(): BoundingBox {
-        return {...super.boundingBox, w: this._w, h: this._h};
+        return {...super.boundingBox, w: this._width, h: this._height};
     }
 }

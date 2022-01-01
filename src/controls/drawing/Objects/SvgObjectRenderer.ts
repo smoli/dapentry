@@ -207,7 +207,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         c.attr("cx", 0);
         c.attr("cy", 0);
-        c.attr("r", circle.r);
+        c.attr("r", circle.radius);
 
         this._createStyle(c, circle);
 
@@ -230,10 +230,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const o = this.getObjectOrCreate(layer, rectangle, "rect");
 
         const r = o.select(ToolClassSelectors.object);
-        r.attr("x", -rectangle.w / 2);
-        r.attr("y", -rectangle.h / 2);
-        r.attr("width", rectangle.w);
-        r.attr("height", rectangle.h);
+        r.attr("x", -rectangle.width / 2);
+        r.attr("y", -rectangle.height / 2);
+        r.attr("width", rectangle.width);
+        r.attr("height", rectangle.height);
         this._createStyle(r, rectangle);
 
         o.attr("transform", this._createTransform(rectangle));

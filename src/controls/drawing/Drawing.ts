@@ -13,6 +13,7 @@ import {Selection} from "d3";
 import {MoveTool} from "./Tools/MoveTool";
 import {Tool} from "./Tools/Tool";
 import {DrawLine} from "./Tools/DrawLine";
+import {RotateTool} from "./Tools/RotateTool";
 
 
 /**
@@ -29,6 +30,7 @@ enum ToolNames {
     Rectangle,
     Line,
     Move,
+    Rotate,
     None
 }
 
@@ -55,6 +57,11 @@ enum Events {
      * Move tool was selected
      */
     ToolMove,
+
+    /**
+     * Rotation tool was selected
+     */
+    ToolRotate,
 
     /**
      * Tool was cancelled
@@ -128,13 +135,16 @@ export default class Drawing extends Control {
         this._interactionState.add(state(States.NoTool), Events.ToolRect, state(States.DrawingTool));
 
         this._interactionState.add(state(States.NoTool), Events.ToolMove, state(States.ManipulationTool));
+        this._interactionState.add(state(States.NoTool), Events.ToolRotate, state(States.ManipulationTool));
         this._interactionState.add(state(States.DrawingTool), Events.ToolMove, state(States.ManipulationTool));
+        this._interactionState.add(state(States.DrawingTool), Events.ToolRotate, state(States.ManipulationTool));
 
         this._interactionState.add(state(States.ManipulationTool), Events.ToolCircle, state(States.DrawingTool));
         this._interactionState.add(state(States.ManipulationTool), Events.ToolRect, state(States.DrawingTool));
         this._interactionState.add(state(States.ManipulationTool), Events.ToolLine, state(States.DrawingTool));
 
         this._interactionState.add(state(States.ManipulationTool), Events.ToolMove, state(States.ManipulationTool));
+        this._interactionState.add(state(States.ManipulationTool), Events.ToolRotate, state(States.ManipulationTool));
 
         this._interactionState.add(state(States.DrawingTool), Events.Cancel, state(States.NoTool));
         this._interactionState.add(state(States.ManipulationTool), Events.Cancel, state(States.NoTool));
@@ -225,6 +235,9 @@ export default class Drawing extends Control {
             case ToolNames.Move:
                 tool = new MoveTool(this._objectRenderer);
                 break;
+            case ToolNames.Rotate:
+                tool = new RotateTool(this._objectRenderer);
+                break;
 
             case ToolNames.None:
                 break;
@@ -269,6 +282,10 @@ export default class Drawing extends Control {
                 switch (event) {
                     case Events.ToolMove:
                         this._switchTool(ToolNames.Move)
+                        break;
+
+                    case Events.ToolRotate:
+                        this._switchTool(ToolNames.Rotate);
                         break;
                 }
                 break;
@@ -352,6 +369,8 @@ export default class Drawing extends Control {
             this._updateState(Events.ToolMove);
         } else if (d3.event.key === "l") {
             this._updateState(Events.ToolLine);
+        } else if (d3.event.key === "d") {
+            this._updateState(Events.ToolRotate);
         }
     }
 
