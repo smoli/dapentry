@@ -1,6 +1,6 @@
 specVersion: "2.3"
 metadata:
-  name: ui5.typescript.helloworld
+  name: sts.drawable
 type: application
 resources:
   configuration:

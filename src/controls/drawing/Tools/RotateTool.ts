@@ -27,6 +27,7 @@ export class RotateTool extends Tool {
 
         this._state.add(state(States.Wait), Events.HandleDown, state(States.Handle));
         this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));
+        this._state.start(state(States.Wait));
     }
 
     finish() {
@@ -46,7 +47,7 @@ export class RotateTool extends Tool {
         Object.keys(poi)
             .forEach(poiId => {
                 if (poiId !== POI[POI.center]) {
-                    this._renderer.renderHandle(this._object, poi[poiId], this._onHandleEvent.bind(this), poiId);
+                    this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), poiId);
                 }
             })
 
@@ -111,10 +112,6 @@ export class RotateTool extends Tool {
     }
 
     public get result(): any {
-        return null;
-    }
-
-    get code(): string {
         return `ROTATE ${this._object.name} ${this._finalAngle}`
     }
 }

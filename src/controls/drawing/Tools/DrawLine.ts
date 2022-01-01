@@ -2,7 +2,6 @@ import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
-import {GrCircle} from "../Objects/GrCircle";
 import {GrLine} from "../Objects/GrLine";
 
 enum States {
@@ -14,7 +13,7 @@ enum States {
 
 
 export class DrawLine extends Tool {
-    private _line:GrLine
+    private _line: GrLine
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done)
@@ -23,6 +22,7 @@ export class DrawLine extends Tool {
         this._state.add(state(States.P1), InteractionEvents.MouseMove, state(States.Drag));
         this._state.add(state(States.Drag), InteractionEvents.MouseMove, state(States.Drag));
         this._state.add(state(States.Drag), InteractionEvents.Click, state(States.Done));
+        this._state.start(state(States.Wait));
     }
 
     public reset() {
@@ -60,14 +60,6 @@ export class DrawLine extends Tool {
     }
 
     public get result(): any {
-        if (!this.isDone) {
-            return null;
-        } else {
-            return this._line;
-        }
-    }
-
-    public get code():string {
         const x1 = this._line.x + this._line.x1;
         const y1 = this._line.y + this._line.y1;
         const x2 = this._line.x + this._line.x2;

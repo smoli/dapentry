@@ -2,7 +2,6 @@ import Control from "sap/ui/core/Control";
 import HTML from "sap/ui/core/HTML";
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {state, StateMachine} from "../../runtime/tools/StateMachine";
 import {DrawCircle} from "./Tools/DrawCircle";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {ObjectRenderer, RenderLayer} from "./Objects/ObjectRenderer";
@@ -11,19 +10,10 @@ import {GrObject} from "./Objects/GrObject";
 import {DrawRectangle} from "./Tools/DrawRectangle";
 import {Selection} from "d3";
 import {MoveTool} from "./Tools/MoveTool";
-import {Tool} from "./Tools/Tool";
 import {DrawLine} from "./Tools/DrawLine";
 import {RotateTool} from "./Tools/RotateTool";
+import {ToolManager} from "./ToolManager";
 
-
-/**
- * States of the drawing
- */
-enum States {
-    NoTool = "Drawing.NoTool",
-    DrawingTool = "Drawing.DrawingTool",
-    ManipulationTool = "Drawing.ManipulationTool"
-}
 
 enum ToolNames {
     Circle,
@@ -34,40 +24,6 @@ enum ToolNames {
     None
 }
 
-/**
- * Events that trigger state transitions
- */
-enum Events {
-    /**
-     * GfxCircle tool was selected
-     */
-    ToolCircle,
-
-    /**
-     * Rectangle tool was selected
-     */
-    ToolRect,
-
-    /**
-     * Line tool was selected
-     */
-    ToolLine,
-
-    /**
-     * Move tool was selected
-     */
-    ToolMove,
-
-    /**
-     * Rotation tool was selected
-     */
-    ToolRotate,
-
-    /**
-     * Tool was cancelled
-     */
-    Cancel
-}
 
 /**
  *
@@ -79,11 +35,8 @@ export default class Drawing extends Control {
 
     private _containerId: string;
     private _svg: Selection<any>;
-
-    private _interactionState: StateMachine;
-    private _objectRenderer:ObjectRenderer;
-    private _selection:Array<GrObject>;
-    private _currentTool:Tool;
+    private _toolManager: ToolManager;
+    private _objectRenderer: ObjectRenderer;
 
     static readonly metadata = {
         properties: {
@@ -124,33 +77,30 @@ export default class Drawing extends Control {
         this.setAggregation("_svg", new HTML({
             content: `<svg id="${this._containerId}" style="height: 90vh; width: 100%" tabindex="1000000000"></svg>`
         }));
-
-        this._selection = [];
     }
 
-    private _initializeInteractionState() {
-        this._interactionState = new StateMachine();
-        this._interactionState.add(state(States.NoTool), Events.ToolCircle, state(States.DrawingTool));
-        this._interactionState.add(state(States.NoTool), Events.ToolLine, state(States.DrawingTool));
-        this._interactionState.add(state(States.NoTool), Events.ToolRect, state(States.DrawingTool));
 
-        this._interactionState.add(state(States.NoTool), Events.ToolMove, state(States.ManipulationTool));
-        this._interactionState.add(state(States.NoTool), Events.ToolRotate, state(States.ManipulationTool));
-        this._interactionState.add(state(States.DrawingTool), Events.ToolMove, state(States.ManipulationTool));
-        this._interactionState.add(state(States.DrawingTool), Events.ToolRotate, state(States.ManipulationTool));
+    protected _onToolDone(result) {
+        this.fireNewOperation({code: result});
+        this._objectRenderer.clear(RenderLayer.Interaction);
+    }
 
-        this._interactionState.add(state(States.ManipulationTool), Events.ToolCircle, state(States.DrawingTool));
-        this._interactionState.add(state(States.ManipulationTool), Events.ToolRect, state(States.DrawingTool));
-        this._interactionState.add(state(States.ManipulationTool), Events.ToolLine, state(States.DrawingTool));
+    protected _onToolAbort() {
+        this._objectRenderer.clear(RenderLayer.Interaction);
+    }
 
-        this._interactionState.add(state(States.ManipulationTool), Events.ToolMove, state(States.ManipulationTool));
-        this._interactionState.add(state(States.ManipulationTool), Events.ToolRotate, state(States.ManipulationTool));
+    protected _setupTools() {
+        this._toolManager = new ToolManager(this._objectRenderer);
+        this._toolManager.doneCallBack = this._onToolDone.bind(this);
+        this._toolManager.abortCallBack = this._onToolAbort.bind(this);
 
-        this._interactionState.add(state(States.DrawingTool), Events.Cancel, state(States.NoTool));
-        this._interactionState.add(state(States.ManipulationTool), Events.Cancel, state(States.NoTool));
+        this._toolManager.addTool(DrawCircle, ToolNames.Circle);
+        this._toolManager.addTool(DrawLine, ToolNames.Line);
+        this._toolManager.addTool(DrawRectangle, ToolNames.Rectangle);
+        this._toolManager.addTool(MoveTool, ToolNames.Move);
+        this._toolManager.addTool(RotateTool, ToolNames.Rotate);
 
-
-        this._interactionState.start(state(States.NoTool));
+        this._toolManager.switch(ToolNames.Move);
     }
 
     public onAfterRendering(oEvent: jQuery.Event) {
@@ -158,9 +108,8 @@ export default class Drawing extends Control {
         this._svg = d3.select(this.getDomRef()).select("svg")
         this._objectRenderer = new SvgObjectRenderer(this._svg, this._onObjectClick.bind(this));
         this._renderAll();
+        this._setupTools();
         this._setupMouseEvents();
-        this._initializeInteractionState();
-        this._updateState(Events.ToolMove);
 
         const b = this.getBinding("objects");
 
@@ -192,7 +141,7 @@ export default class Drawing extends Control {
         this._svg.on("keyup", this._interActionKeyDown.bind(this))
     }
 
-    update(clearAllFirst:boolean = false) {
+    update(clearAllFirst: boolean = false) {
         if (clearAllFirst) {
             this._objectRenderer.clear(RenderLayer.Objects);
         }
@@ -202,100 +151,11 @@ export default class Drawing extends Control {
     private _renderAll(): void {
         this._objectRenderer.reset();
         this.getObjects().forEach(obj => {
-            this._objectRenderer.render(obj as GrObject, this._selection.indexOf(obj) !== -1);
+            this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
         });
     }
 
-
-
-    private _cancelTool():void {
-        if (this._currentTool) {
-            this._currentTool.finish();
-            this._currentTool.cancel();
-            this._objectRenderer.clear(RenderLayer.Interaction);
-        }
-    }
-
-    private _switchTool(newTool:ToolNames):void {
-        this._cancelTool();
-
-        let tool = null;
-        switch (newTool) {
-            case ToolNames.Circle:
-                tool = new DrawCircle(this._objectRenderer);
-                break;
-            case ToolNames.Rectangle:
-                tool = new DrawRectangle(this._objectRenderer);
-                break;
-
-            case ToolNames.Line:
-                tool = new DrawLine(this._objectRenderer);
-                break;
-
-            case ToolNames.Move:
-                tool = new MoveTool(this._objectRenderer);
-                break;
-            case ToolNames.Rotate:
-                tool = new RotateTool(this._objectRenderer);
-                break;
-
-            case ToolNames.None:
-                break;
-        }
-
-        if (tool) {
-            tool.reset();
-            tool.selection = this._selection;
-            tool.initialize();
-            this._currentTool = tool;
-        }
-    }
-
-
-    private _updateState(event:Events) {
-
-        this._interactionState.next(event);
-
-        switch(this._interactionState.state.id) {
-
-            case States.NoTool:
-                this._cancelTool();
-                this._interactionState.state.data = null;
-                break;
-
-            case States.DrawingTool:
-                switch (event) {
-                    case Events.ToolCircle:
-                        this._switchTool(ToolNames.Circle);
-                        break;
-                    case Events.ToolRect:
-                        this._switchTool(ToolNames.Rectangle);
-                        break;
-                    case Events.ToolLine:
-                        this._switchTool(ToolNames.Line);
-                        break;
-                }
-
-                break;
-
-            case States.ManipulationTool:
-                switch (event) {
-                    case Events.ToolMove:
-                        this._switchTool(ToolNames.Move)
-                        break;
-
-                    case Events.ToolRotate:
-                        this._switchTool(ToolNames.Rotate);
-                        break;
-                }
-                break;
-        }
-    }
-
     private _pumpToTool(interactionEvent: InteractionEvents) {
-        if (this._interactionState.state.id !== States.DrawingTool && this._interactionState.state.id !== States.ManipulationTool) {
-            return;
-        }
 
         const d3Ev = d3.event;
         const d3MEv = d3.mouse(this._svg.node());
@@ -306,23 +166,11 @@ export default class Drawing extends Control {
             dx: d3Ev.movementX,
             dy: d3Ev.movementY,
             alt: d3Ev.altKey, button: d3Ev.button, buttons: d3Ev.buttons, ctrl: d3Ev.ctrlKey, shift: d3Ev.shiftKey,
-            key: d3Ev.key, keyCode: d3Ev.keyCode
+            key: d3Ev.key, keyCode: d3Ev.keyCode,
+            selection: null
         };
-        const tool = this._currentTool;
 
-        const done = tool.update(interactionEvent, ed);
-        if (done) {
-            const code = tool.code;
-            if(!code) {
-                return;
-            }
-            this._objectRenderer.clear(RenderLayer.Interaction);
-            tool.reset();
-            this._selection = [];
-            this.fireNewOperation({ code })
-        } else if (interactionEvent == InteractionEvents.Cancel) {
-            this._objectRenderer.clear(RenderLayer.Interaction);
-        }
+        this._toolManager.pump(interactionEvent, ed);
     }
 
     private _interActionMouseDown() {
@@ -355,11 +203,7 @@ export default class Drawing extends Control {
     }
 
     private _interActionKeyDown() {
-        if (d3.event.code === "Delete") {
-            if (this._interactionState.state.id !== States.DrawingTool) {
-                this._deleteSelection();
-            }
-        } else if (d3.event.keyCode === 27) {
+        /*if (d3.event.keyCode === 27) {
             this._updateState(Events.Cancel);
         } else if (d3.event.key === "c") {
             this._updateState(Events.ToolCircle);
@@ -371,34 +215,37 @@ export default class Drawing extends Control {
             this._updateState(Events.ToolLine);
         } else if (d3.event.key === "d") {
             this._updateState(Events.ToolRotate);
+        }*/
+
+        if (d3.event.keyCode === 27) {
+            this._toolManager.abortCurrentTool();
+        } else if (d3.event.key === "c") {
+            this._toolManager.switch(ToolNames.Circle);
+        } else if (d3.event.key === "r") {
+            this._toolManager.switch(ToolNames.Rectangle);
+        } else if (d3.event.key === "l") {
+            this._toolManager.switch(ToolNames.Line);
+        } else if (d3.event.key === "g") {
+            this._toolManager.switch(ToolNames.Move);
         }
     }
 
-    private _onObjectClick(object:GrObject) {
-        if (this._interactionState.state.id !== States.ManipulationTool) {
-            return;
-        }
-
-        const i = this._selection.indexOf(object)
-        if (i === -1) {
-            //Single select
-            this._selection = [object];
-            // this._selection.push(object);
+    private _onObjectClick(object: GrObject) {
+        if (this._toolManager.isSelected(object)) {
+            this._toolManager.deselectObject(object);
         } else {
-            this._selection.splice(i, 1);
+            this._toolManager.selectObject(object);
         }
 
+        this._pumpToTool(InteractionEvents.Selection);
         this._renderAll();
-        if (this._currentTool) {
-            this._currentTool.selection = this._selection;
-        }
 
-        this.fireSelectionChange({ selection: this._selection });
+        this.fireSelectionChange({selection: this._toolManager.selection});
     }
 
     private _deleteSelection() {
-        if (this._selection.length === 1) {
-            this.fireObjectDeleted({ object: this._selection[0] })
+        if (this._toolManager.selection.length === 1) {
+            this.fireObjectDeleted({object: this._toolManager.selection[0]})
         }
     }
 

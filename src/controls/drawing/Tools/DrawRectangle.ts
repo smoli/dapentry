@@ -24,6 +24,7 @@ export class DrawRectangle extends Tool {
         this._state.add(state(States.FirstPoint), InteractionEvents.MouseMove, state(States.DragSize));
         this._state.add(state(States.DragSize), InteractionEvents.MouseMove, state(States.DragSize));
         this._state.add(state(States.DragSize), InteractionEvents.Click, state(States.Done));
+        this._state.start(state(States.Wait));
     }
 
     public reset() {
@@ -74,14 +75,6 @@ export class DrawRectangle extends Tool {
     }
 
     public get result(): any {
-        if (!this.isDone) {
-            return null;
-        } else {
-            return this._rect;
-        }
-    }
-
-    get code(): string {
         return `RECT $drawing ${this._rect.name} "${this._rect.name}" $styles.default (${this._rect.x} ${this._rect.y}) ${this._rect.width} ${this._rect.height}`
     }
 
