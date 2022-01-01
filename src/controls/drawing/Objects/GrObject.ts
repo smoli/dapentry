@@ -255,11 +255,11 @@ export abstract class GrObject {
      * moving its center.
      *
      * @param poi           The point of interest to move
-     * @param vector        The vector to move the POI by
+     * @param byVector        The vector to move the POI by
      */
-    public movePOI(poi:POI, vector:Point2D):void {
-        this._x += vector.x;
-        this._y += vector.y;
+    public movePOI(poi:POI, byVector:Point2D):void {
+        this._x += byVector.x;
+        this._y += byVector.y;
     }
 }
 

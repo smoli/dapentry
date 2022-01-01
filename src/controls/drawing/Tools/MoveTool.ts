@@ -21,7 +21,6 @@ export class MoveTool extends Tool {
     protected _selection: Array<GrObject> = [];
     protected _movingObject: GrObject;
     protected _movingPOI: POI;
-    protected _movingPOIPoint: Point2D;
     protected _snappingObject: GrObject;
     protected _snappingPOI: string;
     protected _snapPoint: Point2D;
@@ -55,7 +54,7 @@ export class MoveTool extends Tool {
 
         Object.keys(poi)
             .forEach(poiId => {
-                this._renderer.renderHandle(this._object, poi[poiId], this._onHandleEvent.bind(this), poiId);
+                this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), Number(poiId));
             })
 
         this._renderer.renderBoundingRepresentation(this._object);
@@ -64,14 +63,15 @@ export class MoveTool extends Tool {
     protected _onHandleEvent(object: GrObject, eventData: InteractionEventData, poiId): void {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
-            this._ox = this._object.x;
-            this._oy = this._object.y;
             this._state.next(Events.HandleDown);
             this._movingObject = object;
             this._movingPOI = poiId;
-            this._movingPOIPoint = object.pointsOfInterest[poiId];
+
+            const poi = object.pointsOfInterest[poiId];
+            this._ox = poi.x;
+            this._oy = poi.y;
+
             this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
-                console.log(object, poiId, hit)
                 if (hit) {
                     this._snappingObject = object;
                     this._snappingPOI = poiId;
@@ -108,11 +108,12 @@ export class MoveTool extends Tool {
 
         switch (this._state.state.id as States) {
             case States.Wait:
+                this._movingPOI = this._movingObject = this._snappingObject = this._snappingPOI = this._snapPoint = null;
+
                 break;
 
             case States.Done:
-                this._object.x += eventData.dx;
-                this._object.y += eventData.dy;
+                this._movingObject.movePOI(this._movingPOI, {x: eventData.dx, y: eventData.dy})
                 this._renderer.render(this._object, true);
                 this._renderer.enablePOI(false);
                 this._snapPoint = null;
@@ -122,11 +123,16 @@ export class MoveTool extends Tool {
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._movingObject.movePOI(this._movingPOI, {x: eventData.dx, y: eventData.dy})
                     this._renderer.render(this._object, true);
+                    const poi: POIMap = this._object.pointsOfInterest;
+
+                    Object.keys(poi)
+                        .forEach(poiId => {
+                            this._renderer.updateHandle(this._object, poiId, poi[poiId]);
+                        })
+
                 }
                 break;
         }
-
-
         return false;
     }
 
@@ -135,8 +141,9 @@ export class MoveTool extends Tool {
     }
 
     get code(): string {
-        const dx = this._object.x - this._ox;
-        const dy = this._object.y - this._oy;
+        const poi = this._object.pointsOfInterest[this._movingPOI];
+        const dx = poi.x - this._ox;
+        const dy = poi.y - this._oy;
 
         if (dx !== 0 && dy !== 0) {
             if (this._snappingObject) {

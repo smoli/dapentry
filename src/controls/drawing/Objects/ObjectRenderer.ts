@@ -124,13 +124,13 @@ export abstract class ObjectRenderer {
      * The x and y position is given **relative to the origin** of the object.
      *
      * @param object            Object to render the handle on
-     * @param x                 x-Position of the handle.
-     * @param y                 y-Position of the handle
+     * @param p
+     * @param id
      * @param onMouseEvent      callback that is called when the user interacts with the handle.
      * @param data              arbitrary data that is passed to the callback.
      */
-    public abstract renderHandle(object: GrObject, p:Point2D, onMouseEvent: HandleMouseCallBack, data?: any): void;
-
+    public abstract renderHandle(object: GrObject, id: string, p: Point2D, onMouseEvent: HandleMouseCallBack, data?: any): void;
+    public abstract updateHandle(object: GrObject, id: string, p: Point2D);
     /**
      * Remove all handles from the object's representation.
      * @param object

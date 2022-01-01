@@ -92,7 +92,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
 
-    enablePOI(enabled: boolean,  poiCallback: POICallback, except: Array<GrObject>) {
+    enablePOI(enabled: boolean, poiCallback: POICallback, except: Array<GrObject>) {
         if (this._poiRenderingEnabled) {
             this._infoLayer.selectAll("*").remove();
         }
@@ -249,7 +249,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
     private _renderLine(layer: d3.Selection<any>, line: GrLine) {
         const o = this.getObjectOrCreate(layer, line, "line");
 
-        console.log(line.x1 + line.x, line.y1 + line.y, line.x2 + line.x, line.y2 + line.y);
         const l = o.select(ToolClassSelectors.object);
         l.attr("x1", line.x1);
         l.attr("y1", line.y1);
@@ -258,7 +257,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._createStyle(l, line);
 
         o.attr("transform", this._createTransform(line));
-
         return l;
     }
 
@@ -314,7 +312,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
-    public renderHandle(object: GrObject, p: Point2D, onMouseEvent: HandleMouseCallBack, data?: any) {
+    public updateHandle(object: GrObject, id: string, p: Point2D) {
+        const g = this.getObject(this._objectLayer, object);
+        if (g) {
+            g.select(`#${object.name}-handle-${id}`)
+                .attr("cx", p.x - object.x)
+                .attr("cy", p.y - object.y)
+        }
+    }
+
+    public renderHandle(object: GrObject, id: string, p: Point2D, onMouseEvent: HandleMouseCallBack, data?: any) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             console.log(p, data)
@@ -322,6 +329,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 .attr("cx", p.x - object.x)
                 .attr("cy", p.y - object.y)
                 .attr("r", HANDLE_RADIUS)
+                .attr("id", `${object.name}-handle-${id}`)
                 .classed(ToolClasses.handle, true);
 
             this._attachHandleMouseEvents(object, handle, onMouseEvent, data);

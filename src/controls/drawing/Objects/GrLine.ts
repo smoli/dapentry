@@ -33,16 +33,17 @@ export class GrLine extends GrObject {
 
     protected updateCenter() {
         const x1 = this._x1 + this._x;
-        const x2 = this._x2 + this._x;
         const y1 = this._y1 + this._y;
+        const x2 = this._x2 + this._x;
         const y2 = this._y2 + this._y;
+
         this._x = (x1 + x2) / 2;
         this._y = (y1 + y2) / 2;
+
         this._x1 = x1 - this._x;
         this._x2 = x2 - this._x;
         this._y1 = y1 - this._y;
         this._y2 = y2 - this._y;
-
     }
 
     get y2(): number {
@@ -96,4 +97,22 @@ export class GrLine extends GrObject {
             [POI.center]: this.center
         }
     }
+
+    public movePOI(poi:POI, vector:Point2D):void {
+        if (poi === POI.center) {
+            super.movePOI(poi, vector);
+        }
+
+        if (poi === POI.start) {
+            console.log("moving start", vector)
+            this._x1 += vector.x;
+            this._y1 += vector.y;
+            this.updateCenter();
+        } else if (poi === POI.end) {
+            this._x2 += vector.x;
+            this._y2 += vector.y;
+            this.updateCenter();
+        }
+    }
+
 }
