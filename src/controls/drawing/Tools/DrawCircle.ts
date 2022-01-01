@@ -22,6 +22,7 @@ export class DrawCircle extends Tool {
         this._state.add(state(States.CenterPoint), InteractionEvents.MouseMove, state(States.DragRadius));
         this._state.add(state(States.DragRadius), InteractionEvents.MouseMove, state(States.DragRadius));
         this._state.add(state(States.DragRadius), InteractionEvents.Click, state(States.Done));
+        this._state.start(state(States.Wait));
     }
 
     public reset() {
@@ -56,14 +57,6 @@ export class DrawCircle extends Tool {
     }
 
     public get result(): any {
-        if (!this.isDone) {
-            return null;
-        } else {
-            return this._circle;
-        }
-    }
-
-    public get code():string {
         return `CIRCLE $drawing ${this._circle.name} "${this._circle.name}" $styles.default (${this._circle.x} ${this._circle.y}) ${this._circle.radius}`
     }
 }

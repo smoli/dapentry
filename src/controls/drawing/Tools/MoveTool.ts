@@ -33,6 +33,14 @@ export class MoveTool extends Tool {
 
         this._state.add(state(States.Wait), Events.HandleDown, state(States.Handle));
         this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));
+        this._state.start(state(States.Wait));
+    }
+
+    abort() {
+        if (this._object) {
+            this._renderer.removeAllHandles(this._object);
+        }
+        super.abort();
     }
 
     finish() {
@@ -40,6 +48,7 @@ export class MoveTool extends Tool {
         if (!this._object) {
             return;
         }
+
         this._renderer.removeAllHandles(this._object);
         this._movingPOI = this._movingObject = this._snappingObject = this._snappingPOI = this._snapPoint = null;
     }
@@ -84,7 +93,9 @@ export class MoveTool extends Tool {
     }
 
     set selection(value: Array<GrObject>) {
-        this.finish();
+        if (this._object) {
+            this._renderer.removeAllHandles(this._object);
+        }
         this.reset();
         this._selection = value;
         this.initialize();
@@ -95,11 +106,11 @@ export class MoveTool extends Tool {
     }
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
-        if (!this._object) {
-            return false;
-        }
-
         this._state.next(interactionEvent);
+
+        if (interactionEvent === InteractionEvents.Selection) {
+            this.selection = eventData.selection;
+        }
 
         if (this._snapPoint) {
             eventData.dx = this._snapPoint.x - this._object.pointsOfInterest[this._movingPOI].x;
@@ -137,10 +148,6 @@ export class MoveTool extends Tool {
     }
 
     public get result(): any {
-        return null;
-    }
-
-    get code(): string {
         const poi = this._object.pointsOfInterest[this._movingPOI];
         const dx = poi.x - this._ox;
         const dy = poi.y - this._oy;

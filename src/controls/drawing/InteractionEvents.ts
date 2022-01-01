@@ -1,3 +1,5 @@
+import {GrObject} from "./Objects/GrObject";
+
 export enum InteractionEvents {
     Click,
     AlternateClick,
@@ -6,6 +8,7 @@ export enum InteractionEvents {
     MouseMove,
     MouseLeave,
     MouseEnter,
+    Selection,
     Cancel
 }
 
@@ -21,5 +24,6 @@ export interface InteractionEventData {
     shift: boolean,
     alt: boolean,
     key: string,
-    keyCode: number
+    keyCode: number,
+    selection?: Array<GrObject>
 }
