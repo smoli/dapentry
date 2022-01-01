@@ -57,6 +57,9 @@ export default class OperationEditor extends Control {
             case 'STROKE':
                 return "opStroke";
 
+            case 'ROTATE':
+                return "opRotate";
+
             case 'MOVE':
                 if (tokens.length === 3) {
                     return "opMoveByCenter"

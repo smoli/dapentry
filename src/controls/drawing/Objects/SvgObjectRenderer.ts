@@ -267,9 +267,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     protected _createTransform(object: GrObject): string {
-        // Scale -> translate -> rotate
+        // rotate -> translate -> scale
 
-        return `translate(${object.x} ${object.y})`;
+        let rot = "";
+
+        let trans = `translate(${object.x} ${object.y})`
+        if (object.rotation !== 0) {
+            rot = `rotate(${object.rotation})`
+        }
+
+        return trans + " " + rot;
     }
 
     protected _createStyle(elem: Selection<any>, object: GrObject): void {

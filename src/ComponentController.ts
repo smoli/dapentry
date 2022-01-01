@@ -11,6 +11,7 @@ import {GrObject, ObjectType} from "./controls/drawing/Objects/GrObject";
 import Drawing from "./controls/drawing/Drawing";
 import {GfxLine} from "./runtime/gfx/GfxLine";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
+import {GfxRotate} from "./runtime/gfx/GfxRotate";
 
 export class ComponentController {
     private _component: Component;
@@ -41,7 +42,7 @@ export class ComponentController {
             selection: []
         });
         component.setModel(appModel, "appModel");
-        this.preloadDemoCode();
+        // this.preloadDemoCode();
     }
 
     public setSelectedCodeLine(line?) {
