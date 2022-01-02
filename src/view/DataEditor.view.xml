@@ -6,20 +6,9 @@
 
     <VBox class="sapUiNoMargin">
 
-        <VBox class="sapUiNoMargin" items="{appModel>/data}" alignItems="Start">
-            <HBox class="sapUiNoMargin" justifyContent="Center" alignItems="Center">
-                <Button type="Transparent" text="-" press="onDeleteDataField"/>
-                <Text text="{appModel>name} = " class="sapUiNoMarginTop sapUiNoMarginBottom"/>
-<!--                <Text text="{appModel>value}" class="sapUiNoMargin" />-->
-                <Input value="{appModel>value}" class="sapUiNoMargin"  type="Number" change="onFieldValueChanged">
-                    <layoutData>
-                        <FlexItemData growFactor="0"/>
-                    </layoutData>
-                </Input>
-                <Button type="Transparent" text="+"/>
-            </HBox>
-
-
+        <VBox class="sapUiNoMargin"
+              items="{ path: 'appModel>/data', factory: '.fieldUIFactory'}"
+              alignItems="Start">
         </VBox>
         <Button text="+" press="onNewDataField"/>
     </VBox>

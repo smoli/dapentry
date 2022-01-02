@@ -113,21 +113,6 @@ export default class Drawing extends Control {
         this._renderAll();
         this._setupTools();
         this._setupMouseEvents();
-
-        const b = this.getBinding("objects");
-
-        b.attachChange(() => {
-            debugger;
-        })
-        b.attachRefresh(() => {
-            debugger;
-        })
-        b.attachDataReceived(() => {
-            debugger;
-        })
-        b.attachAggregatedDataStateChange(() => {
-            debugger;
-        })
     }
 
     private _makeId(suffix: string): string {
