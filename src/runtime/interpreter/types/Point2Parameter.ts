@@ -1,4 +1,5 @@
 import {Parameter} from "../Parameter";
+import {Point2D} from "../../../controls/drawing/Objects/GeoMath";
 
 export class Point2Parameter extends Parameter{
 
@@ -19,10 +20,7 @@ export class Point2Parameter extends Parameter{
     }
 
     finalized(closure): any {
-        return {
-            x: this._x.finalized(closure),
-            y: this._y.finalized(closure)
-        }
+        return new Point2D(this._x.finalized(closure), this._y.finalized(closure));
     }
 
 }

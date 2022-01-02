@@ -131,7 +131,7 @@ export class ToolManager {
     public pump(interactionEvent: InteractionEvents, eventData: InteractionEventData) {
         if (this._currentTool) {
             if (eventData) {
-                eventData.selection = this._selection;
+                eventData.selection = [...this._selection];
             }
             this._currentTool.update(interactionEvent, eventData);
 
@@ -158,7 +158,7 @@ export class ToolManager {
         if (this._currentTool && (this._selection.length || pumpEmpty)) {
             this.pump(InteractionEvents.Selection,
                 {
-                    selection: this._selection,
+                    selection: [...this._selection],        // If tools store the selection we don't want to mess with their state
                     interactionEvent: InteractionEvents.Selection,
                     x: 0,
                     y: 0,

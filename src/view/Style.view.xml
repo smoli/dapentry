@@ -7,19 +7,22 @@
         xmlns:mvc="sap.ui.core.mvc">
 
     <Page>
-<!--        <Text text="lkjh" />-->
         <VBox items="{appModel>/selection}">
             <items>
                 <VBox>
-                <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}" change="onColorChange"/>
-                <Slider value="{appModel>style/strokeWidth}" width="100%"
-                        min="{= ${appModel>type} === 'Line' ? 1 : 0 }"
-                        max="25"
-                        showAdvancedTooltip="true"
-                        showHandleTooltip="false"
-                        inputsAsTooltips="true"
-                        change="onStrokeWidthChange"
-                        class="sapUiMediumMarginBottom" />
+                    <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}"
+                                         change="onColorChange"/>
+                    <HBox width="100%" justifyContent="Stretch">
+                        <Text text="{i18n>strokWidth}" />
+                    <Slider value="{appModel>style/strokeWidth}" width="100%"
+                            min="{= ${appModel>type} === 'Line' ? 1 : 0 }"
+                            max="25"
+                            showAdvancedTooltip="true"
+                            showHandleTooltip="false"
+                            inputsAsTooltips="true"
+                            change="onStrokeWidthChange"
+                            class="sapUiMediumMarginBottom"/>
+                    </HBox>
                 </VBox>
             </items>
         </VBox>

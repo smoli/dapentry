@@ -49,6 +49,7 @@ export class MoveTool extends Tool {
         if (!this._object) {
             return;
         }
+        this._renderer.removeAllHandles(this._object);
         this._movingPOI = this._movingObject = this._snappingObject = this._snappingPOI = this._snapPoint = null;
     }
 
@@ -92,9 +93,6 @@ export class MoveTool extends Tool {
     }
 
     set selection(value: Array<GrObject>) {
-        if (this._object) {
-            this._renderer.removeAllHandles(this._object);
-        }
         this.finish()
         this.reset();
         this._selection = value;
