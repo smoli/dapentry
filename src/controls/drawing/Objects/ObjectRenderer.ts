@@ -25,6 +25,7 @@ import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
 import {Point2D} from "./GeoMath";
+import {GrPolygon} from "./GrPolygon";
 
 /**
  * Callback signature for functions invoked when an object is clicked
@@ -103,6 +104,14 @@ export abstract class ObjectRenderer {
      * @param line
      */
     public abstract renderLine(layer:RenderLayer, line: GrLine): void;
+
+    /**
+     * Render a polygon on the given layer.
+     * @param layer
+     * @param polygon
+     */
+    public abstract renderPolygon(layer:RenderLayer, polygon: GrPolygon): void;
+
 
     /**
      * Render the bounding representation for an object on the object layer

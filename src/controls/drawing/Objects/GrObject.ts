@@ -6,7 +6,8 @@ export enum ObjectType {
     Rectangle,
     Ellipse,
     Square,
-    Line
+    Line,
+    Polygon
 }
 
 

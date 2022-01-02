@@ -13,12 +13,14 @@ import {MoveTool} from "./Tools/MoveTool";
 import {DrawLine} from "./Tools/DrawLine";
 import {RotateTool} from "./Tools/RotateTool";
 import {ToolManager} from "./ToolManager";
+import {DrawPolygon} from "./Tools/DrawPolygon";
 
 
 enum ToolNames {
     Circle,
     Rectangle,
     Line,
+    Polygon,
     Move,
     Rotate,
     None
@@ -99,6 +101,7 @@ export default class Drawing extends Control {
         this._toolManager.addTool(DrawRectangle, ToolNames.Rectangle);
         this._toolManager.addTool(MoveTool, ToolNames.Move);
         this._toolManager.addTool(RotateTool, ToolNames.Rotate);
+        this._toolManager.addTool(DrawPolygon, ToolNames.Polygon);
 
         this._toolManager.switch(ToolNames.Move);
     }
@@ -139,6 +142,7 @@ export default class Drawing extends Control {
         this._svg.on("mousemove", this._interActionMouseMove.bind(this))
         this._svg.on("click", this._interActionClick.bind(this))
         this._svg.on("keyup", this._interActionKeyDown.bind(this))
+        this._svg.on("contextmenu", this._interActionClick.bind(this))
     }
 
     update(clearAllFirst: boolean = false) {
@@ -196,6 +200,7 @@ export default class Drawing extends Control {
 
     private _interActionClick() {
         if (d3.event.button != 0) {
+            d3.event.preventDefault();
             this._pumpToTool(InteractionEvents.AlternateClick)
         } else {
             this._pumpToTool(InteractionEvents.Click)
@@ -225,6 +230,8 @@ export default class Drawing extends Control {
             this._toolManager.switch(ToolNames.Rectangle);
         } else if (d3.event.key === "l") {
             this._toolManager.switch(ToolNames.Line);
+        } else if (d3.event.key === "p") {
+            this._toolManager.switch(ToolNames.Polygon);
         } else if (d3.event.key === "g") {
             this._toolManager.switch(ToolNames.Move);
         } else if (d3.event.key === "t") {
@@ -238,10 +245,7 @@ export default class Drawing extends Control {
         } else {
             this._toolManager.selectObject(object);
         }
-
-        this._pumpToTool(InteractionEvents.Selection);
         this._renderAll();
-
         this.fireSelectionChange({selection: this._toolManager.selection});
     }
 

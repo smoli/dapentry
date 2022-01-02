@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="BuildEnvironment" pattern="file[untitled]:build//*" />
+</component>

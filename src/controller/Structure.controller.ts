@@ -64,6 +64,9 @@ export default class StructureController extends BaseController {
             case "ROTATE":
                 return "opRotate";
 
+            case "POLY":
+                return "opPolygon";
+
             case 'MOVE':
                 if (tokens.length === 3) {
                     return "opMoveByCenter"

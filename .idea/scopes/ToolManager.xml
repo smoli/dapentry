@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="ToolManager" pattern="file:test/ui/toolManager_spec.ts||file[untitled]:src/controls/drawing/Tools//*" />
+</component>

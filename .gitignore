@@ -19,3 +19,4 @@ dist/
 /build/
 /src/controls/*.tsinterface.ts
 /doc/reference/
+*.generated.tsinterface.ts

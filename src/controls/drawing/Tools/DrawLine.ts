@@ -60,10 +60,10 @@ export class DrawLine extends Tool {
     }
 
     public get result(): any {
-        const x1 = this._line.x + this._line.x1;
-        const y1 = this._line.y + this._line.y1;
-        const x2 = this._line.x + this._line.x2;
-        const y2 = this._line.y + this._line.y2;
+        const x1 = this._line.x1;
+        const y1 = this._line.y1;
+        const x2 = this._line.x2;
+        const y2 = this._line.y2;
 
         return `LINE $drawing ${this._line.name} "${this._line.name}" $styles.default (${x1} ${y1}) (${x2} ${y2})`
 

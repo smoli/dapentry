@@ -13,7 +13,7 @@
                     <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}"
                                          change="onColorChange"/>
                     <HBox width="100%" justifyContent="Stretch">
-                        <Text text="{i18n>strokWidth}" />
+                        <Text text="{i18n>strokeWidth}" />
                     <Slider value="{appModel>style/strokeWidth}" width="100%"
                             min="{= ${appModel>type} === 'Line' ? 1 : 0 }"
                             max="25"

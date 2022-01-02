@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="ObjectsAndDrawing" pattern="file[untitled]:src/controls/drawing//*" />
+</component>
