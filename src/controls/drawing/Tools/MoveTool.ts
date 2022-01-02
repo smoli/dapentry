@@ -1,8 +1,9 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap, Point2D} from "../Objects/GrObject";
+import {GrObject, POI, POIMap} from "../Objects/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
+import {Point2D} from "../Objects/GeoMath";
 
 
 enum States {
@@ -48,8 +49,6 @@ export class MoveTool extends Tool {
         if (!this._object) {
             return;
         }
-
-        this._renderer.removeAllHandles(this._object);
         this._movingPOI = this._movingObject = this._snappingObject = this._snappingPOI = this._snapPoint = null;
     }
 
@@ -96,6 +95,7 @@ export class MoveTool extends Tool {
         if (this._object) {
             this._renderer.removeAllHandles(this._object);
         }
+        this.finish()
         this.reset();
         this._selection = value;
         this.initialize();
@@ -124,15 +124,15 @@ export class MoveTool extends Tool {
                 break;
 
             case States.Done:
-                this._movingObject.movePOI(this._movingPOI, {x: eventData.dx, y: eventData.dy})
-                this._renderer.render(this._object, true);
+                this._movingObject.movePOI(this._movingPOI, new Point2D(eventData.dx, eventData.dy))
+                this._renderer.render(this._object, true)
                 this._renderer.enablePOI(false);
                 this._snapPoint = null;
                 return true;
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
-                    this._movingObject.movePOI(this._movingPOI, {x: eventData.dx, y: eventData.dy})
+                    this._movingObject.movePOI(this._movingPOI, new Point2D(eventData.dx, eventData.dy))
                     this._renderer.render(this._object, true);
                     const poi: POIMap = this._object.pointsOfInterest;
 

@@ -1,10 +1,10 @@
 import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
-import {Point2D} from "../../controls/drawing/Objects/GrObject";
 import {GfxObject} from "./GfxObject";
 import {GrCircle} from "../../controls/drawing/Objects/GrCircle";
 import {GrLine} from "../../controls/drawing/Objects/GrLine";
+import {Point2D} from "../../controls/drawing/Objects/GeoMath";
 
 export class GfxLine extends GfxObject {
     private readonly _p1: Point2Parameter;

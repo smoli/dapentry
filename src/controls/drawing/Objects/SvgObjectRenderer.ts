@@ -1,12 +1,13 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {GrObject, ObjectType, Point2D} from "./GrObject";
+import {GrObject, ObjectType} from "./GrObject";
 import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, POICallback, RenderLayer} from "./ObjectRenderer";
 import {Selection} from "d3";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
+import {Point2D} from "./GeoMath";
 
 enum ToolClasses {
     object = "grObject",
@@ -24,6 +25,15 @@ enum ToolClassSelectors {
 
 const HANDLE_RADIUS: string = "7px";
 
+interface ObjectInfo {
+    x: number,
+    y: number,
+    rot: number,
+    scaleX: number,
+    scaleY: number,
+    handles: Array<Point2D>
+}
+
 
 /**
  * Renderer using SVG. This uses d3 (3.4) for rendering.
@@ -35,10 +45,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
     protected _infoLayer: Selection<any>;
     protected _interactionLayer: Selection<any>;
     private _poiRenderingEnabled: boolean;
+    private _objectInfo: { [key: string]: ObjectInfo };
 
     constructor(container: Selection<any>, onObjectClick: ObjectClickCallback = null) {
         super(onObjectClick);
         this._setupLayers(container);
+        this._objectInfo = {}
     }
 
     protected _setupLayers(container: Selection<any>): void {
@@ -55,10 +67,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
     clear(layer: RenderLayer) {
         if (layer === RenderLayer.Objects) {
             this._objectLayer.selectAll("*").remove();
+            this._objectInfo = {};
         } else if (layer === RenderLayer.Interaction) {
             this._interactionLayer.selectAll("*").remove();
         }
     }
+
 
     render(object: GrObject, selected: boolean) {
 
@@ -117,14 +131,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
             svgGroup = this._infoLayer.append("g").attr("id", object.id + "-info")
         }
 
-        svgGroup.attr("transform", this._createTransform(object))
-
         const poiIds = Object.keys(object.pointsOfInterest);
         Object.values(object.pointsOfInterest)
             .forEach((poi, i) => {
                 const c = svgGroup.append("circle")
-                    .attr("cx", poi.x - object.x)
-                    .attr("cy", poi.y - object.y)
+                    .attr("cx", poi.x)
+                    .attr("cy", poi.y)
                     .attr("r", HANDLE_RADIUS)
                     .classed(ToolClasses.poi, true);
 
@@ -161,6 +173,17 @@ export class SvgObjectRenderer extends ObjectRenderer {
         let svgGroup = layer.select("#" + object.id);
         if (svgGroup.empty()) {
             svgGroup = layer.append("g").attr("id", object.id);
+
+            const info = {
+                x: object.x,
+                y: object.y,
+                rot: object.rotation,
+                scaleX: object.scaleX,
+                scaleY: object.scaleY,
+                handles: []
+            }
+
+            this._objectInfo[object.name] = info;
 
             const svgObject = svgGroup.append(svgTag).attr("class", ToolClasses.object);
             svgObject.on("click", () => {
@@ -205,19 +228,30 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const o = this.getObjectOrCreate(layer, circle, "circle")
         const c = o.select(ToolClassSelectors.object);
 
-        c.attr("cx", 0);
-        c.attr("cy", 0);
+        c.attr("cx", circle.x);
+        c.attr("cy", circle.y);
         c.attr("r", circle.radius);
 
+        this.addRotation(circle, o)
         this._createStyle(c, circle);
 
-        o.attr("transform", this._createTransform(circle));
 
-        return c;
+        return o;
     }
 
     renderCircle(layer: RenderLayer, circle: GrCircle) {
-        return this._renderCircle(this.getLayer(layer), circle);
+        const o = this._renderCircle(this.getLayer(layer), circle);
+    }
+
+    protected addRotation(object: GrObject, svgGroup: Selection<any>) {
+
+        svgGroup.select(ToolClassSelectors.object).attr("transform", `rotate( ${object.rotation} ${object.x} ${object.y})`)
+
+        const bb = svgGroup.select(ToolClassSelectors.boundingBox)
+        if (!bb.empty()) {
+            bb.attr("transform", `rotate( ${object.rotation} ${object.x} ${object.y})`)
+        }
+
     }
 
     /**
@@ -230,13 +264,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const o = this.getObjectOrCreate(layer, rectangle, "rect");
 
         const r = o.select(ToolClassSelectors.object);
-        r.attr("x", -rectangle.width / 2);
-        r.attr("y", -rectangle.height / 2);
+        r.attr("x", -rectangle.width / 2 + rectangle.x);
+        r.attr("y", -rectangle.height / 2 + rectangle.y);
         r.attr("width", rectangle.width);
         r.attr("height", rectangle.height);
         this._createStyle(r, rectangle);
-
-        o.attr("transform", this._createTransform(rectangle));
+        this.addRotation(rectangle, o)
 
         return r;
     }
@@ -250,13 +283,14 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const o = this.getObjectOrCreate(layer, line, "line");
 
         const l = o.select(ToolClassSelectors.object);
-        l.attr("x1", line.x1);
-        l.attr("y1", line.y1);
-        l.attr("x2", line.x2);
-        l.attr("y2", line.y2);
+        l.attr("x1", line.x1 + line.x);
+        l.attr("y1", line.y1 + line.y);
+        l.attr("x2", line.x2 + line.x);
+        l.attr("y2", line.y2 + line.y);
         this._createStyle(l, line);
+        this.addRotation(line, o)
 
-        o.attr("transform", this._createTransform(line));
+
         return l;
     }
 
@@ -264,18 +298,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return this._renderLine(this.getLayer(layer), line);
     }
 
-    protected _createTransform(object: GrObject): string {
-        // rotate -> translate -> scale
-
-        let rot = "";
-
-        let trans = `translate(${object.x} ${object.y})`
-        if (object.rotation !== 0) {
-            rot = `rotate(${object.rotation})`
-        }
-
-        return trans + " " + rot;
-    }
 
     protected _createStyle(elem: Selection<any>, object: GrObject): void {
         if (!object.style) {
@@ -287,18 +309,18 @@ export class SvgObjectRenderer extends ObjectRenderer {
     renderBoundingRepresentation(object: GrObject) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            const c = g.selectAll(ToolClassSelectors.boundingBox);
+            let c = g.selectAll(ToolClassSelectors.boundingBox);
 
-            if (!c.empty()) {
+            if (c.empty()) {
                 // Already drawing a bounding representation
-                return;
+                c = g.append("rect")
+                    .classed(ToolClasses.boundingBox, true);
             }
 
             const bb = object.boundingBox;
 
-            g.append("rect")
-                .attr("x", -bb.w / 2)
-                .attr("y", -bb.h / 2)
+            c.attr("x", -bb.w / 2 + object.x)
+                .attr("y", -bb.h / 2 + object.y)
                 .attr("width", bb.w)
                 .attr("height", bb.h)
                 .classed(ToolClasses.boundingBox, true);
@@ -316,8 +338,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             g.select(`#${object.name}-handle-${id}`)
-                .attr("cx", p.x - object.x)
-                .attr("cy", p.y - object.y)
+                .attr("cx", p.x)
+                .attr("cy", p.y)
         }
     }
 
@@ -325,11 +347,13 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             console.log(p, data)
+            this._objectInfo[object.name].handles.push(p);
             const handle = g.append("circle")
-                .attr("cx", p.x - object.x)
-                .attr("cy", p.y - object.y)
+                .attr("cx", p.x)
+                .attr("cy", p.y)
                 .attr("r", HANDLE_RADIUS)
                 .attr("id", `${object.name}-handle-${id}`)
+                .data<Point2D>([p])
                 .classed(ToolClasses.handle, true);
 
             this._attachHandleMouseEvents(object, handle, onMouseEvent, data);

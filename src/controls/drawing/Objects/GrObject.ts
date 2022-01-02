@@ -1,4 +1,5 @@
 import {Style} from "./StyleManager";
+import {deg2rad, Point2D} from "./GeoMath";
 
 export enum ObjectType {
     Circle,
@@ -55,25 +56,20 @@ export interface BoundingBox {
 }
 
 
-export interface Point2D {
-    x:number,
-    y:number
-}
-
-
 /**
  * Base class for graphical objects that are displayed on the drawing.
  *
  * The instances are pooled by their name.
  */
-export abstract class GrObject {
+export abstract class GrObject{
 
     private static _instanceCounter:number = 0;
     private static _pool: {[key:string]:GrObject} = {}
 
     private _name:string;
-    protected _y:number;
-    protected _x:number;
+    protected _center:Point2D;
+    protected _xAxis:Point2D = new Point2D(1, 0);
+    protected _yAxis: Point2D = new Point2D(0, 1);
     private _scaleX:number = 1;
     private _scaleY:number = 1;
     private _rotation:number = 0;
@@ -84,8 +80,7 @@ export abstract class GrObject {
 
     protected constructor(type:ObjectType, name:string, x:number, y:number) {
         this._name = name;
-        this._x = x;
-        this._y = y;
+        this._center = new Point2D(x, y);
         this._type = type;
 
         if (name === null) {
@@ -94,7 +89,11 @@ export abstract class GrObject {
     }
 
     protected static getPoolInstance(name:string) {
-        return name && GrObject._pool[name];
+        const r = name && GrObject._pool[name];
+        if (r) {
+            r.rotation = 0;
+        }
+        return r;
     }
 
     protected static setPoolInstance(object:GrObject):GrObject {
@@ -147,18 +146,18 @@ export abstract class GrObject {
     }
 
     get y(): number {
-        return this._y;
+        return this._center.y;
     }
 
     set y(value: number) {
-        this._y = value;
+        this._center.y = value;
     }
     get x(): number {
-        return this._x;
+        return this._center.x;
     }
 
     set x(value: number) {
-        this._x = value;
+        this._center.x = value;
     }
 
     get rotation(): number {
@@ -166,6 +165,8 @@ export abstract class GrObject {
     }
 
     set rotation(value: number) {
+        this._xAxis = new Point2D(1, 0).rotate(deg2rad(value));
+        this._yAxis = new Point2D(0, 1).rotate(deg2rad(value));
         this._rotation = value;
     }
     get scaleY(): number {
@@ -190,7 +191,7 @@ export abstract class GrObject {
      * @return Bounding box
      */
     get boundingBox():BoundingBox {
-        return { x: this._x, y: this._y, w: 0, h: 0 };
+        return { x: this.x, y: this.y, w: 0, h: 0 };
     }
 
 
@@ -199,7 +200,7 @@ export abstract class GrObject {
      * object's origin.
      */
     get center():Point2D  {
-        return { x: this._x, y: this._y };
+        return this._center;
     }
 
     /**
@@ -207,7 +208,7 @@ export abstract class GrObject {
      * Relative to the object's origin.
      */
     get bottom():Point2D {
-        return { x: this._x, y: this._y + this.boundingBox.h / 2 };
+        return this._yAxis.copy().scale(this.boundingBox.h / 2).add(this._center);
     }
 
     /**
@@ -215,7 +216,7 @@ export abstract class GrObject {
      * to the object's origin.
      */
     get left():Point2D {
-        return { x:  this._x - this.boundingBox.w / 2, y: this._y };
+        return this._xAxis.copy().scale(-this.boundingBox.w / 2).add(this._center);
     }
 
     /**
@@ -223,7 +224,8 @@ export abstract class GrObject {
      * the object's origin.
      */
     get top():Point2D {
-        return { x: this._x, y: this._y -this.boundingBox.h / 2 };
+        return this._yAxis.copy().scale(-this.boundingBox.h / 2).add(this._center);
+
     }
 
     /**
@@ -231,11 +233,11 @@ export abstract class GrObject {
      * to the object's origin.
      */
     get right():Point2D {
-        return { x: this._x + this.boundingBox.w / 2, y: this._y };
+        return this._xAxis.copy().scale(this.boundingBox.w / 2).add(this._center);
     }
 
     /**
-     * Get distinctive points of the object. These can be
+     * Get "points of interest" for the object. These can be
      * used for snapping and other things.
      */
     get pointsOfInterest():POIMap {
@@ -258,8 +260,7 @@ export abstract class GrObject {
      * @param byVector        The vector to move the POI by
      */
     public movePOI(poi:POI, byVector:Point2D):void {
-        this._x += byVector.x;
-        this._y += byVector.y;
+        this._center.add(byVector);
     }
 }
 

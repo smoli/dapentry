@@ -1,8 +1,9 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap, Point2D} from "../Objects/GrObject";
+import {GrObject, POI, POIMap} from "../Objects/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
+import {Point2D} from "../Objects/GeoMath";
 
 
 enum States {
@@ -28,6 +29,13 @@ export class RotateTool extends Tool {
         this._state.add(state(States.Wait), Events.HandleDown, state(States.Handle));
         this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));
         this._state.start(state(States.Wait));
+    }
+
+    abort() {
+        if (this._object) {
+            this._renderer.removeAllHandles(this._object);
+        }
+        super.abort();
     }
 
     finish() {
@@ -59,7 +67,7 @@ export class RotateTool extends Tool {
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             const poi = this._object.pointsOfInterest[poiId];
             
-            this._startVector = { x: poi.x - this._object.x, y: poi.y - this._object.y };
+            this._startVector = new Point2D(poi.x - this._object.x, poi.y - this._object.x);
             
             this._state.next(Events.HandleDown);
         }
@@ -77,11 +85,11 @@ export class RotateTool extends Tool {
     }
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
-        if (!this._object) {
-            return false;
-        }
-
         this._state.next(interactionEvent);
+
+        if (interactionEvent === InteractionEvents.Selection) {
+            this.selection = eventData.selection;
+        }
 
         switch (this._state.state.id as States) {
             case States.Wait:
@@ -103,6 +111,13 @@ export class RotateTool extends Tool {
                     this._object.rotation = (a * 180) / Math.PI;
 
                     this._renderer.render(this._object, true);
+
+                    const poi: POIMap = this._object.pointsOfInterest;
+
+                    Object.keys(poi)
+                        .forEach(poiId => {
+                            this._renderer.updateHandle(this._object, poiId, poi[poiId]);
+                        })
                 }
                 break;
         }

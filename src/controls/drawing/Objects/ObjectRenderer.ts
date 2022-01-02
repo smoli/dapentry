@@ -19,11 +19,12 @@
  * @module
  */
 
-import {GrObject, POI, Point2D} from "./GrObject";
+import {GrObject, POI} from "./GrObject";
 import {InteractionEventData} from "../InteractionEvents";
 import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
+import {Point2D} from "./GeoMath";
 
 /**
  * Callback signature for functions invoked when an object is clicked

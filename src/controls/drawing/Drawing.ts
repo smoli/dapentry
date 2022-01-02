@@ -227,6 +227,8 @@ export default class Drawing extends Control {
             this._toolManager.switch(ToolNames.Line);
         } else if (d3.event.key === "g") {
             this._toolManager.switch(ToolNames.Move);
+        } else if (d3.event.key === "t") {
+            this._toolManager.switch(ToolNames.Rotate);
         }
     }
 
