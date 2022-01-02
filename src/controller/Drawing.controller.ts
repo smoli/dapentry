@@ -38,7 +38,9 @@ export default class DrawingController extends BaseController {
     }
 
     async onNewOperation(event) {
-        await this.getComponentController().addOperation(event.getParameter("code"));
+        if (event.getParameter("code")) {
+            await this.getComponentController().addOperation(event.getParameter("code"));
+        }
     }
 
     onCodeLineChanged(event) {
