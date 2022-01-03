@@ -14,7 +14,38 @@ export class Parser {
         if (!line.trim()) {
             return [];
         }
-        return peg$parse(line.trim(), {}) || [];
+
+        try {
+            const r = peg$parse(line.trim(), {}) || [];
+            return r;
+        } catch (e) {
+            console.log("SYNTAX ERROR IN: ", line.trim());
+            console.log(e.message);
+            throw e;
+        }
+    }
+
+    public static constructCodeLine(tokens:Array<Token>):string {
+        let code = "";
+        const construct = (code, tokens): Array<string> => {
+
+            for (const t of tokens) {
+                if (t.type === TokenTypes.POINT) {
+                    code.push("(");
+                    code.push(t.value[0].value);
+                    code.push(t.value[1].value);
+                    code.push(")");
+                } else if (t.type === TokenTypes.STRING) {
+                    code.push(`"${t.value}"`);
+                } else {
+                    code.push(t.value);
+                }
+            }
+
+            return code;
+        }
+
+        return construct([], tokens).join(" ");
     }
 }
 

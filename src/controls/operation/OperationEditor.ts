@@ -1,5 +1,5 @@
 import Control from "sap/ui/core/Control";
-import {Token, TokenTypes} from "../../runtime/interpreter/Parser";
+import {Parser, Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 
@@ -118,28 +118,8 @@ export default class OperationEditor extends Control {
 
         token.value = newValue;
 
-        const construct = (code, tokens): Array<string> => {
-
-            for (const t of tokens) {
-                if (t.type === TokenTypes.POINT) {
-                    code.push("(");
-                    code.push(t.value[0].value);
-                    code.push(t.value[1].value);
-                    code.push(")");
-                } else if (t.type === TokenTypes.STRING) {
-                    code.push(`"${t.value}"`);
-                } else {
-                    code.push(t.value);
-                }
-            }
-
-            return code;
-        }
-
-        const newCode = construct([], tokens);
-
         this.fireChange({
-            code: newCode.join(" ")
+            code: Parser.constructCodeLine(tokens)
         });
 
     }

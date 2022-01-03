@@ -25,6 +25,17 @@ describe('Array', () => {
 
     });
 
+    it("can be initialized empty", async () => {
+        const code = `
+                LOAD r1 [ ]
+        `
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(Array.isArray(i.getRegister("r1"))).to.be.true;
+
+    });
+
     it("can have items added to it", async () => {
         const code = `
             LOAD r1 [100 200 300 400]

@@ -19,11 +19,15 @@ export type CreationInfo = { [key: string]: number }
  */
 export class CodeManager {
     private _code: string[];
+    private _registers: string[];
+    private _labels: string[];
     private _creationOpcodes: CreationInfo;
 
 
     constructor(creationOpcodes: CreationInfo = {"LOAD": 1}) {
         this._code = [];
+        this._registers = [];
+        this._labels = [];
         this._creationOpcodes = creationOpcodes;
     }
 
@@ -53,6 +57,7 @@ export class CodeManager {
      */
     addStatement(statement: string) {
         this._code.push(statement);
+        this.memorizeRegistersAndLabels(statement);
     }
 
     /**
@@ -63,6 +68,7 @@ export class CodeManager {
      */
     insertStatement(statement: string, index: number) {
         this._code.splice(index, 0, statement);
+        this.memorizeRegistersAndLabels(statement);
     }
 
     /**
@@ -71,6 +77,8 @@ export class CodeManager {
      */
     removeStatement(index: number) {
         this._code.splice(index, 1);
+        this.refreshRegisterAndLabelMemory();
+
     }
 
     /**
@@ -81,6 +89,7 @@ export class CodeManager {
      */
     updateStatement(index: number, newStatement: string) {
         this._code[index] = newStatement;
+        this.refreshRegisterAndLabelMemory();
     }
 
     /**
@@ -207,5 +216,67 @@ export class CodeManager {
         }
 
         return ret;
+    }
+
+    protected makeUniqueName(memory:string[], preference:string):string {
+        if (memory.indexOf(preference) === -1) {
+            return preference;
+        }
+
+        let suff = 0;
+        while(memory.indexOf(preference + "_" + suff) !== -1) {
+            suff++;
+        }
+
+        return preference + "_" + suff;
+    }
+
+    public makeUniqueRegisterName(preference):string {
+        return this.makeUniqueName(this._registers, preference);
+    }
+
+    public registerExists(registerName):boolean {
+        return this._registers.indexOf(registerName) !== -1;
+    }
+
+    public makeUniqueLabelName(preference):string {
+        return this.makeUniqueName(this._labels, preference);
+    }
+
+    public labelExists(registerName):boolean {
+        return this._labels.indexOf(registerName) !== -1;
+    }
+
+
+    protected refreshRegisterAndLabelMemory() {
+        this._registers = [];
+        this._labels = [];
+        this._code.forEach(c => this.memorizeRegistersAndLabels(c));
+    }
+
+    protected memorizeRegistersAndLabels(statement) {
+        const tokens:Array<Token> = Parser.parseLine(statement);
+
+        const walk = (tokens:Array<Token>) => {
+            for (const token of tokens) {
+                switch (token.type) {
+                    case TokenTypes.REGISTER:
+                        this._registers.push(token.value as string);
+                        break;
+                    case TokenTypes.LABEL:
+                        this._labels.push(token.value as string);
+                        break;
+                    case TokenTypes.POINT:
+                        walk(token.value as Array<Token>);
+                        break;
+                    case TokenTypes.ARRAY:
+                        walk(token.value as Array<Token>);
+                        break;
+
+                }
+            }
+        }
+
+        walk(tokens);
     }
 }
