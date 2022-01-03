@@ -16,6 +16,7 @@ import {GfxPolygon} from "./runtime/gfx/GfxPolygon";
 import {GfxOperation} from "./runtime/gfx/GfxOperation";
 import {GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
 import {Operation} from "./runtime/interpreter/Operation";
+import {CodeManager} from "./runtime/CodeManager";
 
 
 /**
@@ -42,6 +43,7 @@ export class ComponentController {
     private _component: Component;
     private _interpreter: Interpreter;
     private _styleManager: StyleManager;
+    private _codeManager: CodeManager;
     private _drawing: Drawing;
     private _lastTouchedObjectByProgram: GrObject;
 
@@ -60,8 +62,9 @@ export class ComponentController {
         this._interpreter.addOperation("FILL", makeGfxOperation(GfxFill, this.lastTouchedObjectByProgram.bind(this)));
         this._interpreter.addOperation("STROKE", makeGfxOperation(GfxStroke, this.lastTouchedObjectByProgram.bind(this)));
 
+        this._codeManager = new CodeManager();
+
         const appModel = new JSONModel({
-            code: [],
             segmentedCode: [],
             selectedCodeLine: null,
             data: [],
@@ -98,10 +101,8 @@ export class ComponentController {
 
 
     protected async runCode(): Promise<any> {
-        const c = this.getAppModel().getProperty("/code");
-
         const data = this.getDataFromDataFields();
-        this._interpreter.parse(c);
+        this._interpreter.parse(this._codeManager.code);
         return this._interpreter.run({
             "$drawing": this.getAppModel().getProperty("/drawing"),
             "$styles": this._styleManager.styles,
@@ -125,10 +126,8 @@ export class ComponentController {
     }
 
     private addCodeLine(codeLine: string): void {
-        const c = this.getAppModel().getProperty("/code");
-        c.push(codeLine);
-        this.getAppModel().setProperty("/code", c);
-        this.addCodeLineToSegmentedCode(c.length - 1, codeLine);
+        this._codeManager.addStatement(codeLine);
+        this.addCodeLineToSegmentedCode(this._codeManager.code.length - 1, codeLine);
     }
 
     protected updateSegmentedCodeLine(index:number, codeLine:string) {
@@ -139,9 +138,7 @@ export class ComponentController {
     }
 
     async updateOperation(index:number, code:string) {
-        const c = this.getAppModel().getProperty("/code");
-        c[index] = code;
-        this.getAppModel().setProperty("/code", c);
+        this._codeManager.updateStatement(index, code);
         this.updateSegmentedCodeLine(index, code);
         await this.runCode();
         this.updateDrawing();

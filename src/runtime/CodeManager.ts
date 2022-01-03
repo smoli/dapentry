@@ -74,6 +74,16 @@ export class CodeManager {
     }
 
     /**
+     * Replace the statement at the given index with the new one.
+     * This performs no range check.
+     * @param index
+     * @param newStatement
+     */
+    updateStatement(index: number, newStatement: string) {
+        this._code[index] = newStatement;
+    }
+
+    /**
      * Removes all statements that have the register as an argument.
      *
      * If `deep` is `true` then statements for registers whose creation was removed
