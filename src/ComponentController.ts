@@ -13,8 +13,30 @@ import {GfxLine} from "./runtime/gfx/GfxLine";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxPolygon} from "./runtime/gfx/GfxPolygon";
-import {makeGfxOperation} from "./runtime/gfx/GfxOperation";
+import {GfxOperation} from "./runtime/gfx/GfxOperation";
 import {GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
+import {Operation} from "./runtime/interpreter/Operation";
+
+
+/**
+ * Creates a operation class that calls a callback for the grObject
+ * created/manipulated.
+ *
+ * TODO: I obviously haven't understood the typing properly, as I expected
+ *       OpClass: (typeof GfxOperation) to work. But it didn't :-(
+ *
+ * @param OpClass
+ * @param objectCallBack
+ */
+function makeGfxOperation(OpClass: (typeof Operation), objectCallBack: (GrObject) => void) {
+    return class C extends OpClass {
+        async execute(interpreter: Interpreter): Promise<any> {
+            const r = super.execute(interpreter);
+            objectCallBack((this as unknown as GfxOperation).target);
+            return r;
+        }
+    }
+}
 
 export class ComponentController {
     private _component: Component;
@@ -29,14 +51,14 @@ export class ComponentController {
         this._interpreter = new Interpreter();
 
         this._interpreter.addOperation("CIRCLE", makeGfxOperation(GfxCircle, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("RECT", GfxRect);
-        this._interpreter.addOperation("LINE", GfxLine);
-        this._interpreter.addOperation("POLY", GfxPolygon);
-        this._interpreter.addOperation("QUAD", GfxQuadratic);
+        this._interpreter.addOperation("RECT", makeGfxOperation(GfxRect, this.lastTouchedObjectByProgram.bind(this)));
+        this._interpreter.addOperation("LINE", makeGfxOperation(GfxLine, this.lastTouchedObjectByProgram.bind(this)));
+        this._interpreter.addOperation("POLY", makeGfxOperation(GfxPolygon, this.lastTouchedObjectByProgram.bind(this)));
+        this._interpreter.addOperation("QUAD", makeGfxOperation(GfxQuadratic, this.lastTouchedObjectByProgram.bind(this)));
         this._interpreter.addOperation("MOVE", makeGfxOperation(GfxMove, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("ROTATE", GfxRotate);
-        this._interpreter.addOperation("FILL", GfxFill);
-        this._interpreter.addOperation("STROKE", GfxStroke);
+        this._interpreter.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.lastTouchedObjectByProgram.bind(this)));
+        this._interpreter.addOperation("FILL", makeGfxOperation(GfxFill, this.lastTouchedObjectByProgram.bind(this)));
+        this._interpreter.addOperation("STROKE", makeGfxOperation(GfxStroke, this.lastTouchedObjectByProgram.bind(this)));
 
         const appModel = new JSONModel({
             code: [],
@@ -150,6 +172,9 @@ export class ComponentController {
 
     public updateAll() {
         this.runCode().then(() => {
+            if (this._lastTouchedObjectByProgram) {
+                this._drawing.selectObject(this._lastTouchedObjectByProgram);
+            }
             this.updateDrawing();
         });
     }

@@ -1,6 +1,5 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {Interpreter} from "../interpreter/Interpreter";
 import {GrObject} from "../../controls/drawing/Objects/GrObject";
 
 
@@ -23,12 +22,3 @@ export class GfxOperation extends Operation {
 
 }
 
-export function makeGfxOperation(OpClass: (typeof Operation), objectCallBack: (GrObject) => void) {
-    return class C extends OpClass {
-
-        async execute(interpreter: Interpreter): Promise<any> {
-            // objectCallBack((this as unknown as GfxOperation).target);
-            return super.execute(interpreter);
-        }
-    }
-}

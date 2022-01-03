@@ -239,6 +239,14 @@ export default class Drawing extends Control {
         }
     }
 
+    public selectObject(object: GrObject) {
+        if (this._toolManager.isSelected(object)) {
+            this._toolManager.deselectObject(object);
+        } else {
+            this._toolManager.selectObject(object);
+        }
+    }
+
     private _onObjectClick(object: GrObject) {
         if (this._toolManager.isSelected(object)) {
             this._toolManager.deselectObject(object);
