@@ -13,23 +13,27 @@ import {GfxLine} from "./runtime/gfx/GfxLine";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxPolygon} from "./runtime/gfx/GfxPolygon";
+import {makeGfxOperation} from "./runtime/gfx/GfxOperation";
+import {GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
 
 export class ComponentController {
     private _component: Component;
     private _interpreter: Interpreter;
     private _styleManager: StyleManager;
     private _drawing: Drawing;
+    private _lastTouchedObjectByProgram: GrObject;
 
     constructor(component: Component) {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new Interpreter();
 
-        this._interpreter.addOperation("CIRCLE", GfxCircle);
+        this._interpreter.addOperation("CIRCLE", makeGfxOperation(GfxCircle, this.lastTouchedObjectByProgram.bind(this)));
         this._interpreter.addOperation("RECT", GfxRect);
         this._interpreter.addOperation("LINE", GfxLine);
         this._interpreter.addOperation("POLY", GfxPolygon);
-        this._interpreter.addOperation("MOVE", GfxMove);
+        this._interpreter.addOperation("QUAD", GfxQuadratic);
+        this._interpreter.addOperation("MOVE", makeGfxOperation(GfxMove, this.lastTouchedObjectByProgram.bind(this)));
         this._interpreter.addOperation("ROTATE", GfxRotate);
         this._interpreter.addOperation("FILL", GfxFill);
         this._interpreter.addOperation("STROKE", GfxStroke);
@@ -45,6 +49,10 @@ export class ComponentController {
         });
         component.setModel(appModel, "appModel");
          // this.preloadDemoCode();
+    }
+
+    protected lastTouchedObjectByProgram(object:GrObject) {
+        this._lastTouchedObjectByProgram = object;
     }
 
     public setSelectedCodeLine(line?) {
@@ -75,6 +83,7 @@ export class ComponentController {
         return this._interpreter.run({
             "$drawing": this.getAppModel().getProperty("/drawing"),
             "$styles": this._styleManager.styles,
+            "$lastObject": null,
             ...data
         });
     }

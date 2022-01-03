@@ -25,7 +25,7 @@ import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
 import {Point2D} from "./GeoMath";
-import {GrPolygon} from "./GrPolygon";
+import {GrPolygon, GrQuadratic} from "./GrPolygon";
 
 /**
  * Callback signature for functions invoked when an object is clicked
@@ -111,6 +111,7 @@ export abstract class ObjectRenderer {
      * @param polygon
      */
     public abstract renderPolygon(layer:RenderLayer, polygon: GrPolygon): void;
+    public abstract renderQuadratic(layer:RenderLayer, quadric: GrQuadratic): void;
 
 
     /**

@@ -8,7 +8,7 @@ import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
 import {Point2D} from "./GeoMath";
-import {GrPolygon} from "./GrPolygon";
+import {GrPolygon, GrQuadratic} from "./GrPolygon";
 
 enum ToolClasses {
     object = "grObject",
@@ -98,6 +98,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 break;
             case ObjectType.Polygon:
                 svgObjc = this._renderPolygon(this._objectLayer, object as GrPolygon);
+                break;
+
+            case ObjectType.Quadratic:
+                svgObjc = this._renderQuadratic(this._objectLayer, object as GrQuadratic);
                 break;
         }
 
@@ -302,7 +306,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return this._renderLine(this.getLayer(layer), line);
     }
 
-
     renderPolygon(layer: RenderLayer, polygon: GrPolygon) {
         return this._renderPolygon(this.getLayer(layer), polygon);
     }
@@ -330,6 +333,38 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return p;
     }
 
+
+    renderQuadratic(layer: RenderLayer, polygon: GrQuadratic) {
+        return this._renderQuadratic(this.getLayer(layer), polygon);
+    }
+    _renderQuadratic(layer: Selection<any>, polygon: GrQuadratic) {
+        if (polygon.points.length < 3) {
+            return this._renderPolygon(layer, polygon);
+        }
+
+        const o = this.getObjectOrCreate(layer, polygon, "path");
+
+        const p = o.select(ToolClassSelectors.object);
+
+        let d = `M ${polygon.points[0].x} ${polygon.points[0].y}`;
+        d += ` Q ${polygon.points[1].x} ${polygon.points[1].y}`;
+        d += ` , ${polygon.points[2].x} ${polygon.points[2].y}`;
+
+        for (let i = 3; i < polygon.points.length; i++) {
+            d += `T ${polygon.points[i].x} ${polygon.points[i].y}`;
+        }
+
+        if (polygon.closed) {
+            d += " Z";
+        }
+        p.attr("d", d);
+
+
+        this._createPathStyle(p, polygon);
+        this.addRotation(polygon, o);
+
+        return p;
+    }
 
     protected _createPathStyle(elem: Selection<any>, object: GrPolygon): void {
         if (!object.style) {

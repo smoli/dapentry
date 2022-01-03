@@ -9,6 +9,7 @@ export enum InteractionEvents {
     MouseLeave,
     MouseEnter,
     Selection,
+    Key,
     Cancel
 }
 

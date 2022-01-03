@@ -21,32 +21,19 @@ function computeCenterAndBB(points: Array<Point2D>) {
     return {center, width, height};
 }
 
-export class GrPolygon extends GrObject {
+export class GrPolygonBase extends GrObject {
+    protected _points: Array<Point2D>;
+    protected _closed: boolean;
+    protected _width: number;
+    protected _height: number;
 
-    private _points: Array<Point2D>;
-    private _closed: boolean;
-    private _width: number;
-    private _height: number;
-
-    protected constructor(name: string, points: Array<Point2D>, closed: boolean = false) {
+    protected constructor(type:ObjectType, name: string, points: Array<Point2D>, closed: boolean = false) {
         let {center, width, height} = computeCenterAndBB(points);
-        super(ObjectType.Polygon, name, center.x, center.y);
+        super(type, name, center.x, center.y);
         this._points = points;
         this._closed = closed;
         this._width = width;
         this._height = height;
-    }
-
-    public static create(name: string, points: Array<Point2D>, closed: boolean = false) {
-        const i = GrObject.getPoolInstance(name) as GrPolygon;
-        if (!i) {
-            return GrObject.setPoolInstance(new GrPolygon(name, points, closed)) as GrPolygon;
-        }
-        i._points = points;
-        i._closed = closed;
-        i.computeCenterAndBB();
-
-        return i;
     }
 
     protected computeCenterAndBB() {
@@ -95,5 +82,40 @@ export class GrPolygon extends GrObject {
         this._points.forEach(p => p.add(byVector));
         this.computeCenterAndBB();
     }
+}
 
+
+export class GrPolygon extends GrPolygonBase {
+    protected constructor(name: string, points: Array<Point2D>, closed: boolean = false) {
+        super(ObjectType.Polygon, name, points, closed);
+    }
+
+    public static create(name: string, points: Array<Point2D>, closed: boolean = false) {
+        const i = GrObject.getPoolInstance(name) as GrPolygon;
+        if (!i) {
+            return GrObject.setPoolInstance(new GrPolygon(name, points, closed)) as GrPolygon;
+        }
+        i._points = points;
+        i._closed = closed;
+        i.computeCenterAndBB();
+
+        return i;
+    }
+}
+export class GrQuadratic extends GrPolygonBase {
+    protected constructor(name: string, points: Array<Point2D>, closed: boolean = false) {
+        super(ObjectType.Quadratic, name, points, closed);
+    }
+
+    public static create(name: string, points: Array<Point2D>, closed: boolean = false) {
+        const i = GrObject.getPoolInstance(name) as GrQuadratic;
+        if (!i) {
+            return GrObject.setPoolInstance(new GrQuadratic(name, points, closed)) as GrQuadratic;
+        }
+        i._points = points;
+        i._closed = closed;
+        i.computeCenterAndBB();
+
+        return i;
+    }
 }

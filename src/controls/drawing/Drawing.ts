@@ -14,6 +14,8 @@ import {DrawLine} from "./Tools/DrawLine";
 import {RotateTool} from "./Tools/RotateTool";
 import {ToolManager} from "./ToolManager";
 import {DrawPolygon} from "./Tools/DrawPolygon";
+import {Point2D} from "./Objects/GeoMath";
+import {DrawQuadratic} from "./Tools/DrawQuadratic";
 
 
 enum ToolNames {
@@ -21,6 +23,7 @@ enum ToolNames {
     Rectangle,
     Line,
     Polygon,
+    Quadric,
     Move,
     Rotate,
     None
@@ -65,6 +68,7 @@ export default class Drawing extends Control {
     }
 
     // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
+    private _lastMouse: Point2D;
     constructor(idOrSettings?: string | $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings) {
@@ -102,6 +106,7 @@ export default class Drawing extends Control {
         this._toolManager.addTool(MoveTool, ToolNames.Move);
         this._toolManager.addTool(RotateTool, ToolNames.Rotate);
         this._toolManager.addTool(DrawPolygon, ToolNames.Polygon);
+        this._toolManager.addTool(DrawQuadratic, ToolNames.Quadric);
 
         this._toolManager.switch(ToolNames.Move);
     }
@@ -158,6 +163,12 @@ export default class Drawing extends Control {
             key: d3Ev.key, keyCode: d3Ev.keyCode,
             selection: null
         };
+        if (!isNaN(ed.x)) {
+            this._lastMouse = new Point2D(ed.x, ed.y)
+        } else if (this._lastMouse) {
+            ed.x = this._lastMouse.x;
+            ed.y = this._lastMouse.y;
+        }
 
         this._toolManager.pump(interactionEvent, ed);
     }
@@ -217,10 +228,14 @@ export default class Drawing extends Control {
             this._toolManager.switch(ToolNames.Line);
         } else if (d3.event.key === "p") {
             this._toolManager.switch(ToolNames.Polygon);
+        } else if (d3.event.key === "q") {
+            this._toolManager.switch(ToolNames.Quadric);
         } else if (d3.event.key === "g") {
             this._toolManager.switch(ToolNames.Move);
         } else if (d3.event.key === "t") {
             this._toolManager.switch(ToolNames.Rotate);
+        } else {
+            this._pumpToTool(InteractionEvents.Key)
         }
     }
 

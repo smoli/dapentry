@@ -1,17 +1,15 @@
-import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {Style} from "../../controls/drawing/Objects/StyleManager";
+import {GfxOperation} from "./GfxOperation";
 
-export class GfxObject extends Operation {
+export class GfxObject extends GfxOperation {
 
-    private _target: Parameter;
     private _drawing: Parameter;
     private _name: Parameter;
     private _style: Parameter;
 
     constructor(opcode: string, drawing: Parameter, target: Parameter, name: Parameter, style: Parameter) {
-        super(opcode);
-        this._target = target;
+        super(opcode, target);
         this._drawing = drawing;
         this._name = name;
         this._style = style;
@@ -23,14 +21,6 @@ export class GfxObject extends Operation {
 
     get drawing(): Array<any> {
         return this._getParam(this._drawing);
-    }
-
-    get target(): any {
-        return this._getParam(this._target);
-    }
-
-    set target(value) {
-        this._setParam(this._target, value);
     }
 
     get style(): Style {

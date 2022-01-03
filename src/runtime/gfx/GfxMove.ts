@@ -2,9 +2,9 @@ import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GrObject, POI} from "../../controls/drawing/Objects/GrObject";
+import {GfxOperation} from "./GfxOperation";
 
-export class GfxMove extends Operation {
-    private readonly _object: Parameter;
+export class GfxMove extends GfxOperation {
     private _vector: Point2Parameter;
     private readonly _targetObject: Parameter;
     private _targetPoi: Parameter;
@@ -12,9 +12,7 @@ export class GfxMove extends Operation {
 
 
     constructor(opcode: string, object: Parameter, poiOrVector: Point2Parameter | Parameter, vectorOrObject: Point2Parameter | Parameter, targetPoi: Parameter) {
-        super(opcode);
-
-        this._object = object;
+        super(opcode, object);
 
         if (poiOrVector instanceof Point2Parameter) {
             this._poi = new Parameter(false, POI[POI.center]);
@@ -29,10 +27,6 @@ export class GfxMove extends Operation {
         }
     }
 
-    get object(): GrObject {
-        return this._getParam(this._object);
-    }
-
     get poi():POI {
         return POI[this._poi.finalized(this.closure) as string];
 
@@ -40,7 +34,7 @@ export class GfxMove extends Operation {
 
     get vector(): any {
         if (this._targetObject) {
-            const p = this.object.pointsOfInterest[this.poi];
+            const p = this.target.pointsOfInterest[this.poi];
             const t = this.targetObject.pointsOfInterest[this.targetPoi];
             return { x: t.x - p.x, y: t.y - p.y }
         } else {
@@ -57,6 +51,6 @@ export class GfxMove extends Operation {
     }
 
     async execute(): Promise<any> {
-        this.object.movePOI(this.poi, this.vector);
+        this.target.movePOI(this.poi, this.vector);
     }
 }

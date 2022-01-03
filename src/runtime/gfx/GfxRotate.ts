@@ -1,21 +1,16 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {GrObject} from "../../controls/drawing/Objects/GrObject";
+import {GfxOperation} from "./GfxOperation";
 
-export class GfxRotate extends Operation {
-    private readonly _object: Parameter;
+export class GfxRotate extends GfxOperation {
     private _angle: Parameter;
 
 
-    constructor(opcode: string, object: Parameter, angle:Parameter) {
-        super(opcode);
+    constructor(opcode: string, object: Parameter, angle: Parameter) {
+        super(opcode, object);
 
-        this._object = object;
-this._angle = angle;
-    }
-
-    get object(): GrObject {
-        return this._getParam(this._object);
+        this._angle = angle;
     }
 
     get angle(): number {
@@ -23,6 +18,6 @@ this._angle = angle;
     }
 
     async execute(): Promise<any> {
-        this.object.rotation = this.angle;
+        this.target.rotation = this.angle;
     }
 }

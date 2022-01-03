@@ -1,24 +1,16 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {GrObject} from "../../controls/drawing/Objects/GrObject";
+import {GfxOperation} from "./GfxOperation";
 
-export class GfxFill extends Operation {
-    private readonly _object: Parameter;
-    private _color: Parameter;
-    private _alpha: Parameter;
-
-
+export class GfxFill extends GfxOperation {
+    private readonly _color: Parameter;
+    private readonly _alpha: Parameter;
 
     constructor(opcode: string, object: Parameter, color: Parameter, alpha:Parameter) {
-        super(opcode);
+        super(opcode, object);
 
-        this._object = object;
         this._color = color;
         this._alpha = alpha;
-    }
-
-    get object(): GrObject {
-        return this._getParam(this._object);
     }
 
     get color(): string {
@@ -30,10 +22,10 @@ export class GfxFill extends Operation {
     }
 
     async execute(): Promise<any> {
-        this.object.fillColor = this.color;
-        this.object.strokeColor = this.color;
+        this.target.fillColor = this.color;
+        this.target.strokeColor = this.color;
         if (this._alpha) {
-            this.object.fillOpacity = this.alpha;
+            this.target.fillOpacity = this.alpha;
         }
     }
 }
