@@ -17,6 +17,7 @@ import {GfxOperation} from "./runtime/gfx/GfxOperation";
 import {GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
 import {Operation} from "./runtime/interpreter/Operation";
 import {CodeManager} from "./runtime/CodeManager";
+import {BaseComponentController} from "./BaseComponentController";
 
 
 /**
@@ -39,7 +40,7 @@ function makeGfxOperation(OpClass: (typeof Operation), objectCallBack: (GrObject
     }
 }
 
-export class ComponentController {
+export class ComponentController extends BaseComponentController {
     private _component: Component;
     private _interpreter: Interpreter;
     private _styleManager: StyleManager;
@@ -48,6 +49,8 @@ export class ComponentController {
     private _lastTouchedObjectByProgram: GrObject;
 
     constructor(component: Component) {
+        super();
+
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new Interpreter();
