@@ -197,6 +197,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
             svgObject.on("click", () => {
                 this._fireSelect(object);
             });
+
+            // Slots to better control that handles are always painted on top of handles
+            svgGroup.append("g").classed(ToolClasses.boundingBox, true);
+            svgGroup.append("g").classed(ToolClasses.handle, true);
         }
         return svgGroup;
     }
@@ -386,11 +390,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
     renderBoundingRepresentation(object: GrObject) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            let c = g.selectAll(ToolClassSelectors.boundingBox);
+            let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
 
             if (c.empty()) {
                 // Already drawing a bounding representation
-                c = g.append("rect")
+                c = g.select("g" + ToolClassSelectors.boundingBox).append("rect")
                     .classed(ToolClasses.boundingBox, true);
             }
 
@@ -407,14 +411,14 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public removeBoundingRepresentation(object: GrObject) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.selectAll(ToolClassSelectors.boundingBox).remove();
+            g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox).remove();
         }
     }
 
     public updateHandle(object: GrObject, id: string, p: Point2D) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.select(`#${object.name}-handle-${id}`)
+            g.select("g" + ToolClassSelectors.handle).select(`#${object.name}-handle-${id}`)
                 .attr("cx", p.x)
                 .attr("cy", p.y)
         }
@@ -424,7 +428,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             this._objectInfo[object.name].handles.push(p);
-            const handle = g.append("circle")
+            const handle = g.select("g" + ToolClassSelectors.handle).append("circle")
                 .attr("cx", p.x)
                 .attr("cy", p.y)
                 .attr("r", HANDLE_RADIUS)
@@ -439,7 +443,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public removeAllHandles(object): void {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.selectAll(ToolClassSelectors.handle).remove();
+            g.select("g" + ToolClassSelectors.handle).selectAll(ToolClassSelectors.handle).remove();
         }
     }
 
