@@ -57,7 +57,7 @@ export class JSONModelAccess {
             }
         }
 
-        return pathParts.join("/");
+        return "/" + pathParts.join("/");
     }
 
     get(...parts: Array<pathPart>) {

@@ -12,9 +12,10 @@ import JSONModel from "sap/ui/model/json/JSONModel";
  */
 export default class DataEditorController extends BaseController {
 
-    protected makeFieldName(prefix: string, d: Array<any>) {
+    protected makeFieldName(prefix: string) {
         let n = 1;
 
+        const d = this.getAppModel().get("data");
         while (d.find(d => d.name === prefix + n)) {
             n++;
         }
@@ -24,17 +25,14 @@ export default class DataEditorController extends BaseController {
     }
 
     onNewDataField(event) {
-        const d = this.getAppModel().getProperty("/data");
-        d.push({name: this.makeFieldName("f", d), value: 1})
-        this.getAppModel().setProperty("/data", d);
+        this.getAppModel().push({name: this.makeFieldName("f"), value: 1}).to("data");
     }
 
     onDeleteDataField(event) {
         const ctx = event.getSource().getBindingContext("appModel");
         const nameToDelete = ctx.getProperty("name");
-        let d = this.getAppModel().getProperty("/data");
-        d = d.filter(d => d.name !== nameToDelete);
-        this.getAppModel().setProperty("/data", d);
+
+        this.getAppModel().remove(d => d.name === nameToDelete).from("data");
     }
 
     onFieldValueChanged() {

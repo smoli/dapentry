@@ -7,6 +7,9 @@
 import UIComponent from "sap/ui/core/UIComponent";
 import { support } from "sap/ui/Device";
 import {ComponentController} from "./ComponentController";
+import {CodeManager} from "./runtime/CodeManager";
+import JSONModel from "sap/ui/model/json/JSONModel";
+import {AppModel} from "./model/AppModel";
 
 
 /**
@@ -14,13 +17,14 @@ import {ComponentController} from "./ComponentController";
  * @namespace sts.drawable
  */
 export default class Component extends UIComponent {
-
     public static metadata = {
         manifest: "json"
     };
 
     private contentDensityClass : string;
     private _appController: ComponentController;
+    private _codeManager: CodeManager;
+    private _appModel: AppModel;
 
     /**
      * Initialize component.
@@ -28,9 +32,30 @@ export default class Component extends UIComponent {
     public init() : void {
         super.init();
         this.getRouter().initialize();
+
+        this._codeManager = new CodeManager();
+
+        const appModel = new JSONModel({
+            segmentedCode: [],
+            selectedCodeLine: null,
+            data: [],
+            drawing: [],
+            poi: [],
+            selection: []
+        });
+        this.setModel(appModel, "appModel");
+        this._appModel = new AppModel(appModel);
+
         this._appController = new ComponentController(this);
     }
 
+    getCodeManager(): CodeManager {
+        return this._codeManager;
+    }
+
+    getAppModel(): AppModel {
+        return this._appModel;
+    }
 
     getComponentController(): ComponentController {
         return this._appController;

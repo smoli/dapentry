@@ -17,9 +17,18 @@ class MockJSONModel {
         this.data = data;
     }
 
+    getParts(path) {
+        const parts = path.split("/");
+        if (path[0] === "/") {
+            parts.shift();
+        }
+
+        return parts;
+    }
+
     setProperty(path, value) {
         console.log("setting", path)
-        const parts = path.split("/");
+        const parts = this.getParts(path);
         let data = this.data;
         const last = parts.pop();
         for (const p of parts) {
@@ -31,7 +40,7 @@ class MockJSONModel {
 
     getProperty(path) {
         console.log("getting", path)
-        const parts = path.split("/");
+        const parts = this.getParts(path);
 
         const n = this.data;
 

@@ -1,16 +1,43 @@
+import Component from "../../Component";
+import {AppModel} from "../../model/AppModel";
 
 
 export interface ActionResult {
     data: any
 }
 
-export class BaseAction {
+export abstract class BaseAction {
 
-    constructor() {
+    private readonly _component: Component;
+
+    protected constructor(component: Component) {
+        this._component = component;
     }
 
-    async execute(data:any):Promise<ActionResult> {
-        return Promise.resolve({ data: null})
+    get component(): Component {
+        return this._component;
     }
+
+    get appModel(): AppModel {
+        return this._component.getAppModel();
+    }
+
+
+    async execute(data: any): Promise<ActionResult> {
+        const isAsync = this.perform.constructor.name === "AsyncFunction";
+
+        let result;
+        if (isAsync) {
+            result = await this.perform(data);
+        } else {
+            result = this.perform(data)
+        }
+
+        return {data: result};
+    }
+
+    protected abstract perform(data: any): any;
 
 }
+
+

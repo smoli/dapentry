@@ -1,50 +1,19 @@
 import Component from "./Component";
-import JSONModel from "sap/ui/model/json/JSONModel";
 import {Interpreter} from "./runtime/interpreter/Interpreter";
-import {GfxCircle} from "./runtime/gfx/GfxCircle";
-import {GfxRect} from "./runtime/gfx/GfxRect";
-import {GfxMove} from "./runtime/gfx/GfxMove";
-import {Parser} from "./runtime/interpreter/Parser";
 import {StyleManager} from "./controls/drawing/Objects/StyleManager";
-import {GfxFill} from "./runtime/gfx/GfxFill";
 import {GrObject, ObjectType} from "./controls/drawing/Objects/GrObject";
 import Drawing from "./controls/drawing/Drawing";
-import {GfxLine} from "./runtime/gfx/GfxLine";
-import {GfxStroke} from "./runtime/gfx/GfxStroke";
-import {GfxRotate} from "./runtime/gfx/GfxRotate";
-import {GfxPolygon} from "./runtime/gfx/GfxPolygon";
-import {GfxOperation} from "./runtime/gfx/GfxOperation";
-import {GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
-import {Operation} from "./runtime/interpreter/Operation";
-import {CodeManager} from "./runtime/CodeManager";
 import {BaseComponentController} from "./BaseComponentController";
-
-
-/**
- * Creates a operation class that calls a callback for the grObject
- * created/manipulated.
- *
- * TODO: I obviously haven't understood the typing properly, as I expected
- *       OpClass: (typeof GfxOperation) to work. But it didn't :-(
- *
- * @param OpClass
- * @param objectCallBack
- */
-function makeGfxOperation(OpClass: (typeof Operation), objectCallBack: (GrObject) => void) {
-    return class C extends OpClass {
-        async execute(interpreter: Interpreter): Promise<any> {
-            const r = super.execute(interpreter);
-            objectCallBack((this as unknown as GfxOperation).target);
-            return r;
-        }
-    }
-}
+import {GfxInterpreter} from "./GfxInterpreter";
+import {JSONModelAccess} from "./JSONModelAccess";
+import {AddStatement} from "./controller/actions/AddStatement";
+import {AddStatements} from "./controller/actions/AddStatements";
+import {UpdateStatement} from "./controller/actions/UpdateStatement";
 
 export class ComponentController extends BaseComponentController {
     private _component: Component;
     private _interpreter: Interpreter;
     private _styleManager: StyleManager;
-    private _codeManager: CodeManager;
     private _drawing: Drawing;
     private _lastTouchedObjectByProgram: GrObject;
 
@@ -53,47 +22,21 @@ export class ComponentController extends BaseComponentController {
 
         this._component = component;
         this._styleManager = new StyleManager();
-        this._interpreter = new Interpreter();
-
-        this._interpreter.addOperation("CIRCLE", makeGfxOperation(GfxCircle, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("RECT", makeGfxOperation(GfxRect, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("LINE", makeGfxOperation(GfxLine, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("POLY", makeGfxOperation(GfxPolygon, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("QUAD", makeGfxOperation(GfxQuadratic, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("MOVE", makeGfxOperation(GfxMove, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("FILL", makeGfxOperation(GfxFill, this.lastTouchedObjectByProgram.bind(this)));
-        this._interpreter.addOperation("STROKE", makeGfxOperation(GfxStroke, this.lastTouchedObjectByProgram.bind(this)));
-
-        this._codeManager = new CodeManager();
-
-        const appModel = new JSONModel({
-            segmentedCode: [],
-            selectedCodeLine: null,
-            data: [],
-            drawing: [],
-            poi: [],
-            selection: []
-        });
-        component.setModel(appModel, "appModel");
-         // this.preloadDemoCode();
-    }
-
-    protected lastTouchedObjectByProgram(object:GrObject) {
-        this._lastTouchedObjectByProgram = object;
+        this._interpreter = new GfxInterpreter();
+        // this.preloadDemoCode();
     }
 
     public setSelectedCodeLine(line?) {
         if (!line) {
-            this.getAppModel().setProperty("/selectedCodeLine", null);
+            this.getAppModel().set("selectedCodeLine").to(null);
         } else {
-            this.getAppModel().setProperty("/selectedCodeLine", line);
+            this.getAppModel().set("selectedCodeLine").to(line);
         }
     }
 
     protected getDataFromDataFields() {
         const scope = {};
-        const d = this.getAppModel().getProperty("/data");
+        const d = this.getAppModel().get("data");
 
         for (const field of d) {
             scope[field.name] = field.value;
@@ -105,56 +48,33 @@ export class ComponentController extends BaseComponentController {
 
     protected async runCode(): Promise<any> {
         const data = this.getDataFromDataFields();
-        this._interpreter.parse(this._codeManager.code);
+        this._interpreter.parse(this._component.getCodeManager().code);
         return this._interpreter.run({
-            "$drawing": this.getAppModel().getProperty("/drawing"),
+            "$drawing": this.getAppModel().get("drawing"),
             "$styles": this._styleManager.styles,
             "$lastObject": null,
             ...data
         });
     }
 
-    getAppModel(): JSONModel {
-        return this._component.getModel("appModel") as JSONModel;
-    }
-
-    private addCodeLineToSegmentedCode(index: number, codeLine: string): void {
-        const tokens = Parser.parseLine(codeLine);
-        const c = this.getAppModel().getProperty("/segmentedCode");
-        c.push({
-            index,
-            tokens
-        });
-        this.getAppModel().setProperty("/segmentedCode", c);
-    }
-
-    private addCodeLine(codeLine: string): void {
-        this._codeManager.addStatement(codeLine);
-        this.addCodeLineToSegmentedCode(this._codeManager.code.length - 1, codeLine);
-    }
-
-    protected updateSegmentedCodeLine(index:number, codeLine:string) {
-        const tokens = Parser.parseLine(codeLine);
-        const c = this.getAppModel().getProperty("/segmentedCode");
-        c[index].tokens = tokens;
-        this.getAppModel().setProperty("/segmentedCode", c);
+    getAppModel(): JSONModelAccess {
+        return this._component.getAppModel();
     }
 
     async updateOperation(index:number, code:string) {
-        this._codeManager.updateStatement(index, code);
-        this.updateSegmentedCodeLine(index, code);
+        await this.execute(new UpdateStatement(this._component, index, code));
         await this.runCode();
         this.updateDrawing();
     }
 
     async addOperation(code: string) {
-        this.addCodeLine(code);
+        await this.execute(new AddStatement(this._component, code));
         await this.runCode();
         this.updateDrawing();
     }
 
     async addOperations(code: Array<string>) {
-        code.forEach(c => this.addCodeLine(c));
+        await this.execute(new AddStatements(this._component, code))
         if (this._drawing) {
             await this.runCode();
             this.updateDrawing();
@@ -192,7 +112,7 @@ export class ComponentController extends BaseComponentController {
     }
 
     getSelection(): Array<GrObject> {
-        return this.getAppModel().getProperty("/selection");
+        return this.getAppModel().get("selection");
     }
 
     setSelection(selection: Array<GrObject>) {
@@ -209,87 +129,80 @@ export class ComponentController extends BaseComponentController {
             });
         }
 
-        this.getAppModel().setProperty("/selection", s);
+        this.getAppModel().set("selection").to(s);
     }
 
     protected preloadDemoCode(): void {
-        const code = `LINE $drawing Line1 "Line1" $styles.default (2 439) (795 10)
-LINE $drawing Line2 "Line2" $styles.default (937 54) (11 566)
-LINE $drawing Line3 "Line3" $styles.default (12 554) (5 433)
-POLY $drawing Polygon4 "Polygon4" $styles.default [ (6 435) (801 8) (801 8) (939 54) (8 564) (8 429) (8 429) ] 1
-FILL Polygon4 "#ffffff" 1
-FILL Polygon4 "#f6d59d" 1
-CIRCLE $drawing Circle5 "Circle5" $styles.default (65 450) 18.973665961010276
-CIRCLE $drawing Circle6 "Circle6" $styles.default (143 423) 18.439088914585774
-CIRCLE $drawing Circle7 "Circle7" $styles.default (211 392) 18.973665961010276
-CIRCLE $drawing Circle8 "Circle8" $styles.default (283 352) 21.095023109728988
-CIRCLE $drawing Circle9 "Circle9" $styles.default (352 307) 19
-CIRCLE $drawing Circle10 "Circle10" $styles.default (419 274) 17.11724276862369
-CIRCLE $drawing Circle11 "Circle11" $styles.default (495 235) 16
-CIRCLE $drawing Circle12 "Circle12" $styles.default (556 199) 19
-CIRCLE $drawing Circle13 "Circle13" $styles.default (624 160) 19.235384061671343
-CIRCLE $drawing Circle14 "Circle14" $styles.default (690 116) 18.027756377319946
-CIRCLE $drawing Circle15 "Circle15" $styles.default (778 75) 30.083217912982647
-FILL Circle5 "#52eeff" 1
-FILL Circle5 "#85eefa" 1
-FILL Circle6 "#52ebff" 1
-FILL Circle6 "#87eaf7" 1
-FILL Circle7 "#52fcff" 1
-FILL Circle7 "#92f5f6" 1
-FILL Circle8 "#52ffff" 1
-FILL Circle8 "#79f6f6" 1
-FILL Circle9 "#52fffc" 1
-FILL Circle9 "#8ff5f3" 1
-FILL Circle10 "#52f3ff" 1
-FILL Circle10 "#80edf5" 1
-FILL Circle11 "#52ffff" 1
-FILL Circle11 "#9cf7f7" 1
-FILL Circle12 "#52ffff" 1
-FILL Circle12 "#7af0f0" 1
-FILL Circle13 "#52ffff" 1
-FILL Circle13 "#7febeb" 1
-FILL Circle14 "#52eeff" 1
-FILL Circle14 "#a4ecf4" 1
-FILL Circle15 "#52f6ff" 1
-LINE $drawing Line16 "Line16" $styles.default (15 632) (938 188)
-POLY $drawing Polygon17 "Polygon17" $styles.default [ (14 631) (935 188) (925 864) (925 864) (9 873) (14 622) (16 628) ] 1
-FILL Polygon17 "#ffffff" 1
-FILL Polygon17 "#2c13ec" 1
-RECT $drawing Rectangle18 "Rectangle18" $styles.default (97.5 694.5) 67 67
-FILL Rectangle18 "#ffffff" 1
-FILL Rectangle18 "#ddec0e" 1
-FILL Rectangle18 "#e2ee44" 1
-RECT $drawing Rectangle19 "Rectangle19" $styles.default (129.5 758) 79 68
-FILL Rectangle19 "#ecec13" 1
-CIRCLE $drawing Circle20 "Circle20" $styles.default (340 540) 38.07886552931954
-CIRCLE $drawing Circle21 "Circle21" $styles.default (473 503) 36.24913792078372
-CIRCLE $drawing Circle22 "Circle22" $styles.default (586 449) 40.22437072223753
-CIRCLE $drawing Circle23 "Circle23" $styles.default (696 399) 38.48376280978771
-CIRCLE $drawing Circle24 "Circle24" $styles.default (809 337) 36.89173349139343
-FILL Circle24 "#eca013" 1
-FILL Circle24 "#e89802" 1
-FILL Circle23 "#ffa552" 1
-FILL Circle23 "#e97407" 1
-FILL Circle22 "#52ff5a" 1
-FILL Circle21 "#ff52f6" 1
-FILL Circle20 "#ffff52" 1
-POLY $drawing Polygon27 "Polygon27" $styles.default [ (95 229) (37 278) (37 278) (89 338) (182 304) (95 227) (97 232) ] 1
-POLY $drawing Polygon28 "Polygon28" $styles.default [ (188 191) (227 235) (300 221) (226 128) (189 191) (189 191) ] 1
-POLY $drawing Polygon29 "Polygon29" $styles.default [ (57 67) (14 146) (95 194) (188 117) (57 65) (57 65) ] 1
-POLY $drawing Polygon30 "Polygon30" $styles.default [ (275 41) (240 94) (331 160) (343 55) (273 43) (272 40) ] 1
-POLY $drawing Polygon31 "Polygon31" $styles.default [ (408 49) (360 137) (436 149) (433 50) (408 51) (410 47) ] 1
-POLY $drawing Polygon32 "Polygon32" $styles.default [ (512 42) (465 132) (606 81) (537 10) (507 51) (511 43) ] 1
-FILL Polygon27 "#5dff52" 1
-FILL Polygon28 "#52ff52" 1
-FILL Polygon30 "#54ff52" 1
-FILL Polygon31 "#52ff77" 1
-FILL Polygon32 "#66ff52" 1
-FILL Polygon29 "#7dff52" 1
-POLY $drawing Polygon33 "Polygon33" $styles.default [ (9 565) (14 631) (938 186) (939 52) (8 569) (13 567) ] 1
-FILL Polygon33 "#ff5a52" 1
-FILL Polygon4 "#f6f19d" 1
-FILL Polygon4 "#ede207" 1
-FILL Polygon4 "#f9ef24" 1`;
+        const code = `POLY $drawing Polygon2 "Polygon2" $styles.default [ (209 342) (209 371) (238 357) (209 342) ] 1
+QUAD $drawing Quadratic4 "Quadratic4" $styles.default [ (238 357) (277 336) (292 353) (285 374) (237 357) ] 1
+FILL Polygon2 "#fcff52" 1
+FILL Polygon2 "#f7fb04" 1
+FILL Quadratic4 "#fff652" 1
+FILL Quadratic4 "#faee0f" 1
+FILL Quadratic4 "#fcf003" 1
+FILL Quadratic4 "#efe30b" 1
+FILL Quadratic4 "#fef106" 1
+FILL Quadratic4 "#fef325" 1
+POLY $drawing Polygon5 "Polygon5" $styles.default [ (266 405) (283 417) (267 431) (268 405) ] 1
+FILL Polygon5 "#f00505" 1
+QUAD $drawing Quadratic6 "Quadratic6" $styles.default [ (285 417) (330 406) (339 416) (317 430) (284 416) ] 1
+FILL Quadratic6 "#ff5452" 1
+FILL Quadratic6 "#f00e0a" 1
+POLY $drawing Polygon7 "Polygon7" $styles.default [ (338 368) (338 386) (368 374) (335 360) (339 384) ] 1
+FILL Polygon7 "#71ff52" 1
+FILL Polygon7 "#30f005" 1
+QUAD $drawing Quadratic8 "Quadratic8" $styles.default [ (366 372) (409 359) (416 370) (392 385) (369 351) ] 1
+FILL Quadratic8 "#52ff5d" 1
+FILL Quadratic8 "#06f416" 1
+QUAD $drawing Quadratic11 "Quadratic11" $styles.default [ (13 46) (58 77) (155 60) (293 30) (379 58) (478 47) (602 76) (719 53) (770 59) (919 21) ] 1
+FILL Quadratic11 "#52fcff" 1
+FILL Quadratic11 "#52cbff" 1
+QUAD $drawing Quadratic12 "Quadratic12" $styles.default [ (6 657) (44 612) (53 624) (10 667) (12 650) ] 1
+QUAD $drawing Quadratic13 "Quadratic13" $styles.default [ (3 626) (32 589) (36 599) (6 633) ] 1
+QUAD $drawing Quadratic14 "Quadratic14" $styles.default [ (7 688) (44 669) (53 669) (4 704) ] 1
+FILL Quadratic14 "#f80d0d" 1
+FILL Quadratic12 "#ff5d52" 1
+FILL Quadratic12 "#f41b0b" 1
+FILL Quadratic13 "#ff5d52" 1
+FILL Quadratic13 "#fb1909" 1
+QUAD $drawing Quadratic15 "Quadratic15" $styles.default [ (187 905) (154 848) (167 841) (192 901) ] 1
+QUAD $drawing Quadratic16 "Quadratic16" $styles.default [ (198 902) (221 854) (241 850) (203 904) ] 1
+QUAD $drawing Quadratic17 "Quadratic17" $styles.default [ (191 874) (193 833) (205 824) (197 882) ] 1
+FILL Quadratic17 "#ffffff" 1
+FILL Quadratic17 "#f609c3" 1
+FILL Quadratic16 "#ff52ee" 1
+FILL Quadratic16 "#f005d8" 1
+FILL Quadratic15 "#ff52d7" 1
+FILL Quadratic15 "#fe0bc5" 1
+QUAD $drawing Quadratic18 "Quadratic18" $styles.default [ (690 904) (583 769) (613 759) (706 908) ] 1
+QUAD $drawing Quadratic19 "Quadratic19" $styles.default [ (710 903) (649 726) (681 735) (717 904) ] 1
+QUAD $drawing Quadratic20 "Quadratic20" $styles.default [ (719 903) (744 717) (758 748) (728 906) ] 1
+QUAD $drawing Quadratic21 "Quadratic21" $styles.default [ (673 903) (573 828) (562 847) (667 907) ] 1
+QUAD $drawing Quadratic22 "Quadratic22" $styles.default [ (735 906) (782 826) (785 848) (742 905) ] 1
+FILL Quadratic21 "#fa4605" 1
+FILL Quadratic21 "#e14e19" 1
+FILL Quadratic21 "#de4812" 1
+FILL Quadratic21 "#f14b0e" 1
+FILL Quadratic21 "#ed5821" 1
+FILL Quadratic21 "#f8612a" 1
+FILL Quadratic18 "#fa6129" 1
+FILL Quadratic19 "#f76d3b" 1
+FILL Quadratic20 "#f7622b" 1
+FILL Quadratic22 "#f26431" 1
+POLY $drawing Polygon23 "Polygon23" $styles.default [ (400 476) (400 421) (449 453) (402 476) ] 1
+FILL Polygon23 "#ffffff" 1
+FILL Polygon23 "#080bd4" 1
+QUAD $drawing Quadratic24 "Quadratic24" $styles.default [ (450 451) (489 419) (540 420) (528 467) (448 450) ] 1
+FILL Quadratic24 "#525dff" 1
+FILL Quadratic24 "#0818f7" 1
+QUAD $drawing Quadratic25 "Quadratic25" $styles.default [ (358 903) (336 861) (343 812) (314 755) (324 745) (359 802) (363 882) (373 906) ] 1
+FILL Quadratic25 "#ffffff" 1
+FILL Quadratic25 "#047116" 1
+QUAD $drawing Quadratic26 "Quadratic26" $styles.default [ (374 905) (374 844) (393 813) (382 766) (385 755) (413 779) (395 837) (386 900) ] 1
+FILL Quadratic26 "#52ff5a" 1
+FILL Quadratic26 "#057f0b" 1
+POLY $drawing Polygon28 "Polygon28" $styles.default [ (581 342) (580 372) (609 358) (581 342) ] 1
+FILL Polygon28 "#f52424" 1`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }

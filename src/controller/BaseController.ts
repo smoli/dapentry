@@ -4,6 +4,7 @@ import {ComponentController} from "../ComponentController";
 import Component from "../Component";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
+import {JSONModelAccess} from "../JSONModelAccess";
 
 /**
  * @namespace sts.drawable.controller
@@ -14,7 +15,7 @@ export default class BaseController extends Controller {
         return (this.getOwnerComponent() as Component).getComponentController();
     }
 
-    getAppModel():JSONModel {
+    getAppModel():JSONModelAccess {
         return this.getComponentController().getAppModel();
     }
 
