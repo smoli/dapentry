@@ -141,6 +141,21 @@ describe('JSONModelAccess', () => {
             .to.deep.equal([1, 2, 3])
     });
 
+    it('can insert into arrays', () => {
+        ma.insert(10)
+            .into("invoices", i => i.title === "Title 2", "positions", p => p.num === 10, "list")
+            .at(1);
+        expect(ma.get("invoices", i => i.title === "Title 2", "positions", p => p.num === 10, "list"))
+            .to.deep.equal([1, 10, 2, 3, 4]);
+
+        ma.insert(11, 12, 13, 14)
+            .into("invoices", i => i.title === "Title 2", "positions", p => p.num === 10, "list")
+            .at(3);
+        expect(ma.get("invoices", i => i.title === "Title 2", "positions", p => p.num === 10, "list"))
+            .to.deep.equal([1, 10, 2, 11, 12, 13, 14, 3, 4])
+
+    })
+
     it('can remove properties from objects', () => {
         ma.remove("list").from("invoices", i => i.title === "Title 2", "positions", p => p.num === 10);
         expect(ma.get("invoices", i => i.title === "Title 2", "positions", p => p.num === 10)

@@ -12,6 +12,14 @@ interface pusher {
     to: (...parts: Array<pathPart>) => void;
 }
 
+
+interface inserterAt {
+    at: (number) => void;
+}
+interface inserter {
+    into: (...parts: Array<pathPart>) => inserterAt;
+}
+
 interface remover {
     from: (...parts: Array<pathPart>) => any;
 }
@@ -98,6 +106,21 @@ export class JSONModelAccess {
                 const r = arr.pop();
                 this._model.setProperty(path, arr);
                 return r;
+            }
+        }
+    }
+
+    insert(...values:Array<any>): inserter {
+        return {
+            into: (...parts: Array<pathPart>):inserterAt => {
+                const path = this.constructPath(parts);
+                const arr = this._model.getProperty(path) as Array<any>;
+
+                return {
+                    at: insertionIndex => {
+                        arr.splice(insertionIndex, 0, ...values);
+                    }
+                }
             }
         }
     }
