@@ -8,6 +8,7 @@ import {JSONModelAccess} from "./JSONModelAccess";
 import {AddStatement} from "./controller/actions/AddStatement";
 import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
+import {ReplaceCode} from "./controller/actions/ReplaceCode";
 
 export class ComponentController extends BaseComponentController {
     private readonly _component: Component;
@@ -106,6 +107,14 @@ export class ComponentController extends BaseComponentController {
 
     async addOperations(code: Array<string>) {
         await this.execute(new AddStatements(this._component, code))
+        if (this._drawing) {
+            await this.runCode();
+            this.updateDrawing();
+        }
+    }
+
+    async replaceCode(code: Array<string>) {
+        await this.execute(new ReplaceCode(this._component, code))
         if (this._drawing) {
             await this.runCode();
             this.updateDrawing();

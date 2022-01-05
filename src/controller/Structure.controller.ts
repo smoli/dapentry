@@ -30,6 +30,11 @@ const StatementConfig = {
 export default class StructureController extends BaseController {
 
 
+    onCodeChanged(event) {
+        const code = event.getParameter("value");
+        this.getComponentController().replaceCode(code.split("\n").filter(a => a.length !== 0)).then();
+    }
+
     onCodelineSelectionChange(event) {
         const item = event.getParameter("listItem");
         const selected: boolean = event.getParameter("selected");

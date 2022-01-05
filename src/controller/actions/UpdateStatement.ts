@@ -102,6 +102,8 @@ export class UpdateStatement extends BaseAction {
                 }))
                 .into("segmentedCode")
                 .at(this._statementIndex)
+
+            this.appModel.set("codeString").to(this.component.getCodeManager().code.join("\n"));
         }
 
 

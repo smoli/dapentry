@@ -3,6 +3,7 @@
         displayBlock="true"
         xmlns="sap.m"
         xmlns:l="sap.ui.layout"
+        xmlns:code="sap.ui.codeeditor"
         xmlns:mvc="sap.ui.core.mvc">
 
     <Page>
@@ -24,6 +25,9 @@
                         items="{ path: 'appModel>/segmentedCode',
                                factory: '.codeDescriptionFactory' }">
                 </List>
+
+                <code:CodeEditor value="{appModel>/codeString}" change="onCodeChanged" syntaxHints="false"/>
+
             </l:contentAreas>
         </l:Splitter>
     </Page>

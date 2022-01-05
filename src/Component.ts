@@ -42,6 +42,7 @@ export default class Component extends UIComponent {
         });
 
         const appModel = new JSONModel({
+            codeString: "",
             segmentedCode: [],
             selectedCodeLine: null,
             data: [],
