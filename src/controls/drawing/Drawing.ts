@@ -44,9 +44,7 @@ export default class Drawing extends Control {
     private _objectRenderer: ObjectRenderer;
 
     static readonly metadata = {
-        properties: {
-            objects: {type: "any", defaultValue: []}
-        },
+        properties: {},
 
         events: {
             newOperation: {
@@ -69,6 +67,8 @@ export default class Drawing extends Control {
 
     // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
     private _lastMouse: Point2D;
+    private _objects: Array<GrObject>;
+
     constructor(idOrSettings?: string | $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings) {
@@ -113,9 +113,9 @@ export default class Drawing extends Control {
 
     public onAfterRendering(oEvent: jQuery.Event) {
         super.onAfterRendering(oEvent);
+
         this._svg = d3.select(this.getDomRef()).select("svg")
         this._objectRenderer = new SvgObjectRenderer(this._svg, this._onObjectClick.bind(this));
-        this._renderAll();
         this._setupTools();
         this._setupMouseEvents();
     }
@@ -135,6 +135,10 @@ export default class Drawing extends Control {
         this._svg.on("contextmenu", this._interActionClick.bind(this))
     }
 
+    setObjects(objects: Array<GrObject>) {
+        this._objects = objects;
+    }
+
     update(clearAllFirst: boolean = false) {
         if (clearAllFirst) {
             this._objectRenderer.clear(RenderLayer.Objects);
@@ -144,7 +148,7 @@ export default class Drawing extends Control {
 
     private _renderAll(): void {
         this._objectRenderer.reset();
-        this.getObjects().forEach(obj => {
+        this._objects.forEach(obj => {
             this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
         });
     }

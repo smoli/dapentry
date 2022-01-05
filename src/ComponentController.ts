@@ -30,6 +30,7 @@ export class ComponentController extends BaseComponentController {
      * @protected
      */
     protected updateDrawing(clearAllFirst: boolean = false) {
+        this._drawing.setObjects(this.getAppModel().get("drawing"));
         this._drawing.update(clearAllFirst);
     }
 

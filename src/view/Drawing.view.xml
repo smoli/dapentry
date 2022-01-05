@@ -13,7 +13,6 @@
                              newOperation="onNewOperation"
                              objectDeleted="onObjectDeleted"
                              selectionChange="onSelectionChange"
-                             objects="{appModel>/drawing}"
             />
         </VBox>
     </Page>
