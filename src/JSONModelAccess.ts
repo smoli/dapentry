@@ -4,23 +4,23 @@ type filterFunc = (any, number?) => boolean;
 
 type pathPart = (string | number | filterFunc);
 
-interface setter {
+interface setTo {
     to: (newValue: any) => void;
 }
 
-interface pusher {
+interface pushTo {
     to: (...parts: Array<pathPart>) => void;
 }
 
 
-interface inserterAt {
+interface insertIntoAt {
     at: (number) => void;
 }
-interface inserter {
-    into: (...parts: Array<pathPart>) => inserterAt;
+interface insertInto {
+    into: (...parts: Array<pathPart>) => insertIntoAt;
 }
 
-interface remover {
+interface removeFrom {
     from: (...parts: Array<pathPart>) => any;
 }
 
@@ -72,7 +72,7 @@ export class JSONModelAccess {
         return this._model.getProperty(this.constructPath(parts));
     }
 
-    set(...parts: Array<pathPart>): setter {
+    set(...parts: Array<pathPart>): setTo {
         return {
             to: newValue => {
                 this._model.setProperty(this.constructPath(parts), newValue);
@@ -84,7 +84,7 @@ export class JSONModelAccess {
      * Insert an entry at the end of an array
      * @param value
      */
-    push(value:any): pusher {
+    push(value:any): pushTo {
         return {
             to: (...parts: Array<pathPart>) => {
                 const path = this.constructPath(parts);
@@ -98,7 +98,7 @@ export class JSONModelAccess {
     /**
      * Remove the last entry from an array
      */
-    pop(): remover {
+    pop(): removeFrom {
         return {
             from: (...parts: Array<pathPart>):any => {
                 const path = this.constructPath(parts);
@@ -110,9 +110,9 @@ export class JSONModelAccess {
         }
     }
 
-    insert(...values:Array<any>): inserter {
+    insert(...values:Array<any>): insertInto {
         return {
-            into: (...parts: Array<pathPart>):inserterAt => {
+            into: (...parts: Array<pathPart>):insertIntoAt => {
                 const path = this.constructPath(parts);
                 const arr = this._model.getProperty(path) as Array<any>;
 
@@ -133,7 +133,7 @@ export class JSONModelAccess {
      *
      * @param identifier
      */
-    remove(identifier: (string|number|filterFunc)): remover {
+    remove(identifier: (string|number|filterFunc)): removeFrom {
 
         return {
             from: (...parts: Array<pathPart>):any => {
