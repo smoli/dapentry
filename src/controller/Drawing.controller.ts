@@ -1,6 +1,7 @@
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Drawing from "../controls/drawing/Drawing";
 import BaseController from "./BaseController";
+import {GfxRect} from "../runtime/gfx/GfxRect";
 
 /**
  * @namespace sts.drawable.controller
@@ -39,7 +40,13 @@ export default class DrawingController extends BaseController {
 
     async onNewOperation(event) {
         if (event.getParameter("code")) {
-            await this.getComponentController().addOperation(event.getParameter("code"));
+            const code = event.getParameter("code");
+
+            if (Array.isArray(code)) {
+                await this.getComponentController().addOperations(code);
+            } else {
+                await this.getComponentController().addOperation(code);
+            }
         }
     }
 

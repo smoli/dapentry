@@ -10,8 +10,8 @@ export class GfxLine extends GfxObject {
     private readonly _p1: Point2Parameter;
     private readonly _p2: Parameter;
 
-    constructor(opcode:string, drawing:Parameter, target:Parameter, style:Parameter, p1:Point2Parameter, p2:Point2Parameter) {
-        super(opcode, drawing, target, style);
+    constructor(opcode:string, target:Parameter, style:Parameter, p1:Point2Parameter, p2:Point2Parameter) {
+        super(opcode, target, style);
         this._p1 = p1;
         this._p2 = p2;
     }
@@ -37,7 +37,6 @@ export class GfxLine extends GfxObject {
         c.style = this.style;
         this.target = c;
 
-        this.drawing.push(c);
     }
 
 

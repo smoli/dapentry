@@ -1,7 +1,7 @@
 import BaseController from "./BaseController";
 import Control from "sap/ui/core/Control";
 import Text from "sap/m/Text";
-import {Token, TokenTypes} from "../runtime/interpreter/Parser";
+import {Parser, Token, TokenTypes} from "../runtime/interpreter/Parser";
 import HBox from "sap/m/HBox";
 import Input from "sap/m/Input";
 import {FlexAlignItems, FlexJustifyContent, InputType} from "sap/m/library";
@@ -32,7 +32,7 @@ export default class StructureController extends BaseController {
 
     onCodelineSelectionChange(event) {
         const item = event.getParameter("listItem");
-        const selected:boolean = event.getParameter("selected");
+        const selected: boolean = event.getParameter("selected");
 
         if (!selected) {
             this.getComponentController().setSelectedCodeLine()
@@ -41,7 +41,7 @@ export default class StructureController extends BaseController {
         }
     }
 
-    getTextIdForTokens(tokens:Array<Token>):string {
+    getTextIdForTokens(tokens: Array<Token>): string {
         const firstToken = tokens[0];
 
         switch (firstToken.value) {
@@ -67,6 +67,12 @@ export default class StructureController extends BaseController {
             case "POLY":
                 return "opPolygon";
 
+            case "QUAD":
+                return "opQuadratic";
+
+            case "APP":
+                return "opAppend"
+
             case 'MOVE':
                 if (tokens.length === 3) {
                     return "opMoveByCenter"
@@ -90,7 +96,7 @@ export default class StructureController extends BaseController {
             return new Text(id, {text: "NO FIRST TOKEN!"});
         }
 
-        const tokenTexts = tokens.map((t:Token) => {
+        const tokenTexts = tokens.map((t: Token) => {
             switch (t.type) {
                 case TokenTypes.NUMBER:
                     return (t.value as number).toFixed(2);
@@ -106,7 +112,7 @@ export default class StructureController extends BaseController {
         const t = this.getResourceText(this.getTextIdForTokens(tokens), ...tokenTexts);
 
         return new CustomListItem(id, {
-            content: [new Text({ text: t })]
+            content: [new Text({text: t})]
         });
 
     }
@@ -118,7 +124,7 @@ export default class StructureController extends BaseController {
 
         if (!firstToken) {
             console.log("NO FIRST TOKEN", tokens || null)
-            return new Text({ text: "NO FIRST TOKEN!"});
+            return new Text({text: "NO FIRST TOKEN!"});
         }
 
         const config = StatementConfig[firstToken.value] || [Do.text];
@@ -128,7 +134,7 @@ export default class StructureController extends BaseController {
             items: config.map((c: Do, i) => {
                 const token = tokens[i];
 
-                let control:Control;
+                let control: Control;
                 switch (c) {
                     case Do.hidden:
                         return null;
@@ -153,24 +159,24 @@ export default class StructureController extends BaseController {
         })
     }
 
-    createText(token):Control {
-        return new Text({text: token.value, wrapping: false })
+    createText(token): Control {
+        return new Text({text: token.value, wrapping: false})
     }
 
-    createInput(token:Token, context, indexPath):Control {
+    createInput(token: Token, context, indexPath): Control {
 
-        let inp:Control;
-        switch(token.type) {
+        let inp: Control;
+        switch (token.type) {
             case TokenTypes.REGISTER:
-                inp = new Input({ value: token.value as string, width: "auto" })
+                inp = new Input({value: token.value as string, width: "auto"})
                 break;
 
             case TokenTypes.NUMBER:
-                inp = new Input({ value: token.value as string, type: InputType.Number, width: "auto" });
+                inp = new Input({value: token.value as string, type: InputType.Number, width: "auto"});
                 break;
 
             case TokenTypes.STRING:
-                inp = new Input({ value: token.value as string, width: "auto"});
+                inp = new Input({value: token.value as string, width: "auto"});
                 break;
 
             case TokenTypes.POINT:
@@ -178,12 +184,13 @@ export default class StructureController extends BaseController {
                     displayInline: true,
                     alignItems: FlexAlignItems.Center,
                     items: [
-                        new Text({ text: "("}),
+                        new Text({text: "("}),
                         this.createInput(token.value[0], context, [...indexPath, 0]),
-                        new Text({ text: ","}),
+                        new Text({text: ","}),
                         this.createInput(token.value[1], context, [...indexPath, 1]),
-                        new Text({ text: ")"})
-                    ]})
+                        new Text({text: ")"})
+                    ]
+                })
                 break;
 
             default:
@@ -194,30 +201,17 @@ export default class StructureController extends BaseController {
             inp.attachChange(event => {
                 const statement = context.getObject();
 
-                let t = { value: statement.tokens };
+                let t = {value: statement.tokens};
                 for (const i of indexPath) t = t.value[i]
                 t.value = event.getParameter("value");
 
-                const construct = (code, tokens):Array<string> => {
-
-                    for (const t of tokens) {
-                        if (t.type === TokenTypes.POINT) {
-                            code.push("(");
-                            code.push(t.value[0].value);
-                            code.push(t.value[1].value);
-                            code.push(")");
-                        } else if (t.type === TokenTypes.STRING) {
-                            code.push(`"${t.value}"`);
-                        } else {
-                            code.push(t.value);
-                        }
-                    }
-
-                    return code;
-                }
-
-                const newCode = construct([], statement.tokens).join(" ");
-                this.getComponentController().updateOperation(statement.index, newCode).then();
+                const newCode = Parser.constructCodeLine(statement.tokens);
+                this.getComponentController().updateOperation(
+                    statement.index,
+                    indexPath[0],
+                    indexPath.length === 2 ? indexPath[1] : -1,
+                    newCode
+                ).then();
             });
         }
 

@@ -62,6 +62,15 @@ export default class OperationEditor extends Control {
             case 'ROTATE':
                 return "opRotate";
 
+            case "POLY":
+                return "opQuadratic";
+
+           case "QUAD":
+                return "opQuadratic";
+
+            case "APP":
+                return "opAppend"
+
             case 'MOVE':
                 if (tokens.length === 3) {
                     return "opMoveByCenter"

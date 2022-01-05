@@ -48,7 +48,7 @@ export default class Drawing extends Control {
 
         events: {
             newOperation: {
-                code: "string"
+                code: "any"
             },
 
             selectionChange: {

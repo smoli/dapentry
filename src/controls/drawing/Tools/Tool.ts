@@ -85,5 +85,5 @@ export abstract class Tool {
     /**
      * If the tool creates something, return it here.
      */
-    public abstract get result(): any;
+    public abstract get result(): (string|Array<string>);
 }

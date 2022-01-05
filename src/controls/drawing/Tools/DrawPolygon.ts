@@ -123,7 +123,9 @@ export class DrawPolygon extends Tool {
 
     public get result(): any {
         if (this._poly && this._poly.points.length > 1) {
-            return `${this._opCode} $drawing ${this._poly.name} $styles.default [ ${this._poly.points.map(p => `(${p.x} ${p.y})`).join(" ")} ] ${this._closed ? 1 : 0}`;
+            return [
+                `${this._opCode} ${this._poly.name} $styles.default [ ${this._poly.points.map(p => `(${p.x} ${p.y})`).join(" ")} ] ${this._closed ? 1 : 0}`,
+                `APP $drawing ${this._poly.name}`]
         } else {
             return null;
         }

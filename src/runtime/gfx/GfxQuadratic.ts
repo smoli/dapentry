@@ -9,8 +9,8 @@ export class GfxQuadratic extends GfxObject {
     private readonly _points: ArrayParameter;
     private readonly _closed: Parameter;
 
-    constructor(opcode:string, drawing:Parameter, target:Parameter, style:Parameter, points:ArrayParameter, closed:Parameter) {
-        super(opcode, drawing, target, style);
+    constructor(opcode:string, target:Parameter, style:Parameter, points:ArrayParameter, closed:Parameter) {
+        super(opcode, target, style);
         this._points = points;
         this._closed = closed;
     }
@@ -28,8 +28,6 @@ export class GfxQuadratic extends GfxObject {
         const c = GrQuadratic.create(this.targetName, this.points, this.closed)
         c.style = this.style;
         this.target = c;
-
-        this.drawing.push(c);
     }
 
 
@@ -41,8 +39,6 @@ export class GfxBezier extends GfxQuadratic {
         const c = GrBezier.create(this.name, this.points, this.closed)
         c.style = this.style;
         this.target = c;
-
-        this.drawing.push(c);
     }
 
 }
