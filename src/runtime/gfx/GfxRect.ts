@@ -11,8 +11,8 @@ export class GfxRect extends GfxObject {
     private _width: Parameter;
     private _height: Parameter;
 
-    constructor(opcode:string, drawing:Parameter, target:Parameter, name:Parameter, style:Parameter, p1:Point2Parameter, w:Parameter, h:Parameter) {
-        super(opcode, drawing, target, name, style);
+    constructor(opcode:string, drawing:Parameter, target:Parameter, style:Parameter, p1:Point2Parameter, w:Parameter, h:Parameter) {
+        super(opcode, drawing, target, style);
         this._p1 = p1;
         this._width = w;
         this._height = h;
@@ -31,7 +31,7 @@ export class GfxRect extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const r = GrRectangle.create(this.name, this.p1.x, this.p1.y, this.width, this.height);
+        const r = GrRectangle.create(this.targetName, this.p1.x, this.p1.y, this.width, this.height);
         r.style = this.style;
         this.target = r;
         this.drawing.push(r);

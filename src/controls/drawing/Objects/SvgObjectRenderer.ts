@@ -8,7 +8,7 @@ import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
 import {Point2D} from "./GeoMath";
-import {GrPolygon, GrQuadratic} from "./GrPolygon";
+import {GrBezier, GrPolygon, GrQuadratic} from "./GrPolygon";
 
 enum ToolClasses {
     object = "grObject",
@@ -63,6 +63,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     reset() {
         this._renderedObjects = [];
+        this.clear(RenderLayer.Objects);
+        this.clear(RenderLayer.Interaction);
     }
 
     clear(layer: RenderLayer) {
@@ -74,6 +76,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
+    remove(object: GrObject) {
+        this._objectLayer.select("#" + object.id).remove();
+    }
 
     render(object: GrObject, selected: boolean) {
 
@@ -102,6 +107,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
             case ObjectType.Quadratic:
                 svgObjc = this._renderQuadratic(this._objectLayer, object as GrQuadratic);
+                break;
+
+            case ObjectType.Bezier:
+                svgObjc = this._renderBezier(this._objectLayer, object as GrBezier);
                 break;
         }
 
@@ -341,6 +350,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     renderQuadratic(layer: RenderLayer, polygon: GrQuadratic) {
         return this._renderQuadratic(this.getLayer(layer), polygon);
     }
+
     _renderQuadratic(layer: Selection<any>, polygon: GrQuadratic) {
         if (polygon.points.length < 3) {
             return this._renderPolygon(layer, polygon);
@@ -370,6 +380,40 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return p;
     }
 
+
+    public renderBezier(layer: RenderLayer, bezier: GrBezier) {
+        return this._renderBezier(this.getLayer(layer), bezier);
+    }
+
+    private _renderBezier(layer: d3.Selection<any>, bezier: GrBezier) {
+        if (bezier.points.length < 4) {
+            return;
+        }
+
+        const o = this.getObjectOrCreate(layer, bezier, "path");
+
+        const p = o.select(ToolClassSelectors.object);
+
+        let d = `M ${bezier.points[0].x} ${bezier.points[0].y}`;
+        d += ` C ${bezier.points[1].x} ${bezier.points[1].y}`;
+        d += ` , ${bezier.points[2].x} ${bezier.points[2].y}`;
+
+        for (let i = 3; i < bezier.points.length; i++) {
+            d += `T ${bezier.points[i].x} ${bezier.points[i].y}`;
+        }
+
+        if (bezier.closed) {
+            d += " Z";
+        }
+        p.attr("d", d);
+
+
+        this._createPathStyle(p, bezier);
+        this.addRotation(bezier, o);
+
+        return p;
+    }
+
     protected _createPathStyle(elem: Selection<any>, object: GrPolygon): void {
         if (!object.style) {
             if (!object.closed) {
@@ -377,7 +421,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
             }
             return
         }
-        elem.attr("style", `fill: ${object.closed ? object.style.fillColor: "none"}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}; stroke-width: ${object.style.strokeWidth}`);
+        elem.attr("style", `fill: ${object.closed ? object.style.fillColor : "none"}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}; stroke-width: ${object.style.strokeWidth}`);
     }
 
     protected _createStyle(elem: Selection<any>, object: GrObject): void {
@@ -475,6 +519,4 @@ export class SvgObjectRenderer extends ObjectRenderer {
             handler(object, makeEvent(InteractionEvents.Click), data)
         });
     }
-
-
 }

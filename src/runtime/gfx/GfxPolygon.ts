@@ -12,8 +12,8 @@ export class GfxPolygon extends GfxObject {
     private readonly _points: ArrayParameter;
     private readonly _closed: Parameter;
 
-    constructor(opcode:string, drawing:Parameter, target:Parameter, name:Parameter, style:Parameter, points:ArrayParameter, closed:Parameter) {
-        super(opcode, drawing, target, name, style);
+    constructor(opcode:string, drawing:Parameter, target:Parameter, style:Parameter, points:ArrayParameter, closed:Parameter) {
+        super(opcode, drawing, target, style);
         this._points = points;
         this._closed = closed;
     }
@@ -28,7 +28,7 @@ export class GfxPolygon extends GfxObject {
 
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const c = GrPolygon.create(this.name, this.points, this.closed)
+        const c = GrPolygon.create(this.targetName, this.points, this.closed)
         c.style = this.style;
         this.target = c;
 

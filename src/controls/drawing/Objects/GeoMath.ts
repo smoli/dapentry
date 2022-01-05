@@ -7,7 +7,7 @@ export class Point2D {
         this.y = y;
     }
 
-    copy():Point2D {
+    get copy():Point2D {
         return new Point2D(this.x, this.y);
     }
 

@@ -11,7 +11,7 @@ enum States {
     Done = "DrawPolygon.Done",
 }
 
-export class DrawPolygon extends Tool {
+export class DrawBezier extends Tool {
 
     private _poly: GrPolygonBase;
     protected _objectClass: any = GrPolygon;
@@ -22,8 +22,9 @@ export class DrawPolygon extends Tool {
     constructor(renderer) {
         super(renderer, States.Wait, States.Done);
 
-        this._state.add(state(States.Wait), InteractionEvents.Click, state(States.Point));
-        this._state.add(state(States.Point), InteractionEvents.Click, state(States.Wait));
+        this._state.add(state(States.Wait), InteractionEvents.MouseDown, state(States.Point));
+        this._state.add(state(States.Point), InteractionEvents.MouseMove, state(States.Point));
+        this._state.add(state(States.Point), InteractionEvents.MouseUp, state(States.Wait));
         this._state.add(state(States.Wait), InteractionEvents.AlternateClick, state(States.Done));
 
         this._renderMethod = renderer.renderPolygon.bind(renderer);
@@ -45,8 +46,14 @@ export class DrawPolygon extends Tool {
         let newp: Point2D;
         newp = new Point2D(eventData.x, eventData.y);
         switch (interactionEvent) {
-            case InteractionEvents.MouseMove:
-                this._poly.setPoint(this._poly.points.length - 1, newp);
+            case InteractionEvents.MouseDown:
+                if (!this._poly) {
+                    this._poly = GrPolygon.create(null, [newp, newp, newp], false);
+                } else {
+                    this._poly.addPoint(newp);
+                    this._poly.addPoint(newp);
+                    this._poly.addPoint(newp);
+                }
                 this._renderMethod(RenderLayer.Interaction, this._poly);
                 break;
 
@@ -67,18 +74,25 @@ export class DrawPolygon extends Tool {
 
     protected handlePointState(interactionEvent: InteractionEvents, eventData: InteractionEventData = null) {
         let newp: Point2D;
+        newp = new Point2D(eventData.x, eventData.y);
 
-        if (interactionEvent == InteractionEvents.Click) {
-            newp = new Point2D(eventData.x, eventData.y);
+        switch (interactionEvent) {
+            case InteractionEvents.MouseMove:
+                let i = this._poly.points.length - 2;
+                const p2 = this._poly.points[i--];
+                const p1 = this._poly.points[i--];
 
-            if (!this._poly) {
-                this._poly = this._objectClass.create(null, [newp, newp], false);
-            } else {
+                const d = newp.copy.sub(p2);
+                p1.sub(d);
+                this._poly.removeLastPoint();
                 this._poly.addPoint(newp);
-            }
+                this._renderMethod(RenderLayer.Interaction, this._poly);
 
-            this._renderMethod(RenderLayer.Interaction, this._poly);
-            this._state.next(InteractionEvents.Click);
+                break;
+
+            case InteractionEvents.MouseUp:
+
+                break;
         }
     }
 

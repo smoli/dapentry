@@ -9,8 +9,8 @@ export class GfxCircle extends GfxObject {
     private readonly _center: Point2Parameter;
     private readonly _radius: Parameter;
 
-    constructor(opcode:string, drawing:Parameter, target:Parameter, name:Parameter, style:Parameter, center:Point2Parameter, radius:Parameter) {
-        super(opcode, drawing, target, name, style);
+    constructor(opcode:string, drawing:Parameter, target:Parameter, style:Parameter, center:Point2Parameter, radius:Parameter) {
+        super(opcode, drawing, target, style);
         this._center = center;
         this._radius = radius;
     }
@@ -32,7 +32,7 @@ export class GfxCircle extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const c = GrCircle.create(this.name, this.center.x, this.center.y, this.radius)
+        const c = GrCircle.create(this.targetName, this.center.x, this.center.y, this.radius)
         c.style = this.style;
         this.target = c;
 

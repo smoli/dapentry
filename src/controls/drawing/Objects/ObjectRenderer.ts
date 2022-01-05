@@ -25,7 +25,7 @@ import {GrCircle} from "./GrCircle";
 import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
 import {Point2D} from "./GeoMath";
-import {GrPolygon, GrQuadratic} from "./GrPolygon";
+import {GrBezier, GrPolygon, GrQuadratic} from "./GrPolygon";
 
 /**
  * Callback signature for functions invoked when an object is clicked
@@ -79,6 +79,8 @@ export abstract class ObjectRenderer {
      */
     public abstract render(object: GrObject, selected: boolean): void;
 
+    public abstract remove(object: GrObject): void;
+    
     /**
      * Clear the layer
      */
@@ -112,6 +114,7 @@ export abstract class ObjectRenderer {
      */
     public abstract renderPolygon(layer:RenderLayer, polygon: GrPolygon): void;
     public abstract renderQuadratic(layer:RenderLayer, quadric: GrQuadratic): void;
+    public abstract renderBezier(layer:RenderLayer, bezier: GrBezier): void;
 
 
     /**

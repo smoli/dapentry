@@ -10,8 +10,8 @@ export class GfxLine extends GfxObject {
     private readonly _p1: Point2Parameter;
     private readonly _p2: Parameter;
 
-    constructor(opcode:string, drawing:Parameter, target:Parameter, name:Parameter, style:Parameter, p1:Point2Parameter, p2:Point2Parameter) {
-        super(opcode, drawing, target, name, style);
+    constructor(opcode:string, drawing:Parameter, target:Parameter, style:Parameter, p1:Point2Parameter, p2:Point2Parameter) {
+        super(opcode, drawing, target, style);
         this._p1 = p1;
         this._p2 = p2;
     }
@@ -33,7 +33,7 @@ export class GfxLine extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const c = GrLine.create(this.name, this.p1.x, this.p1.y, this.p2.x, this.p2.y)
+        const c = GrLine.create(this.targetName, this.p1.x, this.p1.y, this.p2.x, this.p2.y)
         c.style = this.style;
         this.target = c;
 

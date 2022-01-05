@@ -64,7 +64,7 @@ export class GrPolygonBase extends GrObject {
     }
 
     public addPoint(point: Point2D) {
-        this._points.push(point.copy());
+        this._points.push(point.copy);
         this.computeCenterAndBB();
     }
 
@@ -111,6 +111,24 @@ export class GrQuadratic extends GrPolygonBase {
         const i = GrObject.getPoolInstance(name) as GrQuadratic;
         if (!i) {
             return GrObject.setPoolInstance(new GrQuadratic(name, points, closed)) as GrQuadratic;
+        }
+        i._points = points;
+        i._closed = closed;
+        i.computeCenterAndBB();
+
+        return i;
+    }
+}
+
+export class GrBezier extends GrPolygonBase {
+    protected constructor(name: string, points: Array<Point2D>, closed: boolean = false) {
+        super(ObjectType.Bezier, name, points, closed);
+    }
+
+    public static create(name: string, points: Array<Point2D>, closed: boolean = false) {
+        const i = GrObject.getPoolInstance(name) as GrBezier;
+        if (!i) {
+            return GrObject.setPoolInstance(new GrBezier(name, points, closed)) as GrQuadratic;
         }
         i._points = points;
         i._closed = closed;

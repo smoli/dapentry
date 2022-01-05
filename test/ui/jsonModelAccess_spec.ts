@@ -7,13 +7,13 @@ import exp = require("constants");
 
 class MockJSONModel {
 
-    public data:any;
+    public data: any;
 
     constructor() {
         this.data = {}
     }
 
-    setData(data:any) {
+    setData(data: any) {
         this.data = data;
     }
 
@@ -64,52 +64,57 @@ describe('JSONModelAccess', () => {
 
     const model = new MockJSONModel();
     const ma = new JSONModelAccess(model as unknown as JSONModel);
+    const demoData = {
+        list: [1, 2, 3, 4],
+        invoices: [
+            {
+                title: "Title 1",
+                address: {name: "Jon Doe", street: "Somestreet", city: "Overthere"},
+                positions: [
+                    {
+                        num: 10,
+                        article: "GoodStuff",
+                        amount: 5,
+                        price: {amount: 4, currency: "EUR"},
+                        list: [1, 2, 3, 4],
+                    }
+                ]
+            },
+            {
+                title: "Title 2",
+                address: {name: "Jane Doe", street: "Elmstreet", city: "Othertown"},
+                positions: [
+                    {
+                        num: 10,
+                        article: "BadStuff",
+                        amount: 5,
+                        price: {amount: 4, currency: "EUR"},
+                        list: [1, 2, 3, 4],
+                    },
+                    {
+                        num: 20,
+                        article: "GoodStuff",
+                        amount: 5,
+                        price: {amount: 4, currency: "EUR"}
+                    },
+                ]
+            }
+        ]
+    };
 
     beforeEach(() => {
-        model.setData({
-            list: [1, 2, 3, 4],
-            invoices: [
-                {
-                    title: "Title 1",
-                    address: {name: "Jon Doe", street: "Somestreet", city: "Overthere"},
-                    positions: [
-                        {
-                            num: 10,
-                            article: "GoodStuff",
-                            amount: 5,
-                            price: {amount: 4, currency: "EUR"},
-                            list: [1, 2, 3, 4],
-                        }
-                    ]
-                },
-                {
-                    title: "Title 2",
-                    address: {name: "Jane Doe", street: "Elmstreet", city: "Othertown"},
-                    positions: [
-                        {
-                            num: 10,
-                            article: "BadStuff",
-                            amount: 5,
-                            price: {amount: 4, currency: "EUR"},
-                            list: [1, 2, 3, 4],
-                        },
-                        {
-                            num: 20,
-                            article: "GoodStuff",
-                            amount: 5,
-                            price: {amount: 4, currency: "EUR"}
-                        },
-                    ]
-                }
-            ]
-
-
-        })
+        model.setData(demoData)
     })
 
     it('simplifies accessing deep structures in model data', () => {
         expect(ma.get("invoices", 0, "title")).to.equal("Title 1");
         expect(ma.get("invoices", i => i.title === "Title 2", "address/name")).to.equal("Jane Doe")
+        expect(ma.get("invoices", i => i.title === "Title 2")).to.deep.equal(demoData.invoices[1])
+    });
+
+    it("returns undefined if the requested data does not exist", () => {
+        expect(ma.get("invoices", 12, "title")).to.be.undefined;
+        expect(ma.get("invoices", i => i.title === "NOT HERE")).to.be.undefined;
     });
 
     it('can set values', () => {
@@ -169,4 +174,4 @@ describe('JSONModelAccess', () => {
 
     });
 
-    });
+});

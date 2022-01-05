@@ -8,7 +8,8 @@ export enum ObjectType {
     Square,
     Line,
     Polygon,
-    Quadratic
+    Quadratic,
+    Bezier
 }
 
 
@@ -28,7 +29,7 @@ export enum POI {
 export type POIMap = {[key in POI]?: Point2D };
 
 let objCounter = 1;
-function getObjectName(prefix:string):string {
+export function getNewObjectName(prefix:string):string {
     return prefix + objCounter++;
 }
 
@@ -112,7 +113,7 @@ export abstract class GrObject{
     }
 
     protected _makeName() {
-        this._name = getObjectName(ObjectType[this._type]);
+        this._name = getNewObjectName(ObjectType[this._type]);
     }
 
     get id(): string {
@@ -210,7 +211,7 @@ export abstract class GrObject{
      * Relative to the object's origin.
      */
     get bottom():Point2D {
-        return this._yAxis.copy().scale(this.boundingBox.h / 2).add(this._center);
+        return this._yAxis.copy.scale(this.boundingBox.h / 2).add(this._center);
     }
 
     /**
@@ -218,7 +219,7 @@ export abstract class GrObject{
      * to the object's origin.
      */
     get left():Point2D {
-        return this._xAxis.copy().scale(-this.boundingBox.w / 2).add(this._center);
+        return this._xAxis.copy.scale(-this.boundingBox.w / 2).add(this._center);
     }
 
     /**
@@ -226,7 +227,7 @@ export abstract class GrObject{
      * the object's origin.
      */
     get top():Point2D {
-        return this._yAxis.copy().scale(-this.boundingBox.h / 2).add(this._center);
+        return this._yAxis.copy.scale(-this.boundingBox.h / 2).add(this._center);
 
     }
 
@@ -235,7 +236,7 @@ export abstract class GrObject{
      * to the object's origin.
      */
     get right():Point2D {
-        return this._xAxis.copy().scale(this.boundingBox.w / 2).add(this._center);
+        return this._xAxis.copy.scale(this.boundingBox.w / 2).add(this._center);
     }
 
     /**

@@ -53,7 +53,8 @@ export class DrawLine extends Tool {
 
             case States.Done:
                 this._line.x2 = eventData.x;
-                this._line.y2 = eventData.y
+                this._line.y2 = eventData.y;
+                this._renderer.remove(this._line);
         }
 
         return this.isDone;
@@ -65,7 +66,7 @@ export class DrawLine extends Tool {
         const x2 = this._line.x2;
         const y2 = this._line.y2;
 
-        return `LINE $drawing ${this._line.name} "${this._line.name}" $styles.default (${x1} ${y1}) (${x2} ${y2})`
+        return `LINE $drawing ${this._line.name} $styles.default (${x1} ${y1}) (${x2} ${y2})`
 
     }
 }

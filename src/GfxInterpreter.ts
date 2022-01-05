@@ -5,7 +5,7 @@ import {GfxCircle} from "./runtime/gfx/GfxCircle";
 import {GfxRect} from "./runtime/gfx/GfxRect";
 import {GfxLine} from "./runtime/gfx/GfxLine";
 import {GfxPolygon} from "./runtime/gfx/GfxPolygon";
-import {GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
+import {GfxBezier, GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
 import {GfxMove} from "./runtime/gfx/GfxMove";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxFill} from "./runtime/gfx/GfxFill";
@@ -45,6 +45,7 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("LINE", makeGfxOperation(GfxLine, this.setLastObjectTouched.bind(this)));
         this.addOperation("POLY", makeGfxOperation(GfxPolygon, this.setLastObjectTouched.bind(this)));
         this.addOperation("QUAD", makeGfxOperation(GfxQuadratic, this.setLastObjectTouched.bind(this)));
+        this.addOperation("BEZIER", makeGfxOperation(GfxBezier, this.setLastObjectTouched.bind(this)));
         this.addOperation("MOVE", makeGfxOperation(GfxMove, this.setLastObjectTouched.bind(this)));
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.setLastObjectTouched.bind(this)));
         this.addOperation("FILL", makeGfxOperation(GfxFill, this.setLastObjectTouched.bind(this)));

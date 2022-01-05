@@ -33,7 +33,13 @@ export default class Component extends UIComponent {
         super.init();
         this.getRouter().initialize();
 
-        this._codeManager = new CodeManager();
+        this._codeManager = new CodeManager({
+            LOAD: 1,
+            ADD: 1,
+            SUB: 1,
+            CIRCLE: 2,
+            RECT: 2
+        });
 
         const appModel = new JSONModel({
             segmentedCode: [],

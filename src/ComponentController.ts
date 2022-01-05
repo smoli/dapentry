@@ -1,5 +1,4 @@
 import Component from "./Component";
-import {Interpreter} from "./runtime/interpreter/Interpreter";
 import {StyleManager} from "./controls/drawing/Objects/StyleManager";
 import {GrObject, ObjectType} from "./controls/drawing/Objects/GrObject";
 import Drawing from "./controls/drawing/Drawing";
@@ -11,11 +10,10 @@ import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 
 export class ComponentController extends BaseComponentController {
-    private _component: Component;
-    private _interpreter: Interpreter;
+    private readonly _component: Component;
+    private _interpreter: GfxInterpreter;
     private _styleManager: StyleManager;
     private _drawing: Drawing;
-    private _lastTouchedObjectByProgram: GrObject;
 
     constructor(component: Component) {
         super();
@@ -25,6 +23,37 @@ export class ComponentController extends BaseComponentController {
         this._interpreter = new GfxInterpreter();
         // this.preloadDemoCode();
     }
+
+    /**
+     * TODO: This is hacky
+     * @param clearAllFirst
+     * @protected
+     */
+    protected updateDrawing(clearAllFirst: boolean = false) {
+        this._drawing.update(clearAllFirst);
+    }
+
+    public updateAll() {
+        this.runCode().then(() => {
+            if (this._interpreter.lastObjectTouched) {
+                this._drawing.selectObject(this._interpreter.lastObjectTouched);
+            }
+            this.updateDrawing();
+        });
+    }
+
+    /**
+     * TODO: this is hacky. We need to figure out a way to make the drawing control
+     *       actually data driven.
+     * @param value
+     */
+    public set drawing(value: Drawing) {
+        this._drawing = value;
+        this.runCode().then(() => {
+            this.updateDrawing();
+        });
+    }
+
 
     public setSelectedCodeLine(line?) {
         if (!line) {
@@ -47,6 +76,7 @@ export class ComponentController extends BaseComponentController {
 
 
     protected async runCode(): Promise<any> {
+        this.getAppModel().set("drawing").to([]);
         const data = this.getDataFromDataFields();
         this._interpreter.parse(this._component.getCodeManager().code);
         return this._interpreter.run({
@@ -61,8 +91,8 @@ export class ComponentController extends BaseComponentController {
         return this._component.getAppModel();
     }
 
-    async updateOperation(index:number, code:string) {
-        await this.execute(new UpdateStatement(this._component, index, code));
+    async updateOperation(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
+        await this.execute(new UpdateStatement(this._component, statementIndex, tokenIndex, tokenSubIndex, newValue));
         await this.runCode();
         this.updateDrawing();
     }
@@ -81,35 +111,6 @@ export class ComponentController extends BaseComponentController {
         }
     }
 
-    /**
-     * TODO: This is hacky
-     * @param clearAllFirst
-     * @protected
-     */
-    protected updateDrawing(clearAllFirst: boolean = false) {
-        this._drawing.update(clearAllFirst);
-    }
-
-    public updateAll() {
-        this.runCode().then(() => {
-            if (this._lastTouchedObjectByProgram) {
-                this._drawing.selectObject(this._lastTouchedObjectByProgram);
-            }
-            this.updateDrawing();
-        });
-    }
-
-    /**
-     * TODO: this is hacky. We need to figure out a way to make the drawing control
-     *       actually data driven.
-     * @param value
-     */
-    public set drawing(value: Drawing) {
-        this._drawing = value;
-        this.runCode().then(() => {
-            this.updateDrawing();
-        });
-    }
 
     getSelection(): Array<GrObject> {
         return this.getAppModel().get("selection");

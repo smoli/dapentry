@@ -3,6 +3,7 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrCircle} from "../Objects/GrCircle";
+import {getNewObjectName} from "../Objects/GrObject";
 
 enum States {
     Wait = "DrawCircle.Wait",
@@ -51,12 +52,13 @@ export class DrawCircle extends Tool {
 
             case States.Done:
                 this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                this._renderer.remove(this._circle);
         }
 
         return this.isDone;
     }
 
     public get result(): any {
-        return `CIRCLE $drawing ${this._circle.name} "${this._circle.name}" $styles.default (${this._circle.x} ${this._circle.y}) ${this._circle.radius}`
+        return `CIRCLE $drawing ${this._circle.name} $styles.default (${this._circle.x} ${this._circle.y}) ${this._circle.radius}`
     }
 }

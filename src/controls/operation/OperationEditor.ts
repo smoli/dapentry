@@ -19,7 +19,9 @@ export default class OperationEditor extends Control {
 
         events: {
             change: {
-                code: "string"
+                tokenIndex: "number",
+                tokenSubIndex: "number",        // When changing a component of an array or point
+                value: "number"
             }
         }
     }
@@ -107,19 +109,12 @@ export default class OperationEditor extends Control {
 
     inputChangeHandler(index:number, subindex: number = -1, event) {
 
-        const tokens = this.getTokens();
         const newValue = event.getParameter("value");
 
-        let token = tokens[index];
-
-        if (subindex !== -1) {
-            token = token.value[subindex];
-        }
-
-        token.value = newValue;
-
         this.fireChange({
-            code: Parser.constructCodeLine(tokens)
+            tokenIndex: index,
+            tokenSubIndex: subindex,
+            newValue: newValue
         });
 
     }

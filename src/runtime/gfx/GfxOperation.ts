@@ -16,6 +16,10 @@ export class GfxOperation extends Operation {
         return this._getParam(this._target);
     }
 
+    get targetName():string {
+        return this._target.name;
+    }
+
     set target(value) {
         this._setParam(this._target, value);
     }

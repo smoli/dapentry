@@ -44,6 +44,10 @@ export default class DrawingController extends BaseController {
     }
 
     onCodeLineChanged(event) {
-        this.getComponentController().updateOperation(this.getAppModel().getProperty("/selectedCodeLine/index"), event.getParameter("code"))
+        this.getComponentController().updateOperation(
+            this.getAppModel().get("selectedCodeLine/index"),
+            event.getParameter("tokenIndex"),
+            event.getParameter("tokenSubIndex"),
+            event.getParameter("newValue"));
     }
 }

@@ -8,15 +8,15 @@ export class GfxObject extends GfxOperation {
     private _name: Parameter;
     private _style: Parameter;
 
-    constructor(opcode: string, drawing: Parameter, target: Parameter, name: Parameter, style: Parameter) {
+    constructor(opcode: string, drawing: Parameter, target: Parameter, style: Parameter) {
         super(opcode, target);
         this._drawing = drawing;
-        this._name = name;
         this._style = style;
     }
 
     get name(): any {
-        return this._name.finalized(this.closure)
+        return null;
+        // return this._name.finalized(this.closure)
     }
 
     get drawing(): Array<any> {

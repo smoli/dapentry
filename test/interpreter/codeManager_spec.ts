@@ -310,13 +310,13 @@ describe('Code manager', () => {
 
         m.addCodeString(code);
 
-        function replace(reg: string, argumentToReplace: number, data: string) {
+        function replace(reg: string, argumentToReplace: number, dataName: string) {
             let index: number = m.getCreationStatement(reg);
             const original = m.code[index];
             const tokens = Parser.parseLine(original);
 
             const tempRegName = m.makeUniqueRegisterName(reg + "Tmp");
-            const iteratorName = m.makeUniqueRegisterName(data + "iter");
+            const iteratorName = m.makeUniqueRegisterName(dataName + "iter");
 
             for (const t of tokens) {
                 if (t.type === TokenTypes.REGISTER && t.value === reg) {
@@ -332,7 +332,7 @@ describe('Code manager', () => {
             m.insertStatement(`ITER ${iteratorName} data`, index++);
             m.insertStatement(`LOAD ${reg} [ ]`, index++);
 
-            const labelName = m.makeUniqueLabelName("LOOP" + data.toUpperCase());
+            const labelName = m.makeUniqueLabelName("LOOP" + dataName.toUpperCase());
             m.insertStatement(`${labelName}:`, index++);
             m.insertStatement(newCodeLine, index++);
             m.insertStatement(`APP ${reg} ${tempRegName}`, index++);
@@ -345,6 +345,8 @@ describe('Code manager', () => {
         const i = new Interpreter();
         i.parse(m.code);
         await i.run();
+
+        console.log(m.code.join("\n"));
 
         expect(i.getRegister("r2")).to.deep.equal([2, 3, 4, 5]);
 
