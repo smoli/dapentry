@@ -9,6 +9,7 @@ import {GrRectangle} from "./GrRectangle";
 import {GrLine} from "./GrLine";
 import {Point2D} from "./GeoMath";
 import {GrBezier, GrPolygon, GrQuadratic} from "./GrPolygon";
+import {GrObjectList} from "./GrObjectList";
 
 enum ToolClasses {
     object = "grObject",
@@ -82,44 +83,52 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     render(object: GrObject, selected: boolean) {
 
-        let svgObjc;
         this._renderedObjects.push(object);
 
         switch (object.type) {
             case ObjectType.Circle:
-                svgObjc = this._renderCircle(this._objectLayer, object as GrCircle);
+                this._renderCircle(this._objectLayer, object as GrCircle);
                 break;
 
             case ObjectType.Rectangle:
-                svgObjc = this._renderRectangle(this._objectLayer, object as GrRectangle);
+                this._renderRectangle(this._objectLayer, object as GrRectangle);
                 break;
 
             case ObjectType.Ellipse:
                 break;
             case ObjectType.Square:
                 break;
+
             case ObjectType.Line:
-                svgObjc = this._renderLine(this._objectLayer, object as GrLine);
+                this._renderLine(this._objectLayer, object as GrLine);
                 break;
+
             case ObjectType.Polygon:
-                svgObjc = this._renderPolygon(this._objectLayer, object as GrPolygon);
+                this._renderPolygon(this._objectLayer, object as GrPolygon);
                 break;
 
             case ObjectType.Quadratic:
-                svgObjc = this._renderQuadratic(this._objectLayer, object as GrQuadratic);
+                this._renderQuadratic(this._objectLayer, object as GrQuadratic);
                 break;
 
             case ObjectType.Bezier:
-                svgObjc = this._renderBezier(this._objectLayer, object as GrBezier);
+                this._renderBezier(this._objectLayer, object as GrBezier);
+                break;
+
+            case ObjectType.List:
+                this._renderObjectList(object as GrObjectList, selected);
                 break;
         }
 
-        if (selected) {
+        if (selected && object.type !== ObjectType.List) {
             this.renderBoundingRepresentation(object)
         } else {
             this.removeBoundingRepresentation(object);
         }
+    }
 
+    _renderObjectList(objectList: GrObjectList, selected) {
+        objectList.objects.forEach(object => this.render(object, selected))
     }
 
 

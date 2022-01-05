@@ -42,7 +42,7 @@
           "pattern": "",
           "name": "default",
           "target": ["structure", "drawing", "style"],
-          "layout": "ThreeColumnsMidExpanded"
+          "layout": "TwoColumnsMidExpanded"
         }
       ],
       "targets": {

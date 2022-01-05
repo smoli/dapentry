@@ -37,8 +37,8 @@ export default class Component extends UIComponent {
             LOAD: 1,
             ADD: 1,
             SUB: 1,
-            CIRCLE: 2,
-            RECT: 2
+            CIRCLE: 1,
+            RECT: 1
         });
 
         const appModel = new JSONModel({

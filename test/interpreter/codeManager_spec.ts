@@ -288,9 +288,11 @@ describe('Code manager', () => {
     it("can be used to replace a statement with a complex block of statements", async () => {
         const m = new CodeManager({ LOAD: 1, ADD: 1 });
         const code = `
+                LOAD globalResult [ ]
                 LOAD data [ 1 2 3 4 ]
                 LOAD r1 1
-                ADD r2 r1 10 
+                ADD r2 r1 10
+                APP globalResult r2
                 LOAD r3 2
         `;
 
@@ -315,7 +317,7 @@ describe('Code manager', () => {
             const original = m.code[index];
             const tokens = Parser.parseLine(original);
 
-            const tempRegName = m.makeUniqueRegisterName(reg + "Tmp");
+            const tempRegName = m.makeUniqueRegisterName(reg + "Looped");
             const iteratorName = m.makeUniqueRegisterName(dataName + "iter");
 
             for (const t of tokens) {
@@ -332,12 +334,14 @@ describe('Code manager', () => {
             m.insertStatement(`ITER ${iteratorName} data`, index++);
             m.insertStatement(`LOAD ${reg} [ ]`, index++);
 
+            m.insertStatement("PUSHSF", index++);
             const labelName = m.makeUniqueLabelName("LOOP" + dataName.toUpperCase());
             m.insertStatement(`${labelName}:`, index++);
             m.insertStatement(newCodeLine, index++);
             m.insertStatement(`APP ${reg} ${tempRegName}`, index++);
             m.insertStatement(`NEXT ${iteratorName}`, index++);
             m.insertStatement(`JINE ${iteratorName} ${labelName}`, index++);
+            m.insertStatement("POPSF", index++);
         }
 
         replace("r2", 2, "data");
@@ -349,6 +353,7 @@ describe('Code manager', () => {
         console.log(m.code.join("\n"));
 
         expect(i.getRegister("r2")).to.deep.equal([2, 3, 4, 5]);
+        expect(i.getRegister("globalResult")).to.deep.equal([[2, 3, 4, 5]]);
 
     });
 });

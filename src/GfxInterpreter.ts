@@ -11,6 +11,7 @@ import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxFill} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GrObject} from "./controls/drawing/Objects/GrObject";
+import {GfxObjectList} from "./runtime/gfx/GfxObject";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -50,6 +51,7 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.setLastObjectTouched.bind(this)));
         this.addOperation("FILL", makeGfxOperation(GfxFill, this.setLastObjectTouched.bind(this)));
         this.addOperation("STROKE", makeGfxOperation(GfxStroke, this.setLastObjectTouched.bind(this)));
+        this.addOperation("OBLIST", GfxObjectList);
     }
 
     protected setLastObjectTouched(object:GrObject) {

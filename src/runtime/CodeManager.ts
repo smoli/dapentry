@@ -224,11 +224,11 @@ export class CodeManager {
         }
 
         let suff = 0;
-        while(memory.indexOf(preference + "_" + suff) !== -1) {
+        while(memory.indexOf(preference + suff) !== -1) {
             suff++;
         }
 
-        return preference + "_" + suff;
+        return preference + suff;
     }
 
     public makeUniqueRegisterName(preference):string {

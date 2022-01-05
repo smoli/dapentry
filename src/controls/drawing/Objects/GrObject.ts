@@ -9,7 +9,8 @@ export enum ObjectType {
     Line,
     Polygon,
     Quadratic,
-    Bezier
+    Bezier,
+    List
 }
 
 
@@ -92,11 +93,14 @@ export abstract class GrObject{
     }
 
     protected static getPoolInstance(name:string) {
+        return null;
+/*
         const r = name && GrObject._pool[name];
         if (r) {
             r.rotation = 0;
         }
         return r;
+*/
     }
 
     protected static setPoolInstance(object:GrObject):GrObject {
@@ -120,6 +124,10 @@ export abstract class GrObject{
         return this._name;
     }
 
+
+    set name(value:string) {
+        this._name = value;
+    }
     get name(): string {
         return this._name;
     }

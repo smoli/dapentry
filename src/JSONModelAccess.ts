@@ -131,6 +131,9 @@ export class JSONModelAccess {
      * If a predicate is used for array removal this will
      * only remove the first matching entry.
      *
+     * If a string or a number is given it will be interpreted
+     * as an index for arrays and as a key for objects.
+     *
      * @param identifier
      */
     remove(identifier: (string|number|filterFunc)): removeFrom {

@@ -1,6 +1,7 @@
 import {Parameter} from "../interpreter/Parameter";
 import {Style} from "../../controls/drawing/Objects/StyleManager";
 import {GfxOperation} from "./GfxOperation";
+import {GrObjectList} from "../../controls/drawing/Objects/GrObjectList";
 
 export class GfxObject extends GfxOperation {
 
@@ -21,4 +22,15 @@ export class GfxObject extends GfxOperation {
         return {... s};
     }
 
+}
+
+export class GfxObjectList extends GfxOperation {
+
+    constructor(opcode:string, target: Parameter) {
+        super(opcode, target);
+    }
+
+    async execute(): Promise<any> {
+        this.target = new GrObjectList(this.targetName)
+    }
 }
