@@ -116,8 +116,8 @@ describe('Parser', () => {
                 {type: TokenTypes.OPCODE, value: "LOAD"},
                 {type: TokenTypes.REGISTER, value: "r1"},
                 {type: TokenTypes.NUMBER, value: 23},
-                {type: TokenTypes.ANNOTATION, value: "A1"},
-                {type: TokenTypes.ANNOTATION, value: "A2"}
+                {type: TokenTypes.ANNOTATION, value: "A1", args: []},
+                {type: TokenTypes.ANNOTATION, value: "A2", args: []}
             ]
         );
 
@@ -125,8 +125,30 @@ describe('Parser', () => {
 
         expect(tokens).to.deep.equal(
             [
-                {type: TokenTypes.ANNOTATION, value: "A1"},
-                {type: TokenTypes.ANNOTATION, value: "A2"}
+                {type: TokenTypes.ANNOTATION, value: "A1", args: []},
+                {type: TokenTypes.ANNOTATION, value: "A2", args: []}
+            ]
+        );
+    })
+    it("parses annotations with arguments", () => {
+        let tokens = Parser.parseLine("LOAD r1 23 @A1 a b @A2 ced def");
+
+        expect(tokens).to.deep.equal(
+            [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {type: TokenTypes.NUMBER, value: 23},
+                {type: TokenTypes.ANNOTATION, value: "A1", args: ["a", "b"]},
+                {type: TokenTypes.ANNOTATION, value: "A2", args: ["ced", "def"]}
+            ]
+        );
+
+        tokens = Parser.parseLine("@A1 a b @A2 ced def");
+
+        expect(tokens).to.deep.equal(
+            [
+                {type: TokenTypes.ANNOTATION, value: "A1", args: ["a", "b"]},
+                {type: TokenTypes.ANNOTATION, value: "A2", args: ["ced", "def"]}
             ]
         );
 

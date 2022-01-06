@@ -54,9 +54,27 @@
   }
 
   Annotation "Annotation"
-  = "@" anno:([a-zA-Z0-9-.]+) {
-  	return { type: TokenTypes.ANNOTATION, value: anno.join("")};
+  = "@" anno:([a-zA-Z0-9-.]+) _ args:AnnotationArgs? {
+  	let argList = []
+
+  	return {
+    	type: TokenTypes.ANNOTATION,
+        value: anno.join(""),
+        args: args
+      };
   }
+
+  AnnotationArgs "AnnotationArgs"
+  = rest:(_ AnnotationArg)* {
+  	return rest.map(r => r[1])
+  }
+
+
+  AnnotationArg "AnnotationArg"
+  = a:[a-zA-Z0-9-.]+ {
+  	return a.join("")
+  }
+
 
   Comment "Comment"
   = "#" .* {
