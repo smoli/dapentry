@@ -106,7 +106,30 @@ describe('Parser', () => {
             .to.throw;
         expect(() => Parser.parseLine("100 ) 100 200"))
             .to.throw;
-
-
     });
+
+    it("parses annotations for statements", () => {
+        let tokens = Parser.parseLine("LOAD r1 23 @A1 @A2");
+
+        expect(tokens).to.deep.equal(
+            [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {type: TokenTypes.NUMBER, value: 23},
+                {type: TokenTypes.ANNOTATION, value: "A1"},
+                {type: TokenTypes.ANNOTATION, value: "A2"}
+            ]
+        );
+
+        tokens = Parser.parseLine("@A1 @A2");
+
+        expect(tokens).to.deep.equal(
+            [
+                {type: TokenTypes.ANNOTATION, value: "A1"},
+                {type: TokenTypes.ANNOTATION, value: "A2"}
+            ]
+        );
+
+
+    })
 });

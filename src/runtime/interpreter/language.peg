@@ -2,10 +2,26 @@
   function flatten(stuff) {
     return stuff.map(a => a.filter(a => a != null)).map(a => a[0]) ;
   }
+  const TokenTypes = {
+  	OPCODE: 0,
+    REGISTER: 1,
+    NUMBER: 2,
+    STRING: 3,
+    LABEL: 4,
+    POINT: 5,
+    ARRAY: 6,
+    EXPRESSION: 7,
+    ANNOTATION: 8,
+    OTHER: 9
+  }
+
 }
   Expression "Expression"
-      = exp:(Label/Operation/Comment) _ Comment? {
-      return exp
+      = exp:(Label/Operation/Comment/Annotations) _ anno:(Annotations)? _ Comment? {
+      const r = []
+      if (exp) r.push(...exp);
+      if (anno) r.push(...anno);
+      return r;
       }
 
   Operation "Operation"
@@ -14,7 +30,7 @@
       }
 
   ArgumentOrTuple "Argument or Tuple"
-      = aot:(Argument/Tuple/Array) {
+      = aot:(Argument/Tuple/Array/Eval) {
       return aot
       }
 
@@ -25,14 +41,22 @@
 
 
    Register "Register"
-      = reg:([$a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9]*) {
+      = reg:([$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*) {
       return {
         type: TokenTypes.REGISTER,
             value: text()
             }
       }
 
+  Annotations "Annotations"
+  = first:Annotation rest:(_ Annotation)* {
+  	return [first, ...flatten(rest)]
+  }
 
+  Annotation "Annotation"
+  = "@" anno:([a-zA-Z0-9-.]+) {
+  	return { type: TokenTypes.ANNOTATION, value: anno.join("")};
+  }
 
   Comment "Comment"
   = "#" .* {
@@ -60,7 +84,10 @@
       return { type: TokenTypes.POINT, value: flatten(args) }
       }
 
-
+  Eval "Eval"
+  = "{" _ exp:([^}]*) _ "}" {
+  	return { type: TokenTypes.EXPRESSION, value: exp.join("") }
+  }
 
   Array "Array"
       = "["_ args:(_ ArgumentOrTuple)* _ "]" {
