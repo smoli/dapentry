@@ -18,6 +18,9 @@ class MockJSONModel {
     }
 
     getParts(path) {
+        if (!path) {
+            return null;
+        }
         const parts = path.split("/");
         if (path[0] === "/") {
             parts.shift();
@@ -40,12 +43,17 @@ class MockJSONModel {
 
     getProperty(path) {
         console.log("getting", path)
+        if (!path) {
+            return undefined;
+        }
         const parts = this.getParts(path);
 
-        const n = this.data;
 
         const walk = (n, i) => {
             const part = parts[i];
+            if (!n) {
+                return undefined;
+            }
             const newN = n[part];
             i++;
             if (i < parts.length) {
@@ -103,7 +111,7 @@ describe('JSONModelAccess', () => {
     };
 
     beforeEach(() => {
-        model.setData(demoData)
+        model.setData(JSON.parse(JSON.stringify(demoData)));
     })
 
     it('simplifies accessing deep structures in model data', () => {
