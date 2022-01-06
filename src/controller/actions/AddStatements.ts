@@ -11,10 +11,6 @@ export class AddStatements extends BaseAction {
     }
 
     perform() {
-        for (const s of this._statements) {
-            this.component.getCodeManager().addStatement(s);
-        }
         this.appModel.addStatements(this._statements);
-        return null;
     }
 }

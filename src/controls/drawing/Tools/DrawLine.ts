@@ -68,7 +68,7 @@ export class DrawLine extends Tool {
 
         return [
             `LINE ${this._line.name} $styles.default (${x1} ${y1}) (${x2} ${y2})`,
-            `APP $drawing ${this._line.name}`
+            `APP $drawing ${this._line.name}                @HIDE`
             ]
 
     }

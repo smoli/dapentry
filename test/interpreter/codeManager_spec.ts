@@ -332,24 +332,25 @@ describe('Code manager', () => {
 
         it("can create blocks", () => {
             const code = `
-            @EACH f1
-                ITER f1iter f1                                                        
-                OBLIST Rectangle1
-                RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value
-                APP Rectangle1.objects Rectangle1-Prev
-                NEXT f1iter
-            LOOPF1:
-            @BODY
-                RECT Rectangle1Lpd $styles.default ( 360 277.5 ) 218 f1iter.value     @REPLACE Rectangle1Lpd Rectangle1 @REPLACE f1iter.value f1
-                MOVE Rectangle1Lpd "bottom" Rectangle1-Prev "top"                     @REPLACE Rectangle1Lpd Rectangle1 @REPLACE f1iter.value f1
-                LOAD r1 200
-            @ENDBODY
-                APP Rectangle1.objects Rectangle1Lpd
-                LOAD Rectangle1-Prev Rectangle1Lpd
-                NEXT f1iter
-                JINE f1iter LOOPF1
-                APP $drawing Rectangle1                                               
-            @ENDEACH
+                @EACH f1 @REPLACE Rectangle1-Tmp Rectangle1 @REPLACE f1iter.value f1
+                    ITER f1iter f1
+                    OBLIST Rectangle1
+                    RECT Rectangle1-Tmp $styles.default ( 408.5 395.5 ) 219 f1iter.value            
+                    APP Rectangle1.objects Rectangle1-Tmp
+                    LOAD Rectangle1-Prev Rectangle1-Tmp
+                    NEXT f1iter
+                LOOPF1:
+                @BODY    @REPLACE Rectangle1-Tmp Box1
+                    RECT Rectangle1-Tmp $styles.default ( 408.5 395.5 ) 219 f1iter.value
+                    MOVE Rectangle1-Tmp "bottom" Rectangle1-Prev "top"                          @REPLACE Rectangle1-Prev Previous
+                    LOAD r1 r2                                                                  @REPLACE r2 renault
+                @ENDBODY
+                    LOAD Rectangle1-Prev Rectangle1-Tmp
+                    APP Rectangle1.objects Rectangle1-Tmp
+                    NEXT f1iter
+                    JINE f1iter LOOPF1
+                @ENDEACH
+                    APP $drawing Rectangle1                @HIDE
            `;
 
             const m = new CodeManager();
@@ -359,9 +360,9 @@ describe('Code manager', () => {
 
             expect(annotated).to.deep.equal([
                 { originalLine: 0, code: "@EACH f1" },
-                { originalLine: 8, code: "RECT Rectangle1 $styles.default ( 360 277.5 ) 218 f1" },
-                { originalLine: 9, code: 'MOVE Rectangle1 "bottom" Rectangle1-Prev "top"' },
-                { originalLine: 10, code: "LOAD r1 200" },
+                { originalLine: 9, code: "RECT Box1 $styles.default ( 408.5 395.5 ) 219 f1" },
+                { originalLine: 10, code: 'MOVE Box1 "bottom" Previous "top"' },
+                { originalLine: 11, code: "LOAD r1 renault" },
                 { originalLine: 17, code: "@ENDEACH" }
             ])
 

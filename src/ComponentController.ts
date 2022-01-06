@@ -9,6 +9,7 @@ import {AddStatement} from "./controller/actions/AddStatement";
 import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
+import {AppModel} from "./model/AppModel";
 
 export class ComponentController extends BaseComponentController {
     private readonly _component: Component;
@@ -89,7 +90,7 @@ export class ComponentController extends BaseComponentController {
         });
     }
 
-    getAppModel(): JSONModelAccess {
+    getAppModel(): AppModel {
         return this._component.getAppModel();
     }
 

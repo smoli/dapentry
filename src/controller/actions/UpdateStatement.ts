@@ -2,6 +2,7 @@ import Component from "../../Component";
 import {Parser, TokenTypes} from "../../runtime/interpreter/Parser";
 import {BaseAction} from "./BaseAction";
 import {CodeManager} from "../../runtime/CodeManager";
+import {data} from "jquery";
 
 export class UpdateStatement extends BaseAction {
     private readonly _newValue: string;
@@ -9,7 +10,7 @@ export class UpdateStatement extends BaseAction {
     private readonly _tokenIndex: number;
     private readonly _tokenSubIndex: number;
 
-    constructor(component: Component, _statementIndex: number, tokenIndex:number, tokenSubIndex:number, newValue: string) {
+    constructor(component: Component, _statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
         super(component);
         this._newValue = newValue;
         this._statementIndex = _statementIndex;
@@ -18,12 +19,13 @@ export class UpdateStatement extends BaseAction {
     }
 
 
-    replace(codeManager:CodeManager, reg: string, argumentToReplace: number, dataName: string):Array<string> {
+    replace(codeManager: CodeManager, reg: string, argumentToReplace: number, dataName: string): Array<string> {
         let index: number = codeManager.getCreationStatement(reg);
         const original = codeManager.code[index];
         const tokens = Parser.parseLine(original);
 
-        const tempRegName = codeManager.makeUniqueRegisterName(reg + "Lpd");
+        const prevRegName = codeManager.makeUniqueRegisterName(reg + "-Prev");
+        const tempRegName = codeManager.makeUniqueRegisterName(reg + "-Tmp");
         const iteratorName = codeManager.makeUniqueRegisterName(dataName + "iter");
 
         for (const t of tokens) {
@@ -34,18 +36,30 @@ export class UpdateStatement extends BaseAction {
 
         const newStatements = [];
 
+        newStatements.push("@EACH " + dataName + ` @REPLACE ${tempRegName} ${reg} @REPLACE ${iteratorName}.value ${dataName}`);
         tokens[argumentToReplace].value = iteratorName + ".value";
-        const newCodeLine = Parser.constructCodeLine(tokens);
+        const updatedCodeLine = Parser.constructCodeLine(tokens);
 
         newStatements.push(`ITER ${iteratorName} ${dataName}`);
         newStatements.push(`OBLIST ${reg}`);
 
+        newStatements.push(updatedCodeLine);
+        newStatements.push(`APP ${reg}.objects ${tempRegName}`);
+        newStatements.push(`LOAD ${prevRegName} ${tempRegName}`);
+        newStatements.push(`NEXT ${iteratorName}`);
+
         const labelName = codeManager.makeUniqueLabelName("LOOP" + dataName.toUpperCase());
         newStatements.push(`${labelName}:`);
-        newStatements.push(newCodeLine);
+
+        newStatements.push("@BODY");
+        newStatements.push(updatedCodeLine);
+        newStatements.push("@ENDBODY");
+
+        newStatements.push(`LOAD ${prevRegName} ${tempRegName}`);
         newStatements.push(`APP ${reg}.objects ${tempRegName}`);
         newStatements.push(`NEXT ${iteratorName}`);
         newStatements.push(`JINE ${iteratorName} ${labelName}`);
+        newStatements.push("@ENDEACH");
 
         console.log(codeManager.code.join("\n"));
 
@@ -61,7 +75,7 @@ export class UpdateStatement extends BaseAction {
             token = token.value[this._tokenSubIndex];
         }
 
-        let newStatements:string[] = [];
+        let newStatements: string[] = [];
 
         if (this._newValue.match(/^"[^"]*"$/)) { // String literal
             token.value = this._newValue;
@@ -88,22 +102,7 @@ export class UpdateStatement extends BaseAction {
         }
 
         if (newStatements.length) {
-            this.component.getCodeManager().removeStatement(this._statementIndex);
-            newStatements.forEach((statement, i) => {
-                this.component.getCodeManager().insertStatement(statement, this._statementIndex + i);
-            })
-            this.appModel.remove(this._statementIndex).from("segmentedCode");
-            this.appModel
-                .insert(...newStatements.map((s, i) => {
-                    return {
-                        index: this._statementIndex + i,
-                        tokens: Parser.parseLine(s)
-                    }
-                }))
-                .into("segmentedCode")
-                .at(this._statementIndex)
-
-            this.appModel.set("codeString").to(this.component.getCodeManager().code.join("\n"));
+            this.appModel.replaceStatement(this._statementIndex, newStatements);
         }
 
 

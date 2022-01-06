@@ -51,7 +51,7 @@ export default class Component extends UIComponent {
             selection: []
         });
         this.setModel(appModel, "appModel");
-        this._appModel = new AppModel(appModel);
+        this._appModel = new AppModel(appModel, this._codeManager);
 
         this._appController = new ComponentController(this);
     }

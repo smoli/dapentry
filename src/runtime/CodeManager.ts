@@ -1,5 +1,6 @@
 import {Parser, Token, TokenTypes} from "./interpreter/Parser";
 import {StateMachine} from "./tools/StateMachine";
+import {Stack} from "./tools/Stack";
 
 
 export type TokenList = Array<Token>;
@@ -160,12 +161,13 @@ export class CodeManager {
         return this._code.map(c => c);
     }
 
-    get annotatedCode(): Array<string> {
+    get annotatedCode(): Array<{ originalLine:number, code:string }> {
 
         const ret = [];
-        const blockStack = [];
+        const blockStack = new Stack<{ code: string, replaces: Array<Token>}>();
 
         const find = (tokens, value) => tokens.find(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
+        const findAll = (tokens, value) => tokens.filter(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
 
         let originalLine = -1;
         for (const codeLine of this._code) {
@@ -179,7 +181,7 @@ export class CodeManager {
 
             const body = find(tokens, "BODY");
             if (body) {
-                blockStack.push({ originalLine, code: "BODY" });
+                blockStack.push({ code: "BODY", replaces: findAll(tokens, "REPLACE") });
                 continue;
             }
 
@@ -191,14 +193,14 @@ export class CodeManager {
                 continue;
             }
 
-            if (blockStack[blockStack.length - 1] === "EACH") {
+            if (blockStack.length && blockStack.top.code === "EACH") {
                 continue;
             }
 
             const each = find(tokens, "EACH");
             if (each) {
                 ret.push({ originalLine, code: "@EACH " + each.args.join(" ") });
-                blockStack.push("EACH");
+                blockStack.push({ code: "EACH", replaces: findAll(tokens, "REPLACE") });
                 continue;
             }
 
@@ -214,6 +216,16 @@ export class CodeManager {
             for (const t of tokens) {
                 if (t.type === TokenTypes.ANNOTATION) {
                     if (t.value === "REPLACE") {
+                        newLine = newLine.replace(t.args[0], t.args[1])
+                    }
+                }
+            }
+
+            if (blockStack.length) {
+                let l = blockStack.length;
+
+                while(l--) {
+                    for (const t of blockStack[l].replaces) {
                         newLine = newLine.replace(t.args[0], t.args[1])
                     }
                 }
