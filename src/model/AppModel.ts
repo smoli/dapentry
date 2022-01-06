@@ -1,13 +1,22 @@
 import {JSONModelAccess} from "../JSONModelAccess";
 import {Parser, TokenTypes} from "../runtime/interpreter/Parser";
+import {CodeManager} from "../runtime/CodeManager";
 
 export class AppModel extends JSONModelAccess {
 
-    constructor(model) {
+    private _codeManager: CodeManager;
+
+    constructor(model, codeManager:CodeManager) {
         super(model);
+        this._codeManager = codeManager;
+    }
+
+    get codeManager(): CodeManager {
+        return this._codeManager;
     }
 
     addStatement(code: string) {
+        this.codeManager.addCodeString(code);
         const index = this.get("segmentedCode").length;
         const tokens = Parser.parseLine(code);
         this.push({
