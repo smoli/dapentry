@@ -235,6 +235,10 @@ export class Interpreter {
                     (token.value as Array<any>).map(token => this.makeParameter(token))
                 )
 
+            case TokenTypes.ANNOTATION:
+                // Annotations are ignored for execution
+                break;
+
             case TokenTypes.OTHER:
                 break;
         }

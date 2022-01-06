@@ -73,4 +73,20 @@ describe('Interpreter', () => {
 
     });
 
+    it("ignores annotations in code", async () => {
+       const code = `
+                LOAD r1 200  @A1
+                LOAD r2 pc   @lkjh @lkjh 
+                DEC r1       @KJHGlkj123
+       `
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(199);
+        expect(i.getRegister("r2")).to.equal(1)
+
+    });
+
 });
