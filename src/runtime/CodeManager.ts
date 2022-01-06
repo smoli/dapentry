@@ -1,4 +1,5 @@
 import {Parser, Token, TokenTypes} from "./interpreter/Parser";
+import {StateMachine} from "./tools/StateMachine";
 
 
 export type TokenList = Array<Token>;
@@ -9,7 +10,6 @@ export type TokenList = Array<Token>;
  * the register has to be.
  */
 export type CreationInfo = { [key: string]: number }
-
 
 /**
  * The Code Manager provides means to create and manipulate code and
@@ -22,6 +22,7 @@ export class CodeManager {
     private _registers: string[];
     private _labels: string[];
     private _creationOpcodes: CreationInfo;
+    private _state: StateMachine;
 
 
     constructor(creationOpcodes: CreationInfo = {"LOAD": 1}) {
@@ -29,6 +30,7 @@ export class CodeManager {
         this._registers = [];
         this._labels = [];
         this._creationOpcodes = creationOpcodes;
+        this._state = new StateMachine();
     }
 
     /**
@@ -156,6 +158,72 @@ export class CodeManager {
      */
     get code(): Array<string> {
         return this._code.map(c => c);
+    }
+
+    get annotatedCode(): Array<string> {
+
+        const ret = [];
+        const blockStack = [];
+
+        const find = (tokens, value) => tokens.find(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
+
+        let originalLine = -1;
+        for (const codeLine of this._code) {
+            originalLine++;
+            const tokens = Parser.parseLine(codeLine);
+
+            if (!!find(tokens, "HIDE")) {
+                continue;
+            }
+
+
+            const body = find(tokens, "BODY");
+            if (body) {
+                blockStack.push({ originalLine, code: "BODY" });
+                continue;
+            }
+
+
+            const endeach = find(tokens, "ENDEACH");
+            if (endeach) {
+                blockStack.pop();
+                ret.push({ originalLine, code: "@ENDEACH"});
+                continue;
+            }
+
+            if (blockStack[blockStack.length - 1] === "EACH") {
+                continue;
+            }
+
+            const each = find(tokens, "EACH");
+            if (each) {
+                ret.push({ originalLine, code: "@EACH " + each.args.join(" ") });
+                blockStack.push("EACH");
+                continue;
+            }
+
+
+            const endbody = find(tokens, "ENDBODY");
+            if (endbody) {
+                blockStack.pop();
+                continue;
+            }
+
+            let newLine = codeLine.split("@")[0].trim();
+
+            for (const t of tokens) {
+                if (t.type === TokenTypes.ANNOTATION) {
+                    if (t.value === "REPLACE") {
+                        newLine = newLine.replace(t.args[0], t.args[1])
+                    }
+                }
+            }
+
+
+            ret.push({ originalLine, code: newLine});
+        }
+
+        return ret;
     }
 
     /**

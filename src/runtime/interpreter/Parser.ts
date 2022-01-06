@@ -4,6 +4,7 @@ export {TokenTypes} from "./TokenTypes";
 export interface Token {
     type: TokenTypes,
     value: number | string | Array<any>
+    args?: Array<string>
 }
 
 export class Parser {

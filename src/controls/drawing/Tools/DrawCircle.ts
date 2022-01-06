@@ -61,6 +61,6 @@ export class DrawCircle extends Tool {
     public get result(): any {
         return [
             `CIRCLE ${this._circle.name} $styles.default (${this._circle.x} ${this._circle.y}) ${this._circle.radius}`,
-            `APP $drawing ${this._circle.name}`]
+            `APP $drawing ${this._circle.name}              @HIDE`]
     }
 }

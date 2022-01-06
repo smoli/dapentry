@@ -12,13 +12,6 @@ export class AddStatement extends BaseAction {
 
     perform() {
         this.component.getCodeManager().addStatement(this._statement);
-        const index = this.component.getCodeManager().code.length - 1;
-        const tokens = Parser.parseLine(this._statement);
-        this.appModel.push({index, tokens}).to("segmentedCode")
-
-        const codeString = this.appModel.get("codeString");
-        this.appModel.set("codeString").to(codeString + "\n" + this._statement);
-
-        return null;
+        this.appModel.addStatement(this._statement);
     }
 }

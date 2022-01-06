@@ -284,9 +284,93 @@ describe('Code manager', () => {
 
     });
 
+    describe("by analyzing code annotations", () => {
+
+        it("unannotated lines stay untouched", () => {
+            const m = new CodeManager();
+
+            const code = `
+                LOAD r1 20
+                LOAD r2 r1
+                LOAD lkjh ( r1 10 )
+                LOAD TESTtestTEST [ r1 lkjh 10 10 20 r1 220 r2 ]
+                ADD r2 r2 r1
+                ITER iter TESTtestTEST
+            `;
+
+            m.addCodeString(code);
+
+            expect(m.annotatedCode).to.deep.equal([
+                { originalLine: 0, code: "LOAD r1 20" },
+                { originalLine: 1, code: "LOAD r2 r1" },
+                { originalLine: 2, code: "LOAD lkjh ( r1 10 )" },
+                { originalLine: 3, code: "LOAD TESTtestTEST [ r1 lkjh 10 10 20 r1 220 r2 ]" },
+                { originalLine: 4, code: "ADD r2 r2 r1" },
+                { originalLine: 5, code: "ITER iter TESTtestTEST" }
+            ]);
+        });
+
+        it("can hide statements", () => {
+
+            const code = `
+                RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value
+                APP Rectangle1.objects Rectangle1-Prev                              @HIDE
+                LOAD r1 200
+            `;
+
+            const m = new CodeManager();
+            m.addCodeString(code);
+
+            const annotated = m.annotatedCode;
+
+            expect(annotated).to.deep.equal([
+                { originalLine: 0, code: "RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value" },
+                { originalLine: 2, code: "LOAD r1 200" }
+            ]);
+
+        });
+
+        it("can create blocks", () => {
+            const code = `
+            @EACH f1
+                ITER f1iter f1                                                        
+                OBLIST Rectangle1
+                RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value
+                APP Rectangle1.objects Rectangle1-Prev
+                NEXT f1iter
+            LOOPF1:
+            @BODY
+                RECT Rectangle1Lpd $styles.default ( 360 277.5 ) 218 f1iter.value     @REPLACE Rectangle1Lpd Rectangle1 @REPLACE f1iter.value f1
+                MOVE Rectangle1Lpd "bottom" Rectangle1-Prev "top"                     @REPLACE Rectangle1Lpd Rectangle1 @REPLACE f1iter.value f1
+                LOAD r1 200
+            @ENDBODY
+                APP Rectangle1.objects Rectangle1Lpd
+                LOAD Rectangle1-Prev Rectangle1Lpd
+                NEXT f1iter
+                JINE f1iter LOOPF1
+                APP $drawing Rectangle1                                               
+            @ENDEACH
+           `;
+
+            const m = new CodeManager();
+            m.addCodeString(code);
+
+            const annotated = m.annotatedCode;
+
+            expect(annotated).to.deep.equal([
+                { originalLine: 0, code: "@EACH f1" },
+                { originalLine: 8, code: "RECT Rectangle1 $styles.default ( 360 277.5 ) 218 f1" },
+                { originalLine: 9, code: 'MOVE Rectangle1 "bottom" Rectangle1-Prev "top"' },
+                { originalLine: 10, code: "LOAD r1 200" },
+                { originalLine: 17, code: "@ENDEACH" }
+            ])
+
+        })
+    });
+
 
     it("can be used to replace a statement with a complex block of statements", async () => {
-        const m = new CodeManager({ LOAD: 1, ADD: 1 });
+        const m = new CodeManager({LOAD: 1, ADD: 1});
         const code = `
                 LOAD globalResult [ ]
                 LOAD data [ 1 2 3 4 ]

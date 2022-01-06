@@ -3,11 +3,18 @@
     "**/*.d.ts"
   ],
   "presets": [
-    ["transform-ui5", {
-      "modulesMap": {}
-    }
+    [
+      "transform-ui5",
+      {
+        "modulesMap": {}
+      }
     ],
-    "@babel/typescript"
+    [
+      "@babel/typescript",
+      {
+        "module": "commonjs"
+      }
+    ]
   ],
   "plugins": [
     "babel-plugin-transform-async-to-promises",
