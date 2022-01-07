@@ -71,6 +71,7 @@ export abstract class GrObject{
     private static _pool: {[key:string]:GrObject} = {}
 
     private _name:string;
+    protected _parent:GrObject = null;
     protected _center:Point2D;
     protected _xAxis:Point2D = new Point2D(1, 0);
     protected _yAxis: Point2D = new Point2D(0, 1);
@@ -79,6 +80,7 @@ export abstract class GrObject{
     private _rotation:number = 0;
     private _style:Style = null;
     private _instanceCount = GrObject._instanceCounter++;
+
 
     private readonly _type:ObjectType;
 
@@ -106,6 +108,14 @@ export abstract class GrObject{
     protected static setPoolInstance(object:GrObject):GrObject {
         GrObject._pool[object.name] = object;
         return object;
+    }
+
+    public setParent(value: GrObject) {
+        this._parent = value;
+    }
+
+    public get parent():GrObject {
+        return this._parent;
     }
 
     get instanceCount(): number {

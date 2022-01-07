@@ -6,7 +6,7 @@ import {GrObjectList} from "../../controls/drawing/Objects/GrObjectList";
 
 export class GfxOperation extends Operation {
 
-    private readonly _target: Parameter;
+    protected readonly _target: Parameter;
 
     constructor(opcode: string, objectOrTarget: Parameter) {
         super(opcode);
@@ -26,9 +26,9 @@ export class GfxOperation extends Operation {
             if (!(this.target as any instanceof GrObjectList)) {
                 const oldValue = this.target;
                 this._setParam(this._target, new GrObjectList(this.targetName));
-                (this.target as GrObjectList).objects.push(oldValue);
+                (this.target as GrObjectList).addObject(oldValue);
             }
-            (this.target as GrObjectList).objects.push(value);
+            (this.target as GrObjectList).addObject(value);
         } else {
             this._setParam(this._target, value);
         }

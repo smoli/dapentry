@@ -45,7 +45,7 @@ export default class Component extends UIComponent {
             codeString: "",
             segmentedCode: [],
             selectedCodeLine: null,
-            data: [],
+            data: [ { name: "f1", value: [10, 20, 50, 100, 150] }],
             drawing: [],
             poi: [],
             selection: []

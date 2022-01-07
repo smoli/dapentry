@@ -33,4 +33,9 @@ export class GrObjectList extends GrObject {
     get objects(): Array<GrObject> {
         return this._objects;
     }
+
+    addObject(object:GrObject) {
+        this._objects.push(object);
+        object.setParent(this);
+    }
 }
