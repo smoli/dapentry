@@ -10,6 +10,7 @@ import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
 import {AppModel} from "./model/AppModel";
+import {Token} from "./runtime/interpreter/Parser";
 
 export class ComponentController extends BaseComponentController {
     private readonly _component: Component;
@@ -32,7 +33,7 @@ export class ComponentController extends BaseComponentController {
      * @protected
      */
     protected updateDrawing(clearAllFirst: boolean = false) {
-        this._drawing.setObjects(this.getAppModel().get("drawing"));
+        this._drawing.setObjects(this._interpreter.objects);
         this._drawing.update(clearAllFirst);
     }
 
@@ -58,12 +59,17 @@ export class ComponentController extends BaseComponentController {
     }
 
 
-    public setSelectedCodeLine(line?) {
+    public setSelectedCodeLine(line?:{ index: number, tokens: Array<Token>}) {
         if (!line) {
             this.getAppModel().set("selectedCodeLine").to(null);
+            this._interpreter.clearHaltAfter()
         } else {
             this.getAppModel().set("selectedCodeLine").to(line);
+            this._interpreter.haltAfter(line.index);
         }
+        this.runCode().then(() => {
+            this.updateDrawing();
+        });
     }
 
     protected getDataFromDataFields() {
@@ -79,11 +85,10 @@ export class ComponentController extends BaseComponentController {
 
 
     protected async runCode(): Promise<any> {
-        this.getAppModel().set("drawing").to([]);
+        this._interpreter.clearObjects();
         const data = this.getDataFromDataFields();
         this._interpreter.parse(this._component.getCodeManager().code);
         return this._interpreter.run({
-            "$drawing": this.getAppModel().get("drawing"),
             "$styles": this._styleManager.styles,
             "$lastObject": null,
             ...data

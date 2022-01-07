@@ -4,18 +4,19 @@ import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
 import {GrCircle} from "../../controls/drawing/Objects/GrCircle";
 import {Point2D} from "../../controls/drawing/Objects/GeoMath";
+import {GrObjectList} from "../../controls/drawing/Objects/GrObjectList";
 
 export class GfxCircle extends GfxObject {
     private readonly _center: Point2Parameter;
     private readonly _radius: Parameter;
 
-    constructor(opcode:string, target:Parameter, style:Parameter, center:Point2Parameter, radius:Parameter) {
+    constructor(opcode: string, target: Parameter, style: Parameter, center: Point2Parameter, radius: Parameter) {
         super(opcode, target, style);
         this._center = center;
         this._radius = radius;
     }
 
-    get center():Point2D {
+    get center(): Point2D {
         return this._center.finalized(this.closure);
     }
 
@@ -23,7 +24,7 @@ export class GfxCircle extends GfxObject {
         this._setParam(this._center, value)
     }
 
-    get radius():number {
+    get radius(): number {
         return this._radius.finalized(this.closure);
     }
 

@@ -75,6 +75,16 @@ export class CodeManager {
     }
 
     /**
+     * Insert a statement after the given index.
+     * @param statement
+     * @param afterIndex
+     */
+    insertStatementAfter(statement: string, afterIndex: number) {
+        this._code.splice(afterIndex + 1, 0, statement);
+        this.memorizeRegistersAndLabels(statement);
+    }
+
+    /**
      * Remove a statement from the given position.
      * @param index
      */
@@ -175,6 +185,9 @@ export class CodeManager {
             const tokens = Parser.parseLine(codeLine);
 
             if (!!find(tokens, "HIDE")) {
+                if (ret.length) {
+                    ret[ret.length - 1].originalLine ++;
+                }
                 continue;
             }
 

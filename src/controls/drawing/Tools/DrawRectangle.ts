@@ -79,10 +79,7 @@ export class DrawRectangle extends Tool {
     }
 
     public get result(): any {
-        return [
-            `RECT ${this._rect.name} $styles.default (${this._rect.x} ${this._rect.y}) ${this._rect.width} ${this._rect.height}`,
-            `APP $drawing ${this._rect.name}                @HIDE`
-        ]
+        return `RECT ${this._rect.name} $styles.default (${this._rect.x} ${this._rect.y}) ${this._rect.width} ${this._rect.height}`;
     }
 
 }

@@ -69,6 +69,28 @@ describe('Code manager', () => {
             "ADD r1 23",
             "LOAD r2 r1",
         ]);
+    });
+
+    it('can insert a code line after', () => {
+        const m = new CodeManager();
+        const code = `
+            LOAD r1 23
+            ADD r1 23
+            LOAD r2 r1           
+        `;
+
+        m.addCodeString(code);
+
+        expect(m.code.length).to.equal(3);
+
+        m.insertStatementAfter("ADD r3 r1 10", 1);
+        expect(m.code.length).to.equal(4);
+        expect(m.code).to.deep.equal([
+            "LOAD r1 23",
+            "ADD r1 23",
+            "ADD r3 r1 10",
+            "LOAD r2 r1",
+        ]);
     })
 
     it('can remove a code line', () => {
@@ -324,7 +346,7 @@ describe('Code manager', () => {
             const annotated = m.annotatedCode;
 
             expect(annotated).to.deep.equal([
-                { originalLine: 0, code: "RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value" },
+                { originalLine: 1, code: "RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value" },
                 { originalLine: 2, code: "LOAD r1 200" }
             ]);
 
@@ -363,7 +385,7 @@ describe('Code manager', () => {
                 { originalLine: 9, code: "RECT Box1 $styles.default ( 408.5 395.5 ) 219 f1" },
                 { originalLine: 10, code: 'MOVE Box1 "bottom" Previous "top"' },
                 { originalLine: 11, code: "LOAD r1 renault" },
-                { originalLine: 17, code: "@ENDEACH" }
+                { originalLine: 18, code: "@ENDEACH" }
             ])
 
         })

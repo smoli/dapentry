@@ -66,10 +66,7 @@ export class DrawLine extends Tool {
         const x2 = this._line.x2;
         const y2 = this._line.y2;
 
-        return [
-            `LINE ${this._line.name} $styles.default (${x1} ${y1}) (${x2} ${y2})`,
-            `APP $drawing ${this._line.name}                @HIDE`
-            ]
+        return [`LINE ${this._line.name} $styles.default (${x1} ${y1}) (${x2} ${y2})`]
 
     }
 }

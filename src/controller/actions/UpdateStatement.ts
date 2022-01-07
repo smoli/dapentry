@@ -24,39 +24,28 @@ export class UpdateStatement extends BaseAction {
         const original = codeManager.code[index];
         const tokens = Parser.parseLine(original);
 
-        const prevRegName = codeManager.makeUniqueRegisterName(reg + "-Prev");
-        const tempRegName = codeManager.makeUniqueRegisterName(reg + "-Tmp");
         const iteratorName = codeManager.makeUniqueRegisterName(dataName + "iter");
 
-        for (const t of tokens) {
-            if (t.type === TokenTypes.REGISTER && t.value === reg) {
-                t.value = tempRegName;
-            }
-        }
 
         const newStatements = [];
 
-        newStatements.push("@EACH " + dataName + ` @REPLACE ${tempRegName} ${reg} @REPLACE ${iteratorName}.value ${dataName}`);
+        newStatements.push("@EACH " + dataName + ` ${iteratorName}.value ${dataName}`);
         tokens[argumentToReplace].value = iteratorName + ".value";
-        const updatedCodeLine = Parser.constructCodeLine(tokens);
+        const newCreationStatement = Parser.constructCodeLine(tokens);
+
 
         newStatements.push(`ITER ${iteratorName} ${dataName}`);
-        newStatements.push(`OBLIST ${reg}`);
 
-        newStatements.push(updatedCodeLine);
-        newStatements.push(`APP ${reg}.objects ${tempRegName}`);
-        newStatements.push(`LOAD ${prevRegName} ${tempRegName}`);
+        newStatements.push(newCreationStatement);
         newStatements.push(`NEXT ${iteratorName}`);
 
         const labelName = codeManager.makeUniqueLabelName("LOOP" + dataName.toUpperCase());
         newStatements.push(`${labelName}:`);
 
         newStatements.push("@BODY");
-        newStatements.push(updatedCodeLine);
+        newStatements.push(newCreationStatement);
         newStatements.push("@ENDBODY");
 
-        newStatements.push(`LOAD ${prevRegName} ${tempRegName}`);
-        newStatements.push(`APP ${reg}.objects ${tempRegName}`);
         newStatements.push(`NEXT ${iteratorName}`);
         newStatements.push(`JINE ${iteratorName} ${labelName}`);
         newStatements.push("@ENDEACH");

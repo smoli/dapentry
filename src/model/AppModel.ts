@@ -5,10 +5,12 @@ import {Parser} from "../runtime/interpreter/Parser";
 export class AppModel extends JSONModelAccess {
 
     private readonly _codeManager: CodeManager;
+    private _haltIndex: number;
 
-    constructor(model, codeManager:CodeManager) {
+    constructor(model, codeManager: CodeManager) {
         super(model);
         this._codeManager = codeManager;
+        this._codeManager.clear();
     }
 
     get codeManager(): CodeManager {
@@ -32,6 +34,7 @@ export class AppModel extends JSONModelAccess {
         this.set("codeString").to(this._codeManager.code.join("\n"));
     }
 
+
     addStatement(code: string) {
         this.codeManager.addStatement(code);
         this.updateSegmentedCode();
@@ -51,7 +54,7 @@ export class AppModel extends JSONModelAccess {
         this.updateCodeString();
     }
 
-    replaceStatement(indexToReplace:number, newStatements:(string|Array<string>)) {
+    replaceStatement(indexToReplace: number, newStatements: (string | Array<string>)) {
         let first;
         if (Array.isArray(newStatements)) {
             first = newStatements[0]
