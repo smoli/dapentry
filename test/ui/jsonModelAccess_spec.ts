@@ -22,9 +22,8 @@ class MockJSONModel {
             return null;
         }
         const parts = path.split("/");
-        if (path[0] === "/") {
-            parts.shift();
-        }
+        // Remove the leading /
+        parts.shift();
 
         return parts;
     }

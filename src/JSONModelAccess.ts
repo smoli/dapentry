@@ -45,7 +45,7 @@ export class JSONModelAccess {
             if (typeof p === "string" || typeof p === "number") {
                 pathParts.push(p);
             } else if (typeof p === "function") {
-                const tmpPath = pathParts.join("/");
+                const tmpPath = "/" + pathParts.join("/");
 
                 const arrOrObj = this._model.getProperty(tmpPath);
 
