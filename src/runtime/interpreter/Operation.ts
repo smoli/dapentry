@@ -19,6 +19,10 @@ export class Operation {
         return this._closure;
     }
 
+    get opcode(): string {
+        return this._opcode;
+    }
+
 
     protected _getParam(param) {
         if (param.isRegister) {

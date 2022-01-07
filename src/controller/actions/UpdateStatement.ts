@@ -26,10 +26,9 @@ export class UpdateStatement extends BaseAction {
 
         const iteratorName = codeManager.makeUniqueRegisterName(dataName + "iter");
 
-
         const newStatements = [];
 
-        newStatements.push("@EACH " + dataName + ` ${iteratorName}.value ${dataName}`);
+        newStatements.push("@EACH " + dataName + `@REPLACE ${iteratorName}.value ${dataName}`);
         tokens[argumentToReplace].value = iteratorName + ".value";
         const newCreationStatement = Parser.constructCodeLine(tokens);
 

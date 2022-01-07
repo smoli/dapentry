@@ -171,6 +171,13 @@ export class CodeManager {
         return this._code.map(c => c);
     }
 
+
+    /**
+     * Apply annotations to code
+     *
+     * TODO: This is a hacky implementation that breaks if you don't
+     *       apply annotations the way they are expected
+     */
     get annotatedCode(): Array<{ originalLine:number, code:string }> {
 
         const ret = [];
@@ -185,9 +192,6 @@ export class CodeManager {
             const tokens = Parser.parseLine(codeLine);
 
             if (!!find(tokens, "HIDE")) {
-                if (ret.length) {
-                    ret[ret.length - 1].originalLine ++;
-                }
                 continue;
             }
 
@@ -195,6 +199,7 @@ export class CodeManager {
             const body = find(tokens, "BODY");
             if (body) {
                 blockStack.push({ code: "BODY", replaces: findAll(tokens, "REPLACE") });
+                originalLine--;
                 continue;
             }
 
@@ -203,6 +208,7 @@ export class CodeManager {
             if (endeach) {
                 blockStack.pop();
                 ret.push({ originalLine, code: "@ENDEACH"});
+                originalLine--;
                 continue;
             }
 
@@ -214,6 +220,7 @@ export class CodeManager {
             if (each) {
                 ret.push({ originalLine, code: "@EACH " + each.args.join(" ") });
                 blockStack.push({ code: "EACH", replaces: findAll(tokens, "REPLACE") });
+                originalLine--;
                 continue;
             }
 
@@ -221,8 +228,12 @@ export class CodeManager {
             const endbody = find(tokens, "ENDBODY");
             if (endbody) {
                 blockStack.pop();
+                originalLine--;
                 continue;
             }
+
+            // Here we have an actual code statement
+
 
             let newLine = codeLine.split("@")[0].trim();
 

@@ -177,11 +177,14 @@ export class Interpreter {
                 programCounter++;
 
                 if(programCounter >= this._program.length || programCounter > this._haltAt) {
+                    console.log("halted at", programCounter);
+
                     break;
                 }
 
                 this._globals.setPC(programCounter);
                 this._currentInstruction = this._program[programCounter];
+                console.log(programCounter, this._currentInstruction.opcode)
                 this._currentInstruction.setClosure(this._currentFrame);
                 await this._currentInstruction.execute(this);
 
