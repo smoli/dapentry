@@ -154,7 +154,7 @@ export class MoveTool extends Tool {
         const dx = poi.x - this._ox;
         const dy = poi.y - this._oy;
 
-        if (dx !== 0 && dy !== 0) {
+        if (dx !== 0 || dy !== 0) {
             if (this._snappingObject) {
                 return `MOVE ${this._object.name} "${POI[this._movingPOI]}" ${this._snappingObject.name} "${POI[this._snappingPOI]}"`
             } else {
