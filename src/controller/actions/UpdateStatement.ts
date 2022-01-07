@@ -35,8 +35,8 @@ export class UpdateStatement extends BaseAction {
 
         newStatements.push(`ITER ${iteratorName} ${dataName}`);
 
-        newStatements.push(newCreationStatement);
-        newStatements.push(`NEXT ${iteratorName}`);
+        // newStatements.push(newCreationStatement);
+        // newStatements.push(`NEXT ${iteratorName}`);
 
         const labelName = codeManager.makeUniqueLabelName("LOOP" + dataName.toUpperCase());
         newStatements.push(`${labelName}:`);

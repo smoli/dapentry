@@ -1,4 +1,4 @@
-import {GrObject, ObjectType} from "./GrObject";
+import {GrObject, ObjectType, POIMap} from "./GrObject";
 
 class ObjectArray extends Array<GrObject> {
     private _baseName: string;
@@ -17,6 +17,13 @@ class ObjectArray extends Array<GrObject> {
             obj.name = this._baseName + "-" + (index + i);
         })
         return r;
+    }
+
+    get last():GrObject {
+        if (this.length) {
+            return this[this.length - 1];
+        }
+        return undefined;
     }
 }
 
@@ -37,5 +44,12 @@ export class GrObjectList extends GrObject {
     addObject(object:GrObject) {
         this._objects.push(object);
         object.setParent(this);
+    }
+
+    get pointsOfInterest(): POIMap {
+        if (this._objects.last) {
+            return this._objects.last.pointsOfInterest;
+        }
+        return {};
     }
 }

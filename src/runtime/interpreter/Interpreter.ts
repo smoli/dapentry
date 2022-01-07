@@ -42,6 +42,7 @@ export class Interpreter {
     private _globals: GlobalStackFrame = new GlobalStackFrame();
     private _labels: { [key: string]: number } = {};
     private _haltAt: number = Number.MAX_SAFE_INTEGER;
+    private _haltAtAfterIterations: number;
 
 
     constructor() {
@@ -131,8 +132,9 @@ export class Interpreter {
         this._labels[labelName] = this.pc;
     }
 
-    public haltAfter(pc: number) {
+    public haltAfter(pc: number, iterations: number = 1) {
         this._haltAt = pc;
+        this._haltAtAfterIterations = iterations;
     }
 
     public clearHaltAfter() {
@@ -170,12 +172,17 @@ export class Interpreter {
     }
 
     public async _run(): Promise<any> {
+        let haltIterations = this._haltAtAfterIterations;
         try {
             while (true) {
                 let programCounter = this._globals.getPC();
                 programCounter++;
 
-                if (programCounter >= this._program.length || programCounter > this._haltAt) {
+                if (programCounter == this._haltAt) {
+                    haltIterations--;
+                }
+
+                if (programCounter >= this._program.length) {
                     break;
                 }
 
@@ -188,6 +195,9 @@ export class Interpreter {
                     if (this._stopped) {
                         return false;
                     }
+                }
+                if (haltIterations === 0) {
+                    break;
                 }
             }
         } catch (e) {

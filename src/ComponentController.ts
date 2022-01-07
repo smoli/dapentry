@@ -30,7 +30,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter();
-        this.preloadDemoCode();
+        // this.preloadDemoCode();
     }
 
     /**
@@ -74,7 +74,21 @@ export class ComponentController extends BaseComponentController {
             this.getAppModel().set("segmentedCode", c => c.index === index, "selected").to(true);
             const line = this.getAppModel().get("segmentedCode", c => c.index === index);
             this.getAppModel().set("selectedCodeLine").to(line);
-            this._interpreter.haltAfter(index);
+
+            const code = this.getAppModel().get("segmentedCode");
+            let inEach = false;
+            let i = code.findIndex(c => c.index === index);
+            while(i--) {
+                if (code[i].tokens[0].value === "EACH") {
+                    inEach = true;
+                    break;
+                }
+                if (code[i].tokens[0].value === "ENDEACH") {
+                    break;
+                }
+            }
+
+            this._interpreter.haltAfter(index, inEach ? 2 : 1);
         }
         this.runCode().then(() => {
             this.updateDrawing();

@@ -37,9 +37,16 @@ export class GfxMove extends GfxOperation {
         if (this._targetObject) {
             let o1 = this.target;
             let o2 = this.targetObject;
-            if (this.target === this.targetObject && this.target instanceof GrObjectList) {
-                o1 = this.target.objects[this.target.objects.length - 1];
-                o2 = this.target.objects[this.target.objects.length - 2];
+            if (this.target === this.targetObject) {
+                if (this.target instanceof GrObjectList) {
+                    o1 = this.target.objects[this.target.objects.length - 1];
+                    o2 = this.target.objects[this.target.objects.length - 2];
+                } else {
+                    // This is a move operation that moves the same object upon a poi in itself.
+                    // We're at the first iteration of a loop and ignore that move.
+                    // TODO: Is this the correct approach?
+                    return { x: 0, y: 0 }
+                }
             }
             const p = o1.pointsOfInterest[this.poi];
             const t = o2.pointsOfInterest[this.targetPoi];
