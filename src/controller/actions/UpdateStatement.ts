@@ -74,7 +74,7 @@ export class UpdateStatement extends BaseAction {
             token.type = TokenTypes.NUMBER;
             newStatements.push(Parser.constructCodeLine(tokens));
         } else { // Maybe a register name from data
-            const dataValue = this.component.getAppModel().get("data", d => d.name === this._newValue)[0];
+            const dataValue = this.component.getAppModel().get("data", d => d.name === this._newValue);
             token.type = TokenTypes.REGISTER;
 
             if (dataValue && Array.isArray(dataValue.value)) {
