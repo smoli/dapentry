@@ -131,6 +131,10 @@ describe('JSONModelAccess', () => {
         expect(ma.get("invoices", i => i.title === "Title 2", "address/name")).to.equal("Jane Austen");
     });
 
+    it('setting values on unresolved paths', () => {
+       ma.set("invoices", i => i.title === "Title 3", "address/name").to("NOCHANGE");
+    });
+
     it('can create new properties by setting values on objects', () => {
         ma.set("invoices", 0, "newProperty").to("added")
         expect(ma.get("invoices", 0, "newProperty")).to.equal("added");

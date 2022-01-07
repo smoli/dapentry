@@ -199,7 +199,6 @@ export class CodeManager {
             const body = find(tokens, "BODY");
             if (body) {
                 blockStack.push({ code: "BODY", replaces: findAll(tokens, "REPLACE") });
-                originalLine--;
                 continue;
             }
 
@@ -208,7 +207,6 @@ export class CodeManager {
             if (endeach) {
                 blockStack.pop();
                 ret.push({ originalLine, code: "@ENDEACH"});
-                originalLine--;
                 continue;
             }
 
@@ -220,7 +218,6 @@ export class CodeManager {
             if (each) {
                 ret.push({ originalLine, code: "@EACH " + each.args.join(" ") });
                 blockStack.push({ code: "EACH", replaces: findAll(tokens, "REPLACE") });
-                originalLine--;
                 continue;
             }
 
@@ -228,7 +225,6 @@ export class CodeManager {
             const endbody = find(tokens, "ENDBODY");
             if (endbody) {
                 blockStack.pop();
-                originalLine--;
                 continue;
             }
 

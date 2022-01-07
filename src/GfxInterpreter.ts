@@ -55,6 +55,10 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("OBLIST", GfxObjectList);
     }
 
+    get code():Array<string> {
+        return this._program.map(p => p ? p.opcode : "NOP");
+    }
+
     protected objectCallBack(object:GrObject) {
         this._objects[object.name] = object;
         this._lastObjectTouched = object;

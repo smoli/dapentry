@@ -24,7 +24,8 @@ export class AppModel extends JSONModelAccess {
                     .map(c => {
                         return {
                             index: c.originalLine,
-                            tokens: Parser.parseLine(c.code)
+                            tokens: Parser.parseLine(c.code),
+                            selected: false
                         }
                     })
             );
@@ -35,8 +36,21 @@ export class AppModel extends JSONModelAccess {
     }
 
 
+    insertStatement(code: string, atIndex:number) {
+        this.codeManager.insertStatement(code, atIndex);
+        this.updateSegmentedCode();
+        this.updateCodeString();
+    }
+
     addStatement(code: string) {
         this.codeManager.addStatement(code);
+        this.updateSegmentedCode();
+        this.updateCodeString();
+    }
+
+    insertStatements(code: Array<string>, atIndex:number) {
+        let index = atIndex;
+        code.forEach(c => this.codeManager.insertStatement(c, index++));
         this.updateSegmentedCode();
         this.updateCodeString();
     }

@@ -17,7 +17,7 @@ class GlobalStackFrame extends StackFrame {
         return this._data[name]
     }
 
-    getPC():number {
+    getPC(): number {
         return this._data.pc
     }
 
@@ -31,7 +31,7 @@ export class Interpreter {
 
     private _stack: Array<StackFrame> = [];
     private _currentFrame: StackFrame;
-    private _program: Array<Operation> = [];
+    protected _program: Array<Operation> = [];
 
     private _executed: boolean = false;
 
@@ -42,7 +42,6 @@ export class Interpreter {
     private _globals: GlobalStackFrame = new GlobalStackFrame();
     private _labels: { [key: string]: number } = {};
     private _haltAt: number = Number.MAX_SAFE_INTEGER;
-
 
 
     constructor() {
@@ -132,7 +131,7 @@ export class Interpreter {
         this._labels[labelName] = this.pc;
     }
 
-    public haltAfter(pc:number) {
+    public haltAfter(pc: number) {
         this._haltAt = pc;
     }
 
@@ -140,7 +139,7 @@ export class Interpreter {
         this._haltAt = Number.MAX_SAFE_INTEGER;
     }
 
-    public async run(registers?: { [key: string]: any}): Promise<any> {
+    public async run(registers?: { [key: string]: any }): Promise<any> {
         this._resetExecution();
         this.pushStack();
 
@@ -158,15 +157,15 @@ export class Interpreter {
         return await this._run();
     }
 
-    public halt():void {
+    public halt(): void {
         this.setPC(this._program.length);
     }
 
-    public setPC(value:number) {
+    public setPC(value: number) {
         this._globals.setPC(value);
     }
 
-    public get pc():number {
+    public get pc(): number {
         return this._globals.getPC();
     }
 
@@ -176,20 +175,19 @@ export class Interpreter {
                 let programCounter = this._globals.getPC();
                 programCounter++;
 
-                if(programCounter >= this._program.length || programCounter > this._haltAt) {
-                    console.log("halted at", programCounter);
-
+                if (programCounter >= this._program.length || programCounter > this._haltAt) {
                     break;
                 }
 
                 this._globals.setPC(programCounter);
                 this._currentInstruction = this._program[programCounter];
-                console.log(programCounter, this._currentInstruction.opcode)
-                this._currentInstruction.setClosure(this._currentFrame);
-                await this._currentInstruction.execute(this);
+                if (this._currentInstruction) {
+                    this._currentInstruction.setClosure(this._currentFrame);
+                    await this._currentInstruction.execute(this);
 
-                if (this._stopped) {
-                    return false;
+                    if (this._stopped) {
+                        return false;
+                    }
                 }
             }
         } catch (e) {
@@ -215,7 +213,7 @@ export class Interpreter {
         }
     }
 
-    public parse(program: (string| Array<string>)): void {
+    public parse(program: (string | Array<string>)): void {
 
         let lines;
         if (typeof program === "string") {
@@ -225,7 +223,7 @@ export class Interpreter {
         }
         lines = lines.filter(s => s.trim().length > 0)
 
-        this._program = lines.map(l => this.parseLine(l)).filter(p => !!p);
+        this._program = lines.map(l => this.parseLine(l));
     }
 
     private makeParameter(token): Parameter {

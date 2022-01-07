@@ -42,7 +42,7 @@ export default class StructureController extends BaseController {
         if (!selected) {
             this.getComponentController().setSelectedCodeLine()
         } else {
-            this.getComponentController().setSelectedCodeLine(item.getBindingContext("appModel").getObject());
+            this.getComponentController().setSelectedCodeLine(item.getBindingContext("appModel").getProperty("index"));
         }
     }
 
@@ -116,7 +116,8 @@ export default class StructureController extends BaseController {
 
         const t = this.getResourceText(this.getTextIdForTokens(tokens), ...tokenTexts);
 
-        return new CustomListItem(id, {
+        // @ts-ignore
+        return new CustomListItem(id, { selected: "{appModel>selected}",
             content: [new Text({text: t})]
         });
 
