@@ -3,6 +3,7 @@ import {expect} from "chai"
 const sinon = require("sinon")
 
 import {Interpreter} from "../../src/runtime/interpreter/Interpreter";
+import Int from "sap/ui/model/odata/type/Int";
 
 describe('Interpreter', () => {
 
@@ -87,6 +88,69 @@ describe('Interpreter', () => {
         expect(i.getRegister("r1")).to.equal(199);
         expect(i.getRegister("r2")).to.equal(1)
 
+    });
+
+    it("can be told to halt after a given instruction", async () => {
+
+        const code = `
+            LOAD r1 200
+            ADD r1 1
+            ADD r1 1
+            ADD r1 1
+            ADD r1 1
+            ADD r1 1
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        i.haltAfter(2);
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(202);
+
+        i.clearHaltAfter();
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(205);
+
+        i.haltAfter(4);
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(204);
+    });
+
+    it("can be told to halt after the n-th iteration of a given instruction", async () => {
+
+        const code = `
+            LOAD r1 200
+            LOAD i 5
+        LOOP:
+            ADD r1 1
+            DEC i
+            JNZ i LOOP    
+        `
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        i.haltAfter(3, 2);
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(202);
+
+        i.clearHaltAfter();
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(205);
+
+        i.haltAfter(3, 4);
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(204);
+
+        // If there are less iterations than told, then it will of course execute th whole program
+        i.haltAfter(3, 7);
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(205);
+
+        i.haltAfter(1, 2);      // <-- not within a loop
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(205);
     });
 
 });
