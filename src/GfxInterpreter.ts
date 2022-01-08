@@ -60,7 +60,7 @@ export class GfxInterpreter extends Interpreter {
     }
 
     protected objectCallBack(object:GrObject) {
-        this._objects[object.name] = object;
+        this._objects[object.uniqueName] = object;
         this._lastObjectTouched = object;
     }
 

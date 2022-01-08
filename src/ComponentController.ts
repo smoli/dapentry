@@ -201,7 +201,7 @@ export class ComponentController extends BaseComponentController {
 
             s = selection.map(object => {
                 return {
-                    "name": object.name,
+                    "name": object.uniqueName,
                     "type": ObjectType[object.type],
                     "style": {...object.style},
                     object

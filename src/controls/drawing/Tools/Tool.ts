@@ -69,6 +69,7 @@ export abstract class Tool {
      * Abort tool. This does not deactivate the tool.
      */
     public abort(): void {
+        this.disableSnapping();
         return;
     }
 

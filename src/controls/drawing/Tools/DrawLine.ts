@@ -1,9 +1,9 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrLine} from "../Objects/GrLine";
-import {GrObject} from "../Objects/GrObject";
+import {GrObject, POI} from "../Objects/GrObject";
 
 enum States {
     Wait = "DrawLine.Wait",
@@ -15,6 +15,8 @@ enum States {
 
 export class DrawLine extends Tool {
     private _line: GrLine
+    private _firstSnapInfo: SnapInfo;
+    private _secondSnapInfo: SnapInfo;
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done)
@@ -25,13 +27,8 @@ export class DrawLine extends Tool {
         this._state.add(state(States.Drag), InteractionEvents.Click, state(States.Done));
         this._state.start(state(States.Wait));
 
-
-        this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
-
-        }, []);
-
+        this.enableSnapping();
     }
-
 
     public reset() {
         super.reset();
@@ -44,6 +41,9 @@ export class DrawLine extends Tool {
             return false;
         }
 
+        let snapInfo = this.tryToSnap(eventData);
+        eventData = snapInfo.event;
+
         this._state.next(interactionEvent);
 
         console.log(eventData.x, eventData.y);
@@ -51,6 +51,7 @@ export class DrawLine extends Tool {
             case States.P1:
                 this._line = GrLine.create(null, eventData.x, eventData.y, eventData.x, eventData.y);
                 this._renderer.renderLine(RenderLayer.Interaction, this._line);
+                this._firstSnapInfo = snapInfo;
                 break;
 
             case States.Drag:
@@ -63,6 +64,8 @@ export class DrawLine extends Tool {
                 this._line.x2 = eventData.x;
                 this._line.y2 = eventData.y;
                 this._renderer.remove(this._line);
+                this._secondSnapInfo = snapInfo;
+                this.disableSnapping();
         }
 
         return this.isDone;
@@ -74,7 +77,17 @@ export class DrawLine extends Tool {
         const x2 = this._line.x2;
         const y2 = this._line.y2;
 
-        return [`LINE ${this._line.name} $styles.default (${x1} ${y1}) (${x2} ${y2})`]
+        let one = `(${x1} ${y1})`;
+        let two = `(${x2} ${y2})`;
+        if (this._firstSnapInfo.object) {
+            one = `${this._firstSnapInfo.object.name} "${POI[this._firstSnapInfo.poiId]}"`
+        }
+        if (this._secondSnapInfo.object) {
+            two = `${this._secondSnapInfo.object.name} "${POI[this._secondSnapInfo.poiId]}"`
+        }
+
+
+        return [`LINE ${this._line.uniqueName} $styles.default ${one} ${two}`]
 
     }
 }

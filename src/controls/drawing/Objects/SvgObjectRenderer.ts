@@ -206,7 +206,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 handles: []
             }
 
-            this._objectInfo[object.name] = info;
+            this._objectInfo[object.uniqueName] = info;
 
             const svgObject = svgGroup.append(svgTag).attr("class", ToolClasses.object);
             svgObject.on("click", () => {
@@ -468,7 +468,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public updateHandle(object: GrObject, id: string, p: Point2D) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.select("g" + ToolClassSelectors.handle).select(`#${object.name}-handle-${id}`)
+            g.select("g" + ToolClassSelectors.handle).select(`#${object.uniqueName}-handle-${id}`)
                 .attr("cx", p.x)
                 .attr("cy", p.y)
         }
@@ -477,12 +477,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public renderHandle(object: GrObject, id: string, p: Point2D, onMouseEvent: HandleMouseCallBack, data?: any) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            this._objectInfo[object.name].handles.push(p);
+            this._objectInfo[object.uniqueName].handles.push(p);
             const handle = g.select("g" + ToolClassSelectors.handle).append("circle")
                 .attr("cx", p.x)
                 .attr("cy", p.y)
                 .attr("r", HANDLE_RADIUS)
-                .attr("id", `${object.name}-handle-${id}`)
+                .attr("id", `${object.uniqueName}-handle-${id}`)
                 .data<Point2D>([p])
                 .classed(ToolClasses.handle, true);
 

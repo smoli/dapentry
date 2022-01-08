@@ -127,6 +127,6 @@ export class RotateTool extends Tool {
     }
 
     public get result(): any {
-        return `ROTATE ${this._object.name} ${this._finalAngle}`
+        return `ROTATE ${this._object.uniqueName} ${this._finalAngle}`
     }
 }

@@ -17,7 +17,7 @@ function peg$SyntaxError(message, expected, found, location) {
   this.expected = expected;
   this.found    = found;
   this.location = location;
-  this.name     = "SyntaxError";
+  this.uniqueName     = "SyntaxError";
 
   if (typeof Error.captureStackTrace === "function") {
     Error.captureStackTrace(this, peg$SyntaxError);

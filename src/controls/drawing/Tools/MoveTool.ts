@@ -104,9 +104,14 @@ export class MoveTool extends Tool {
         this._lastSnapInfo = this.tryToSnap(eventData);
         eventData = this._lastSnapInfo.event;
 
-
-        let dx = eventData.x - this._object.pointsOfInterest[this._movingPOI].x;
-        let dy = eventData.y - this._object.pointsOfInterest[this._movingPOI].y;
+        let dx;
+        let dy;
+        if (this._object && this._movingPOI) {
+            dx = eventData.x - this._object.pointsOfInterest[this._movingPOI].x;
+            dy = eventData.y - this._object.pointsOfInterest[this._movingPOI].y;
+        } else {
+            return;
+        }
 
         switch (this._state.state.id as States) {
             case States.Wait:
@@ -145,15 +150,9 @@ export class MoveTool extends Tool {
 
         if (dx !== 0 || dy !== 0) {
             let name1 = this._object.name;
-            if (this._object.parent) {
-                name1 = this._object.parent.name;
-            }
 
             if (this._lastSnapInfo && this._lastSnapInfo.object) {
                 let name2 = this._lastSnapInfo.object.name;
-                if (this._lastSnapInfo.object.parent) {
-                    name2 = this._lastSnapInfo.object.parent.name;
-                }
 
                 return `MOVE ${name1} "${POI[this._movingPOI]}" ${name2} "${POI[this._lastSnapInfo.poiId]}"`
             } else {

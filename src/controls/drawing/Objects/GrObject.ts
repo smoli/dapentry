@@ -70,7 +70,7 @@ export abstract class GrObject{
     private static _instanceCounter:number = 0;
     private static _pool: {[key:string]:GrObject} = {}
 
-    private _name:string;
+    private _uniqueName:string;
     protected _parent:GrObject = null;
 
     protected _center:Point2D;
@@ -86,7 +86,7 @@ export abstract class GrObject{
     private readonly _type:ObjectType;
 
     protected constructor(type:ObjectType, name:string, x:number, y:number) {
-        this._name = name;
+        this._uniqueName = name;
         this._center = new Point2D(x, y);
         this._type = type;
 
@@ -107,7 +107,7 @@ export abstract class GrObject{
     }
 
     protected static setPoolInstance(object:GrObject):GrObject {
-        GrObject._pool[object.name] = object;
+        GrObject._pool[object.uniqueName] = object;
         return object;
     }
 
@@ -128,20 +128,29 @@ export abstract class GrObject{
     }
 
     protected _makeName() {
-        this._name = getNewObjectName(ObjectType[this._type]);
+        this._uniqueName = getNewObjectName(ObjectType[this._type]);
     }
 
     get id(): string {
-        return this._name;
+        return this._uniqueName;
     }
 
 
-    set name(value:string) {
-        this._name = value;
+    set uniqueName(value:string) {
+        this._uniqueName = value;
     }
-    get name(): string {
-        return this._name;
+    get uniqueName(): string {
+        return this._uniqueName;
     }
+
+    get name():string {
+        if (this._parent) {
+            return this._parent.uniqueName;
+        }
+
+        return this._uniqueName;
+    }
+
 
     get style(): Style {
         return this._style;

@@ -2,7 +2,7 @@ import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GrObject, POI} from "../../controls/drawing/Objects/GrObject";
-import {GfxOperation} from "./GfxOperation";
+import {getParameterConfig, GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../controls/drawing/Objects/GrObjectList";
 
 export class GfxMove extends GfxOperation {
@@ -15,6 +15,25 @@ export class GfxMove extends GfxOperation {
     constructor(opcode: string, object: Parameter, poiOrVector: Point2Parameter | Parameter, vectorOrObject: Point2Parameter | Parameter, targetPoi: Parameter) {
         super(opcode, object);
 
+        switch (getParameterConfig(poiOrVector, vectorOrObject, targetPoi)) {
+            case "2":
+                this._poi = new Parameter(false, POI[POI.center]);
+                this._vector = poiOrVector as Point2Parameter;
+                break;
+
+            case "P2":
+                this._poi = poiOrVector;
+                this._vector = vectorOrObject as Point2Parameter;
+                break;
+
+            case "PPP":
+                this._poi = poiOrVector;
+                this._targetObject = vectorOrObject;
+                this._targetPoi = targetPoi;
+                break;
+        }
+
+/*
         if (poiOrVector instanceof Point2Parameter) {
             this._poi = new Parameter(false, POI[POI.center]);
             this._vector = poiOrVector;
@@ -26,6 +45,7 @@ export class GfxMove extends GfxOperation {
             this._targetObject = vectorOrObject;
             this._targetPoi = targetPoi;
         }
+*/
     }
 
     get poi(): POI {
@@ -43,7 +63,7 @@ export class GfxMove extends GfxOperation {
                     o2 = this.target.objects[this.target.objects.length - 2];
                 } else {
                     // This is a move operation that moves the same object upon a poi in itself.
-                    // We're at the first iteration of a loop and ignore that move.
+                    // We're most likely at the first iteration of a loop and ignore that move.
                     // TODO: Is this the correct approach?
                     return { x: 0, y: 0 }
                 }
