@@ -72,6 +72,7 @@ export abstract class GrObject{
 
     private _name:string;
     protected _parent:GrObject = null;
+
     protected _center:Point2D;
     protected _xAxis:Point2D = new Point2D(1, 0);
     protected _yAxis: Point2D = new Point2D(0, 1);

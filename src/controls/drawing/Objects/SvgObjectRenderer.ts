@@ -115,9 +115,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 this._renderBezier(this._objectLayer, object as GrBezier);
                 break;
 
-            case ObjectType.List:
-                this._renderObjectList(object as GrObjectList, selected);
-                break;
         }
 
         if (selected && object.type !== ObjectType.List) {

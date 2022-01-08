@@ -16,6 +16,7 @@ import {ToolManager} from "./ToolManager";
 import {DrawPolygon} from "./Tools/DrawPolygon";
 import {Point2D} from "./Objects/GeoMath";
 import {DrawQuadratic} from "./Tools/DrawQuadratic";
+import {GrObjectList} from "./Objects/GrObjectList";
 
 
 enum ToolNames {
@@ -149,7 +150,14 @@ export default class Drawing extends Control {
     private _renderAll(): void {
         this._objectRenderer.reset();
         this._objects.forEach(obj => {
-            this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
+            if (obj instanceof GrObjectList) {
+                obj.objects.forEach(obj => {
+                    this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
+                })
+            } else {
+                this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
+            }
+
         });
     }
 
@@ -208,20 +216,6 @@ export default class Drawing extends Control {
     }
 
     private _interActionKeyDown() {
-        /*if (d3.event.keyCode === 27) {
-            this._updateState(Events.Cancel);
-        } else if (d3.event.key === "c") {
-            this._updateState(Events.ToolCircle);
-        } else if (d3.event.key === "r") {
-            this._updateState(Events.ToolRect);
-        } else if (d3.event.key === "s") {
-            this._updateState(Events.ToolMove);
-        } else if (d3.event.key === "l") {
-            this._updateState(Events.ToolLine);
-        } else if (d3.event.key === "d") {
-            this._updateState(Events.ToolRotate);
-        }*/
-
         if (d3.event.keyCode === 27) {
             this._toolManager.abortCurrentTool();
         } else if (d3.event.key === "c") {
@@ -254,10 +248,13 @@ export default class Drawing extends Control {
     private _onObjectClick(object: GrObject) {
         if (this._toolManager.isSelected(object)) {
             this._toolManager.deselectObject(object);
+            this._objectRenderer.removeBoundingRepresentation(object);
         } else {
+            this._toolManager.selection.forEach(obj => {
+                this._objectRenderer.removeBoundingRepresentation(obj);
+            })
             this._toolManager.selectObject(object);
         }
-        this._renderAll();
         this.fireSelectionChange({selection: this._toolManager.selection});
     }
 
