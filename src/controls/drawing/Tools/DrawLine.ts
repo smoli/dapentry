@@ -3,6 +3,7 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrLine} from "../Objects/GrLine";
+import {GrObject} from "../Objects/GrObject";
 
 enum States {
     Wait = "DrawLine.Wait",
@@ -23,7 +24,14 @@ export class DrawLine extends Tool {
         this._state.add(state(States.Drag), InteractionEvents.MouseMove, state(States.Drag));
         this._state.add(state(States.Drag), InteractionEvents.Click, state(States.Done));
         this._state.start(state(States.Wait));
+
+
+        this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
+
+        }, []);
+
     }
+
 
     public reset() {
         super.reset();
