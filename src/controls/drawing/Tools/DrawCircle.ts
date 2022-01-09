@@ -2,8 +2,8 @@ import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
-import {GrCircle} from "../Objects/GrCircle";
-import {getNewObjectName} from "../Objects/GrObject";
+import {GrCircle} from "../../../Geo/GrCircle";
+import {getNewObjectName} from "../../../Geo/GrObject";
 
 enum States {
     Wait = "DrawCircle.Wait",

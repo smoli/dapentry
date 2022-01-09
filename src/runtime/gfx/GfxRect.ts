@@ -2,7 +2,7 @@ import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
-import {GrRectangle} from "../../controls/drawing/Objects/GrRectangle";
+import {GrRectangle} from "../../Geo/GrRectangle";
 
 export class GfxRect extends GfxObject {
 

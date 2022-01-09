@@ -1,6 +1,6 @@
 import Component from "./Component";
 import {StyleManager} from "./controls/drawing/Objects/StyleManager";
-import {GrObject, ObjectType} from "./controls/drawing/Objects/GrObject";
+import {GrObject, ObjectType} from "./Geo/GrObject";
 import Drawing from "./controls/drawing/Drawing";
 import {BaseComponentController} from "./BaseComponentController";
 import {GfxInterpreter} from "./GfxInterpreter";

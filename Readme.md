@@ -22,9 +22,9 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * ~~[ ] denote expressions with () instead of {}~~ Don't do that because we want to use () in expressions
 * [x] Make a parameter type that evaluates an expression
 * [x] Properly recognize when the user enters an expression when editing a statement
-* [ ] Add a method getPointAtPercentage to GrObject
-  * [ ] implement for lines
-  * [ ] implement for circles
+* [x] Add a method getPointAtPercentage to GrObject
+  * [x] implement for lines
+  * [x] implement for circles
   * [ ] implement for rects
   * [ ] implement for polygons
 * [ ] create operation to append a point to a polygon

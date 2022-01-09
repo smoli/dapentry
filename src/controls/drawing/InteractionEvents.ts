@@ -1,4 +1,4 @@
-import {GrObject} from "./Objects/GrObject";
+import {GrObject} from "../../Geo/GrObject";
 
 export enum InteractionEvents {
     Click,

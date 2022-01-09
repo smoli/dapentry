@@ -1,9 +1,9 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
-import {GrObject, POI} from "../../controls/drawing/Objects/GrObject";
+import {GrObject, POI} from "../../Geo/GrObject";
 import {getParameterConfig, GfxOperation} from "./GfxOperation";
-import {GrObjectList} from "../../controls/drawing/Objects/GrObjectList";
+import {GrObjectList} from "../../Geo/GrObjectList";
 
 export class GfxMove extends GfxOperation {
     private _vector: Point2Parameter;

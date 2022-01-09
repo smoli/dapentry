@@ -3,8 +3,8 @@ import {expect} from "chai"
 import {ToolManager} from "../../src/controls/drawing/ToolManager";
 import {Tool} from "../../src/controls/drawing/Tools/Tool";
 import {InteractionEventData, InteractionEvents} from "../../src/controls/drawing/InteractionEvents";
-import {GrCircle} from "../../src/controls/drawing/Objects/GrCircle";
-import {GrObject} from "../../src/controls/drawing/Objects/GrObject";
+import {GrCircle} from "../../src/Geo/GrCircle";
+import {GrObject} from "../../src/Geo/GrObject";
 
 
 class TestTool extends Tool {

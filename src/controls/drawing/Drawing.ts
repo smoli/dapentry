@@ -6,7 +6,7 @@ import {DrawCircle} from "./Tools/DrawCircle";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {ObjectRenderer, RenderLayer} from "./Objects/ObjectRenderer";
 import {SvgObjectRenderer} from "./Objects/SvgObjectRenderer";
-import {GrObject} from "./Objects/GrObject";
+import {GrObject} from "../../Geo/GrObject";
 import {DrawRectangle} from "./Tools/DrawRectangle";
 import {Selection} from "d3";
 import {MoveTool} from "./Tools/MoveTool";
@@ -14,9 +14,9 @@ import {DrawLine} from "./Tools/DrawLine";
 import {RotateTool} from "./Tools/RotateTool";
 import {ToolManager} from "./ToolManager";
 import {DrawPolygon} from "./Tools/DrawPolygon";
-import {Point2D} from "./Objects/GeoMath";
+import {Point2D} from "../../Geo/GeoMath";
 import {DrawQuadratic} from "./Tools/DrawQuadratic";
-import {GrObjectList} from "./Objects/GrObjectList";
+import {GrObjectList} from "../../Geo/GrObjectList";
 
 
 enum ToolNames {

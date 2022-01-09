@@ -1,4 +1,5 @@
 import {BoundingBox, GrObject, ObjectType} from "./GrObject";
+import {Point2D, TWO_PI} from "./GeoMath";
 
 export class GrCircle extends GrObject {
 
@@ -30,6 +31,25 @@ export class GrCircle extends GrObject {
 
     get boundingBox(): BoundingBox {
         return {...super.boundingBox, w: this._radius * 2, h: this._radius * 2};
+    }
+
+
+    /**
+     * Interpolation is clockwise and starts at the top.
+     * pct 0 is top
+     * pct 1 is top again
+     * pct 0.25 right
+     * pct 0.5 bottom
+     * pct 0.75 left
+     *
+     * @param pct
+     */
+    getPointAtPercentage(pct: number): Point2D {
+
+        const t = TWO_PI * (pct);
+
+        return this.top.copy.sub(this.center).rotate(t).add(this.center)
+
     }
 
 

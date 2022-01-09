@@ -107,4 +107,8 @@ export class GrLine extends GrObject {
         }
     }
 
+    getPointAtPercentage(pct: number): Point2D {
+        return this.start.copy.add(this.end.copy.sub(this.start).scale(pct));
+    }
+
 }

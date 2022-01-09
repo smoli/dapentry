@@ -1,20 +1,31 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GrLine} from "../../../src/controls/drawing/Objects/GrLine";
+import {GrLine} from "../../../src/Geo/GrLine";
 
 
 describe('GrLIne', () => {
 
-    xit('defines a line in 2d space', () => {
-        const l = GrLine.create("line", 9, 9, 11, 11);
+    it("point at percentage", () => {
+        let l = GrLine.create(null, 0, 0, 100, 100);
+        let p;
 
-        expect(l.x).to.equal(10);
-        expect(l.y).to.equal(10);
+        p = l.getPointAtPercentage(0.5);
+        expect(p.x).to.equal(50);
+        expect(p.y).to.equal(50);
 
-        l.x2 = 12;
+        p = l.getPointAtPercentage(0.25);
+        expect(p.x).to.equal(25);
+        expect(p.y).to.equal(25);
 
-        expect(l.x).to.equal(21 / 2);
-        expect(l.y).to.equal(10);
+        p = l.getPointAtPercentage(0.75);
+        expect(p.x).to.equal(75);
+        expect(p.y).to.equal(75);
 
-    });
+
+        l = GrLine.create(null, 0, 0, 77, 0);
+        p = l.getPointAtPercentage(0.25);
+        expect(p.x).to.equal(77 / 4);
+        expect(p.y).to.equal(0);
+    })
+
 });

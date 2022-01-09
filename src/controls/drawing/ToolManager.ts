@@ -1,7 +1,7 @@
 import {Tool} from "./Tools/Tool";
 import {ObjectRenderer} from "./Objects/ObjectRenderer";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
-import {GrObject} from "./Objects/GrObject";
+import {GrObject} from "../../Geo/GrObject";
 
 export class ToolManager {
     private readonly _tools: { [key: (string | symbol | number)]: typeof Tool }

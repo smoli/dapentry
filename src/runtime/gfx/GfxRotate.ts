@@ -1,6 +1,6 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {GrObject} from "../../controls/drawing/Objects/GrObject";
+import {GrObject} from "../../Geo/GrObject";
 import {GfxOperation} from "./GfxOperation";
 
 export class GfxRotate extends GfxOperation {

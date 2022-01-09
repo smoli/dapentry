@@ -1,8 +1,8 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {GrObject, POI} from "../../controls/drawing/Objects/GrObject";
-import {GrObjectList} from "../../controls/drawing/Objects/GrObjectList";
-import {Point2D} from "../../controls/drawing/Objects/GeoMath";
+import {GrObject, POI} from "../../Geo/GrObject";
+import {GrObjectList} from "../../Geo/GrObjectList";
+import {Point2D} from "../../Geo/GeoMath";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {ArrayParameter} from "../interpreter/types/ArrayParameter";
 

@@ -2,8 +2,8 @@ import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
-import {GrLine} from "../Objects/GrLine";
-import {GrObject, POI} from "../Objects/GrObject";
+import {GrLine} from "../../../Geo/GrLine";
+import {GrObject, POI} from "../../../Geo/GrObject";
 
 enum States {
     Wait = "DrawLine.Wait",
@@ -46,7 +46,6 @@ export class DrawLine extends Tool {
 
         this._state.next(interactionEvent);
 
-        console.log(eventData.x, eventData.y);
         switch (this._state.state.id) {
             case States.P1:
                 this._line = GrLine.create(null, eventData.x, eventData.y, eventData.x, eventData.y);

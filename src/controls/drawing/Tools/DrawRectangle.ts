@@ -2,7 +2,7 @@ import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
-import {GrRectangle} from "../Objects/GrRectangle";
+import {GrRectangle} from "../../../Geo/GrRectangle";
 
 enum States {
     Wait = "DrawRect.Wait",

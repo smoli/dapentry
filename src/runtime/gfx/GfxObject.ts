@@ -1,7 +1,7 @@
 import {Parameter} from "../interpreter/Parameter";
 import {Style} from "../../controls/drawing/Objects/StyleManager";
 import {GfxOperation} from "./GfxOperation";
-import {GrObjectList} from "../../controls/drawing/Objects/GrObjectList";
+import {GrObjectList} from "../../Geo/GrObjectList";
 
 export class GfxObject extends GfxOperation {
 

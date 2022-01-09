@@ -10,7 +10,7 @@ import {GfxMove} from "./runtime/gfx/GfxMove";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxFill} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
-import {GrObject} from "./controls/drawing/Objects/GrObject";
+import {GrObject} from "./Geo/GrObject";
 import {GfxObjectList} from "./runtime/gfx/GfxObject";
 
 /**

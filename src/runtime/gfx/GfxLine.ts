@@ -2,8 +2,8 @@ import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
-import {GrLine} from "../../controls/drawing/Objects/GrLine";
-import {Point2D} from "../../controls/drawing/Objects/GeoMath";
+import {GrLine} from "../../Geo/GrLine";
+import {Point2D} from "../../Geo/GeoMath";
 import {getParameterConfig} from "./GfxOperation";
 
 

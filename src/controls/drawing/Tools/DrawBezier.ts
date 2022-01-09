@@ -2,8 +2,8 @@ import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
-import {Point2D} from "../Objects/GeoMath";
-import {GrPolygon, GrPolygonBase} from "../Objects/GrPolygon";
+import {Point2D} from "../../../Geo/GeoMath";
+import {GrPolygon, GrPolygonBase} from "../../../Geo/GrPolygon";
 
 enum States {
     Wait = "DrawPolygon.Wait",

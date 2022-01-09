@@ -1,9 +1,9 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap} from "../Objects/GrObject";
+import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
-import {Point2D} from "../Objects/GeoMath";
+import {Point2D} from "../../../Geo/GeoMath";
 
 
 enum States {

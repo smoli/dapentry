@@ -1,4 +1,4 @@
-import {GrObject} from "./GrObject";
+import {GrObject} from "../../../Geo/GrObject";
 
 export interface Style {
     fillColor:string;

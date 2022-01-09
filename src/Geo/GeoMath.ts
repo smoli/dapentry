@@ -95,3 +95,22 @@ export function rotatePivot(p: Point2D, angle: number, pivot: Point2D): Point2D 
         x * s + y * c + pivot.y
     );
 }
+
+/**
+ * Epsilon: Used for equality testing. Everything that's less distant than EPSILON is
+ * considered equal
+ * @type {number}
+ */
+export const EPSILON = 1e-07;
+
+export const TWO_PI = Math.PI * 2;
+
+/**
+ * Test for equality
+ * @param a
+ * @param b
+ * @returns {boolean}
+ */
+export function eq(a, b) {
+    return Math.abs(a - b) <= EPSILON;
+}

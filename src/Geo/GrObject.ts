@@ -1,4 +1,4 @@
-import {Style} from "./StyleManager";
+import {Style} from "../controls/drawing/Objects/StyleManager";
 import {deg2rad, Point2D} from "./GeoMath";
 
 export enum ObjectType {
@@ -292,6 +292,23 @@ export abstract class GrObject{
      */
     public movePOI(poi:POI, byVector:Point2D):void {
         this._center.add(byVector);
+    }
+
+
+    /**
+     * Returns a point on the outline of the object. Where the point lies
+     * is defined by a percentage (value 0.0 - 1.0).
+     *
+     *  A percentage of 0 means "the start of the objects outline"
+     *  A percentage of 1 means "the end of the objects outline"
+     *  0 < percentage < 1 means a "point somewhere between the start and the end"
+     *
+     *  How the interpolation works and what the start and the end means is object specific.
+     *
+     * @param pct               Value between 0 and 1
+     */
+    public getPointAtPercentage(pct: number): Point2D {
+        return this.center;
     }
 }
 
