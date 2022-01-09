@@ -22,7 +22,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * ~~[ ] denote expressions with () instead of {}~~ Don't do that because we want to use () in expressions
 * [x] Make a parameter type that evaluates an expression
 * [ ] Properly recognize when the user enters an expression when editing a statement
-* [ ] Add a method getPointAtPercentaga to GrObject
+* [ ] Add a method getPointAtPercentage to GrObject
   * [ ] implement for lines
   * [ ] implement for circles
   * [ ] implement for rects
@@ -31,7 +31,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * [ ] make polygons open by default
 * [ ] autoclose polygons
 * [ ] enable fill rendering for open polygons
-* Maybe configure what kind of Parameter-Class to use for a given token type. This remives dependency of Point2D from core runtime
+* Maybe configure what kind of Parameter-Class to use for a given token type. This removes dependency of Point2D from core runtime
 * Array index like r1[0]?
 
 

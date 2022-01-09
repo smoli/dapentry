@@ -346,7 +346,7 @@ describe('Code manager', () => {
             const annotated = m.annotatedCode;
 
             expect(annotated).to.deep.equal([
-                { originalLine: 1, code: "RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value" },
+                { originalLine: 0, code: "RECT Rectangle1-Prev $styles.default ( 360 500 ) 218 f1iter.value" },
                 { originalLine: 2, code: "LOAD r1 200" }
             ]);
 
@@ -385,7 +385,7 @@ describe('Code manager', () => {
                 { originalLine: 9, code: "RECT Box1 $styles.default ( 408.5 395.5 ) 219 f1" },
                 { originalLine: 10, code: 'MOVE Box1 "bottom" Previous "top"' },
                 { originalLine: 11, code: "LOAD r1 renault" },
-                { originalLine: 18, code: "@ENDEACH" }
+                { originalLine: 17, code: "@ENDEACH" }
             ])
 
         })
