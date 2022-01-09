@@ -15,9 +15,22 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 ## Next steps
 
-* Annotate generated code to define
-  * what statements to display on the ui
-  * where to insert code
+* [x] Annotate generated code to define
+  * [x] what statements to display on the ui
+  * [x] where to insert code
+* ~~[ ] denote Points with <> instead of ()~~ Don't do that because we want to use () in expressions
+* ~~[ ] denote expressions with () instead of {}~~ Don't do that because we want to use () in expressions
+* [x] Make a parameter type that evaluates an expression
+* [ ] Properly recognize when the user enters an expression when editing a statement
+* [ ] Add a method getPointAtPercentaga to GrObject
+  * [ ] implement for lines
+  * [ ] implement for circles
+  * [ ] implement for rects
+  * [ ] implement for polygons
+* [ ] create operation to append a point to a polygon
+* [ ] make polygons open by default
+* [ ] autoclose polygons
+* [ ] enable fill rendering for open polygons
 * Maybe configure what kind of Parameter-Class to use for a given token type. This remives dependency of Point2D from core runtime
 * Array index like r1[0]?
 

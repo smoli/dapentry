@@ -30,7 +30,7 @@
       }
 
   ArgumentOrTuple "Argument or Tuple"
-      = aot:(Argument/Tuple/Array/Eval) {
+      = aot:(Argument/Tuple/Eval/Array) {
       return aot
       }
 

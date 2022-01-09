@@ -6,6 +6,7 @@ import {Label} from "./operations/Label";
 import {StackFrame} from "./StackFrame";
 import {Point2Parameter} from "./types/Point2Parameter";
 import {ArrayParameter} from "./types/ArrayParameter";
+import {ExpressionParameter} from "./types/ExpressionParameter";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -258,6 +259,9 @@ export class Interpreter {
             case TokenTypes.ANNOTATION:
                 // Annotations are ignored for execution
                 break;
+
+            case TokenTypes.EXPRESSION:
+                return new ExpressionParameter(token.value);
 
             case TokenTypes.OTHER:
                 break;

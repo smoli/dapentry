@@ -107,6 +107,9 @@ export abstract class Tool {
     }
 
     protected enableSnapping(objectsToExclude: Array<GrObject> = []) {
+        if (!this._renderer) {
+            return;
+        }
         this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
             if (hit) {
                 this._snappingObject = object;
@@ -120,7 +123,9 @@ export abstract class Tool {
 
     protected disableSnapping() {
         this.clearSnapInfo();
-        this._renderer.enablePOI(false);
+        if (this._renderer) {
+            this._renderer.enablePOI(false);
+        }
     }
 
     protected tryToSnap(eventData: InteractionEventData): SnapInfo {

@@ -17,7 +17,7 @@ function peg$SyntaxError(message, expected, found, location) {
   this.expected = expected;
   this.found    = found;
   this.location = location;
-  this.uniqueName     = "SyntaxError";
+  this.name     = "SyntaxError";
 
   if (typeof Error.captureStackTrace === "function") {
     Error.captureStackTrace(this, peg$SyntaxError);
@@ -545,9 +545,9 @@ function peg$parse(input, options) {
     if (s1 === peg$FAILED) {
       s1 = peg$parseTuple();
       if (s1 === peg$FAILED) {
-        s1 = peg$parseArray();
+        s1 = peg$parseEval();
         if (s1 === peg$FAILED) {
-          s1 = peg$parseEval();
+          s1 = peg$parseArray();
         }
       }
     }

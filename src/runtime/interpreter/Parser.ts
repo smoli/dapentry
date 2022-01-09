@@ -589,9 +589,9 @@ function peg$parse(input, options) {
         if (s1 === peg$FAILED) {
             s1 = peg$parseTuple();
             if (s1 === peg$FAILED) {
-                s1 = peg$parseArray();
+                s1 = peg$parseEval();
                 if (s1 === peg$FAILED) {
-                    s1 = peg$parseEval();
+                    s1 = peg$parseArray();
                 }
             }
         }
@@ -1624,4 +1624,3 @@ function peg$parse(input, options) {
         );
     }
 }
-
