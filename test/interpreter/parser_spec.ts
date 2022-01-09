@@ -1,6 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {Parser, TokenTypes} from "../../src/runtime/interpreter/Parser";
+import {Parser, TokenTypes, Token} from "../../src/runtime/interpreter/Parser";
+
 
 describe('Parser', () => {
 
@@ -153,5 +154,71 @@ describe('Parser', () => {
         );
 
 
-    })
+    });
+
+    describe("given a list of tokens", () => {
+
+        it("can construct the proper code line", () => {
+
+            let tokens:Array<Token> = [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {type: TokenTypes.REGISTER, value: "r2"}
+            ]
+
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 r2");
+
+            tokens = [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {type: TokenTypes.REGISTER, value: "r2"},
+                {type: TokenTypes.ANNOTATION, value: "HIDE"}
+            ]
+
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 r2 @HIDE");
+
+            tokens = [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {
+                    type: TokenTypes.EXPRESSION, value: [
+                        {type: TokenTypes.NUMBER, value: 2},
+                        {type: TokenTypes.OPERATOR, value: "+"},
+                        {
+                            type: TokenTypes.EXPRESSION, value: [
+                                {type: TokenTypes.REGISTER, value: "r1"},
+                                {type: TokenTypes.OPERATOR, value: "*"},
+                                {type: TokenTypes.NUMBER, value: 2}
+                            ]
+                        }
+
+                    ]
+                }
+            ]
+
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 ( 2 + ( r1 * 2 ) )");
+
+            tokens = [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {
+                    type: TokenTypes.EXPRESSION, value: [
+                        {
+                            type: TokenTypes.EXPRESSION, value: [
+                                {type: TokenTypes.NUMBER, value: 2},
+                                {type: TokenTypes.OPERATOR, value: "+"},
+                                {type: TokenTypes.REGISTER, value: "r1"}
+                            ]
+                        },
+                        {type: TokenTypes.OPERATOR, value: "*"},
+                        {type: TokenTypes.NUMBER, value: 2},
+
+                    ]
+                }
+            ]
+
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 ( ( 2 + r1 ) * 2 )");
+        })
+
+    });
 });

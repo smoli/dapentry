@@ -7,6 +7,7 @@ export enum TokenTypes {
     POINT,
     ARRAY,
     EXPRESSION,
+    OPERATOR,
     ANNOTATION,
     OTHER
 }

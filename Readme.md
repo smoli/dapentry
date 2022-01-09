@@ -21,7 +21,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * ~~[ ] denote Points with <> instead of ()~~ Don't do that because we want to use () in expressions
 * ~~[ ] denote expressions with () instead of {}~~ Don't do that because we want to use () in expressions
 * [x] Make a parameter type that evaluates an expression
-* [ ] Properly recognize when the user enters an expression when editing a statement
+* [x] Properly recognize when the user enters an expression when editing a statement
 * [ ] Add a method getPointAtPercentage to GrObject
   * [ ] implement for lines
   * [ ] implement for circles

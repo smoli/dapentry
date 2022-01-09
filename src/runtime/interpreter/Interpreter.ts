@@ -247,8 +247,8 @@ export class Interpreter {
 
             case TokenTypes.POINT:
                 return new Point2Parameter(
-                    new Parameter(token.value[0].type === TokenTypes.REGISTER, token.value[0].value),
-                    new Parameter(token.value[1].type === TokenTypes.REGISTER, token.value[1].value)
+                    this.makeParameter(token.value[0]),
+                    this.makeParameter(token.value[1])
                 )
 
             case TokenTypes.ARRAY:
@@ -261,7 +261,7 @@ export class Interpreter {
                 break;
 
             case TokenTypes.EXPRESSION:
-                return new ExpressionParameter(token.value);
+                return new ExpressionParameter(token);
 
             case TokenTypes.OTHER:
                 break;

@@ -2,6 +2,12 @@
   function flatten(stuff) {
     return stuff.map(a => a.filter(a => a != null)).map(a => a[0]) ;
   }
+  function flattenExp(exp) {
+  	if (exp.value.length === 1) {
+    	return exp.value[0]
+    }
+    return exp;
+  }
   const TokenTypes = {
   	OPCODE: 0,
     REGISTER: 1,
@@ -11,31 +17,78 @@
     POINT: 5,
     ARRAY: 6,
     EXPRESSION: 7,
-    ANNOTATION: 8,
-    OTHER: 9
+    OPERATOR: 8,
+    ANNOTATION: 9,
+    OTHER: 10
   }
 
 }
+
   Expression "Expression"
       = exp:(Label/Operation/Comment/Annotations) _ anno:(Annotations)? _ Comment? {
       const r = []
       if (exp) r.push(...exp);
       if (anno) r.push(...anno);
-      return r;
+      return r.filter(x => !!x);
       }
+
+
+
+  Eval
+    = head:Term tail:(_ OP1 _ Term)* {
+      const r = [head]
+      if (tail.length)
+          r.push(tail[0][1], tail[0][3])
+
+      return flattenExp({ type: TokenTypes.EXPRESSION, value: r.filter(x => !!x) })
+    }
+
+  OP1
+   = ("+" / "-") {
+   	return { type: TokenTypes.OPERATOR, value: text() }
+   }
+
+
+  Term
+    = head:Factor tail:(_ OP2 _ Factor)* {
+      const r = [head]
+      if (tail.length)
+          r.push(tail[0][1], tail[0][3])
+
+      return flattenExp({ type: TokenTypes.EXPRESSION, value: r.filter(x => !!x) })
+    }
+
+
+
+  OP2
+   = ("*" / "/") {
+   	return { type: TokenTypes.OPERATOR, value: text() }
+   }
+
+  Factor
+    = "(" _ expr:Eval _ ")"
+    / Number
+    / Register
+
+
+
 
   Operation "Operation"
   = exp:Opcode args:(_ ArgumentOrTuple)* {
-      return [exp, ...flatten(args)]
+      return [exp, ...args.map(a => a[1])]
       }
 
+
+
+
+
   ArgumentOrTuple "Argument or Tuple"
-      = aot:(Argument/Tuple/Eval/Array) {
+      = aot:(Argument/Tuple/Array) {
       return aot
       }
 
   Argument "Argument"
-      = arg:(Register/Number/String) {
+      = arg:(Eval/String) {
       return arg
       }
 
@@ -102,10 +155,6 @@
       return { type: TokenTypes.POINT, value: flatten(args) }
       }
 
-  Eval "Eval"
-  = "{" _ exp:([^}]*) _ "}" {
-  	return { type: TokenTypes.EXPRESSION, value: exp.join("") }
-  }
 
   Array "Array"
       = "["_ args:(_ ArgumentOrTuple)* _ "]" {
