@@ -29,7 +29,7 @@ describe('GrCircle', () => {
         expect(eq(p.x, -90)).to.be.ok
         expect(eq(p.y, 10)).to.be.ok
 
-        c.rotation = 90;
+        c.rotate(90);
         p = c.getPointAtPercentage(0);
         expect(eq(p.x, 110)).to.be.ok
         expect(eq(p.y, 10)).to.be.ok

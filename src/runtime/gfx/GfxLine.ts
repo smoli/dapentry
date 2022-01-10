@@ -5,7 +5,7 @@ import {GfxObject} from "./GfxObject";
 import {GrLine} from "../../Geo/GrLine";
 import {Point2D} from "../../Geo/GeoMath";
 import {getParameterConfig} from "./GfxOperation";
-import {GrObject} from "../../Geo/GrObject";
+import {GrObject, POI} from "../../Geo/GrObject";
 
 
 export class GfxLine extends GfxObject {

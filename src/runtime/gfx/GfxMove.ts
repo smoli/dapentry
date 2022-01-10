@@ -35,11 +35,11 @@ export class GfxMove extends GfxOperation {
 
     }
 
-    get poi(): POI {
+    get poi(): (string|number) {
         return this._poi.finalized(this.closure);
     }
 
-    get targetPoi(): POI {
+    get targetPoi(): (string|number) {
         return this._targetPoi.finalized(this.closure);
     }
 
@@ -72,9 +72,9 @@ export class GfxMove extends GfxOperation {
 
     async execute(): Promise<any> {
         if (this.target instanceof GrObjectList) {
-            this.target.objects[this.target.objects.length - 1].movePOI(this.poi, this.vector);
+            this.target.objects[this.target.objects.length - 1].movePOI(POI[this.poi], this.vector);
         } else {
-            this.target.movePOI(this.poi, this.vector);
+            this.target.movePOI(POI[this.poi], this.vector);
         }
     }
 }

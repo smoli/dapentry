@@ -33,7 +33,7 @@ describe('GrLIne', () => {
 
         let l = GrLine.create(null, -1, 0, 1, 0);
 
-        l.rotation = 45;
+        l.rotate(45);
 
         console.log(l.start, l.end);
 

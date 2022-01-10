@@ -29,12 +29,19 @@ class ObjectArray extends Array<GrObject> {
 
 
 export class GrObjectList extends GrObject {
-    private readonly _objects: ObjectArray;
+    protected _objects: ObjectArray;
 
     constructor(name: string) {
         super(ObjectType.List, name, 0, 0);
         this._objects = new ObjectArray();
         this._objects.baseName = this.uniqueName;
+    }
+
+    copy() {
+        const copy = new GrObjectList(this._uniqueName);
+
+        copy._objects = this._objects;
+        return copy;
     }
 
     get objects(): Array<GrObject> {

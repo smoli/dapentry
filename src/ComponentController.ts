@@ -30,7 +30,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter();
-        this.preloadDemoCode();
+        // this.preloadDemoCode();
     }
 
     /**
