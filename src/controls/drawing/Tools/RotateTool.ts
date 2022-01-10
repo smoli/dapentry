@@ -23,6 +23,7 @@ export class RotateTool extends Tool {
     protected _selection: Array<GrObject> = [];
     private _startVector: Point2D;
     private _finalAngle: number = 0;
+    private _rotationObject: GrObject;
 
     constructor(renderer: ObjectRenderer) {
         super(renderer, States.Wait, States.Done);
@@ -31,7 +32,6 @@ export class RotateTool extends Tool {
         this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));
 
         this._state.add(state(States.Handle), InteractionEvents.Cancel, state(States.Cancel));
-        this._state.add(state(States.Wait), InteractionEvents.Cancel, state(States.Cancel));
 
         this._state.start(state(States.Wait));
     }
@@ -71,6 +71,8 @@ export class RotateTool extends Tool {
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             const poi = this._object.pointsOfInterest[poiId];
 
+            this._rotationObject = this._object.createProxy();
+
             this._startVector = poi.copy.sub(this._object.center);
             this._finalAngle = 0;
             this._state.next(Events.HandleDown);
@@ -100,36 +102,40 @@ export class RotateTool extends Tool {
                 break;
 
             case States.Cancel:
-                debugger;
+                if (this._object) {
+                    this._renderer.render(this._object, true);
+                }
                 break;
 
             case States.Done:
-                const vector = new Point2D(eventData.x - this._object.center.x, eventData.y - this._object.center.y);
+                const vector = new Point2D(eventData.x - this._rotationObject.center.x, eventData.y - this._rotationObject.center.y);
 
                 let a = vector.angleTo(this._startVector);
                 a = rad2deg(a);
-                this._object.rotate(a);
-                this._renderer.render(this._object, true);
+                this._rotationObject.rotate(a);
+                this._renderer.render(this._rotationObject, true);
                 this._finalAngle += a;
+                this._object.rotate(this._finalAngle);
+                this._rotationObject = null;
                 return true;
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
-                    const vector = new Point2D(eventData.x - this._object.center.x, eventData.y - this._object.center.y);
+                    const vector = new Point2D(eventData.x - this._rotationObject.center.x, eventData.y - this._rotationObject.center.y);
 
                     let a = vector.angleTo(this._startVector);
                     a = rad2deg(a);
-                    this._object.rotate(a)
+                    this._rotationObject.rotate(a)
                     this._startVector = vector;
                     this._finalAngle += a;
 
-                    this._renderer.render(this._object, true);
+                    this._renderer.render(this._rotationObject, true);
 
-                    const poi: POIMap = this._object.pointsOfInterest;
+                    const poi: POIMap = this._rotationObject.pointsOfInterest;
 
                     Object.keys(poi)
                         .forEach(poiId => {
-                            this._renderer.updateHandle(this._object, poiId, poi[poiId]);
+                            this._renderer.updateHandle(this._rotationObject, poiId, poi[poiId]);
                         })
                 }
                 break;

@@ -2,13 +2,13 @@ import {BoundingBox, GrObject, ObjectType} from "./GrObject";
 
 export class GrEllipse extends GrObject {
 
-    private _w: number;
-    private _h: number;
+    private _width: number;
+    private _height: number;
 
     protected constructor(name: string, x: number, y: number, w: number, h: number) {
         super(ObjectType.Ellipse, name, x, y);
-        this._w = w;
-        this._h = h;
+        this._width = w;
+        this._height = h;
     }
 
     public static create(name: string, x: number, y: number, w: number, h: number) {
@@ -18,30 +18,34 @@ export class GrEllipse extends GrObject {
         }
         i.x = x;
         i.y = y;
-        i.w = w;
-        i.h = h;
+        i.width = w;
+        i.height = h;
 
         return i;
     }
 
-    get h(): number {
-        return this._h;
+    protected copy(): GrObject {
+        return GrEllipse.create(this._uniqueName, this.center.x, this.center.y, this.width, this.height);
     }
 
-    set h(value: number) {
-        this._h = value;
+    get height(): number {
+        return this._height;
     }
 
-    get w(): number {
-        return this._w;
+    set height(value: number) {
+        this._height = value;
     }
 
-    set w(value: number) {
-        this._w = value;
+    get width(): number {
+        return this._width;
+    }
+
+    set width(value: number) {
+        this._width = value;
     }
 
     get boundingBox(): BoundingBox {
-        return {...super.boundingBox, w: this._w, h: this._h};
+        return {...super.boundingBox, w: this._width, h: this._height};
     }
 
 }

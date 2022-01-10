@@ -31,6 +31,15 @@ export class GrLine extends GrObject {
     }
 
 
+    createProxy(): GrObject {
+        return this.copy();
+    }
+
+    protected copy(): GrObject {
+        return GrLine.create(this._uniqueName, this.x1, this.y1, this.x2, this.y2);
+    }
+
+
     protected updateCenter() {
         this._center = new Point2D(this._end.x - this._start.x, this._end.y - this._start.y).scale(0.5);
         this._center.add(this._start);

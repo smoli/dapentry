@@ -1,5 +1,5 @@
-import {BoundingBox, GrObject, ObjectType, POI} from "./GrObject";
-import {Point2D} from "./GeoMath";
+import {BoundingBox, GrObject, ObjectType, POI, POIMap} from "./GrObject";
+import {deg2rad, Point2D} from "./GeoMath";
 
 
 function computeCenterAndBB(points: Array<Point2D>) {
@@ -10,10 +10,7 @@ function computeCenterAndBB(points: Array<Point2D>) {
     let maxY = Math.max(...points.map(p => p.y));
     let minY = Math.min(...points.map(p => p.y));
 
-    for (const p of points) {
-        center.add(p);
-    }
-    center.scale(1 / points.length);
+    center = new Point2D((minX + maxX) / 2, (minY + maxY) / 2);
 
     let width = maxX - minX;
     let height = maxY - minY;
@@ -27,7 +24,7 @@ export class GrPolygonBase extends GrObject {
     protected _width: number;
     protected _height: number;
 
-    protected constructor(type:ObjectType, name: string, points: Array<Point2D>, closed: boolean = false) {
+    protected constructor(type: ObjectType, name: string, points: Array<Point2D>, closed: boolean = false) {
         let {center, width, height} = computeCenterAndBB(points);
         super(type, name, center.x, center.y);
         this._points = points;
@@ -41,6 +38,14 @@ export class GrPolygonBase extends GrObject {
         this._center = center;
         this._width = width;
         this._height = height;
+    }
+
+    createProxy(): GrObject {
+        return this.copy();
+    }
+
+    protected copy(): GrPolygonBase {
+        return null;
     }
 
     get closed() {
@@ -82,6 +87,12 @@ export class GrPolygonBase extends GrObject {
         this._points.forEach(p => p.add(byVector));
         this.computeCenterAndBB();
     }
+
+    rotate(value: number) {
+        super.rotate(value);
+        const a = deg2rad(value);
+        this._points.forEach(p => p.rotate(a, this.center));
+    }
 }
 
 
@@ -98,10 +109,14 @@ export class GrPolygon extends GrPolygonBase {
         i._points = points;
         i._closed = closed;
         i.computeCenterAndBB();
-
         return i;
     }
+
+    protected copy(): GrPolygonBase {
+        return GrPolygon.create(this._uniqueName, this._points.map(p => p.copy), this._closed);
+    }
 }
+
 export class GrQuadratic extends GrPolygonBase {
     protected constructor(name: string, points: Array<Point2D>, closed: boolean = false) {
         super(ObjectType.Quadratic, name, points, closed);
@@ -118,6 +133,11 @@ export class GrQuadratic extends GrPolygonBase {
 
         return i;
     }
+
+    protected copy(): GrPolygonBase {
+        return GrQuadratic.create(this._uniqueName, this._points.map(p => p.copy), this._closed);
+    }
+
 }
 
 export class GrBezier extends GrPolygonBase {
@@ -136,4 +156,9 @@ export class GrBezier extends GrPolygonBase {
 
         return i;
     }
+
+    protected copy(): GrPolygonBase {
+        return GrBezier.create(this._uniqueName, this._points.map(p => p.copy), this._closed);
+    }
+
 }

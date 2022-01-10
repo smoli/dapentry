@@ -23,6 +23,10 @@ export class GrRectangle extends GrObject {
         return i;
     }
 
+    protected copy(): GrObject {
+        return GrRectangle.create(this._uniqueName, this.center.x, this.center.y, this.width, this.height);
+    }
+
     get height(): number {
         return this._height;
     }

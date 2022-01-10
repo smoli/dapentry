@@ -71,19 +71,17 @@ export abstract class GrObject {
     private static _instanceCounter: number = 0;
     private static _pool: { [key: string]: GrObject } = {}
 
-    private _uniqueName: string;
+    protected _uniqueName: string;
     protected _parent: GrObject = null;
 
     protected _center: Point2D;
     protected _xAxis: Point2D = new Point2D(1, 0);
     protected _yAxis: Point2D = new Point2D(0, 1);
-    private _scaleX: number = 1;
-    private _scaleY: number = 1;
-    private _rotation: number = 0;
-    private _style: Style = null;
-    private _instanceCount = GrObject._instanceCounter++;
-    private _states = [];
-
+    protected _scaleX: number = 1;
+    protected _scaleY: number = 1;
+    protected _rotation: number = 0;
+    protected _style: Style = null;
+    protected _instanceCount = GrObject._instanceCounter++;
 
     private readonly _type: ObjectType;
 
@@ -97,33 +95,28 @@ export abstract class GrObject {
         }
     }
 
-    protected getState(): any {
-        return [
-            this._center.copy,
-            this._xAxis.copy,
-            this._yAxis.copy,
-            this._scaleX,
-            this._scaleY,
-            this._rotation
-        ]
+    /**
+     * This creates a copy of the object with the same unique name.
+     * It therefore will be rendered instead of the original if it is
+     * put into the render pipeline after the original object.
+     *
+     * Use the e.g. to represent the potential update of the object
+     * during manipulation.
+     */
+    public createProxy():GrObject {
+        const copy = this.copy();
+        copy.rotate(this._rotation);
+        copy.scaleX = this._scaleX;
+        copy.scaleY = this._scaleY;
+
+        return copy;
     }
 
-    protected setState(state) {
-        this._center = state[0].copy;
-        this._xAxis = state[1].copy;
-        this._yAxis = state[2].copy;
-        this._scaleX = state[3];
-        this._scaleY = state[4];
-        this._rotation = state[5];
-    }
-
-    pushState() {
-        this._states.push(this.getState());
-    }
-
-    popState() {
-        this.setState(this._states.pop());
-    }
+    /**
+     * Make a new object of the same type with the same name.
+     * @protected
+     */
+    protected abstract copy():GrObject;
 
     protected static getPoolInstance(name: string) {
         return null;

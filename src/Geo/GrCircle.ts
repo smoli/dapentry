@@ -21,6 +21,10 @@ export class GrCircle extends GrObject {
         return i;
     }
 
+    protected copy(): GrObject {
+        return GrCircle.create(this._uniqueName, this.center.x, this.center.y, this.radius);
+    }
+
     get radius(): number {
         return this._radius;
     }

@@ -8,7 +8,7 @@ import {GrCircle} from "../../../Geo/GrCircle";
 import {GrRectangle} from "../../../Geo/GrRectangle";
 import {GrLine} from "../../../Geo/GrLine";
 import {Point2D} from "../../../Geo/GeoMath";
-import {GrBezier, GrPolygon, GrQuadratic} from "../../../Geo/GrPolygon";
+import {GrBezier, GrPolygon, GrPolygonBase, GrQuadratic} from "../../../Geo/GrPolygon";
 import {GrObjectList} from "../../../Geo/GrObjectList";
 
 enum ToolClasses {
@@ -328,7 +328,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return this._renderPolygon(this.getLayer(layer), polygon);
     }
 
-    _renderPolygon(layer: Selection<any>, polygon: GrPolygon) {
+    _renderPolygon(layer: Selection<any>, polygon: GrPolygonBase) {
         const o = this.getObjectOrCreate(layer, polygon, "path");
 
         const p = o.select(ToolClassSelectors.object);
@@ -346,8 +346,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
         this._createPathStyle(p, polygon);
-        this.addRotation(polygon, o);
-
+        this.addRotation(polygon, o.select(ToolClassSelectors.boundingBox));
         return p;
     }
 
@@ -380,7 +379,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
         this._createPathStyle(p, polygon);
-        this.addRotation(polygon, o);
 
         return p;
     }
@@ -414,12 +412,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
         this._createPathStyle(p, bezier);
-        this.addRotation(bezier, o);
 
         return p;
     }
 
-    protected _createPathStyle(elem: Selection<any>, object: GrPolygon): void {
+    protected _createPathStyle(elem: Selection<any>, object: GrPolygonBase): void {
         if (!object.style) {
             if (!object.closed) {
                 elem.attr("style", "fill:none");
