@@ -35,7 +35,7 @@
 
 
   Eval
-    = head:Term tail:(_ OP1 _ Term)* {
+    = head:Term tail:(" " OP1 " " Term)* {
       const r = [head]
       if (tail.length)
           r.push(tail[0][1], tail[0][3])
@@ -44,13 +44,13 @@
     }
 
   OP1
-   = ("+" / "-") {
+   = ("+ " / "-") {
    	return { type: TokenTypes.OPERATOR, value: text() }
    }
 
 
   Term
-    = head:Factor tail:(_ OP2 _ Factor)* {
+    = head:Factor tail:(" " OP2 " " Factor)* {
       const r = [head]
       if (tail.length)
           r.push(tail[0][1], tail[0][3])
