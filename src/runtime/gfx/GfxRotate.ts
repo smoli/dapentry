@@ -18,6 +18,6 @@ export class GfxRotate extends GfxOperation {
     }
 
     async execute(): Promise<any> {
-        this.target.rotation = this.angle;
+        this.target.rotate(this.angle);
     }
 }

@@ -60,6 +60,14 @@ export class Point2D {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
+    /**
+     * Returns the angle between v2 and this in rad.
+     * @param v2
+     */
+    angleTo(v2): number {
+        return Math.atan2(this.y, this.x) - Math.atan2(v2.y, v2.x);
+    }
+
 
 }
 

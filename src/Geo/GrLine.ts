@@ -1,5 +1,6 @@
 import {GrObject, ObjectType, POI, POIMap} from "./GrObject";
-import {Point2D} from "./GeoMath";
+import {deg2rad, Point2D} from "./GeoMath";
+
 
 export class GrLine extends GrObject {
     private _start: Point2D;
@@ -12,6 +13,7 @@ export class GrLine extends GrObject {
         super(ObjectType.Line, name, x, y);
         this._start = new Point2D(x1, y1);
         this._end = new Point2D(x2, y2);
+        this.updateCenter();
 
     }
 
@@ -30,12 +32,8 @@ export class GrLine extends GrObject {
 
 
     protected updateCenter() {
-        const x1 = this._start.x + this.x;
-        const y1 = this._start.y + this.y;
-        const x2 = this._end.x + this.x;
-        const y2 = this._end.y + this.y;
-
-        this._center = new Point2D((x1 + x2) / 2, this.y = (y1 + y2) / 2);
+        this._center = new Point2D(this._end.x - this._start.x, this._end.y - this._start.y).scale(0.5);
+        this._center.add(this._start);
     }
 
     get y2(): number {
@@ -72,6 +70,21 @@ export class GrLine extends GrObject {
     set x1(value: number) {
         this._start.x = value;
         this.updateCenter();
+    }
+
+    rotate(value: number) {
+        console.log("Rotate line", value);
+        super.rotate(value);
+
+        const p1 = this._start.copy.sub(this._center);
+        const p2 = this._end.copy.sub(this._center);
+
+        p1.rotate(deg2rad(value));
+        p2.rotate(deg2rad(value));
+
+        this._start = this._center.copy.add(p1);
+        this._end = this._center.copy.add(p2);
+
     }
 
     get start(): Point2D {

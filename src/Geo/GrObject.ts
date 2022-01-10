@@ -27,10 +27,11 @@ export enum POI {
     end
 }
 
-export type POIMap = {[key in POI]?: Point2D };
+export type POIMap = { [key in POI]?: Point2D };
 
 let objCounter = 1;
-export function getNewObjectName(prefix:string):string {
+
+export function getNewObjectName(prefix: string): string {
     return prefix + objCounter++;
 }
 
@@ -65,27 +66,28 @@ export interface BoundingBox {
  *
  * The instances are pooled by their name.
  */
-export abstract class GrObject{
+export abstract class GrObject {
 
-    private static _instanceCounter:number = 0;
-    private static _pool: {[key:string]:GrObject} = {}
+    private static _instanceCounter: number = 0;
+    private static _pool: { [key: string]: GrObject } = {}
 
-    private _uniqueName:string;
-    protected _parent:GrObject = null;
+    private _uniqueName: string;
+    protected _parent: GrObject = null;
 
-    protected _center:Point2D;
-    protected _xAxis:Point2D = new Point2D(1, 0);
+    protected _center: Point2D;
+    protected _xAxis: Point2D = new Point2D(1, 0);
     protected _yAxis: Point2D = new Point2D(0, 1);
-    private _scaleX:number = 1;
-    private _scaleY:number = 1;
-    private _rotation:number = 0;
-    private _style:Style = null;
+    private _scaleX: number = 1;
+    private _scaleY: number = 1;
+    private _rotation: number = 0;
+    private _style: Style = null;
     private _instanceCount = GrObject._instanceCounter++;
+    private _states = [];
 
 
-    private readonly _type:ObjectType;
+    private readonly _type: ObjectType;
 
-    protected constructor(type:ObjectType, name:string, x:number, y:number) {
+    protected constructor(type: ObjectType, name: string, x: number, y: number) {
         this._uniqueName = name;
         this._center = new Point2D(x, y);
         this._type = type;
@@ -95,18 +97,46 @@ export abstract class GrObject{
         }
     }
 
-    protected static getPoolInstance(name:string) {
-        return null;
-/*
-        const r = name && GrObject._pool[name];
-        if (r) {
-            r.rotation = 0;
-        }
-        return r;
-*/
+    protected getState(): any {
+        return [
+            this._center.copy,
+            this._xAxis.copy,
+            this._yAxis.copy,
+            this._scaleX,
+            this._scaleY,
+            this._rotation
+        ]
     }
 
-    protected static setPoolInstance(object:GrObject):GrObject {
+    protected setState(state) {
+        this._center = state[0].copy;
+        this._xAxis = state[1].copy;
+        this._yAxis = state[2].copy;
+        this._scaleX = state[3];
+        this._scaleY = state[4];
+        this._rotation = state[5];
+    }
+
+    pushState() {
+        this._states.push(this.getState());
+    }
+
+    popState() {
+        this.setState(this._states.pop());
+    }
+
+    protected static getPoolInstance(name: string) {
+        return null;
+        /*
+                const r = name && GrObject._pool[name];
+                if (r) {
+                    r.rotation = 0;
+                }
+                return r;
+        */
+    }
+
+    protected static setPoolInstance(object: GrObject): GrObject {
         GrObject._pool[object.uniqueName] = object;
         return object;
     }
@@ -115,7 +145,7 @@ export abstract class GrObject{
         this._parent = value;
     }
 
-    public get parent():GrObject {
+    public get parent(): GrObject {
         return this._parent;
     }
 
@@ -136,14 +166,15 @@ export abstract class GrObject{
     }
 
 
-    set uniqueName(value:string) {
+    set uniqueName(value: string) {
         this._uniqueName = value;
     }
+
     get uniqueName(): string {
         return this._uniqueName;
     }
 
-    get name():string {
+    get name(): string {
         if (this._parent) {
             return this._parent.uniqueName;
         }
@@ -183,6 +214,7 @@ export abstract class GrObject{
     set y(value: number) {
         this._center.y = value;
     }
+
     get x(): number {
         return this._center.x;
     }
@@ -195,11 +227,12 @@ export abstract class GrObject{
         return this._rotation;
     }
 
-    set rotation(value: number) {
-        this._xAxis = new Point2D(1, 0).rotate(deg2rad(value));
-        this._yAxis = new Point2D(0, 1).rotate(deg2rad(value));
-        this._rotation = value;
+    public rotate(value: number) {
+        this._xAxis.rotate(deg2rad(value));
+        this._yAxis.rotate(deg2rad(value));
+        this._rotation += value;
     }
+
     get scaleY(): number {
         return this._scaleY;
     }
@@ -207,6 +240,7 @@ export abstract class GrObject{
     set scaleY(value: number) {
         this._scaleY = value;
     }
+
     get scaleX(): number {
         return this._scaleX;
     }
@@ -221,8 +255,8 @@ export abstract class GrObject{
      *
      * @return Bounding box
      */
-    get boundingBox():BoundingBox {
-        return { x: this.x, y: this.y, w: 0, h: 0 };
+    get boundingBox(): BoundingBox {
+        return {x: this.x, y: this.y, w: 0, h: 0};
     }
 
 
@@ -230,7 +264,7 @@ export abstract class GrObject{
      * Point at the center of the object relative to the
      * object's origin.
      */
-    get center():Point2D  {
+    get center(): Point2D {
         return this._center;
     }
 
@@ -238,7 +272,7 @@ export abstract class GrObject{
      * Point at the bottom center of the object.
      * Relative to the object's origin.
      */
-    get bottom():Point2D {
+    get bottom(): Point2D {
         return this._yAxis.copy.scale(this.boundingBox.h / 2).add(this._center);
     }
 
@@ -246,7 +280,7 @@ export abstract class GrObject{
      * Point at the left center of the object relative
      * to the object's origin.
      */
-    get left():Point2D {
+    get left(): Point2D {
         return this._xAxis.copy.scale(-this.boundingBox.w / 2).add(this._center);
     }
 
@@ -254,7 +288,7 @@ export abstract class GrObject{
      * Point at the top center of the object relative to
      * the object's origin.
      */
-    get top():Point2D {
+    get top(): Point2D {
         return this._yAxis.copy.scale(-this.boundingBox.h / 2).add(this._center);
 
     }
@@ -263,7 +297,7 @@ export abstract class GrObject{
      * Point at the right center of the object relative
      * to the object's origin.
      */
-    get right():Point2D {
+    get right(): Point2D {
         return this._xAxis.copy.scale(this.boundingBox.w / 2).add(this._center);
     }
 
@@ -271,7 +305,7 @@ export abstract class GrObject{
      * Get "points of interest" for the object. These can be
      * used for snapping and other things.
      */
-    get pointsOfInterest():POIMap {
+    get pointsOfInterest(): POIMap {
         return {
             [POI.center]: this.center,
             [POI.top]: this.top,
@@ -290,7 +324,7 @@ export abstract class GrObject{
      * @param poi           The point of interest to move
      * @param byVector        The vector to move the POI by
      */
-    public movePOI(poi:POI, byVector:Point2D):void {
+    public movePOI(poi: POI, byVector: Point2D): void {
         this._center.add(byVector);
     }
 

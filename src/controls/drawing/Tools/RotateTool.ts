@@ -3,12 +3,13 @@ import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
-import {Point2D} from "../../../Geo/GeoMath";
+import {Point2D, rad2deg} from "../../../Geo/GeoMath";
 
 
 enum States {
     Wait = "RotateTool.Wait",
     Done = "RotateTool.Done",
+    Cancel = "RotateTool.Cancel",
     Handle = "RotateTool.Handle"
 }
 
@@ -21,13 +22,17 @@ export class RotateTool extends Tool {
 
     protected _selection: Array<GrObject> = [];
     private _startVector: Point2D;
-    private _finalAngle: number;
+    private _finalAngle: number = 0;
 
     constructor(renderer: ObjectRenderer) {
         super(renderer, States.Wait, States.Done);
 
         this._state.add(state(States.Wait), Events.HandleDown, state(States.Handle));
         this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));
+
+        this._state.add(state(States.Handle), InteractionEvents.Cancel, state(States.Cancel));
+        this._state.add(state(States.Wait), InteractionEvents.Cancel, state(States.Cancel));
+
         this._state.start(state(States.Wait));
     }
 
@@ -50,14 +55,13 @@ export class RotateTool extends Tool {
         if (!this._object) {
             return;
         }
+        this._finalAngle = 0;
         const poi: POIMap = this._object.pointsOfInterest;
-
         Object.keys(poi)
             .forEach(poiId => {
-                if (poiId !== POI[POI.center]) {
-                    this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), poiId);
-                }
-            })
+                console.log(POI[poiId], poi[poiId])
+                this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), poiId);
+            });
 
         this._renderer.renderBoundingRepresentation(this._object);
     }
@@ -66,9 +70,9 @@ export class RotateTool extends Tool {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             const poi = this._object.pointsOfInterest[poiId];
-            
-            this._startVector = new Point2D(poi.x - this._object.x, poi.y - this._object.x);
-            
+
+            this._startVector = poi.copy.sub(this._object.center);
+            this._finalAngle = 0;
             this._state.next(Events.HandleDown);
         }
     }
@@ -95,20 +99,29 @@ export class RotateTool extends Tool {
             case States.Wait:
                 break;
 
-            case States.Done:
-                const vector = { x: eventData.x - this._object.x, y: eventData.y - this._object.y }
+            case States.Cancel:
+                debugger;
+                break;
 
-                this._finalAngle = Math.atan2(vector.y, vector.x) - Math.atan2(this._startVector.y, this._startVector.x)
-                this._object.rotation = this._finalAngle = (this._finalAngle * 180) / Math.PI;
+            case States.Done:
+                const vector = new Point2D(eventData.x - this._object.center.x, eventData.y - this._object.center.y);
+
+                let a = vector.angleTo(this._startVector);
+                a = rad2deg(a);
+                this._object.rotate(a);
                 this._renderer.render(this._object, true);
+                this._finalAngle += a;
                 return true;
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
-                    const vector = { x: eventData.x - this._object.x, y: eventData.y - this._object.y }
+                    const vector = new Point2D(eventData.x - this._object.center.x, eventData.y - this._object.center.y);
 
-                    const a = Math.atan2(vector.y, vector.x) - Math.atan2(this._startVector.y, this._startVector.x)
-                    this._object.rotation = (a * 180) / Math.PI;
+                    let a = vector.angleTo(this._startVector);
+                    a = rad2deg(a);
+                    this._object.rotate(a)
+                    this._startVector = vector;
+                    this._finalAngle += a;
 
                     this._renderer.render(this._object, true);
 

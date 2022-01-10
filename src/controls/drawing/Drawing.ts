@@ -217,6 +217,7 @@ export default class Drawing extends Control {
 
     private _interActionKeyDown() {
         if (d3.event.keyCode === 27) {
+            this._pumpToTool(InteractionEvents.Cancel);
             this._toolManager.abortCurrentTool();
         } else if (d3.event.key === "c") {
             this._toolManager.switch(ToolNames.Circle);

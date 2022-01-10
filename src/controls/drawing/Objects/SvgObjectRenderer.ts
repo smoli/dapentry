@@ -315,7 +315,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         l.attr("x2", line.x2);
         l.attr("y2", line.y2);
         this._createStyle(l, line);
-        this.addRotation(line, o)
 
 
         return l;

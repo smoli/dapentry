@@ -112,6 +112,7 @@ export class ComponentController extends BaseComponentController {
         const data = this.getDataFromDataFields();
         this._interpreter.parse(this._component.getCodeManager().code);
 
+        /*
         console.group("Actual Source Code");
         this._component.getCodeManager().code.forEach((c, i) => console.log(i, c));
         console.groupEnd();
@@ -120,10 +121,7 @@ export class ComponentController extends BaseComponentController {
         console.groupEnd();
         console.group("Segmented Code");
         this.getAppModel().get("segmentedCode").forEach((c, i) => console.log(i, c));
-        console.groupEnd();
-
-
-
+        console.groupEnd();*/
 
         return this._interpreter.run({
             "$styles": this._styleManager.styles,
@@ -213,8 +211,7 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-        const code = `LINE Line5 $styles.default (335 315) (571 306)
-LINE Line6 $styles.default (297 527) Line5 0.5`;
+        const code = `RECT Rectangle1 $styles.default (300 300) 100 100`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }

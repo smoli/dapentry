@@ -108,14 +108,14 @@ export class ToolManager {
         const ToolClass = this._tools[event] || null;
 
         if (ToolClass) {
-            console.group("Switching to:", ToolClass.name);
+            // console.group("Switching to:", ToolClass.name);
             if (this._currentTool) {
-                console.log("Aborting:", this.getClassForInstance(this._currentTool).name);
+                // console.log("Aborting:", this.getClassForInstance(this._currentTool).name);
                 this._abortCurrentTool();
             }
             this._currentTool = this._makeToolInstance(ToolClass);
             this._pumpSelection(false);
-            console.groupEnd()
+            // console.groupEnd()
         }
     }
 

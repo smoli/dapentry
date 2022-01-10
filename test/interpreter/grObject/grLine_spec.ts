@@ -1,6 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GrLine} from "../../../src/Geo/GrLine";
+import exp = require("constants");
 
 
 describe('GrLIne', () => {
@@ -27,5 +28,15 @@ describe('GrLIne', () => {
         expect(p.x).to.equal(77 / 4);
         expect(p.y).to.equal(0);
     })
+
+    it("rotate", () => {
+
+        let l = GrLine.create(null, -1, 0, 1, 0);
+
+        l.rotation = 45;
+
+        console.log(l.start, l.end);
+
+    });
 
 });
