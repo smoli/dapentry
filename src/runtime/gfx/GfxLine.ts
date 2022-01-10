@@ -5,6 +5,7 @@ import {GfxObject} from "./GfxObject";
 import {GrLine} from "../../Geo/GrLine";
 import {Point2D} from "../../Geo/GeoMath";
 import {getParameterConfig} from "./GfxOperation";
+import {GrObject} from "../../Geo/GrObject";
 
 
 export class GfxLine extends GfxObject {
@@ -46,8 +47,16 @@ export class GfxLine extends GfxObject {
 
     }
 
+    get fromObject():GrObject {
+        return this._fromObject.finalized(this.closure);
+    }
+
+    get fromPoint():(string|number) {
+        return this._fromPoint.finalized(this.closure);
+    };
+
     get fromPoi(): Point2D {
-        return this.objPoiToPoint(this._fromObject, this._fromPoint);
+        return this.objPoiToPoint(this.fromObject, this.fromPoint);
     }
 
     get p1(): Point2D {
@@ -57,8 +66,17 @@ export class GfxLine extends GfxObject {
         return this._p1.finalized(this.closure);
     }
 
+    get toObject():GrObject {
+        return this._toObject.finalized(this.closure);
+    }
+
+    get toPoint():(string|number) {
+        return this._toPoint.finalized(this.closure);
+    };
+
+
     get toPoi(): Point2D {
-        return this.objPoiToPoint(this._toObject, this._toPoint);
+        return this.objPoiToPoint(this.toObject, this.toPoint);
     }
 
     get p2(): Point2D {

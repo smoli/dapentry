@@ -37,9 +37,13 @@ export class GfxOperation extends Operation {
         }
     }
 
-    protected objPoiToPoint(obj:Parameter, poi:Parameter):Point2D {
-        const p = POI[poi.finalized(this.closure)]
-        return obj.finalized(this.closure).pointsOfInterest[p];
+    protected objPoiToPoint(obj:GrObject, poi:(number|string)):Point2D {
+        if (typeof poi === "number") {
+            return obj.getPointAtPercentage(poi);
+        } else {
+            const p = POI[poi]
+            return obj.pointsOfInterest[p];
+        }
     }
 
 }

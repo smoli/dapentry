@@ -27,6 +27,13 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
   * [x] implement for circles
   * [ ] implement for rects
   * [ ] implement for polygons
+* [ ] enable move and creation tools to use percentage points
+* [ ] enable move and creation operations to use percentage points
+  * [x] move
+  * [x] create line
+  * [ ] create circle
+  * [ ] create rectangle
+  * [ ] create polygon
 * [ ] create operation to append a point to a polygon
 * [ ] make polygons open by default
 * [ ] autoclose polygons

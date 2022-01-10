@@ -33,24 +33,18 @@ export class GfxMove extends GfxOperation {
                 break;
         }
 
-/*
-        if (poiOrVector instanceof Point2Parameter) {
-            this._poi = new Parameter(false, POI[POI.center]);
-            this._vector = poiOrVector;
-        } else if (vectorOrObject instanceof Point2Parameter) {
-            this._poi = poiOrVector;
-            this._vector = vectorOrObject;
-        } else {
-            this._poi = poiOrVector;
-            this._targetObject = vectorOrObject;
-            this._targetPoi = targetPoi;
-        }
-*/
     }
 
     get poi(): POI {
-        return POI[this._poi.finalized(this.closure) as string];
+        return this._poi.finalized(this.closure);
+    }
 
+    get targetPoi(): POI {
+        return this._targetPoi.finalized(this.closure);
+    }
+
+    get targetObject(): GrObject {
+        return this._targetObject.finalized(this.closure);
     }
 
     get vector(): any {
@@ -62,26 +56,18 @@ export class GfxMove extends GfxOperation {
                     o1 = this.target.objects[this.target.objects.length - 1];
                     o2 = this.target.objects[this.target.objects.length - 2];
                 } else {
-                    // This is a move operation that moves the same object upon a poi in itself.
+                    // This is a move operation that moves the same object upon a poi of itself.
                     // We're most likely at the first iteration of a loop and ignore that move.
                     // TODO: Is this the correct approach?
                     return { x: 0, y: 0 }
                 }
             }
-            const p = o1.pointsOfInterest[this.poi];
-            const t = o2.pointsOfInterest[this.targetPoi];
+            const p = this.objPoiToPoint(o1, this.poi);
+            const t = this.objPoiToPoint(o2, this.targetPoi)
             return {x: t.x - p.x, y: t.y - p.y}
         } else {
             return this._vector.finalized(this.closure);
         }
-    }
-
-    get targetObject(): GrObject {
-        return this._targetObject.finalized(this.closure);
-    }
-
-    get targetPoi(): POI {
-        return POI[this._targetPoi.finalized(this.closure) as string];
     }
 
     async execute(): Promise<any> {

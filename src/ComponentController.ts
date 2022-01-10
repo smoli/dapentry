@@ -30,7 +30,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter();
-        // this.preloadDemoCode();
+        this.preloadDemoCode();
     }
 
     /**
@@ -213,17 +213,8 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-        const code = `@EACH f1@REPLACE f1iter.value f1
-ITER f1iter f1
-RECT Rectangle1 $styles.default ( 442.5 533 ) 143 f1iter.value
-NEXT f1iter
-LOOPF1:
-@BODY
-RECT Rectangle1 $styles.default ( 442.5 533 ) 143 f1iter.value
-@ENDBODY
-NEXT f1iter
-JINE f1iter LOOPF1
-@ENDEACH`;
+        const code = `LINE Line5 $styles.default (335 315) (571 306)
+LINE Line6 $styles.default (297 527) Line5 0.5`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }
