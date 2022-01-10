@@ -24,4 +24,4 @@ server:
         debug: true
         extraExts: "xml,json,properties"
         port: 35729
-        path: "dist"
+        path: "dest"

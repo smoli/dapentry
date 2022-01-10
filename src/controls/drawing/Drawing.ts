@@ -35,7 +35,7 @@ enum ToolNames {
  *
  * See https://github.com/SAP-samples/ui5-typescript-helloworld/tree/custom-controls
  *
- * @namespace sts.drawable.controls
+ * @namespace sts.drawable.controls.drawing
  */
 export default class Drawing extends Control {
 

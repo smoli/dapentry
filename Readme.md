@@ -9,8 +9,6 @@ http://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/
 
 `$ npm run start`
 
-Maybe you need to do that twice in order to work
-
 then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 ## Next steps
@@ -34,6 +32,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
   * [ ] create circle
   * [ ] create rectangle
   * [ ] create polygon
+* [ ] extend parser to recognize 43.34% as  the number 0.4334
 * [ ] create operation to append a point to a polygon
 * [ ] make polygons open by default
 * [ ] autoclose polygons
