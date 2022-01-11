@@ -6,11 +6,11 @@ describe('Sub', () => {
 
     it('Subtracts the value of two registers and writes the result into a register', async () => {
         const program = `
-            LOAD r1 10
-            LOAD r2 20          
-            SUB  r3 r1 r2  
+            LOAD r1, 10
+            LOAD r2, 20          
+            SUB  r3, r1, r2  
             
-            SUB  r2 10
+            SUB  r2, 10
         `;
 
         const i = new Interpreter();

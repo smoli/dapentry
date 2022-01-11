@@ -6,7 +6,7 @@ import {Parser, TokenTypes, Token} from "../../src/runtime/interpreter/Parser";
 describe('Parser', () => {
 
     it('turns a line of code into tokens', () => {
-        const code = `FAKE r1 123`;
+        const code = `FAKE r1, 123`;
 
         const tokens = Parser.parseLine(code);
 
@@ -20,7 +20,7 @@ describe('Parser', () => {
 
     it('can parse code lines', () => {
 
-        const code = `FAKE r1    "Hello World"      lkjh 123 "   KLJH123"`;
+        const code = `FAKE r1,    "Hello World"   ,   lkjh, 123, "   ,KLJH123"`;
 
         const tokens = Parser.parseLine(code);
 
@@ -30,7 +30,7 @@ describe('Parser', () => {
             {type: TokenTypes.STRING, value: "Hello World"},
             {type: TokenTypes.REGISTER, value: "lkjh"},
             {type: TokenTypes.NUMBER, value: 123},
-            {type: TokenTypes.STRING, value: "   KLJH123"}
+            {type: TokenTypes.STRING, value: "   ,KLJH123"}
         ]);
     });
 
@@ -40,7 +40,7 @@ describe('Parser', () => {
     });
 
     it('will ignore all characters after #, except in strings', () => {
-        const tokens = Parser.parseLine(`SOME thing "With a # string" 123 # Comments go here`);
+        const tokens = Parser.parseLine(`SOME thing, "With a # string", 123 # Comments go here`);
 
         expect(tokens).to.deep.equal([
             {type: TokenTypes.OPCODE, value: "SOME"},
@@ -77,7 +77,7 @@ describe('Parser', () => {
     });
 
     it('parses points', () => {
-        let tokens = Parser.parseLine('LOAD r1 ( 100 200 )');
+        let tokens = Parser.parseLine('LOAD r1, ( 100, 200 )');
 
         expect(tokens).to.deep.equal([
             {type: TokenTypes.OPCODE, value: "LOAD"},
@@ -90,7 +90,7 @@ describe('Parser', () => {
             }
         ]);
 
-        tokens = Parser.parseLine('LOAD r1 "A string with ( smack in ) the middle of it"');
+        tokens = Parser.parseLine('LOAD r1, "A string with ( smack in ) the middle of it"');
         expect(tokens).to.deep.equal([
             {type: TokenTypes.OPCODE, value: "LOAD"},
             {type: TokenTypes.REGISTER, value: "r1"},
@@ -101,16 +101,16 @@ describe('Parser', () => {
             .to.throw;
         expect(() => Parser.parseLine("()"))
             .to.throw;
-        expect(() => Parser.parseLine("( 100 200 ("))
+        expect(() => Parser.parseLine("( 100, 200 ("))
             .to.throw;
-        expect(() => Parser.parseLine("( 100 200"))
+        expect(() => Parser.parseLine("( 100, 200"))
             .to.throw;
-        expect(() => Parser.parseLine("100 ) 100 200"))
+        expect(() => Parser.parseLine("100 ) 100, 200"))
             .to.throw;
     });
 
     it("parses annotations for statements", () => {
-        let tokens = Parser.parseLine("LOAD r1 23 @A1 @A2");
+        let tokens = Parser.parseLine("LOAD r1, 23 @A1 @A2");
 
         expect(tokens).to.deep.equal(
             [
@@ -132,7 +132,7 @@ describe('Parser', () => {
         );
     })
     it("parses annotations with arguments", () => {
-        let tokens = Parser.parseLine("LOAD r1 23 @A1 a b @A2 ced def");
+        let tokens = Parser.parseLine("LOAD r1, 23 @A1 a b @A2 ced def");
 
         expect(tokens).to.deep.equal(
             [
@@ -160,13 +160,13 @@ describe('Parser', () => {
 
         it("can construct the proper code line", () => {
 
-            let tokens:Array<Token> = [
+            let tokens: Array<Token> = [
                 {type: TokenTypes.OPCODE, value: "LOAD"},
                 {type: TokenTypes.REGISTER, value: "r1"},
                 {type: TokenTypes.REGISTER, value: "r2"}
             ]
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 r2");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, r2");
 
             tokens = [
                 {type: TokenTypes.OPCODE, value: "LOAD"},
@@ -175,7 +175,35 @@ describe('Parser', () => {
                 {type: TokenTypes.ANNOTATION, value: "HIDE"}
             ]
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 r2 @HIDE");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, r2 @HIDE");
+
+            tokens = [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {
+                    type: TokenTypes.POINT, value: [
+                        {type: TokenTypes.NUMBER, value: "1"},
+                        {type: TokenTypes.REGISTER, value: "r1"}
+                    ]
+                },
+            ]
+
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( 1, r1 )");
+
+            tokens = [
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {
+                    type: TokenTypes.ARRAY, value: [
+                        {type: TokenTypes.NUMBER, value: "1"},
+                        {type: TokenTypes.REGISTER, value: "r1"},
+                        {type: TokenTypes.REGISTER, value: "r3"}
+                    ]
+                },
+            ]
+
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, [ 1, r1, r3 ]");
+
 
             tokens = [
                 {type: TokenTypes.OPCODE, value: "LOAD"},
@@ -196,7 +224,7 @@ describe('Parser', () => {
                 }
             ]
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 ( 2 + ( r1 * 2 ) )");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( 2 + ( r1 * 2 ) )");
 
             tokens = [
                 {type: TokenTypes.OPCODE, value: "LOAD"},
@@ -217,7 +245,7 @@ describe('Parser', () => {
                 }
             ]
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1 ( ( 2 + r1 ) * 2 )");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( ( 2 + r1 ) * 2 )");
         })
 
     });

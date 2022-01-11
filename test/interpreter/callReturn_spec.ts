@@ -9,16 +9,16 @@ describe('Call and Return', () => {
     it("enable us to implement functions", async () => {
 
         const code = `
-                LOAD r1 100
-                CALL r1 FUNC                
-                CALL r1 FUNC                
-                CALL r1 FUNC                
-                CALL r3 FUNC                
+                LOAD r1, 100
+                CALL r1, FUNC                
+                CALL r1, FUNC                
+                CALL r1, FUNC                
+                CALL r3, FUNC                
                 HALT
                 
              FUNC:
-                LOAD local 0
-                ADD local r1
+                LOAD local, 0
+                ADD local, r1
                 INC local                
                 RET local                             
         `
@@ -34,31 +34,31 @@ describe('Call and Return', () => {
     it("allow for recursion", async () => {
         const code = `
             
-            LOAD r1 5
-            CALL res FIB 
+            LOAD r1, 5
+            CALL res, FIB 
             HALT
             
             FIB:
-                JEQ r1 0 ZERO
-                JEQ r1 1 ONE
+                JEQ r1, 0, ZERO
+                JEQ r1, 1, ONE
                 JMP ELSE
             
                 ZERO:
-                    LOAD r2 0
+                    LOAD r2, 0
                     RET r2
                     
                 ONE:
-                    LOAD r2 1
+                    LOAD r2, 1
                     RET r2
           
                 ELSE:                    
                     DEC r1
-                    CALL r3 FIB
+                    CALL r3, FIB
                     
                     DEC r1
-                    CALL r4 FIB
+                    CALL r4, FIB
                     
-                    ADD r3 r4
+                    ADD r3, r4
                     RET r3
         
         `;

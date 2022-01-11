@@ -6,9 +6,9 @@ describe('Add', () => {
 
     it('Adds the value of two registers and writes the result into a register', async () => {
         const program = `
-            LOAD r1 10
-            LOAD r2 20  
-            ADD  r3 r1 r2          
+            LOAD r1, 10
+            LOAD r2, 20  
+            ADD  r3, r1, r2          
         `;
 
         const i = new Interpreter();
@@ -20,9 +20,9 @@ describe('Add', () => {
 
     it('Adds a value to a register and stores the sum in that register if given two args', async () => {
         const program = `
-            LOAD r1 10
-            LOAD r2 20  
-            ADD  r1 r2          
+            LOAD r1, 10
+            LOAD r2, 20  
+            ADD  r1, r2          
         `;
 
         const i = new Interpreter();
@@ -36,9 +36,9 @@ describe('Add', () => {
     it("concatenates strings", async () => {
 
         const code = `
-            LOAD a "Hello "
-            LOAD b "world!"
-            ADD  a b
+            LOAD a, "Hello "
+            LOAD b, "world!"
+            ADD  a, b
         `;
 
         const i = new Interpreter();

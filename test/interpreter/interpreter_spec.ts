@@ -26,7 +26,7 @@ describe('Interpreter', () => {
     });
 
     it('can take an array of strings as a program', async () => {
-       const code = ['LOAD r1 100', 'ADD r1 10'];
+       const code = ['LOAD r1, 100', 'ADD r1, 10'];
 
         const i = new Interpreter();
         i.parse(code);
@@ -38,7 +38,7 @@ describe('Interpreter', () => {
 
     it("can receive values to preload registers", async ()=> {
        const code = `
-            ADD r2 r1 100
+            ADD r2, r1, 100
        `;
 
         const i = new Interpreter();
@@ -54,13 +54,13 @@ describe('Interpreter', () => {
 
 
         const code = `
-                LOAD r1 200  # 0
-                LOAD r2 pc   # 1
+                LOAD r1, 200  # 0
+                LOAD r2, pc   # 1
                 DEC r1       # 2
                 SETPC 5      # 3  will affect pc before it is incremented               
                 DEC r1       # 4                  
                 DEC r1       # 5
-                LOAD r3 pc   # 6                      
+                LOAD r3, pc   # 6                      
         `;
 
 
@@ -76,8 +76,8 @@ describe('Interpreter', () => {
 
     it("ignores annotations in code", async () => {
        const code = `
-                LOAD r1 200  @A1
-                LOAD r2 pc   @lkjh @lkjh 
+                LOAD r1, 200  @A1
+                LOAD r2, pc   @lkjh @lkjh 
                 DEC r1       @KJHGlkj123
        `
 
@@ -93,12 +93,12 @@ describe('Interpreter', () => {
     it("can be told to halt after a given instruction", async () => {
 
         const code = `
-            LOAD r1 200
-            ADD r1 1
-            ADD r1 1
-            ADD r1 1
-            ADD r1 1
-            ADD r1 1
+            LOAD r1, 200
+            ADD r1, 1
+            ADD r1, 1
+            ADD r1, 1
+            ADD r1, 1
+            ADD r1, 1
         `;
 
         const i = new Interpreter();
@@ -120,12 +120,12 @@ describe('Interpreter', () => {
     it("can be told to halt after the n-th iteration of a given instruction", async () => {
 
         const code = `
-            LOAD r1 200
-            LOAD i 5
+            LOAD r1, 200
+            LOAD i, 5
         LOOP:
-            ADD r1 1
+            ADD r1, 1
             DEC i
-            JNZ i LOOP    
+            JNZ i, LOOP    
         `
 
         const i = new Interpreter();

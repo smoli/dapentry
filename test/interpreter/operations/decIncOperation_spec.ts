@@ -6,7 +6,7 @@ describe('Dec', () => {
 
     it('Subtracts one from a register and writes it back', async () => {
         const program = `
-            LOAD r1 10
+            LOAD r1, 10
             DEC  r1    
             DEC  r1
             DEC  r1
@@ -24,7 +24,7 @@ describe('Inc', () => {
 
     it('Adds one to a register and writes it back', async () => {
         const program = `
-            LOAD r1 10
+            LOAD r1, 10
             INC  r1    
             INC  r1
             INC  r1

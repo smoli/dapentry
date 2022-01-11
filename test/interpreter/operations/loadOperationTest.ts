@@ -6,12 +6,12 @@ describe('Load', () => {
 
     it('load a value into a register', async () => {
         const program = `
-            LOAD r1 "Hello World"
-            LOAD r2 1234            
-            LOAD r3 "Hello Country"
-            LOAD r4 2341            
-            LOAD r5 "Hello City"
-            LOAD r6 3412            
+            LOAD r1, "Hello World"
+            LOAD r2, 1234            
+            LOAD r3, "Hello Country"
+            LOAD r4, 2341            
+            LOAD r5, "Hello City"
+            LOAD r6, 3412            
         `;
 
         const i = new Interpreter();

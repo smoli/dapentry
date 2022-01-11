@@ -8,7 +8,7 @@ describe('Jumps', () => {
     it('are used to jump to a label unconditionally', async () => {
 
         const code = `
-            LOAD r1 10      
+            LOAD r1, 10      
             JMP LABEL                   
             INC  r1
         LABEL:            

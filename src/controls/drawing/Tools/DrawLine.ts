@@ -76,17 +76,17 @@ export class DrawLine extends Tool {
         const x2 = this._line.x2;
         const y2 = this._line.y2;
 
-        let one = `(${x1} ${y1})`;
-        let two = `(${x2} ${y2})`;
+        let one = `(${x1}, ${y1})`;
+        let two = `(${x2}, ${y2})`;
         if (this._firstSnapInfo.object) {
-            one = `${this._firstSnapInfo.object.name} "${POI[this._firstSnapInfo.poiId]}"`
+            one = `${this._firstSnapInfo.object.name}, "${POI[this._firstSnapInfo.poiId]}"`
         }
         if (this._secondSnapInfo.object) {
-            two = `${this._secondSnapInfo.object.name} "${POI[this._secondSnapInfo.poiId]}"`
+            two = `${this._secondSnapInfo.object.name}, "${POI[this._secondSnapInfo.poiId]}"`
         }
 
 
-        return [`LINE ${this._line.uniqueName} $styles.default ${one} ${two}`]
+        return [`LINE ${this._line.uniqueName}, $styles.default, ${one}, ${two}`]
 
     }
 }

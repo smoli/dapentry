@@ -6,12 +6,12 @@ describe('Exponentiante', () => {
 
     it('Exponentiates the value of two registers and writes the result into a register', async () => {
         const program = `
-            LOAD r1 2
-            LOAD r2 8  
-            EXP  r3 r1 r2   
-            EXP  r4 r1 3  
+            LOAD r1, 2
+            LOAD r2, 8  
+            EXP  r3, r1, r2   
+            EXP  r4, r1, 3  
             
-            EXP r2 2    
+            EXP r2, 2    
         `;
 
         const i = new Interpreter();

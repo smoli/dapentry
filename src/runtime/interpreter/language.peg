@@ -35,7 +35,7 @@
 
 
   Eval
-    = head:Term tail:(" " OP1 " " Term)* {
+    = head:Term tail:(_ OP1 _ Term)* {
       const r = [head]
       if (tail.length)
           r.push(tail[0][1], tail[0][3])
@@ -44,13 +44,13 @@
     }
 
   OP1
-   = ("+ " / "-") {
+   = ("+" / "-") {
    	return { type: TokenTypes.OPERATOR, value: text() }
    }
 
 
   Term
-    = head:Factor tail:(" " OP2 " " Factor)* {
+    = head:Factor tail:(_ OP2 _ Factor)* {
       const r = [head]
       if (tail.length)
           r.push(tail[0][1], tail[0][3])
@@ -74,10 +74,11 @@
 
 
   Operation "Operation"
-  = exp:Opcode args:(_ ArgumentOrTuple)* {
-      return [exp, ...args.map(a => a[1])]
+  =  exp:Opcode _ arg1:ArgumentOrTuple args:(S ArgumentOrTuple)* {
+      		return [exp, arg1, ...args.map(a => a[1])]
       }
-
+     / exp:Opcode _ arg:ArgumentOrTuple
+  	 / exp:Opcode { return [exp]; }
 
 
 
@@ -151,14 +152,18 @@
   = [^'"'\n]
 
   Tuple "Tuple"
-      = "("_ args:(_ Argument)* _ ")" {
-      return { type: TokenTypes.POINT, value: flatten(args) }
+      = "("_ first:Argument args:(S Argument)* _ ")" {
+      return { type: TokenTypes.POINT, value: [first, ...args.map(a => a[1])] }
       }
 
 
   Array "Array"
-      = "["_ args:(_ ArgumentOrTuple)* _ "]" {
-      return { type: TokenTypes.ARRAY, value: flatten(args) }
+      = "["_ first:ArgumentOrTuple args:(S ArgumentOrTuple)* _ "]" {
+      		return { type: TokenTypes.ARRAY, value: [first, ...args.map(a => a[1])] }
+      	}
+
+	  / "[" _ "]" {
+      		return { type: TokenTypes.ARRAY, value: [] }
       }
 
   Opcode "Opcode"
@@ -173,6 +178,9 @@
             value: label.join("")
         }]
       }
+
+  S "separator"
+   = _ "," _ { return null }
 
   _ "whitespace"
     = [	 ]* {

@@ -25,10 +25,10 @@ describe('Moving', () => {
 
         it("will move the whole circle, no matter what point is moved", async () => {
             const code = `
-                CIRCLE Circle1 $styles.default (100 100) 50
-                MOVE Circle1 "center" ( 50 50 )
-                CIRCLE Circle2 $styles.default (200 200) 50
-                MOVE Circle2 "top" Circle1 "bottom"
+                CIRCLE Circle1, $styles.default, (100, 100), 50
+                MOVE Circle1, "center", ( 50, 50 )
+                CIRCLE Circle2, $styles.default, (200, 200), 50
+                MOVE Circle2, "top", Circle1, "bottom"
             `;
 
             const i = await runCode(code);
@@ -48,11 +48,11 @@ describe('Moving', () => {
         it('will move the end of a line individually', async () => {
 
             const code = `
-                LINE Line1 $styles.default (0 0) (100 0)
-                LINE Line2 $styles.default (0 0) (100 0)
-                CIRCLE Circle2 $styles.default (100 100) 50
-                MOVE Line1 "end" Circle2 "top"
-                MOVE Line2 "start" Circle2 0.25
+                LINE Line1, $styles.default, (0, 0), (100, 0)
+                LINE Line2, $styles.default, (0, 0), (100, 0)
+                CIRCLE Circle2, $styles.default, (100, 100), 50
+                MOVE Line1, "end", Circle2, "top"
+                MOVE Line2, "start", Circle2, 0.25
             `;
 
             const i = await runCode(code);

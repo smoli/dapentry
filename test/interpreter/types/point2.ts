@@ -8,10 +8,10 @@ describe('Point2', () => {
     it("can be used as data in a program", async () => {
 
         const code = `
-            LOAD r1 ( 100 200 )
-            LOAD r2 50
-            LOAD r3 ( r2 40 )
-            LOAD r3.y r1.x
+            LOAD r1, ( 100, 200 )
+            LOAD r2, 50
+            LOAD r3, ( r2, 40 )
+            LOAD r3.y, r1.x
         `;
 
         const i = new Interpreter();

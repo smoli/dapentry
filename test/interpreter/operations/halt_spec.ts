@@ -8,14 +8,14 @@ describe('Halt', () => {
     it('ends the program', async () => {
 
         const code = `
-            LOAD r1 100
-            CALL r1 FUNC
-            ADD r1 5
+            LOAD r1, 100
+            CALL r1, FUNC
+            ADD r1, 5
             HALT
-            ADD r1 5
+            ADD r1, 5
             
           FUNC:
-            ADD r1 10
+            ADD r1, 10
             RET r1
         `
 

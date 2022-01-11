@@ -8,10 +8,10 @@ describe('Array', () => {
     it("can be used as data in a program", async () => {
 
         const code = `
-            LOAD v 500
-            LOAD r1 [100 200 300 400 v]
-            LOAD r1.1 150
-            LOAD r2 r1.2
+            LOAD v, 500
+            LOAD r1, [100, 200, 300, 400, v]
+            LOAD r1.1, 150
+            LOAD r2, r1.2
         `;
 
         const i = new Interpreter();
@@ -27,7 +27,7 @@ describe('Array', () => {
 
     it("can be initialized empty", async () => {
         const code = `
-                LOAD r1 [ ]
+                LOAD r1, [ ]
         `
         const i = new Interpreter();
         i.parse(code);
@@ -38,11 +38,11 @@ describe('Array', () => {
 
     it("can have items added to it", async () => {
         const code = `
-            LOAD r1 [100 200 300 400]
-            LOAD r2 500
-            APP r1 r2
-            APP r1 550
-            APP r1 600 650                        
+            LOAD r1, [100, 200, 300, 400]
+            LOAD r2, 500
+            APP r1, r2
+            APP r1, 550
+            APP r1, 600, 650                        
         `
 
         const i = new Interpreter();
@@ -54,18 +54,18 @@ describe('Array', () => {
 
     it("can be iterated over", async () => {
         const code = `
-            LOAD a [1 2 3 4 5 6 7]
-            LOAD r 0
+            LOAD a, [1, 2, 3, 4, 5, 6, 7]
+            LOAD r, 0
                         
-            ITER i a
+            ITER i, a
           LABEL:
-            ADD r i.value
-            JEQ i.index 5 END
+            ADD r, i.value
+            JEQ i.index, 5, END
             NEXT i
-            JINE i LABEL
+            JINE i, LABEL
             
           END:
-            MUL r 2                 
+            MUL r, 2                 
        `;
 
         const i = new Interpreter();
@@ -79,16 +79,16 @@ describe('Array', () => {
 
     it("passed into the interpreter", async () => {
         const code = `
-            LOAD r 0
+            LOAD r, 0
                         
-            ITER i a
+            ITER i, a
           LABEL:
-            ADD r i.value
-            JEQ i.index 5 END
+            ADD r, i.value
+            JEQ i.index, 5, END
             NEXT i
-            JINE i LABEL
+            JINE i, LABEL
           END:
-            MUL r 2                 
+            MUL r, 2                 
        `;
 
         const i = new Interpreter();
@@ -104,14 +104,14 @@ describe('Array', () => {
 
     it("iterator value in point", async () => {
         const code = `
-            LOAD ar [1 2 3]
+            LOAD ar, [1, 2, 3]
             
-            ITER i ar
+            ITER i, ar
            LOOP:
-            LOAD r1 (i.value 1)
-            LOAD r2 i.value
+            LOAD r1, (i.value, 1)
+            LOAD r2, i.value
             NEXT i
-            JINE i LOOP
+            JINE i, LOOP
             
         `;
 

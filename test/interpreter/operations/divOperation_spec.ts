@@ -6,11 +6,11 @@ describe('Divide', () => {
 
     it('Divides the value of two registers and writes the result into a register', async () => {
         const program = `
-            LOAD r1 10
-            LOAD r2 20  
-            DIV  r3 r1 r2    
+            LOAD r1, 10
+            LOAD r2, 20  
+            DIV  r3, r1, r2    
             
-            DIV  r2 10      
+            DIV  r2, 10      
         `;
 
         const i = new Interpreter();

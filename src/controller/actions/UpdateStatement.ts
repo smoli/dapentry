@@ -33,7 +33,7 @@ export class UpdateStatement extends BaseAction {
         const newCreationStatement = Parser.constructCodeLine(tokens);
 
 
-        newStatements.push(`ITER ${iteratorName} ${dataName}`);
+        newStatements.push(`ITER ${iteratorName}, ${dataName}`);
 
         // newStatements.push(newCreationStatement);
         // newStatements.push(`NEXT ${iteratorName}`);
@@ -46,7 +46,7 @@ export class UpdateStatement extends BaseAction {
         newStatements.push("@ENDBODY");
 
         newStatements.push(`NEXT ${iteratorName}`);
-        newStatements.push(`JINE ${iteratorName} ${labelName}`);
+        newStatements.push(`JINE ${iteratorName}, ${labelName}`);
         newStatements.push("@ENDEACH");
 
         console.log(codeManager.code.join("\n"));

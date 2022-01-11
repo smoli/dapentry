@@ -8,7 +8,7 @@ describe('Debugging', () => {
     it('can be used to stop and resume program execution', async () => {
 
         const code = `
-            LOAD r1 10
+            LOAD r1, 10
             DEC r1            
             DEBUG
             DEC r1            
@@ -32,7 +32,7 @@ describe('Debugging', () => {
     it('a stopped program can be restarted', async () => {
 
         const code = `
-            LOAD r1 10
+            LOAD r1, 10
             DEC r1            
             DEBUG
             DEC r1            

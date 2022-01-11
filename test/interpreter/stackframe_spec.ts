@@ -8,11 +8,11 @@ describe('Stackframes', () => {
     it('enable us to setup execution contexts', async () => {
 
         const code = `
-            LOAD r1 10
-            LOAD r2 10
+            LOAD r1, 10
+            LOAD r2, 10
             PUSHSF
             DEC r1
-            ADD r1 r2
+            ADD r1, r2
             POPSF            
         `;
 
