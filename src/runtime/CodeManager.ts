@@ -5,6 +5,7 @@ import {Stack} from "./tools/Stack";
 
 export type TokenList = Array<Token>;
 
+
 /**
  * Defines the opcodes that initialize a register.
  * The key is the opcode. The number is the argument position,
@@ -24,13 +25,19 @@ export class CodeManager {
     private _labels: string[];
     private _creationOpcodes: CreationInfo;
     private _state: StateMachine;
+    private readonly _jumpOpcodes: Array<string>;
 
 
-    constructor(creationOpcodes: CreationInfo = {"LOAD": 1}) {
+    constructor(creationOpcodes: CreationInfo =
+                    {"LOAD": 1},
+                jumpOpCodes: Array<string> = [
+                    "JMP", "JNZ", "JNE", "JNZ", "JEQ", "JNE", "JLT", "JLE", "JGT", "JGE", "JINE"]
+    ) {
         this._code = [];
         this._registers = [];
         this._labels = [];
         this._creationOpcodes = creationOpcodes;
+        this._jumpOpcodes = jumpOpCodes;
         this._state = new StateMachine();
     }
 
@@ -178,10 +185,10 @@ export class CodeManager {
      * TODO: This is a hacky implementation that breaks if you don't
      *       apply annotations the way they are expected
      */
-    get annotatedCode(): Array<{ originalLine:number, code:string }> {
+    get annotatedCode(): Array<{ originalLine: number, code: string }> {
 
         const ret = [];
-        const blockStack = new Stack<{ code: string, replaces: Array<Token>}>();
+        const blockStack = new Stack<{ code: string, replaces: Array<Token> }>();
 
         const find = (tokens, value) => tokens.find(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
         const findAll = (tokens, value) => tokens.filter(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
@@ -198,7 +205,7 @@ export class CodeManager {
 
             const body = find(tokens, "BODY");
             if (body) {
-                blockStack.push({ code: "BODY", replaces: findAll(tokens, "REPLACE") });
+                blockStack.push({code: "BODY", replaces: findAll(tokens, "REPLACE")});
                 continue;
             }
 
@@ -206,7 +213,7 @@ export class CodeManager {
             const endeach = find(tokens, "ENDEACH");
             if (endeach) {
                 blockStack.pop();
-                ret.push({ originalLine, code: "@ENDEACH"});
+                ret.push({originalLine, code: "@ENDEACH"});
                 continue;
             }
 
@@ -216,8 +223,8 @@ export class CodeManager {
 
             const each = find(tokens, "EACH");
             if (each) {
-                ret.push({ originalLine, code: "@EACH " + each.args.join(" ") });
-                blockStack.push({ code: "EACH", replaces: findAll(tokens, "REPLACE") });
+                ret.push({originalLine, code: "@EACH " + each.args.join(" ")});
+                blockStack.push({code: "EACH", replaces: findAll(tokens, "REPLACE")});
                 continue;
             }
 
@@ -244,7 +251,7 @@ export class CodeManager {
             if (blockStack.length) {
                 let l = blockStack.length;
 
-                while(l--) {
+                while (l--) {
                     for (const t of blockStack[l].replaces) {
                         newLine = newLine.replace(t.args[0], t.args[1])
                     }
@@ -252,7 +259,7 @@ export class CodeManager {
             }
 
 
-            ret.push({ originalLine, code: newLine});
+            ret.push({originalLine, code: newLine});
         }
 
         return ret;
@@ -297,6 +304,39 @@ export class CodeManager {
         return -1;
     }
 
+    isStatementInLoop(index: number): boolean {
+
+        // Get all labels above
+        const labels = [];
+        for (let i = index - 1; i >= 0; i--) {
+            const t = this.getTokensForStatement(i);
+            if (t && t[0].type === TokenTypes.LABEL) {
+                labels.push(t[0].value);
+            }
+        }
+
+        if (labels.length === 0) {
+            return false;
+        }
+
+        // Find a jump to one of the labels
+        for (let i = index + 1; i < this._code.length; i++) {
+            const t = this.getTokensForStatement(i);
+            const op = this.getOpCode(t);
+
+            if (this._jumpOpcodes.indexOf(op) !== -1) {
+                const lt = t.find(t => t.type === TokenTypes.LABEL);
+                if (lt) {
+                    if (labels.indexOf(lt.value) !== -1) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Get the indexes of all statements that have the given register as an
      * argument.
@@ -318,32 +358,32 @@ export class CodeManager {
         return ret;
     }
 
-    protected makeUniqueName(memory:string[], preference:string):string {
+    protected makeUniqueName(memory: string[], preference: string): string {
         if (memory.indexOf(preference) === -1) {
             return preference;
         }
 
         let suff = 0;
-        while(memory.indexOf(preference + suff) !== -1) {
+        while (memory.indexOf(preference + suff) !== -1) {
             suff++;
         }
 
         return preference + suff;
     }
 
-    public makeUniqueRegisterName(preference):string {
+    public makeUniqueRegisterName(preference): string {
         return this.makeUniqueName(this._registers, preference);
     }
 
-    public registerExists(registerName):boolean {
+    public registerExists(registerName): boolean {
         return this._registers.indexOf(registerName) !== -1;
     }
 
-    public makeUniqueLabelName(preference):string {
+    public makeUniqueLabelName(preference): string {
         return this.makeUniqueName(this._labels, preference);
     }
 
-    public labelExists(registerName):boolean {
+    public labelExists(registerName): boolean {
         return this._labels.indexOf(registerName) !== -1;
     }
 
@@ -355,9 +395,9 @@ export class CodeManager {
     }
 
     protected memorizeRegistersAndLabels(statement) {
-        const tokens:Array<Token> = Parser.parseLine(statement);
+        const tokens: Array<Token> = Parser.parseLine(statement);
 
-        const walk = (tokens:Array<Token>) => {
+        const walk = (tokens: Array<Token>) => {
             for (const token of tokens) {
                 switch (token.type) {
                     case TokenTypes.REGISTER:

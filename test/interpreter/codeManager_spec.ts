@@ -244,6 +244,26 @@ describe('Code manager', () => {
     });
 
     describe("by analyzing the code", () => {
+
+        it("can tell if a statement is within a loop", () => {
+
+            const code = `
+                LOAD r2, 10
+              LAB1:
+                DEC r2
+                JNZ r2, LAB2:
+                LOAD r1,r2
+              LAB2:
+                JNZ r2, LAB1:       
+            `;
+
+            const m = new CodeManager();
+            m.addCodeString(code);
+
+            expect(m.isStatementInLoop(2)).to.be.true;
+
+        });
+
         it("can create new unused register names", () => {
             const m = new CodeManager();
 
@@ -303,7 +323,6 @@ describe('Code manager', () => {
                 }
             }
         });
-
     });
 
     describe("by analyzing code annotations", () => {
@@ -413,7 +432,7 @@ describe('Code manager', () => {
                 ADD tmp, r1, dataIt.value  # CIRCLE...
                 APP r2, tmp
                 NEXT dataIt
-                JINE dataIt, LOOP                
+                JINE dataIt, LOOP:                
         `
 
 
@@ -447,7 +466,7 @@ describe('Code manager', () => {
             m.insertStatement(newCodeLine, index++);
             m.insertStatement(`APP ${reg}, ${tempRegName}`, index++);
             m.insertStatement(`NEXT ${iteratorName}`, index++);
-            m.insertStatement(`JINE ${iteratorName}, ${labelName}`, index++);
+            m.insertStatement(`JINE ${iteratorName}, ${labelName}:`, index++);
             m.insertStatement("POPSF", index++);
         }
 
