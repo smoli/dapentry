@@ -1,5 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
+
 const sinon = require("sinon")
 
 import {Interpreter} from "../../src/runtime/interpreter/Interpreter";
@@ -26,7 +27,7 @@ describe('Interpreter', () => {
     });
 
     it('can take an array of strings as a program', async () => {
-       const code = ['LOAD r1, 100', 'ADD r1, 10'];
+        const code = ['LOAD r1, 100', 'ADD r1, 10'];
 
         const i = new Interpreter();
         i.parse(code);
@@ -36,14 +37,14 @@ describe('Interpreter', () => {
 
     });
 
-    it("can receive values to preload registers", async ()=> {
-       const code = `
+    it("can receive values to preload registers", async () => {
+        const code = `
             ADD r2, r1, 100
        `;
 
         const i = new Interpreter();
         i.parse(code);
-        await i.run({ r1: 100 });
+        await i.run({r1: 100});
 
         expect(i.getRegister("r1")).to.equal(100);
         expect(i.getRegister("r2")).to.equal(200);
@@ -75,7 +76,7 @@ describe('Interpreter', () => {
     });
 
     it("ignores annotations in code", async () => {
-       const code = `
+        const code = `
                 LOAD r1, 200  @A1
                 LOAD r2, pc   @lkjh @lkjh 
                 DEC r1       @KJHGlkj123
@@ -117,7 +118,7 @@ describe('Interpreter', () => {
         expect(i.getRegister("r1")).to.equal(204);
     });
 
-    it("can be told to halt after the n-th iteration of a given instruction", async () => {
+    it("can be told to pause after the n-th iteration of a given instruction", async () => {
 
         const code = `
             LOAD r1, 200
@@ -153,6 +154,29 @@ describe('Interpreter', () => {
         expect(i.getRegister("r1")).to.equal(205);
     });
 
+    it("a paused program can be resumed and runs till the end", async () => {
+
+        const code = `
+            LOAD r1, 200
+            LOAD i, 5
+        LOOP:
+            ADD r1, 1
+            DEC i
+            JNZ i, LOOP:  
+        `
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        i.pauseAfter(3, 2);
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(202);
+
+        await i.resume();
+        expect(i.getRegister("r1")).to.equal(205);
+    });
+
+
     it("can iterate over the program step by step", async () => {
 
         const code = `
@@ -184,7 +208,6 @@ describe('Interpreter', () => {
         await i.next();
         await i.next();
         expect(i.getRegister("r1")).to.equal(6);
-
 
 
     });

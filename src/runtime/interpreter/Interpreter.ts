@@ -28,6 +28,20 @@ class GlobalStackFrame extends StackFrame {
 
 }
 
+/**
+ * Interpreter.
+ *
+ * Runs programs.
+ *
+ * Execution control:
+ *
+ *  - run - runs the whole program from start to finish
+ *  - pause - pauses the execution. Only feasible with an operation, see Debug
+ *  - resume - resumes a paused execution and run till the end
+ *  - pauseAfter - tell the interpreter where to pause before calling run
+ *  - next - execute one single statement of a paused execution
+ *
+ */
 export class Interpreter {
 
     private _stack: Array<StackFrame> = [];
@@ -131,10 +145,26 @@ export class Interpreter {
         }
     }
 
+    /**
+     * Sets a label at the current Program counter.
+     * @param labelName
+     */
     public setLabel(labelName) {
         this._labels[labelName] = this.pc;
     }
 
+    /**
+     * Pause execution after the statement at the given pc
+     * is executed. If it is inside a loop you can specify
+     * the amount of times it has to be executed before the
+     * program is paused.
+     *
+     * This setting will persist if you run the program again
+     * using `run`.
+     *
+     * @param pc
+     * @param iterations
+     */
     public pauseAfter(pc: number, iterations: number = 1) {
         this._pauseAfter = pc;
         this._pauseAtAfterIterations = iterations;
@@ -147,6 +177,8 @@ export class Interpreter {
 
     /**
      * Prepare everything to run the program from the start.
+     * This does not start the program execution. This is normally
+     * used in conjunction with `next`
      * @param registers
      */
     public start(registers?: { [key: string]: any }) {
@@ -164,6 +196,9 @@ export class Interpreter {
     /**
      * Run the program from the start till the end or until the specified
      * wait point is reached.
+     *
+     * This keeps pauseAfter settings!
+     *
      * @param registers
      */
     public async run(registers?: { [key: string]: any }): Promise<any> {
@@ -188,10 +223,14 @@ export class Interpreter {
     /**
      * Resume a stopped execution. Does nothing if the
      * program isn't stopped.
+     * This will override pauseAfter.
      */
     public async resume(): Promise<any> {
         if (this._paused) {
             this._paused = false;
+            this._pauseAfter = Number.MAX_SAFE_INTEGER;
+            this._pauseAtAfterIterations = Number.MAX_SAFE_INTEGER;
+            this._currentHaltIterations = Number.MAX_SAFE_INTEGER;
             return this._run();
         }
     }
@@ -292,6 +331,11 @@ export class Interpreter {
     }
 
 
+    /**
+     * Parse a program. The parsing result is stored internally
+     * and can then be executed repeatedly.
+     * @param program
+     */
     public parse(program: (string | Array<string>)): void {
 
         let lines;
