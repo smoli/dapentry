@@ -13,7 +13,7 @@ describe('Branching is done using jumps', () => {
         LABEL:
             ADD  r2, r2, 10   # Increment value
             DEC  r1         # Decrement loop counter
-            JNZ  r1, LABEL   # As long as loop counter is not zero jump            
+            JNZ  r1, LABEL:   # As long as loop counter is not zero jump            
         `;
 
         const i = new Interpreter();
@@ -33,7 +33,7 @@ describe('Branching is done using jumps', () => {
         LABEL:
             ADD  r2, r2, 10   # Increment value
             DEC  r1         # Decrement loop counter
-            JNE  r1, 5, LABEL   # As long as loop counter is not 5            
+            JNE  r1, 5, LABEL:   # As long as loop counter is not 5            
         `;
 
         const i = new Interpreter();
@@ -53,7 +53,7 @@ describe('Branching is done using jumps', () => {
         LABEL:
             ADD  r2, r2, 10   # Increment value
             INC  r1         # Increment loop counter
-            JLT  r1, 5, LABEL # As long as loop counter is lower than 5            
+            JLT  r1, 5, LABEL: # As long as loop counter is lower than 5            
         `;
 
         const i = new Interpreter();
@@ -72,7 +72,7 @@ describe('Branching is done using jumps', () => {
         LABEL:
             ADD  r2, r2, 10   # Increment value
             INC  r1         # Increment loop counter
-            JLE  r1, 5, LABEL # As long as loop counter is lower or equal to 5            
+            JLE  r1, 5, LABEL: # As long as loop counter is lower or equal to 5            
         `;
 
         const i = new Interpreter();
@@ -92,7 +92,7 @@ describe('Branching is done using jumps', () => {
         LABEL:
             ADD  r2, r2, 10   # Increment value
             DEC  r1         # Decrement loop counter
-            JGT  r1, 5, LABEL # As long as loop counter is greater than 5            
+            JGT  r1, 5, LABEL: # As long as loop counter is greater than 5            
         `;
 
         const i = new Interpreter();
@@ -111,7 +111,7 @@ describe('Branching is done using jumps', () => {
         LABEL:
             ADD  r2, r2, 10   # Increment value
             DEC  r1         # Decrement loop counter
-            JGE  r1, 5, LABEL # As long as loop counter is greater or equal to 5            
+            JGE  r1, 5, LABEL: # As long as loop counter is greater or equal to 5            
         `;
 
         const i = new Interpreter();
@@ -130,7 +130,7 @@ describe('Branching is done using jumps', () => {
         LABEL:
             ADD  r2, r2, 10   
             DEC  r1         
-            JNZ  r1, WRONGLABEL            
+            JNZ  r1, WRONGLABEL:            
         `;
 
         const i = new Interpreter();

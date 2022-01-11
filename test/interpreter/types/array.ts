@@ -60,9 +60,9 @@ describe('Array', () => {
             ITER i, a
           LABEL:
             ADD r, i.value
-            JEQ i.index, 5, END
+            JEQ i.index, 5, END:
             NEXT i
-            JINE i, LABEL
+            JINE i, LABEL:
             
           END:
             MUL r, 2                 
@@ -84,9 +84,9 @@ describe('Array', () => {
             ITER i, a
           LABEL:
             ADD r, i.value
-            JEQ i.index, 5, END
+            JEQ i.index, 5, END:
             NEXT i
-            JINE i, LABEL
+            JINE i, LABEL:
           END:
             MUL r, 2                 
        `;
@@ -111,7 +111,7 @@ describe('Array', () => {
             LOAD r1, (i.value, 1)
             LOAD r2, i.value
             NEXT i
-            JINE i, LOOP
+            JINE i, LOOP:
             
         `;
 

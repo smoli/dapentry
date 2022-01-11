@@ -273,7 +273,7 @@ export class Interpreter {
 
         let opcode = null;
 
-        const parts = tokens.map(token => {
+        const parts = tokens.map((token, i) => {
 
             switch (token.type) {
                 case TokenTypes.OPCODE:
@@ -281,7 +281,9 @@ export class Interpreter {
                     return null;
 
                 case TokenTypes.LABEL:
-                    opcode = "___LBL___";
+                    if (i === 0) {
+                        opcode = "___LBL___";
+                    }
                     return new Parameter(false, token.value);
 
                 default:

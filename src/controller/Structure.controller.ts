@@ -7,6 +7,7 @@ import Input from "sap/m/Input";
 import {FlexAlignItems, FlexJustifyContent, InputType} from "sap/m/library";
 import DisplayListItem from "sap/m/DisplayListItem";
 import CustomListItem from "sap/m/CustomListItem";
+import ListBase from "sap/m/ListBase";
 
 
 enum Do {
@@ -37,6 +38,14 @@ export default class StructureController extends BaseController {
 
     onCodelineSelectionChange(event) {
         const item = event.getParameter("listItem");
+        const source = event.getSource() as ListBase;
+
+        const selection = source.getSelectedItems();
+
+        this.getComponentController().setSelectedCodeLines(selection.map(s => s.getBindingContext("appModel").getProperty("index")));
+
+
+/*
         const selected: boolean = event.getParameter("selected");
 
         if (!selected) {
@@ -44,6 +53,7 @@ export default class StructureController extends BaseController {
         } else {
             this.getComponentController().setSelectedCodeLine(item.getBindingContext("appModel").getProperty("index"));
         }
+*/
     }
 
     getTextIdForTokens(tokens: Array<Token>): string {
@@ -118,6 +128,7 @@ export default class StructureController extends BaseController {
 
         // @ts-ignore
         return new CustomListItem(id, { selected: "{appModel>selected}",
+            type: "Active",
             content: [new Text({text: t})]
         });
 

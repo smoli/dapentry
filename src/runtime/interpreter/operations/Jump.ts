@@ -11,7 +11,7 @@ export class Jump extends Operation {
     }
 
     get label(): any {
-        return this._label.name
+        return this._label.value;
     }
 
     async execute(interpreter): Promise<any> {

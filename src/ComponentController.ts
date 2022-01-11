@@ -65,8 +65,21 @@ export class ComponentController extends BaseComponentController {
     }
 
 
+    public setSelectedCodeLines(indexes:  Array<number>) {
+        if (indexes.length === 1) {
+            this.setSelectedCodeLine(indexes[0]);
+        } else if (indexes.length === 0) {
+            this.setSelectedCodeLine(-1);
+        } else {
+            indexes.forEach(index => {
+                this.getAppModel().set("segmentedCode", c => c.index === index, "selected").to(true);
+            });
+            this.setSelectedCodeLine(Math.max(...indexes));
+        }
+    }
+
     public setSelectedCodeLine(index: number = -1) {
-        this.getAppModel().set("segmentedCode", c => c.selected, "selected").to(false);
+        // this.getAppModel().set("segmentedCode", c => c.selected, "selected").to(false);
         if (index === -1) {
             this.getAppModel().set("selectedCodeLine").to(null);
             this._interpreter.clearHaltAfter()

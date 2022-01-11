@@ -10,10 +10,10 @@ describe('Call and Return', () => {
 
         const code = `
                 LOAD r1, 100
-                CALL r1, FUNC                
-                CALL r1, FUNC                
-                CALL r1, FUNC                
-                CALL r3, FUNC                
+                CALL r1, FUNC:                
+                CALL r1, FUNC:                
+                CALL r1, FUNC:               
+                CALL r3, FUNC:               
                 HALT
                 
              FUNC:
@@ -35,13 +35,13 @@ describe('Call and Return', () => {
         const code = `
             
             LOAD r1, 5
-            CALL res, FIB 
+            CALL res, FIB: 
             HALT
             
             FIB:
-                JEQ r1, 0, ZERO
-                JEQ r1, 1, ONE
-                JMP ELSE
+                JEQ r1, 0, ZERO:
+                JEQ r1, 1, ONE:
+                JMP ELSE:
             
                 ZERO:
                     LOAD r2, 0
@@ -53,10 +53,10 @@ describe('Call and Return', () => {
           
                 ELSE:                    
                     DEC r1
-                    CALL r3, FIB
+                    CALL r3, FIB:
                     
                     DEC r1
-                    CALL r4, FIB
+                    CALL r4, FIB:
                     
                     ADD r3, r4
                     RET r3

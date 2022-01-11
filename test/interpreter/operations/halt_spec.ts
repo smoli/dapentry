@@ -9,7 +9,7 @@ describe('Halt', () => {
 
         const code = `
             LOAD r1, 100
-            CALL r1, FUNC
+            CALL r1, FUNC:
             ADD r1, 5
             HALT
             ADD r1, 5

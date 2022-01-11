@@ -125,7 +125,7 @@ describe('Interpreter', () => {
         LOOP:
             ADD r1, 1
             DEC i
-            JNZ i, LOOP    
+            JNZ i, LOOP:  
         `
 
         const i = new Interpreter();

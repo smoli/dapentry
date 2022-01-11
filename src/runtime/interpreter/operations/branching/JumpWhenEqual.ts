@@ -28,7 +28,7 @@ export class JumpWhenEqual extends Operation {
     }
 
     get label(): any {
-        return this._label.name
+        return this._label.value
     }
 
 

@@ -9,7 +9,7 @@ describe('Jumps', () => {
 
         const code = `
             LOAD r1, 10      
-            JMP LABEL                   
+            JMP LABEL:                   
             INC  r1
         LABEL:            
             INC r1          
