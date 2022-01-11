@@ -82,7 +82,7 @@ export class ComponentController extends BaseComponentController {
         // this.getAppModel().set("segmentedCode", c => c.selected, "selected").to(false);
         if (index === -1) {
             this.getAppModel().set("selectedCodeLine").to(null);
-            this._interpreter.clearHaltAfter()
+            this._interpreter.clearPauseAfter()
         } else {
             this.getAppModel().set("segmentedCode", c => c.index === index, "selected").to(true);
             const line = this.getAppModel().get("segmentedCode", c => c.index === index);
@@ -101,7 +101,7 @@ export class ComponentController extends BaseComponentController {
                 }
             }
 
-            this._interpreter.haltAfter(index, inEach ? 2 : 1);
+            this._interpreter.pauseAfter(index, inEach ? 2 : 1);
         }
         this.runCode().then(() => {
             this.updateDrawing();

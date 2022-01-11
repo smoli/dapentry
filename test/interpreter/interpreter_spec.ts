@@ -104,15 +104,15 @@ describe('Interpreter', () => {
         const i = new Interpreter();
         i.parse(code);
 
-        i.haltAfter(2);
+        i.pauseAfter(2);
         await i.run();
         expect(i.getRegister("r1")).to.equal(202);
 
-        i.clearHaltAfter();
+        i.clearPauseAfter();
         await i.run();
         expect(i.getRegister("r1")).to.equal(205);
 
-        i.haltAfter(4);
+        i.pauseAfter(4);
         await i.run();
         expect(i.getRegister("r1")).to.equal(204);
     });
@@ -131,26 +131,62 @@ describe('Interpreter', () => {
         const i = new Interpreter();
         i.parse(code);
 
-        i.haltAfter(3, 2);
+        i.pauseAfter(3, 2);
         await i.run();
         expect(i.getRegister("r1")).to.equal(202);
 
-        i.clearHaltAfter();
+        i.clearPauseAfter();
         await i.run();
         expect(i.getRegister("r1")).to.equal(205);
 
-        i.haltAfter(3, 4);
+        i.pauseAfter(3, 4);
         await i.run();
         expect(i.getRegister("r1")).to.equal(204);
 
         // If there are less iterations than told, then it will of course execute th whole program
-        i.haltAfter(3, 7);
+        i.pauseAfter(3, 7);
         await i.run();
         expect(i.getRegister("r1")).to.equal(205);
 
-        i.haltAfter(1, 2);      // <-- not within a loop
+        i.pauseAfter(1, 2);      // <-- not within a loop
         await i.run();
         expect(i.getRegister("r1")).to.equal(205);
+    });
+
+    it("can iterate over the program step by step", async () => {
+
+        const code = `
+            LOAD r1, 1
+            INC r1
+            INC r1
+            INC r1
+            INC r1            
+            INC r1            
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        i.pauseAfter(0);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(1);
+
+        await i.next();
+        expect(i.getRegister("r1")).to.equal(2);
+        await i.next();
+        expect(i.getRegister("r1")).to.equal(3);
+        await i.next(2);
+        expect(i.getRegister("r1")).to.equal(5);
+
+        await i.next();
+        await i.next();
+        await i.next();
+        await i.next();
+        await i.next();
+        expect(i.getRegister("r1")).to.equal(6);
+
+
+
     });
 
 });

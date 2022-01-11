@@ -37,13 +37,14 @@ export class Interpreter {
     private _executed: boolean = false;
 
     private _currentInstruction: Operation = null;
-    private _stopped: boolean = false;
+    private _paused: boolean = false;
     private _operationFactory: OperationFactory;
 
     private _globals: GlobalStackFrame = new GlobalStackFrame();
     private _labels: { [key: string]: number } = {};
-    private _haltAt: number = Number.MAX_SAFE_INTEGER;
-    private _haltAtAfterIterations: number;
+    private _pauseAfter: number = Number.MAX_SAFE_INTEGER;
+    private _pauseAtAfterIterations: number;
+    private _currentHaltIterations: number;
 
 
     constructor() {
@@ -105,8 +106,9 @@ export class Interpreter {
         this._labels = this._prepareLabels();
         this._globals = new GlobalStackFrame();
         this._stack = [];
-        this._stopped = false;
+        this._paused = false;
         this._currentFrame = this._globals;
+        this._currentHaltIterations = Number.MAX_SAFE_INTEGER;
 
     }
 
@@ -133,16 +135,21 @@ export class Interpreter {
         this._labels[labelName] = this.pc;
     }
 
-    public haltAfter(pc: number, iterations: number = 1) {
-        this._haltAt = pc;
-        this._haltAtAfterIterations = iterations;
+    public pauseAfter(pc: number, iterations: number = 1) {
+        this._pauseAfter = pc;
+        this._pauseAtAfterIterations = iterations;
     }
 
-    public clearHaltAfter() {
-        this._haltAt = Number.MAX_SAFE_INTEGER;
+    public clearPauseAfter() {
+        this._pauseAfter = Number.MAX_SAFE_INTEGER;
     }
 
-    public async run(registers?: { [key: string]: any }): Promise<any> {
+
+    /**
+     * Prepare everything to run the program from the start.
+     * @param registers
+     */
+    public start(registers?: { [key: string]: any }) {
         this._resetExecution();
         this.pushStack();
 
@@ -152,52 +159,123 @@ export class Interpreter {
                     this._currentFrame.setRegister(name, registers[name])
                 })
         }
+    }
 
-        // We do not pop the outer frame after our program is done,
-        // so we can access the final state after execution
-        // UNCLEAR: We will still only be able to access the outer frame
-        //          will this be enough?
+    /**
+     * Run the program from the start till the end or until the specified
+     * wait point is reached.
+     * @param registers
+     */
+    public async run(registers?: { [key: string]: any }): Promise<any> {
+        this.start(registers);
         return await this._run();
     }
 
+    /**
+     * Halt execution. Cannot be resumed.
+     */
     public halt(): void {
         this.setPC(this._program.length);
     }
 
+    /**
+     * Stop the execution. Can be resumed.
+     */
+    public pause(): void {
+        this._paused = true;
+    }
+
+    /**
+     * Resume a stopped execution. Does nothing if the
+     * program isn't stopped.
+     */
+    public async resume(): Promise<any> {
+        if (this._paused) {
+            this._paused = false;
+            return this._run();
+        }
+    }
+
+    /**
+     * Try to execute the next statement of a paused program
+     * This will override pauseAfter
+     * @param steps         How many steps to execute
+     */
+    public async next(steps: number = 1): Promise<boolean> {
+        this._pauseAfter = Number.MAX_SAFE_INTEGER;
+        this._pauseAtAfterIterations = Number.MAX_SAFE_INTEGER;
+        this._currentHaltIterations = Number.MAX_SAFE_INTEGER;
+        return this._next(steps);
+    }
+
+    protected async _next(steps: number = 1): Promise<boolean> {
+        let n = steps;
+
+        while (n--) {
+            let programCounter = this._globals.getPC();
+            programCounter++;
+
+            if (programCounter >= this._program.length) {
+                return true;
+            }
+
+            if (programCounter == this._pauseAfter) {
+                this._currentHaltIterations--;
+            }
+
+            this._globals.setPC(programCounter);
+            await this._step();
+
+            if (this._currentHaltIterations === 0) {
+                this._paused = true;
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Set program counter.
+     * @param value
+     */
     public setPC(value: number) {
         this._globals.setPC(value);
     }
 
+    /**
+     * Get current program counter.
+     */
     public get pc(): number {
         return this._globals.getPC();
     }
 
-    public async _run(): Promise<any> {
-        let haltIterations = this._haltAtAfterIterations;
+    /**
+     * Execute the next statement
+     * @protected
+     */
+    protected async _step(): Promise<any> {
+        let programCounter = this._globals.getPC();
+        this._currentInstruction = this._program[programCounter];
+        if (this._currentInstruction) {
+            this._currentInstruction.setClosure(this._currentFrame);
+            await this._currentInstruction.execute(this);
+
+            if (this._paused) {
+                return false;
+            }
+        }
+    }
+
+
+    protected async _run(): Promise<any> {
+        this._currentHaltIterations = this._pauseAtAfterIterations;
         try {
             while (true) {
-                let programCounter = this._globals.getPC();
-                programCounter++;
-
-                if (programCounter == this._haltAt) {
-                    haltIterations--;
-                }
-
-                if (programCounter >= this._program.length) {
+                const done = await this._next();
+                if (done) {
                     break;
                 }
-
-                this._globals.setPC(programCounter);
-                this._currentInstruction = this._program[programCounter];
-                if (this._currentInstruction) {
-                    this._currentInstruction.setClosure(this._currentFrame);
-                    await this._currentInstruction.execute(this);
-
-                    if (this._stopped) {
-                        return false;
-                    }
-                }
-                if (haltIterations === 0) {
+                if (this._paused) {
                     break;
                 }
             }
@@ -206,23 +284,13 @@ export class Interpreter {
             this._executed = true;
             throw e;
         } finally {
-            if (!this._stopped) {
+            if (!this._paused) {
                 this._currentInstruction = null;
                 this._executed = true;
             }
         }
     }
 
-    public stop(): void {
-        this._stopped = true;
-    }
-
-    public async resume(): Promise<any> {
-        if (this._stopped) {
-            this._stopped = false;
-            return this._run();
-        }
-    }
 
     public parse(program: (string | Array<string>)): void {
 

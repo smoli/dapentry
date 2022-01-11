@@ -38,14 +38,15 @@ export default class StructureController extends BaseController {
 
     onCodelineSelectionChange(event) {
         const item = event.getParameter("listItem");
+/*
         const source = event.getSource() as ListBase;
 
         const selection = source.getSelectedItems();
 
         this.getComponentController().setSelectedCodeLines(selection.map(s => s.getBindingContext("appModel").getProperty("index")));
+*/
 
 
-/*
         const selected: boolean = event.getParameter("selected");
 
         if (!selected) {
@@ -53,7 +54,6 @@ export default class StructureController extends BaseController {
         } else {
             this.getComponentController().setSelectedCodeLine(item.getBindingContext("appModel").getProperty("index"));
         }
-*/
     }
 
     getTextIdForTokens(tokens: Array<Token>): string {

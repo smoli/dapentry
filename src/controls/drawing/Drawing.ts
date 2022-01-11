@@ -66,10 +66,10 @@ export default class Drawing extends Control {
         }
     }
 
-    // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
     private _lastMouse: Point2D;
     private _objects: Array<GrObject>;
 
+    // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
     constructor(idOrSettings?: string | $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings) {
@@ -136,8 +136,9 @@ export default class Drawing extends Control {
         this._svg.on("contextmenu", this._interActionClick.bind(this))
     }
 
-    setObjects(objects: Array<GrObject>) {
+    setObjects(objects: Array<GrObject>):Drawing {
         this._objects = objects;
+        return this;
     }
 
     update(clearAllFirst: boolean = false) {

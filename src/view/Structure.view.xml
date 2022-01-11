@@ -20,7 +20,7 @@
                 </VBox>
 -->
                 <List
-                        mode="MultiSelect"
+                        mode="SingleSelectMaster"
                         selectionChange="onCodelineSelectionChange"
                         items="{ path: 'appModel>/segmentedCode',
                                factory: '.codeDescriptionFactory' }">
