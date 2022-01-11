@@ -1,7 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {eq, sanitze, EPSILON} from "../src/Geo/GeoMath"
-import exp = require("constants");
+import {eq} from "../src/Geo/GeoMath"
 
 
 describe('Geometry functions', () => {
