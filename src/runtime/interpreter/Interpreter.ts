@@ -28,6 +28,20 @@ class GlobalStackFrame extends StackFrame {
 
 }
 
+/**
+ * Interpreter.
+ *
+ * Runs programs.
+ *
+ * Execution control:
+ *
+ *  - run - runs the whole program from start to finish
+ *  - pause - pauses the execution. Only feasible with an operation, see Debug
+ *  - resume - resumes a paused execution and run till the end
+ *  - pauseAfter - tell the interpreter where to pause before calling run
+ *  - next - execute one single statement of a paused execution
+ *
+ */
 export class Interpreter {
 
     private _stack: Array<StackFrame> = [];
@@ -164,6 +178,9 @@ export class Interpreter {
     /**
      * Run the program from the start till the end or until the specified
      * wait point is reached.
+     *
+     * This keeps pauseAfter settings!
+     *
      * @param registers
      */
     public async run(registers?: { [key: string]: any }): Promise<any> {
@@ -188,10 +205,14 @@ export class Interpreter {
     /**
      * Resume a stopped execution. Does nothing if the
      * program isn't stopped.
+     * This will override pauseAfter.
      */
     public async resume(): Promise<any> {
         if (this._paused) {
             this._paused = false;
+            this._pauseAfter = Number.MAX_SAFE_INTEGER;
+            this._pauseAtAfterIterations = Number.MAX_SAFE_INTEGER;
+            this._currentHaltIterations = Number.MAX_SAFE_INTEGER;
             return this._run();
         }
     }
