@@ -93,6 +93,16 @@ export class GrPolygonBase extends GrObject {
         const a = deg2rad(value);
         this._points.forEach(p => p.rotate(a, this.center));
     }
+
+    get pointsOfInterest(): POIMap {
+        const r = {};
+
+        this._points.forEach((p, i) => {
+            r[POI["P" + i]] = p.copy;
+        })
+
+        return r;
+    }
 }
 
 
