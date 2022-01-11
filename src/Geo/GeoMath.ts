@@ -122,3 +122,4 @@ export const TWO_PI = Math.PI * 2;
 export function eq(a, b) {
     return Math.abs(a - b) <= EPSILON;
 }
+

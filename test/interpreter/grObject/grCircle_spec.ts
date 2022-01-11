@@ -8,6 +8,28 @@ import {eq} from "../../../src/Geo/GeoMath";
 
 describe('GrCircle', () => {
 
+    it("provides some points of interest", () => {
+        let c = GrCircle.create(null, 0, 0, 100);
+
+        expect(c.center).to.deep.equal({ x: 0, y: 0});
+        expect(c.top).to.deep.equal({ x: 0, y: -100});
+        expect(c.bottom).to.deep.equal({ x: 0, y: 100});
+        expect(c.left).to.deep.equal({ x: -100, y: 0});
+        expect(c.right).to.deep.equal({ x: 100, y: 0});
+    });
+
+    it("rotating a circle rotates the points of interest", () => {
+        let c = GrCircle.create(null, 0, 0, 100);
+
+        c.rotate(90);
+
+        expect(c.center).to.deep.equal({ x: 0, y: 0});
+        expect(c.top).to.deep.equal({ x: 100, y: 0});
+        expect(c.bottom).to.deep.equal({ x: -100, y: 0});
+        expect(c.left).to.deep.equal({ x: 0, y: -100});
+        expect(c.right).to.deep.equal({ x: 0, y: 100});
+    });
+
     it("point at percentage", () => {
 
         let c = GrCircle.create(null, 10, 10, 100);
