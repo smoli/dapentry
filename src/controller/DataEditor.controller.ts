@@ -55,8 +55,9 @@ export default class DataEditorController extends BaseController {
     onAddValueToList(event) {
         const ctx = event.getSource().getBindingContext("appModel");
         const d = ctx.getProperty("value");
-        d.push(23);
+        d.push(d[d.length - 1] + (d[d.length - 1] - d[d.length - 2]));
         ctx.getModel().setProperty("value", d, ctx);
+        this.getComponentController().updateAll();
     }
 
     fieldUIFactory(id, context) {
