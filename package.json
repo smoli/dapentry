@@ -19,7 +19,7 @@
     "watch:ts": "babel src --out-dir build --source-maps true --extensions \".ts,.js\" --copy-files --watch",
     "start:ui5": "ui5 serve --port 8080",
     "start:dist": "ui5 serve  --port 8080 -o index.html --config ui5-dist.yaml",
-    "build:controlinterfaces": "npx @ui5/ts-interface-generator --config ./tsconfig.json",
+    "build:controlinterfaces": "npx @ui5/ts-interface-generator --config ./tsconfigForInterfaceGeneration.json",
     "build:docs": "npx typedoc --entryPointStrategy expand ./src --out ./doc/reference"
   },
   "keywords": [],

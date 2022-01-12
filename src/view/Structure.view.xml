@@ -4,6 +4,7 @@
         xmlns="sap.m"
         xmlns:l="sap.ui.layout"
         xmlns:code="sap.ui.codeeditor"
+        xmlns:step="sts.drawable.controls.steps"
         xmlns:mvc="sap.ui.core.mvc">
 
     <Page>
@@ -19,15 +20,13 @@
                     <sts:OperationEditor tokens="{appModel>tokens}" />
                 </VBox>
 -->
-                <List
-                        mode="SingleSelectMaster"
-                        selectionChange="onCodelineSelectionChange"
-                        items="{ path: 'appModel>/segmentedCode',
-                               factory: '.codeDescriptionFactory' }">
-                </List>
+                <step:StepList steps="{appModel>/segmentedCode}" selectionChange="onStepSelectionChange">
+                    <step:steps>
+                        <step:Step tokens="{appModel>tokens}"  codeIndex="{appModel>index}" />
+                    </step:steps>
+                </step:StepList>
 
                 <code:CodeEditor value="{appModel>/codeString}" change="onCodeChanged" syntaxHints="false"/>
-
             </l:contentAreas>
         </l:Splitter>
     </Page>

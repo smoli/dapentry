@@ -6,7 +6,7 @@
   },
   "include": [
     "src/**/*.generated.tsinterface.ts",
-    "src/controls/drawing/Drawing.ts",
+    "xsrc/controls/drawing/Drawing.ts",
     "src/controls/operation/OperationEditor.ts",
     "src/controls/steps/Step.ts",
     "src/controls/steps/StepList.ts"

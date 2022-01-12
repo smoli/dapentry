@@ -4,19 +4,15 @@ import {GrObject, ObjectType} from "./Geo/GrObject";
 import Drawing from "./controls/drawing/Drawing";
 import {BaseComponentController} from "./BaseComponentController";
 import {GfxInterpreter} from "./GfxInterpreter";
-import {JSONModelAccess} from "./JSONModelAccess";
 import {AddStatement} from "./controller/actions/AddStatement";
 import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
 import {AppModel} from "./model/AppModel";
-import {Token} from "./runtime/interpreter/Parser";
+import {SegmentedCodeLine} from "./SegmentedCodeLine";
 
 
-interface SegmentedCodeLine {
-    index: number,
-    tokens: Array<Token>
-}
+
 
 export class ComponentController extends BaseComponentController {
     private readonly _component: Component;

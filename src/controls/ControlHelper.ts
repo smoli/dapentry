@@ -4,7 +4,7 @@ import RenderManager from "sap/ui/core/RenderManager";
 
 export interface CNode {
     attr(name:string, value:any):CNode;
-    class(name:string, doit:boolean):CNode;
+    class(name:string, doit?:boolean):CNode;
     style(name:string, value:string):CNode;
     text(text:string):CNode;
     append(tag:string):CNode;
