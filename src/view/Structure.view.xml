@@ -24,6 +24,7 @@
                     <step:steps>
                         <step:Step tokens="{appModel>tokens}"
                                    codeIndex="{appModel>index}"
+                                   selected="{appModel>selected}"
                                    level="{appModel>level}"
                         />
                     </step:steps>

@@ -13,11 +13,11 @@ export default class Step extends Control {
 
     static readonly metadata = {
         properties: {
-            tokens: { type: "Array" },
+            tokens: { type: "any[]" },
             codeIndex: { type: "int"},
             level: { type: "int", defaultValue: 0 },
 
-            selected: { type: "boolean" }
+            selected: { type: "boolean", bindable: "bindable" }
         },
 
         events: {

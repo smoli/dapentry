@@ -26,7 +26,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter();
-        // this.preloadDemoCode();
+        //this.preloadDemoCode();
     }
 
     /**
@@ -48,6 +48,29 @@ export class ComponentController extends BaseComponentController {
         });
     }
 
+    public async nextStep() {
+
+        if (this._interpreter.stopped) {
+            return;
+        }
+
+        const segmentedCode = this.getAppModel().get("segmentedCode");
+        await this._interpreter.next()
+        let max = 100;
+        while ((max--) && !segmentedCode.find(c => c.index === this._interpreter.pc)) {
+
+            if (this._interpreter.stopped) {
+                break;
+            }
+            await this._interpreter.next();
+        }
+
+        this.getAppModel().set("segmentedCode", c => c.selected, "selected").to(false);
+        this.getAppModel().set("segmentedCode", c => c.index === this._interpreter.pc, "selected").to(true);
+
+        this.updateDrawing();
+    }
+
     /**
      * TODO: this is hacky. We need to figure out a way to make the drawing control
      *       actually data driven.
@@ -66,6 +89,7 @@ export class ComponentController extends BaseComponentController {
             this.setSelectedCodeLine(indexes[0]);
         } else if (indexes.length === 0) {
             this.setSelectedCodeLine(-1);
+            this.updateAll();
         } else {
             indexes.forEach(index => {
                 this.getAppModel().set("segmentedCode", c => c.index === index, "selected").to(true);
@@ -114,6 +138,7 @@ export class ComponentController extends BaseComponentController {
 
         return scope;
     }
+
 
 
     protected async runCode(): Promise<any> {
@@ -220,7 +245,15 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-        const code = `RECT Rectangle1 $styles.default (300 300) 100 100`;
+        const code = `@EACH f1@REPLACE f1iter.value f1
+ITER f1iter, f1
+LOOPF1:
+@BODY
+RECT Rectangle1, $styles.default, ( 283.5, 651.5 ), 177, f1iter.value
+@ENDBODY
+NEXT f1iter
+JINE f1iter, LOOPF1:
+@ENDEACH`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }

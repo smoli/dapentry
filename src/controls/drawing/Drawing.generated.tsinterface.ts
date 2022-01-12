@@ -36,5 +36,17 @@ declare module "./Drawing" {
         attachObjectDeleted<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
         detachObjectDeleted(fn: (event: Event) => void, listener?: object): this;
         fireObjectDeleted(parameters?: object): this;
+
+        // event: nextStep
+        attachNextStep(fn: (event: Event) => void, listener?: object): this;
+        attachNextStep<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
+        detachNextStep(fn: (event: Event) => void, listener?: object): this;
+        fireNextStep(parameters?: object): this;
+
+        // event: previousStep
+        attachPreviousStep(fn: (event: Event) => void, listener?: object): this;
+        attachPreviousStep<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
+        detachPreviousStep(fn: (event: Event) => void, listener?: object): this;
+        firePreviousStep(parameters?: object): this;
     }
 }

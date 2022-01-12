@@ -1,7 +1,6 @@
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Drawing from "../controls/drawing/Drawing";
 import BaseController from "./BaseController";
-import {GfxRect} from "../runtime/gfx/GfxRect";
 
 /**
  * @namespace sts.drawable.controller
@@ -56,5 +55,9 @@ export default class DrawingController extends BaseController {
             event.getParameter("tokenIndex"),
             event.getParameter("tokenSubIndex"),
             event.getParameter("newValue"));
+    }
+
+    onNextStep() {
+        this.getComponentController().nextStep();
     }
 }

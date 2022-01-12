@@ -58,6 +58,14 @@ export default class Drawing extends Control {
 
             objectDeleted: {
                 object: "any"
+            },
+
+            nextStep: {
+
+            },
+
+            previousStep: {
+
             }
         },
 
@@ -217,7 +225,9 @@ export default class Drawing extends Control {
     }
 
     private _interActionKeyDown() {
-        if (d3.event.keyCode === 27) {
+        if (d3.event.code === "ArrowDown") {
+            this.fireNextStep();
+        } else if (d3.event.keyCode === 27) {
             this._pumpToTool(InteractionEvents.Cancel);
             this._toolManager.abortCurrentTool();
         } else if (d3.event.key === "c") {

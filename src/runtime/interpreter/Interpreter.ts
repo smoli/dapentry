@@ -255,6 +255,7 @@ export class Interpreter {
             programCounter++;
 
             if (programCounter >= this._program.length) {
+                this._executed = true;
                 return true;
             }
 
@@ -286,6 +287,10 @@ export class Interpreter {
      */
     public get pc(): number {
         return this._globals.getPC();
+    }
+
+    get stopped():boolean {
+        return this._executed;
     }
 
     /**

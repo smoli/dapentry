@@ -11,6 +11,7 @@
             <operation:OperationEditor tokens="{appModel>/selectedCodeLine/tokens}" change="onCodeLineChanged"/>
             <drawing:Drawing id="drawing"
                              newOperation="onNewOperation"
+                             nextStep="onNextStep"
                              objectDeleted="onObjectDeleted"
                              selectionChange="onSelectionChange"
             />
