@@ -1,4 +1,5 @@
-import {BoundingBox, GrObject, ObjectType} from "./GrObject";
+import {BoundingBox, GrObject, ObjectType, POI, POIMap} from "./GrObject";
+import {Point2D} from "./GeoMath";
 
 export class GrRectangle extends GrObject {
 
@@ -45,5 +46,31 @@ export class GrRectangle extends GrObject {
 
     get boundingBox(): BoundingBox {
         return {...super.boundingBox, w: this._width, h: this._height};
+    }
+
+    get topLeft(): Point2D {
+        return this.makePoint(-this.width / 2, -this.height / 2);
+    }
+
+    get topRight(): Point2D {
+        return this.makePoint(this.width / 2, -this.height / 2);
+    }
+
+    get bottomRight(): Point2D {
+        return this.makePoint(this.width / 2, this.height / 2);
+    }
+
+    get bottomLeft(): Point2D {
+        return this.makePoint(-this.width / 2, this.height / 2);
+    }
+
+    get pointsOfInterest(): POIMap {
+        return {
+            ...super.pointsOfInterest,
+            [POI.topLeft]: this.topLeft,
+            [POI.topRight]: this.topRight,
+            [POI.bottomLeft]: this.bottomLeft,
+            [POI.bottomRight]: this.bottomRight
+        };
     }
 }
