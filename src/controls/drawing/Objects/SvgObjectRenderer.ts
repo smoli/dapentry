@@ -136,7 +136,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         if (enabled) {
             this._renderedObjects.forEach(o => {
-                if (except.indexOf(o) === -1) {
+                if (!except.find(e => e.uniqueName === o.uniqueName)) {
                     this.renderPOI(o, poiCallback)
                 }
             });
