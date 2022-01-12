@@ -106,7 +106,7 @@ export class MoveTool extends Tool {
 
         let dx;
         let dy;
-        if (this._object && this._movingPOI) {
+        if (this._object && this._movingPOI !== null) {
             dx = eventData.x - this._object.pointsOfInterest[this._movingPOI].x;
             dy = eventData.y - this._object.pointsOfInterest[this._movingPOI].y;
         } else {
