@@ -14,11 +14,11 @@ const renderer = {
 
         root.class("stsDrawableOperationEditor", true);
         for (const s of segments) {
-            if (!s.token) {
-                continue;
-            }
             switch (s.type) {
                 case "input":
+                    if (!s.token) {
+                        continue;
+                    }
                     if (s.token.type === TokenTypes.POINT) {
                         root.appendControl(new Text({ text: "("}))
                         root.appendControl(new Input({ value: s.token.value[0].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 0)}))
