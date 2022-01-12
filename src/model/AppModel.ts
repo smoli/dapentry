@@ -25,6 +25,7 @@ export class AppModel extends JSONModelAccess {
                         return {
                             index: c.originalLine,
                             tokens: Parser.parseLine(c.code),
+                            level: c.level,
                             selected: false
                         }
                     })

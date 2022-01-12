@@ -106,6 +106,12 @@ export default class Step extends Control {
             }
         });
 
+        if (firstToken.type === TokenTypes.ANNOTATION) {
+            if (firstToken.args) {
+                tokenTexts.push(...firstToken.args);
+            }
+        }
+
         return this.getResourceText(this.getTextIdForTokens(tokens), ...tokenTexts);
     }
 

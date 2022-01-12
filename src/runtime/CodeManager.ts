@@ -23,7 +23,7 @@ export class CodeManager {
     private _code: string[];
     private _registers: string[];
     private _labels: string[];
-    private _creationOpcodes: CreationInfo;
+    private readonly _creationOpcodes: CreationInfo;
     private _state: StateMachine;
     private readonly _jumpOpcodes: Array<string>;
 
@@ -185,10 +185,11 @@ export class CodeManager {
      * TODO: This is a hacky implementation that breaks if you don't
      *       apply annotations the way they are expected
      */
-    get annotatedCode(): Array<{ originalLine: number, code: string }> {
+    get annotatedCode(): Array<{ originalLine: number, code: string, level: number }> {
 
         const ret = [];
         const blockStack = new Stack<{ code: string, replaces: Array<Token> }>();
+        let level = 0;
 
         const find = (tokens, value) => tokens.find(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
         const findAll = (tokens, value) => tokens.filter(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
@@ -213,7 +214,8 @@ export class CodeManager {
             const endeach = find(tokens, "ENDEACH");
             if (endeach) {
                 blockStack.pop();
-                ret.push({originalLine, code: "@ENDEACH"});
+                level--;
+                //ret.push({originalLine, code: "@ENDEACH", level});
                 continue;
             }
 
@@ -223,7 +225,8 @@ export class CodeManager {
 
             const each = find(tokens, "EACH");
             if (each) {
-                ret.push({originalLine, code: "@EACH " + each.args.join(" ")});
+                ret.push({originalLine, code: "@EACH " + each.args.join(" "), level});
+                level++;
                 blockStack.push({code: "EACH", replaces: findAll(tokens, "REPLACE")});
                 continue;
             }
@@ -259,7 +262,7 @@ export class CodeManager {
             }
 
 
-            ret.push({originalLine, code: newLine});
+            ret.push({originalLine, code: newLine, level});
         }
 
         return ret;

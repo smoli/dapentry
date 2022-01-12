@@ -14,6 +14,9 @@ const renderer = {
 
         root.class("stsDrawableOperationEditor", true);
         for (const s of segments) {
+            if (!s.token) {
+                continue;
+            }
             switch (s.type) {
                 case "input":
                     if (s.token.type === TokenTypes.POINT) {
