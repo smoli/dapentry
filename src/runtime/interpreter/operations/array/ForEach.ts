@@ -3,6 +3,7 @@ import {Parameter} from "../../Parameter";
 import {ArrayIterator} from "../../types/ArrayIterator";
 import {StackFrame} from "../../StackFrame";
 import {Interpreter} from "../../Interpreter";
+import {getParameterConfig} from "../../../gfx/GfxOperation";
 
 interface LoopInfo {
     label: string,
@@ -17,15 +18,29 @@ export class ForEach extends Operation {
 
     private _value: Parameter;
     private _target: Parameter;
+    private _index: Parameter;
 
-    constructor(opcode: string, target: Parameter, value: Parameter) {
+    constructor(opcode: string, target: Parameter, a: Parameter, b: Parameter) {
         super(opcode);
 
-        if (!value.isRegister) {
-            throw new Error("FOREACH: Only allowed for registers containing arrays")
+
+        switch(getParameterConfig(a, b)) {
+            case "P":
+                if (!a.isRegister) {
+                    throw new Error("FOREACH: Only allowed for registers containing arrays")
+                }
+                this._value = a;
+
+                break;
+            case "PP":
+                if (!b.isRegister) {
+                    throw new Error("FOREACH: Only allowed for registers containing arrays")
+                }
+                this._value = b;
+                this._index = a;
+
         }
 
-        this._value = value;
         this._target = target;
     }
 
@@ -63,19 +78,25 @@ export class ForEach extends Operation {
         interpreter.setLabel(labelName);
 
         const valueName = this._target.name;
-        //const indexName = this._target.name;
+        let indexName = null;
+        if (this._index) {
+            indexName = this._index.name;
+        }
 
         ForEach._info.push({
             label: labelName,
             iterator,
             valueName,
-            indexName: null
+            indexName
         })
 
         const sf = new StackFrame();
         interpreter.pushStack(sf);
         sf.setRegister(valueName, iterator.value);
-        //sf.setRegister(indexName, iterator.index);
+
+        if (indexName) {
+            sf.setRegister(indexName, iterator.index);
+        }
     }
 }
 

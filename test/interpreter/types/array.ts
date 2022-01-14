@@ -130,9 +130,9 @@ describe('Array', () => {
         const code = `
             LOAD a, [1, 2, 3, 4, 5, 6, 7]
             LOAD r, 0
-            LOAD v, 100
+            LOAD v, 100     # Will stay untouched
                                         
-            FOREACH v, a       
+            FOREACH v, a  
                 ADD ^r, v
             ENDEACH          
        `;
@@ -145,5 +145,25 @@ describe('Array', () => {
         expect(i.getRegister("r")).to.equal((1 + 2 + 3 + 4 + 5 + 6 + 7))
         expect(i.getRegister("a")).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
         expect(i.getRegister("v")).to.equal(100)
+    });
+
+    it("iteration is provided the index as well", async () => {
+
+        const code = `
+            LOAD a, [1, 2, 3, 4, 5, 6, 7]
+            LOAD r, 0
+                                        
+            FOREACH v, i, a 
+                MUL t, v, i 
+                ADD ^r, t
+            ENDEACH          
+       `;
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        await i.run();
+                     // actually 0 * 1 + 1 * 2 + 2 * 3 + 3 * 4 + 4 * 5 + 5 * 6 + 6 * 7
+        expect(i.getRegister("r")).to.equal((2 + 2 * 3 + 3 * 4 + 4 * 5 + 5 * 6 + 6 * 7))
     });
 });
