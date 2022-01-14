@@ -64,6 +64,12 @@ export class GrRectangle extends GrObject {
         return this.makePoint(-this.width / 2, this.height / 2);
     }
 
+    scale(fx: number, fy: number) {
+        super.scale(fx, fy);
+        this._width *= fx;
+        this._height *= fy;
+    }
+
     get pointsOfInterest(): POIMap {
         return {
             ...super.pointsOfInterest,

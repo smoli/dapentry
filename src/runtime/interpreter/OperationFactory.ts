@@ -28,6 +28,7 @@ import {IteratorNext} from "./operations/array/IteratorNext";
 import {IteratorJumpWhenNotDone} from "./operations/array/IteratorJumpWhenNotDone";
 import {Halt} from "./operations/Halt";
 import {Append} from "./operations/array/Append";
+import {EndForEach, ForEach} from "./operations/array/ForEach";
 
 export class OperationFactory {
 
@@ -83,6 +84,8 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("ITER", Iterator);
     operationFactory.addOperationClass("NEXT", IteratorNext);
     operationFactory.addOperationClass("JINE", IteratorJumpWhenNotDone);
+    operationFactory.addOperationClass("FOREACH", ForEach);
+    operationFactory.addOperationClass("ENDEACH", EndForEach);
     operationFactory.addOperationClass("HALT", Halt);
     operationFactory.addOperationClass("___LBL___", Label);
 

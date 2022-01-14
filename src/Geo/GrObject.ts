@@ -116,9 +116,7 @@ export abstract class GrObject {
     public createProxy():GrObject {
         const copy = this.copy();
         copy.rotate(this._rotation);
-        copy.scaleX = this._scaleX;
-        copy.scaleY = this._scaleY;
-
+        copy.scale(this._scaleX, this._scaleY);
         return copy;
     }
 
@@ -240,16 +238,13 @@ export abstract class GrObject {
         return this._scaleY;
     }
 
-    set scaleY(value: number) {
-        this._scaleY = value;
+    scale(fx: number, fy: number) {
+        this._scaleX = fx;
+        this._scaleY = fy;
     }
 
     get scaleX(): number {
         return this._scaleX;
-    }
-
-    set scaleX(value: number) {
-        this._scaleX = value;
     }
 
     /**
