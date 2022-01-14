@@ -59,7 +59,6 @@ export class DrawBezier extends Tool {
 
             case InteractionEvents.Key:
                 if (eventData.key === "Backspace") {
-                    console.log(eventData)
                     this._poly.removeLastPoint();
                     if (this._poly.points.length === 0) {
                         this._poly = null;

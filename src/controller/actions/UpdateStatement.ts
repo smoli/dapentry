@@ -49,8 +49,6 @@ export class UpdateStatement extends BaseAction {
         newStatements.push(`JINE ${iteratorName}, ${labelName}:`);
         newStatements.push("@ENDEACH");
 
-        console.log(codeManager.code.join("\n"));
-
         return newStatements;
     }
 

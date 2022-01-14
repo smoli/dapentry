@@ -56,5 +56,11 @@ export class GrCircle extends GrObject {
 
     }
 
+    scale(fx: number, fy: number) {
+        if (fx === 1)
+            this._radius *= fy;
+        else
+            this._radius *= fx;
+    }
 
 }

@@ -82,7 +82,6 @@ export class GrLine extends GrObject {
     }
 
     rotate(value: number) {
-        console.log("Rotate line", value);
         super.rotate(value);
 
         const p1 = this._start.copy.sub(this._center);

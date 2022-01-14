@@ -65,7 +65,6 @@ export class GrRectangle extends GrObject {
     }
 
     scale(fx: number, fy: number) {
-        super.scale(fx, fy);
         this._width *= fx;
         this._height *= fy;
     }

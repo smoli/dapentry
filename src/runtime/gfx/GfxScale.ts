@@ -26,7 +26,7 @@ export class GfxScale extends GfxOperation {
         if (this.target instanceof GrObjectList) {
             this.target.objects[this.target.objects.length - 1].scale(this.factorX, this.factorY);
         } else {
-            this.target.scale(this.factorX, this.factorX);
+            this.target.scale(this.factorX, this.factorY);
         }
     }
 }

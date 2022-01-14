@@ -7,7 +7,7 @@ export class Point2D {
         this.y = y;
     }
 
-    get copy():Point2D {
+    get copy(): Point2D {
         return new Point2D(this.x, this.y);
     }
 
@@ -33,6 +33,11 @@ export class Point2D {
         return new Point2D(this.x * p.x, this.y * p.y);
     }
 
+    /**
+     * Rotate
+     * @param angle
+     * @param pivot
+     */
     rotate(angle: number, pivot?: Point2D): Point2D {
         const s = Math.sin(angle);
         const c = Math.cos(angle);
@@ -52,6 +57,9 @@ export class Point2D {
         return this;
     }
 
+    /**
+     * Turn into unit length vector
+     */
     normalize(): Point2D {
         return this.scale(1 / this.length);
     }
@@ -66,6 +74,15 @@ export class Point2D {
      */
     angleTo(v2): number {
         return Math.atan2(this.y, this.x) - Math.atan2(v2.y, v2.x);
+    }
+
+    /**
+     * Turns both components into their absolutes, removing signs.
+     */
+    abs(): Point2D {
+        this.x = Math.abs(this.x);
+        this.y = Math.abs(this.y);
+        return this;
     }
 
 

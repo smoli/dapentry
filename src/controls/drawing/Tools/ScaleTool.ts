@@ -22,6 +22,8 @@ export class ScaleTool extends Tool {
     protected _selection: Array<GrObject> = [];
     protected _scalingObject: GrObject = null;
     protected _scalingPOI: POI = null;
+    protected _finalX: number;
+    protected _finalY: number;
 
     private _op: Point2D;
 
@@ -61,6 +63,8 @@ export class ScaleTool extends Tool {
             this._scalingObject = object.createProxy();
             this._scalingPOI = poiId;
             this._op = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._scalingObject.center);
+            this._finalX = 1;
+            this._finalY = 1;
         }
     }
 
@@ -80,6 +84,19 @@ export class ScaleTool extends Tool {
         return this._selection.length && this._selection[0];
     }
 
+
+    protected _scale(dx, dy) {
+        const np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._scalingObject.center);
+        const fx = np.x !== 0 ? (np.x + dx) / np.x : 1;
+        const fy = np.y !== 0 ? (np.y + dy) / np.y : 1;
+
+        this._scalingObject.scale(Math.abs(fx), Math.abs(fy));
+
+        this._finalX *= Math.abs(fx);
+        this._finalY *= Math.abs(fy);
+        console.log(this._scalingObject.boundingBox, this._finalX, this._finalY)
+    }
+
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
         this._state.next(interactionEvent);
 
@@ -90,8 +107,9 @@ export class ScaleTool extends Tool {
         let dx;
         let dy;
         if (this._object && this._scalingPOI !== null) {
-            dx = eventData.x - this._object.pointsOfInterest[this._scalingPOI].x;
-            dy = eventData.y - this._object.pointsOfInterest[this._scalingPOI].y;
+            const thePOI = this._scalingObject.pointsOfInterest[this._scalingPOI].copy;
+            dx = eventData.x - thePOI.x;
+            dy = eventData.y - thePOI.y;
         } else {
             return;
         }
@@ -103,22 +121,15 @@ export class ScaleTool extends Tool {
                 break;
 
             case States.Done:
-                this._renderer.enablePOI(false);
+                this._scale(dx, dy);
                 return true;
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
-                    const np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._scalingObject.center);
-
-                    const fx = np.x !== 0 ? (np.x + dx) / np.x : 1;
-                    const fy = np.y !== 0 ? (np.y + dy) / np.y : 1;
-
-                    this._scalingObject.scale(Math.abs(fx), Math.abs(fy));
-
-                    this._op = np;
+                    this._scale(dx, dy);
 
                     this._renderer.render(this._scalingObject, true);
-                    const poi: POIMap = this._object.pointsOfInterest;
+                    const poi: POIMap = this._scalingObject.pointsOfInterest;
 
                     Object.keys(poi)
                         .forEach(poiId => {
@@ -132,17 +143,6 @@ export class ScaleTool extends Tool {
     }
 
     public get result(): any {
-        const poi = this._object.pointsOfInterest[this._scalingPOI].copy.sub(this._scalingObject.center);
-        const dx = this._op.x - poi.x;
-        const dy = this._op.y - poi.y;
-
-        if (dx !== 0 || dy !== 0) {
-            const fx = this._op.x !== 0 ? (this._op.x + dx) / this._op.x : 1;
-            const fy = this._op.y !== 0 ? (this._op.y + dy) / this._op.y : 1;
-            return `SCALE ${this._object.name}, ${Math.abs(fx)}, ${Math.abs(fy)}`
-
-        } else {
-            return null;
-        }
+        return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, ${Math.abs(this._finalY)}`
     }
 }

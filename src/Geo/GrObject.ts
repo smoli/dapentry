@@ -87,8 +87,6 @@ export abstract class GrObject {
     protected _center: Point2D;
     protected _xAxis: Point2D = new Point2D(1, 0);
     protected _yAxis: Point2D = new Point2D(0, 1);
-    protected _scaleX: number = 1;
-    protected _scaleY: number = 1;
     protected _rotation: number = 0;
     protected _style: Style = null;
     protected _instanceCount = GrObject._instanceCounter++;
@@ -116,7 +114,6 @@ export abstract class GrObject {
     public createProxy():GrObject {
         const copy = this.copy();
         copy.rotate(this._rotation);
-        copy.scale(this._scaleX, this._scaleY);
         return copy;
     }
 
@@ -234,18 +231,10 @@ export abstract class GrObject {
         this._rotation += value;
     }
 
-    get scaleY(): number {
-        return this._scaleY;
+    public scale(fx: number, fy: number) {
+
     }
 
-    scale(fx: number, fy: number) {
-        this._scaleX = fx;
-        this._scaleY = fy;
-    }
-
-    get scaleX(): number {
-        return this._scaleX;
-    }
 
     /**
      * Return the bounding box of the object.
