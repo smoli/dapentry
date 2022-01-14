@@ -11,15 +11,16 @@
   const TokenTypes = {
   	OPCODE: 0,
     REGISTER: 1,
-    NUMBER: 2,
-    STRING: 3,
-    LABEL: 4,
-    POINT: 5,
-    ARRAY: 6,
-    EXPRESSION: 7,
-    OPERATOR: 8,
-    ANNOTATION: 9,
-    OTHER: 10
+    NONLOCALREGISTER: 2,
+    NUMBER: 3,
+    STRING: 4,
+    LABEL: 5,
+    POINT: 6,
+    ARRAY: 7,
+    EXPRESSION: 8,
+    OPERATOR: 9,
+    ANNOTATION: 10,
+    OTHER: 11
   }
 
 }
@@ -96,10 +97,10 @@
 
 
    Register "Register"
-      = reg:([$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*) {
+      = nonlocal:"^"? reg:([$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*) {
       return {
-        type: TokenTypes.REGISTER,
-            value: text()
+        type: nonlocal? TokenTypes.NONLOCALREGISTER : TokenTypes.REGISTER,
+            value: [...reg.map(r => r.join ? r.join("") : r)].join("")
             }
       }
 

@@ -12,6 +12,7 @@ import {GfxFill} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GrObject} from "./Geo/GrObject";
 import {GfxObjectList} from "./runtime/gfx/GfxObject";
+import {GfxScale} from "./runtime/gfx/GfxScale";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -50,6 +51,7 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("BEZIER", makeGfxOperation(GfxBezier, this.objectCallBack.bind(this)));
         this.addOperation("MOVE", makeGfxOperation(GfxMove, this.objectCallBack.bind(this)));
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.objectCallBack.bind(this)));
+        this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
         this.addOperation("FILL", makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
         this.addOperation("STROKE", makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));
         this.addOperation("OBLIST", GfxObjectList);

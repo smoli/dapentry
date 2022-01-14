@@ -74,6 +74,7 @@ describe('Call and Return', () => {
         }
 
         expect(i.getRegister("res")).to.equal(fib(5));
+        expect(i.getRegister("r1")).to.equal(5);
     })
 
 });

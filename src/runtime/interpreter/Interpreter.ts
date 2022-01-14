@@ -146,7 +146,10 @@ export class Interpreter {
     }
 
     /**
-     * Sets a label at the current Program counter.
+     * Sets a label at the current Program counter. If this is
+     * called from an operation the label will point to the
+     * statement of that operation. The program will therefore
+     * execute the statement after that operation.
      * @param labelName
      */
     public setLabel(labelName) {
@@ -360,7 +363,10 @@ export class Interpreter {
             case TokenTypes.REGISTER:   //pass through
             case TokenTypes.NUMBER:     //pass through
             case TokenTypes.STRING:
-                return new Parameter(token.type === TokenTypes.REGISTER, token.value)
+                return new Parameter(token.type === TokenTypes.REGISTER, token.value);
+
+            case TokenTypes.NONLOCALREGISTER:
+                return new Parameter(token.type === TokenTypes.NONLOCALREGISTER, token.value, true);
 
             case TokenTypes.POINT:
                 return new Point2Parameter(

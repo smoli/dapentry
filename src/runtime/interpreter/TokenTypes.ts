@@ -1,6 +1,7 @@
 export enum TokenTypes {
     OPCODE,
     REGISTER,
+    NONLOCALREGISTER,
     NUMBER,
     STRING,
     LABEL,

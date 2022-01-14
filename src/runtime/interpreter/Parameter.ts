@@ -3,12 +3,15 @@ export class Parameter {
     private readonly _isRegister: boolean = false;
     private readonly _valueOrName: any = null;
     private readonly _components: Array<string> = null
+    private readonly _isNonLocal: boolean;
 
-    constructor(isRegister:boolean, valueOrName:any) {
+    constructor(isRegister:boolean, valueOrName:any, nonLocal: boolean = false) {
         this._valueOrName = valueOrName;
         this._isRegister = isRegister;
+        this._isNonLocal = false;
 
         if (this._isRegister) {
+            this._isNonLocal = nonLocal;
             this._components = valueOrName.split(".");
             this._valueOrName = this._components.shift();
             if (this._components.length === 0) {
@@ -19,6 +22,10 @@ export class Parameter {
 
     get components(): Array<string> {
         return this._components;
+    }
+
+    get isNonLocal(): boolean {
+        return this._isNonLocal;
     }
 
     get isRegister(): boolean {

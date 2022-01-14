@@ -35,11 +35,11 @@ export class Operation {
         }
     }
 
-    protected _setParam(param, value) {
+    protected _setParam(param: Parameter, value: any) {
         if (param.components) {
             return this.closure.setRegisterWithComponents(param.name, param.components, value);
         }
-        return this.closure.setRegister(param.name, value);
+        return this.closure.setRegister(param.name, value, param.isNonLocal);
     }
 
     async execute(interpreter: Interpreter): Promise<any> {

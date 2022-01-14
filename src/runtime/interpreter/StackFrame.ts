@@ -16,7 +16,7 @@ export class StackFrame {
         this._parent = parent;
     }
 
-    get parent() {
+    get parent(): StackFrame {
         return this._parent;
     }
 
@@ -51,6 +51,10 @@ export class StackFrame {
         return this._getRegisterBaseValue(name);
     }
 
+    public hasRegister(name: string):boolean {
+        return this._registers.hasRegister(name);
+    }
+
     public setRegisterWithComponents(name: string, components: Array<string>, value: any): void {
         let newValueObject = this._getRegisterBaseValue(name);
         let l = 0;
@@ -62,8 +66,12 @@ export class StackFrame {
         this._registers.setRegister(name, newValueObject);
     }
 
-    public setRegister(name: string, value: any): void {
-        this._registers.setRegister(name, value);
+    public setRegister(name: string, value: any, tryNonLocal: boolean = false): void {
+        if (tryNonLocal && this._parent && this._parent.hasRegister(name)) {
+            this._parent.setRegister(name, value, tryNonLocal);
+        } else {
+            this._registers.setRegister(name, value);
+        }
     }
 
 

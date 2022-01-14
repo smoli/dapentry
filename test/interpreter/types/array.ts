@@ -123,5 +123,28 @@ describe('Array', () => {
         expect(i.getRegister("r1").x).to.equal(3)
         expect(i.getRegister("r2")).to.equal(3)
 
-    })
+    });
+
+    it("can be iterated over with special operations", async () => {
+
+        const code = `
+            LOAD a, [1, 2, 3, 4, 5, 6, 7]
+            LOAD r, 0
+            LOAD v, 100
+                                        
+            FOREACH v, a       
+                ADD ^r, v
+            ENDEACH          
+       `;
+
+        const i = new Interpreter();
+        i.parse(code);
+
+        await i.run();
+
+        expect(i.getRegister("r")).to.equal((1 + 2 + 3 + 4 + 5 + 6 + 7))
+        expect(i.getRegister("a")).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
+        expect(i.getRegister("v")).to.equal(100)
+
+    });
 });
