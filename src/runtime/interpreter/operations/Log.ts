@@ -22,7 +22,6 @@ export class Log extends Operation {
 
     async execute(interpreter): Promise<any> {
         dbg(this.message);
-        this.closure.setRegister("debug-runtime", "DEBUG")
     }
 
 }
