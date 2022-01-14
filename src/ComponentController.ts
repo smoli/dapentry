@@ -26,7 +26,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter();
-        //this.preloadDemoCode();
+        this.preloadDemoCode();
     }
 
     /**
@@ -37,13 +37,14 @@ export class ComponentController extends BaseComponentController {
     protected updateDrawing(clearAllFirst: boolean = false) {
         this._drawing.setObjects(this._interpreter.objects);
         this._drawing.update(clearAllFirst);
+        if (this._interpreter.lastObjectTouched) {
+            this._drawing.selectObject(this._interpreter.lastObjectTouched);
+        }
     }
 
     public updateAll() {
         this.runCode().then(() => {
-            if (this._interpreter.lastObjectTouched) {
-                this._drawing.selectObject(this._interpreter.lastObjectTouched);
-            }
+
             this.updateDrawing();
         });
     }
@@ -245,15 +246,10 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-        const code = `@EACH f1@REPLACE f1iter.value f1
-ITER f1iter, f1
-LOOPF1:
-@BODY
-RECT Rectangle1, $styles.default, ( 283.5, 651.5 ), 177, f1iter.value
-@ENDBODY
-NEXT f1iter
-JINE f1iter, LOOPF1:
-@ENDEACH`;
+        return;
+        const code = `RECT Rectangle2, $styles.default, (401.5, 560.5), 200, 100
+RECT Rectangle1, $styles.default, (401.5, 560.5), 100, 50
+RECT Rectangle3, $styles.default, (401.5, 560.5), 200, 100`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }
