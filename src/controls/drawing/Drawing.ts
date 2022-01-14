@@ -17,6 +17,7 @@ import {DrawPolygon} from "./Tools/DrawPolygon";
 import {Point2D} from "../../Geo/GeoMath";
 import {DrawQuadratic} from "./Tools/DrawQuadratic";
 import {GrObjectList} from "../../Geo/GrObjectList";
+import {ScaleTool} from "./Tools/ScaleTool";
 
 
 enum ToolNames {
@@ -27,6 +28,7 @@ enum ToolNames {
     Quadric,
     Move,
     Rotate,
+    Scale,
     None
 }
 
@@ -60,13 +62,9 @@ export default class Drawing extends Control {
                 object: "any"
             },
 
-            nextStep: {
+            nextStep: {},
 
-            },
-
-            previousStep: {
-
-            }
+            previousStep: {}
         },
 
         aggregations: {
@@ -114,6 +112,7 @@ export default class Drawing extends Control {
         this._toolManager.addTool(DrawRectangle, ToolNames.Rectangle);
         this._toolManager.addTool(MoveTool, ToolNames.Move);
         this._toolManager.addTool(RotateTool, ToolNames.Rotate);
+        this._toolManager.addTool(ScaleTool, ToolNames.Scale);
         this._toolManager.addTool(DrawPolygon, ToolNames.Polygon);
         this._toolManager.addTool(DrawQuadratic, ToolNames.Quadric);
 
@@ -144,7 +143,7 @@ export default class Drawing extends Control {
         this._svg.on("contextmenu", this._interActionClick.bind(this))
     }
 
-    setObjects(objects: Array<GrObject>):Drawing {
+    setObjects(objects: Array<GrObject>): Drawing {
         this._objects = objects;
         return this;
     }
@@ -244,6 +243,8 @@ export default class Drawing extends Control {
             this._toolManager.switch(ToolNames.Move);
         } else if (d3.event.key === "t") {
             this._toolManager.switch(ToolNames.Rotate);
+        } else if (d3.event.key === "s") {
+            this._toolManager.switch(ToolNames.Scale);
         } else {
             this._pumpToTool(InteractionEvents.Key)
         }

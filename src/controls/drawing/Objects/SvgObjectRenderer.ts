@@ -42,7 +42,7 @@ interface ObjectInfo {
  */
 export class SvgObjectRenderer extends ObjectRenderer {
 
-    protected _renderedObjects: Array<GrObject>;
+    protected _renderedObjects: Array<GrObject> = [];
     protected _objectLayer: Selection<any>;
     protected _infoLayer: Selection<any>;
     protected _interactionLayer: Selection<any>;
@@ -123,11 +123,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
             this.removeBoundingRepresentation(object);
         }
     }
-
-    _renderObjectList(objectList: GrObjectList, selected) {
-        objectList.objects.forEach(object => this.render(object, selected))
-    }
-
 
     enablePOI(enabled: boolean, poiCallback: POICallback, except: Array<GrObject>) {
         if (this._poiRenderingEnabled) {

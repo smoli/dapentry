@@ -138,7 +138,7 @@ export class Interpreter {
     }
 
     public gotoLabel(labelName) {
-        if (this._labels[labelName]) {
+        if (this._labels.hasOwnProperty(labelName)) {
             this._globals.setPC(this._labels[labelName]);
         } else {
             throw new Error(`Unknown label "${labelName}`);
