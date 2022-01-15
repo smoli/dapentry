@@ -1,6 +1,8 @@
 import {BoundingBox, GrObject, ObjectType} from "./GrObject";
 import {TWO_PI} from "./GeoMath";
 import {Point2D} from "./Point2D";
+import {Line2D} from "./Line2D";
+import {Circle2D} from "./Circle2D";
 
 export class GrCircle extends GrObject {
 
@@ -62,6 +64,34 @@ export class GrCircle extends GrObject {
             this._radius *= fy;
         else
             this._radius *= fx;
+    }
+
+
+    projectPoint(point: Point2D): Point2D {
+        const l = Line2D.createPP(point, this.center);
+        const c = new Circle2D(this.center, this.radius);
+        const p = l.intersectCircle(c);
+
+        const d0 = point.copy.sub(p[0]).length;
+        const d1 = point.copy.sub(p[1]).length;
+
+        if (d0 < d1) {
+            return p[0];
+        } else {
+            return p[1];
+        }
+    }
+
+    projectPointAsPercentage(point: Point2D): number {
+        const p = this.projectPoint(point);
+        const axis = new Point2D(0, -1);
+        const a = axis.angleTo(p.sub(this.center));
+
+        if (a < 0) {
+            return -a / TWO_PI
+        } else {
+            return 1 - a / TWO_PI;
+        }
     }
 
 }

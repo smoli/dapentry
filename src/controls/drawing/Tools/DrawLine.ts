@@ -4,6 +4,7 @@ import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrLine} from "../../../Geo/GrLine";
 import {GrObject, POI} from "../../../Geo/GrObject";
+import {Point2D} from "../../../Geo/Point2D";
 
 enum States {
     Wait = "DrawLine.Wait",
@@ -17,6 +18,7 @@ export class DrawLine extends Tool {
     private _line: GrLine
     private _firstSnapInfo: SnapInfo;
     private _secondSnapInfo: SnapInfo;
+    private _otherObject: GrObject;
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done)
@@ -27,7 +29,7 @@ export class DrawLine extends Tool {
         this._state.add(state(States.Drag), InteractionEvents.Click, state(States.Done));
         this._state.start(state(States.Wait));
 
-        this.enableSnapping();
+        this.enablePOISnapping();
     }
 
     public reset() {
@@ -41,7 +43,21 @@ export class DrawLine extends Tool {
             return false;
         }
 
-        let snapInfo = this.tryToSnap(eventData);
+        if (interactionEvent === InteractionEvents.OtherObject) {
+            this._otherObject = eventData.object;
+            if (!this._otherObject) {
+                this.enablePOISnapping();
+            }
+        }
+
+        let snapInfo;
+
+        if (this._otherObject) {
+            this.disablePOISnapping();
+            snapInfo = this.snapToObject(this._otherObject, eventData);
+        } else {
+            snapInfo = this.tryToPOISnap(eventData);
+        }
         eventData = snapInfo.event;
 
         this._state.next(interactionEvent);
@@ -64,7 +80,7 @@ export class DrawLine extends Tool {
                 this._line.y2 = eventData.y;
                 this._renderer.remove(this._line);
                 this._secondSnapInfo = snapInfo;
-                this.disableSnapping();
+                this.disablePOISnapping();
         }
 
         return this.isDone;
@@ -79,10 +95,20 @@ export class DrawLine extends Tool {
         let one = `(${x1}, ${y1})`;
         let two = `(${x2}, ${y2})`;
         if (this._firstSnapInfo.object) {
-            one = `${this._firstSnapInfo.object.name}, "${POI[this._firstSnapInfo.poiId]}"`
+            if (this._firstSnapInfo.poiId === undefined) {
+                const pct = this._firstSnapInfo.object.projectPointAsPercentage(this._firstSnapInfo.point);
+                one = `${this._firstSnapInfo.object.name}, ${pct}`
+            } else {
+                one = `${this._firstSnapInfo.object.name}, "${POI[this._firstSnapInfo.poiId]}"`
+            }
         }
         if (this._secondSnapInfo.object) {
-            two = `${this._secondSnapInfo.object.name}, "${POI[this._secondSnapInfo.poiId]}"`
+            if (this._secondSnapInfo.poiId === undefined) {
+                const pct = this._secondSnapInfo.object.projectPointAsPercentage(this._secondSnapInfo.point);
+                two = `${this._secondSnapInfo.object.name}, ${pct}`
+            } else {
+                two = `${this._secondSnapInfo.object.name}, "${POI[this._secondSnapInfo.poiId]}"`
+            }
         }
 
 

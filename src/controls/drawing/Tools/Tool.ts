@@ -69,7 +69,7 @@ export abstract class Tool {
      * Abort tool. This does not deactivate the tool.
      */
     public abort(): void {
-        this.disableSnapping();
+        this.disablePOISnapping();
         return;
     }
 
@@ -106,7 +106,7 @@ export abstract class Tool {
         this._snapPoint = this._snappingObject = this._snappingPOI = null;
     }
 
-    protected enableSnapping(objectsToExclude: Array<GrObject> = []) {
+    protected enablePOISnapping(objectsToExclude: Array<GrObject> = []) {
         if (!this._renderer) {
             return;
         }
@@ -121,14 +121,29 @@ export abstract class Tool {
         }, objectsToExclude);
     }
 
-    protected disableSnapping() {
+    protected disablePOISnapping() {
         this.clearSnapInfo();
         if (this._renderer) {
             this._renderer.enablePOI(false);
         }
     }
 
-    protected tryToSnap(eventData: InteractionEventData): SnapInfo {
+    protected snapToObject(object: GrObject, eventData): SnapInfo {
+        const p = object.projectPoint( new Point2D(eventData.x, eventData.y));
+       /* const pct = object.projectPointAsPercentage(new Point2D(eventData.x, eventData.y));
+        console.log(pct);*/
+
+        return {
+            event: {
+                ...eventData,
+                x: p.x,
+                y: p.y
+            }, object: object, poiId: undefined, point: p
+
+        }
+    }
+
+    protected tryToPOISnap(eventData: InteractionEventData): SnapInfo {
         if (this._snappingObject) {
             return {
                 object: this._snappingObject,

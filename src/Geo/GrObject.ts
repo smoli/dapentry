@@ -365,5 +365,13 @@ export abstract class GrObject {
             this._center.y + this._xAxis.y * x + this._yAxis.y * y
         )
     }
+
+    public projectPointAsPercentage(point: Point2D): number {
+        return 0;
+    }
+
+    public projectPoint(point: Point2D): Point2D {
+        return null;
+    }
 }
 

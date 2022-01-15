@@ -1,6 +1,7 @@
 import {GrObject, ObjectType, POI, POIMap} from "./GrObject";
 import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
+import {Line2D} from "./Line2D";
 
 
 export class GrLine extends GrObject {
@@ -113,12 +114,12 @@ export class GrLine extends GrObject {
         }
     }
 
-    getOppositePoi(poi: POI): Point2D {
+    getOppositePoi(poi: POI): POI {
         switch (poi) {
             case POI.start:
-                return this.end;
+                return POI.end;
             case POI.end:
-                return this.start
+                return POI.start
 
             default:
                 return super.getOppositePoi(poi);
@@ -143,6 +144,38 @@ export class GrLine extends GrObject {
 
     getPointAtPercentage(pct: number): Point2D {
         return this.start.copy.add(this.end.copy.sub(this.start).scale(pct));
+    }
+
+    projectPoint(point: Point2D): Point2D {
+        const l = Line2D.createPP(this.start, this.end);
+        const p = l.projectPoint(point);
+
+        const u = this._end.copy.sub(this._start);
+        const n = (p.x - this._start.x) / u.x;
+
+        if (n < 0) {
+            return this.start;
+        } else if (n > 1) {
+            return this.end;
+        }
+
+        return p;
+    }
+
+    projectPointAsPercentage(point: Point2D): number {
+        const l = Line2D.createPP(this.start, this.end);
+        const p = l.projectPoint(point);
+
+        const u = this._end.copy.sub(this._start);
+        const n = (p.x - this._start.x) / u.x;
+
+        if (n < 0) {
+            return 0;
+        } else if (n > 1) {
+            return 1;
+        }
+
+        return n;
     }
 
 }

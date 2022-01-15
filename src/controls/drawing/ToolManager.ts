@@ -14,6 +14,7 @@ export class ToolManager {
     private _doneCallback: (any) => void;
     private _abortCallback: () => void;
     private _selection: Array<GrObject>;
+    private _switchCallBack: () => void;
 
 
     constructor(objectRenderer: ObjectRenderer) {
@@ -30,6 +31,10 @@ export class ToolManager {
 
     set abortCallBack(doneCallback: () => void) {
         this._abortCallback = doneCallback;
+    }
+
+    set switchCallBack(switchCallBack: () => void) {
+        this._switchCallBack = switchCallBack;
     }
 
     public addTool(ToolClass: typeof Tool, event: (string | number | symbol)) {
@@ -113,6 +118,9 @@ export class ToolManager {
             }
             this._currentTool = this._makeToolInstance(ToolClass);
             this._pumpSelection(false);
+            if (this._switchCallBack) {
+                this._switchCallBack();
+            }
         }
     }
 
@@ -144,6 +152,9 @@ export class ToolManager {
                 if (ToolClass) {
                     this._currentTool.tearDown();
                     this._currentTool = this._makeToolInstance(ToolClass);
+                    if (this._switchCallBack) {
+                        this._switchCallBack();
+                    }
                 } else {
                     this._currentTool.reset();
                 }

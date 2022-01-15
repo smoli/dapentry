@@ -18,6 +18,7 @@ import {DrawQuadratic} from "./Tools/DrawQuadratic";
 import {GrObjectList} from "../../Geo/GrObjectList";
 import {ScaleTool} from "./Tools/ScaleTool";
 import {Point2D} from "../../Geo/Point2D";
+import {Tool} from "./Tools/Tool";
 
 
 enum ToolNames {
@@ -76,6 +77,7 @@ export default class Drawing extends Control {
     private _objects: Array<GrObject>;
 
     // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
+    private _otherObjectIndex: number = -1;
     constructor(idOrSettings?: string | $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings) {
@@ -102,10 +104,15 @@ export default class Drawing extends Control {
         this._objectRenderer.clear(RenderLayer.Interaction);
     }
 
+    protected _onToolSwitch() {
+        this._otherObjectIndex = -1;
+    }
+
     protected _setupTools() {
         this._toolManager = new ToolManager(this._objectRenderer);
         this._toolManager.doneCallBack = this._onToolDone.bind(this);
         this._toolManager.abortCallBack = this._onToolAbort.bind(this);
+        this._toolManager.switchCallBack = this._onToolSwitch.bind(this);
 
         this._toolManager.addTool(DrawCircle, ToolNames.Circle);
         this._toolManager.addTool(DrawLine, ToolNames.Line);
@@ -170,7 +177,6 @@ export default class Drawing extends Control {
     }
 
     private _pumpToTool(interactionEvent: InteractionEvents) {
-
         const d3Ev = d3.event;
         const d3MEv = d3.mouse(this._svg.node());
         const ed: InteractionEventData = {
@@ -188,6 +194,17 @@ export default class Drawing extends Control {
         } else if (this._lastMouse) {
             ed.x = this._lastMouse.x;
             ed.y = this._lastMouse.y;
+        }
+
+        if (interactionEvent === InteractionEvents.OtherObject) {
+            this._otherObjectIndex++;
+
+            if (this._otherObjectIndex >= this._objects.length) {
+                this._otherObjectIndex = -1;
+                ed.object = null;
+            } else {
+                ed.object = this._objects[this._otherObjectIndex];
+            }
         }
 
         this._toolManager.pump(interactionEvent, ed);
@@ -224,8 +241,13 @@ export default class Drawing extends Control {
     }
 
     private _interActionKeyDown() {
+        console.log(d3.event.code);
+
         if (d3.event.code === "ArrowDown") {
             this.fireNextStep();
+        } else if (d3.event.code === "AltLeft") {
+            d3.event.preventDefault();
+            this._pumpToTool(InteractionEvents.OtherObject);
         } else if (d3.event.keyCode === 27) {
             this._pumpToTool(InteractionEvents.Cancel);
             this._toolManager.abortCurrentTool();

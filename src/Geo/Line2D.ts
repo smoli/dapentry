@@ -1,5 +1,6 @@
 import {Point2D} from "./Point2D";
 import {eq} from "./GeoMath";
+import {Circle2D} from "./Circle2D";
 
 export class Line2D {
 
@@ -69,6 +70,34 @@ export class Line2D {
         const y = (this.d * line.n.x - line.d * this.n.x) / det;
 
         return new Point2D(x, y);
+    }
+
+    intersectCircle(circle: Circle2D): Array<Point2D> {
+        const dl = -(circle.o.x * this.n.x + circle.o.y * this.n.y - this.d);
+        const  det = this.n.x * this.n.x + this.n.y * this.n.y;
+        if (eq(det, 0)) return [];
+
+        let sq = (circle.r ** 2) * det - dl ** 2;
+        if (eq(sq, 0)) {
+            // Tangent
+            return  [
+                new Point2D(
+                    this.n.x * dl / det + circle.o.x,
+                    this.n.y * dl / det + circle.o.x)
+            ]
+        } else if (sq > 0) {
+            sq = Math.sqrt(sq);
+            let x = (this.n.x * dl + this.n.y * sq) / det + circle.o.x;
+            let y = (this.n.y * dl - this.n.x * sq) / det + circle.o.y;
+            const p1 = new Point2D(x, y);
+            x = (this.n.x * dl - this.n.y * sq) / det + circle.o.x;
+            y = (this.n.y * dl + this.n.x * sq) / det + circle.o.y;
+            const p2 = new Point2D(x, y);
+            return [p1, p2]
+        } else {
+            // No intersection
+            return [];
+        }
     }
 
 

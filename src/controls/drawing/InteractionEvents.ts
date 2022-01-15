@@ -9,6 +9,7 @@ export enum InteractionEvents {
     MouseLeave,
     MouseEnter,
     Selection,
+    OtherObject,
     Key,
     Cancel
 }
@@ -26,5 +27,6 @@ export interface InteractionEventData {
     alt: boolean,
     key: string,
     keyCode: number,
-    selection?: Array<GrObject>
+    selection?: Array<GrObject>,
+    object?: GrObject
 }

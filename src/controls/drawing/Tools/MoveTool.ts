@@ -67,7 +67,7 @@ export class MoveTool extends Tool {
             this._ox = poi.x;
             this._oy = poi.y;
 
-            this.enableSnapping([this._object]);
+            this.enablePOISnapping([this._object]);
         }
     }
 
@@ -94,7 +94,7 @@ export class MoveTool extends Tool {
             this.selection = eventData.selection;
         }
 
-        this._lastSnapInfo = this.tryToSnap(eventData);
+        this._lastSnapInfo = this.tryToPOISnap(eventData);
         eventData = this._lastSnapInfo.event;
 
         let dx;
@@ -116,7 +116,7 @@ export class MoveTool extends Tool {
                 this._movingObject.movePOI(this._movingPOI, new Point2D(dx, dy))
                 this._renderer.render(this._object, true)
                 this._renderer.enablePOI(false);
-                this.disableSnapping();
+                this.disablePOISnapping();
                 return true;
 
             case States.Handle:
