@@ -26,6 +26,8 @@ export class ScaleTool extends Tool {
     protected _finalY: number;
 
     private _op: Point2D;
+    private _pivot: Point2D;
+    private _pivotPOI: POI;
 
     constructor(renderer: ObjectRenderer) {
         super(renderer, States.Wait, States.Done);
@@ -62,6 +64,8 @@ export class ScaleTool extends Tool {
             this._state.next(Events.HandleDown);
             this._scalingObject = object.createProxy();
             this._scalingPOI = poiId;
+            this._pivotPOI = object.getOppositePoi(this._scalingPOI);
+            this._pivot = this._scalingObject.pointsOfInterest[this._pivotPOI];
             this._op = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._scalingObject.center);
             this._finalX = 1;
             this._finalY = 1;
@@ -84,17 +88,16 @@ export class ScaleTool extends Tool {
         return this._selection.length && this._selection[0];
     }
 
-
     protected _scale(dx, dy) {
-        const np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._scalingObject.center);
+        let np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._pivot);
         const fx = np.x !== 0 ? (np.x + dx) / np.x : 1;
         const fy = np.y !== 0 ? (np.y + dy) / np.y : 1;
 
-        this._scalingObject.scale(Math.abs(fx), Math.abs(fy));
+        console.log(np, dx, dy);
+        this._scalingObject.scale(Math.abs(fx), Math.abs(fy), this._pivot);
 
         this._finalX *= Math.abs(fx);
         this._finalY *= Math.abs(fy);
-        console.log(this._scalingObject.boundingBox, this._finalX, this._finalY)
     }
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
@@ -117,7 +120,6 @@ export class ScaleTool extends Tool {
         switch (this._state.state.id as States) {
             case States.Wait:
                 this._scalingPOI = this._scalingObject = null;
-
                 break;
 
             case States.Done:
@@ -127,10 +129,10 @@ export class ScaleTool extends Tool {
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._scale(dx, dy);
-
+                    let np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy;
+                    console.log(np, eventData.x, eventData.y);
                     this._renderer.render(this._scalingObject, true);
                     const poi: POIMap = this._scalingObject.pointsOfInterest;
-
                     Object.keys(poi)
                         .forEach(poiId => {
                             this._renderer.updateHandle(this._scalingObject, poiId, poi[poiId]);
@@ -143,6 +145,6 @@ export class ScaleTool extends Tool {
     }
 
     public get result(): any {
-        return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, ${Math.abs(this._finalY)}`
+        return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, ${Math.abs(this._finalY)}, "${POI[this._pivotPOI]}"`
     }
 }

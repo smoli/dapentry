@@ -64,9 +64,14 @@ export class GrRectangle extends GrObject {
         return this.makePoint(-this.width / 2, this.height / 2);
     }
 
-    scale(fx: number, fy: number) {
+    scale(fx: number, fy: number, pivot: Point2D = null) {
         this._width *= fx;
         this._height *= fy;
+        if (pivot) {
+            this.center.x = (this._center.x - pivot.x) * fx + pivot.x
+            this.center.y = (this._center.y - pivot.y) * fy + pivot.y
+        }
+
     }
 
     get pointsOfInterest(): POIMap {
@@ -77,5 +82,24 @@ export class GrRectangle extends GrObject {
             [POI.bottomLeft]: this.bottomLeft,
             [POI.bottomRight]: this.bottomRight
         };
+    }
+
+    getOppositePoi(poi: POI): POI {
+        switch (poi) {
+            case POI.topLeft:
+                return POI.bottomRight;
+
+            case POI.topRight:
+                return POI.bottomLeft;
+
+            case POI.bottomLeft:
+                return POI.topRight;
+
+            case POI.bottomRight:
+                return POI.topLeft;
+
+            default:
+                return super.getOppositePoi(poi);
+        }
     }
 }

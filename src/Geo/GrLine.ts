@@ -112,6 +112,18 @@ export class GrLine extends GrObject {
         }
     }
 
+    getOppositePoi(poi: POI): Point2D {
+        switch (poi) {
+            case POI.start:
+                return this.end;
+            case POI.end:
+                return this.start
+
+            default:
+                return super.getOppositePoi(poi);
+        }
+    }
+
     public movePOI(poi: POI, vector: Point2D): void {
         if (poi === POI.center) {
             super.movePOI(poi, vector);

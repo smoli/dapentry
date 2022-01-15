@@ -77,6 +77,12 @@ export interface BoundingBox {
  * The instances are pooled by their name.
  */
 export abstract class GrObject {
+    get yAxis(): Point2D {
+        return this._yAxis;
+    }
+    get xAxis(): Point2D {
+        return this._xAxis;
+    }
 
     private static _instanceCounter: number = 0;
     private static _pool: { [key: string]: GrObject } = {}
@@ -85,8 +91,8 @@ export abstract class GrObject {
     protected _parent: GrObject = null;
 
     protected _center: Point2D;
-    protected _xAxis: Point2D = new Point2D(1, 0);
-    protected _yAxis: Point2D = new Point2D(0, 1);
+    private _xAxis: Point2D = new Point2D(1, 0);
+    private _yAxis: Point2D = new Point2D(0, 1);
     protected _rotation: number = 0;
     protected _style: Style = null;
     protected _instanceCount = GrObject._instanceCounter++;
@@ -231,9 +237,7 @@ export abstract class GrObject {
         this._rotation += value;
     }
 
-    public scale(fx: number, fy: number) {
-
-    }
+    public scale(fx: number, fy: number, pivot: Point2D = null) { }
 
 
     /**
@@ -299,6 +303,28 @@ export abstract class GrObject {
             [POI.bottom]: this.bottom,
             [POI.left]: this.left,
             [POI.right]: this.right
+        }
+    }
+
+    getOppositePoi(poi: POI):POI {
+        switch (poi) {
+            case POI.center:
+                return null;
+            case POI.top:
+                return POI.bottom;
+
+            case POI.left:
+                return POI.right;
+
+            case POI.bottom:
+                return POI.top;
+
+            case POI.right:
+                return POI.left;
+
+            default:
+                return null;
+
         }
     }
 
