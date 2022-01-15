@@ -1,5 +1,6 @@
 import {BoundingBox, GrObject, ObjectType} from "./GrObject";
-import {Point2D, TWO_PI} from "./GeoMath";
+import {TWO_PI} from "./GeoMath";
+import {Point2D} from "./Point2D";
 
 export class GrCircle extends GrObject {
 

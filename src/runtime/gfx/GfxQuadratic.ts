@@ -1,9 +1,9 @@
 import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {GfxObject} from "./GfxObject";
-import {Point2D} from "../../Geo/GeoMath";
 import {ArrayParameter} from "../interpreter/types/ArrayParameter";
 import {GrBezier, GrQuadratic} from "../../Geo/GrPolygon";
+import {Point2D} from "../../Geo/Point2D";
 
 export class GfxQuadratic extends GfxObject {
     private readonly _points: ArrayParameter;

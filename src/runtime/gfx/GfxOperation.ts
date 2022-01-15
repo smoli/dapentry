@@ -2,9 +2,9 @@ import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {GrObject, POI} from "../../Geo/GrObject";
 import {GrObjectList} from "../../Geo/GrObjectList";
-import {Point2D} from "../../Geo/GeoMath";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {ArrayParameter} from "../interpreter/types/ArrayParameter";
+import {Point2D} from "../../Geo/Point2D";
 
 
 export class GfxOperation extends Operation {

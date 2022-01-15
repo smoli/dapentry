@@ -3,9 +3,9 @@ import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
 import {GrLine} from "../../Geo/GrLine";
-import {Point2D} from "../../Geo/GeoMath";
 import {getParameterConfig} from "./GfxOperation";
 import {GrObject, POI} from "../../Geo/GrObject";
+import {Point2D} from "../../Geo/Point2D";
 
 
 export class GfxLine extends GfxObject {

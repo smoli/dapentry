@@ -1,5 +1,5 @@
 import {BoundingBox, GrObject, ObjectType, POI, POIMap} from "./GrObject";
-import {Point2D} from "./GeoMath";
+import {Point2D} from "./Point2D";
 
 export class GrRectangle extends GrObject {
 

@@ -3,8 +3,8 @@ import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
 import {GrCircle} from "../../Geo/GrCircle";
-import {Point2D} from "../../Geo/GeoMath";
 import {GrObjectList} from "../../Geo/GrObjectList";
+import {Point2D} from "../../Geo/Point2D";
 
 export class GfxCircle extends GfxObject {
     private readonly _center: Point2Parameter;

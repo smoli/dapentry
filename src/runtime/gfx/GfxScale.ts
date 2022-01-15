@@ -1,8 +1,8 @@
 import {Parameter} from "../interpreter/Parameter";
 import {GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../Geo/GrObjectList";
-import {Point2D} from "../../Geo/GeoMath";
 import {POI} from "../../Geo/GrObject";
+import {Point2D} from "../../Geo/Point2D";
 
 export class GfxScale extends GfxOperation {
     private _factorX: Parameter;

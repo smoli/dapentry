@@ -3,7 +3,8 @@ import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
-import {Point2D, rad2deg} from "../../../Geo/GeoMath";
+import {rad2deg} from "../../../Geo/GeoMath";
+import {Point2D} from "../../../Geo/Point2D";
 
 
 enum States {

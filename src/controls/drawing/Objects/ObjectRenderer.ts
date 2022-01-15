@@ -24,8 +24,8 @@ import {InteractionEventData} from "../InteractionEvents";
 import {GrCircle} from "../../../Geo/GrCircle";
 import {GrRectangle} from "../../../Geo/GrRectangle";
 import {GrLine} from "../../../Geo/GrLine";
-import {Point2D} from "../../../Geo/GeoMath";
 import {GrBezier, GrPolygon, GrQuadratic} from "../../../Geo/GrPolygon";
+import {Point2D} from "../../../Geo/Point2D";
 
 /**
  * Callback signature for functions invoked when an object is clicked

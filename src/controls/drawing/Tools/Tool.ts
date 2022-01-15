@@ -2,7 +2,7 @@ import {state, StateMachine} from "../../../runtime/tools/StateMachine";
 import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject} from "../../../Geo/GrObject";
-import {Point2D} from "../../../Geo/GeoMath";
+import {Point2D} from "../../../Geo/Point2D";
 
 export interface SnapInfo {
     object: GrObject,

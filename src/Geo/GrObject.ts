@@ -1,5 +1,6 @@
 import {Style} from "../controls/drawing/Objects/StyleManager";
-import {deg2rad, Point2D} from "./GeoMath";
+import {deg2rad} from "./GeoMath";
+import {Point2D} from "./Point2D";
 
 export enum ObjectType {
     Circle,

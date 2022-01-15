@@ -7,9 +7,9 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GrCircle} from "../../../Geo/GrCircle";
 import {GrRectangle} from "../../../Geo/GrRectangle";
 import {GrLine} from "../../../Geo/GrLine";
-import {Point2D} from "../../../Geo/GeoMath";
 import {GrBezier, GrPolygon, GrPolygonBase, GrQuadratic} from "../../../Geo/GrPolygon";
 import {GrObjectList} from "../../../Geo/GrObjectList";
+import {Point2D} from "../../../Geo/Point2D";
 
 enum ToolClasses {
     object = "grObject",

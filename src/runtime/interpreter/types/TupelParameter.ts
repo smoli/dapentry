@@ -1,5 +1,5 @@
 import {Parameter} from "../Parameter";
-import {Point2D} from "../../../Geo/GeoMath";
+import {Point2D} from "../../../Geo/Point2D";
 
 export class TupelParameter extends Parameter{
 

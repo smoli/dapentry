@@ -14,10 +14,10 @@ import {DrawLine} from "./Tools/DrawLine";
 import {RotateTool} from "./Tools/RotateTool";
 import {ToolManager} from "./ToolManager";
 import {DrawPolygon} from "./Tools/DrawPolygon";
-import {Point2D} from "../../Geo/GeoMath";
 import {DrawQuadratic} from "./Tools/DrawQuadratic";
 import {GrObjectList} from "../../Geo/GrObjectList";
 import {ScaleTool} from "./Tools/ScaleTool";
+import {Point2D} from "../../Geo/Point2D";
 
 
 enum ToolNames {
