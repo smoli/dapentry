@@ -1,6 +1,4 @@
 import Controller from "sap/ui/core/mvc/Controller";
-import JSONModel from "sap/ui/model/json/JSONModel";
-import Drawing from "../controls/drawing/Drawing";
 import {ComponentController} from "../ComponentController";
 import Component from "../Component";
 
@@ -18,7 +16,7 @@ export default class StyleController extends Controller {
 
         if (selection && selection.length) {
             const code = selection.map(object => {
-                return `FILL ${object.uniqueName} "${event.getParameter("hex")}" ${event.getParameter("alpha")}`;
+                return `FILL ${object.name}, "${event.getParameter("hex")}", ${event.getParameter("alpha")}`;
             });
             this.getComponentController().addOperations(code);
         }
@@ -29,7 +27,7 @@ export default class StyleController extends Controller {
 
         if (selection && selection.length) {
             const code = selection.map(object => {
-                return `STROKE ${object.uniqueName} ${event.getParameter("value")}`;
+                return `STROKE ${object.name}, ${event.getParameter("value")}`;
             });
             this.getComponentController().addOperations(code);
         }
