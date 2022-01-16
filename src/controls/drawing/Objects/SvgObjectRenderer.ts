@@ -31,8 +31,6 @@ interface ObjectInfo {
     x: number,
     y: number,
     rot: number,
-    scaleX: number,
-    scaleY: number,
     handles: Array<Point2D>
 }
 
@@ -196,8 +194,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 x: object.x,
                 y: object.y,
                 rot: object.rotation,
-                scaleX: object.scaleX,
-                scaleY: object.scaleY,
                 handles: []
             }
 
@@ -328,15 +324,23 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         const p = o.select(ToolClassSelectors.object);
 
-        let d = `M ${polygon.points[0].x} ${polygon.points[0].y}`;
+        let d;
 
-        for (let i = 1; i < polygon.points.length; i++) {
-            d += `L ${polygon.points[i].x} ${polygon.points[i].y}`;
+        if (polygon.points.length === 1) {
+            const p = polygon.points[0]
+            d = `M ${p.x - 7} ${p.y - 7} L ${p.x + 7} ${p.y + 7} M ${p.x - 7} ${p.y + 7} L ${p.x + 7} ${p.y - 7}`;
+        } else {
+            d = `M ${polygon.points[0].x} ${polygon.points[0].y}`;
+
+            for (let i = 1; i < polygon.points.length; i++) {
+                d += `L ${polygon.points[i].x} ${polygon.points[i].y}`;
+            }
+
+            if (polygon.closed) {
+                d += " Z";
+            }
         }
 
-        if (polygon.closed) {
-            d += " Z";
-        }
         p.attr("d", d);
 
 
