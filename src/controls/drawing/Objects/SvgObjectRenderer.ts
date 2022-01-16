@@ -444,14 +444,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 case ObjectType.Line:
                     this.renderLineBRep(g, object as GrLine);
                     break;
+
+                case ObjectType.Polygon:
+                    this.renderPolygonBRep(g, object as GrPolygon);
+                    break;
 /*
                 case ObjectType.Rectangle:
                     break;
                 case ObjectType.Ellipse:
                     break;
                 case ObjectType.Square:
-                    break;
-                case ObjectType.Polygon:
                     break;
                 case ObjectType.Quadratic:
                     break;
@@ -479,6 +481,36 @@ export class SvgObjectRenderer extends ObjectRenderer {
             }
 
         }
+    }
+
+    protected renderPolygonBRep(g: Selection<any>, polygon: GrPolygon) {
+
+        let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
+        if (c.empty()) {
+            // Not yet drawing a bounding representation
+            c = g.select("g" + ToolClassSelectors.boundingBox).append("path")
+                .classed(ToolClasses.boundingBox, true);
+        }
+
+        let d;
+
+        if (polygon.points.length === 1) {
+            const p = polygon.points[0]
+            d = `M ${p.x} ${p.y} m -10 0 a 10 10 0 1 0 20 0 M ${p.x} ${p.y} m -10 0 a 10 10 0 1 1 20 0`;
+        } else {
+            d = `M ${polygon.points[0].x} ${polygon.points[0].y}`;
+
+            for (let i = 1; i < polygon.points.length; i++) {
+                d += `L ${polygon.points[i].x} ${polygon.points[i].y}`;
+            }
+
+            if (polygon.closed) {
+                d += " Z";
+            }
+        }
+        c.attr("d", d)
+            .classed(ToolClasses.boundingBox, true);
+
     }
 
     protected renderLineBRep(g: Selection<any>, line: GrLine) {
