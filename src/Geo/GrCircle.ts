@@ -84,8 +84,7 @@ export class GrCircle extends GrObject {
 
     projectPointAsPercentage(point: Point2D): number {
         const p = this.projectPoint(point);
-        const axis = new Point2D(0, -1);
-        const a = axis.angleTo(p.sub(this.center));
+        const a = this.yAxis.copy.scale(-1).angleTo(p.sub(this.center));
 
         if (a < 0) {
             return -a / TWO_PI
