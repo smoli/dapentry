@@ -19,9 +19,11 @@ import {GrObjectList} from "../../Geo/GrObjectList";
 import {ScaleTool} from "./Tools/ScaleTool";
 import {Point2D} from "../../Geo/Point2D";
 import {Tool} from "./Tools/Tool";
+import {SelectTool} from "./Tools/SelectTool";
 
 
 enum ToolNames {
+    Select,
     Circle,
     Rectangle,
     Line,
@@ -122,6 +124,9 @@ export default class Drawing extends Control {
         this._toolManager.addTool(ScaleTool, ToolNames.Scale);
         this._toolManager.addTool(DrawPolygon, ToolNames.Polygon);
         this._toolManager.addTool(DrawQuadratic, ToolNames.Quadric);
+        this._toolManager.addTool(SelectTool, ToolNames.Select);
+
+        this._toolManager.setToolAfterDone(SelectTool);
 
         this._toolManager.switch(ToolNames.Move);
     }

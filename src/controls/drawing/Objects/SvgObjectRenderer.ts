@@ -481,7 +481,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 .data<Point2D>([p])
                 .classed(ToolClasses.handle, true);
 
-            this._attachHandleMouseEvents(object, handle, onMouseEvent, data);
+            if (onMouseEvent) {
+                this._attachHandleMouseEvents(object, handle, onMouseEvent, data);
+            }
         }
     }
 
