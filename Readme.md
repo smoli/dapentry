@@ -25,7 +25,9 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
   * [x] implement for circles
   * [ ] implement for rects
   * [ ] implement for polygons
+* [ ] rotate around pivot
 * [ ] enable move and creation tools to use percentage points
+  * [x] create line on lines and circles
 * [ ] enable move and creation operations to use percentage points
   * [x] move
   * [x] create line

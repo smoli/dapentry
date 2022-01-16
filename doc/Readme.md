@@ -25,10 +25,10 @@ register.
 After a frame is popped it is closed, i.e. all registers that where accessed through the frame but where stored in a
 frame lower on the stack are copied. The frame is then attached to all operations that used that frame as a closure.
 
-## Update after execution
+## ~~Update after execution~~
 
-The VM keeps track of what operation within what stack frame accesses which register (read and write). This info can be
+~~The VM keeps track of what operation within what stack frame accesses which register (read and write). This info can be
 used to update register values after the program is run. All operations depending on the updated register are
-re-executed. It works recursively but is kind of inefficient.
+re-executed. It works recursively but is kind of inefficient.~~
 
-This is probably a stupid idea.
+This is probably a stupid idea. Update: Yes it was and the feature is therefore removed.
