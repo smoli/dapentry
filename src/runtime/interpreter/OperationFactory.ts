@@ -29,6 +29,7 @@ import {IteratorJumpWhenNotDone} from "./operations/array/IteratorJumpWhenNotDon
 import {Halt} from "./operations/Halt";
 import {Append} from "./operations/array/Append";
 import {EndForEach, ForEach} from "./operations/array/ForEach";
+import {Do, EndDo} from "./operations/Do";
 
 export class OperationFactory {
 
@@ -86,6 +87,8 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("JINE", IteratorJumpWhenNotDone);
     operationFactory.addOperationClass("FOREACH", ForEach);
     operationFactory.addOperationClass("ENDEACH", EndForEach);
+    operationFactory.addOperationClass("DO", Do);
+    operationFactory.addOperationClass("ENDDO", EndDo);
     operationFactory.addOperationClass("HALT", Halt);
     operationFactory.addOperationClass("___LBL___", Label);
 
