@@ -87,6 +87,15 @@ export class Point2D {
         return this;
     }
 
+
+    /**
+     * Interprets point as a vector and create a new vector perpendicular.
+     * (clockwise)
+     */
+    getPerpendicular(): Point2D {
+        return new Point2D(-this.y, this.x);
+    }
+
     projectOnLine(line: Line2D): Point2D {
         if (line.pointOnLine(this)) {
             return this.copy;

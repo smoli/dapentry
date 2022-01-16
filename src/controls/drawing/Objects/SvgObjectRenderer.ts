@@ -435,22 +435,89 @@ export class SvgObjectRenderer extends ObjectRenderer {
     renderBoundingRepresentation(object: GrObject) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
 
-            if (c.empty()) {
-                // Already drawing a bounding representation
-                c = g.select("g" + ToolClassSelectors.boundingBox).append("rect")
-                    .classed(ToolClasses.boundingBox, true);
+            switch (object.type) {
+                case ObjectType.Circle:
+                    this.renderCircleBRep(g, object as GrCircle);
+                    break;
+
+                case ObjectType.Line:
+                    this.renderLineBRep(g, object as GrLine);
+                    break;
+/*
+                case ObjectType.Rectangle:
+                    break;
+                case ObjectType.Ellipse:
+                    break;
+                case ObjectType.Square:
+                    break;
+                case ObjectType.Polygon:
+                    break;
+                case ObjectType.Quadratic:
+                    break;
+                case ObjectType.Bezier:
+                    break;
+                case ObjectType.List:
+                    break;
+*/
+                default:
+                    let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
+                    if (c.empty()) {
+                        // Not yet drawing a bounding representation
+                        c = g.select("g" + ToolClassSelectors.boundingBox).append("rect")
+                            .classed(ToolClasses.boundingBox, true);
+                    }
+
+                    const bb = object.boundingBox;
+
+                    c.attr("x", -bb.w / 2 + object.x)
+                        .attr("y", -bb.h / 2 + object.y)
+                        .attr("width", bb.w)
+                        .attr("height", bb.h)
+                        .classed(ToolClasses.boundingBox, true);
+
             }
 
-            const bb = object.boundingBox;
+        }
+    }
 
-            c.attr("x", -bb.w / 2 + object.x)
-                .attr("y", -bb.h / 2 + object.y)
-                .attr("width", bb.w)
-                .attr("height", bb.h)
+    protected renderLineBRep(g: Selection<any>, line: GrLine) {
+        let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
+        if (c.empty()) {
+            // Not yet drawing a bounding representation
+            c = g.select("g" + ToolClassSelectors.boundingBox).append("path")
                 .classed(ToolClasses.boundingBox, true);
         }
+
+        const w = line.style.strokeWidth / 2 + 1;
+        const n:Point2D = line.end.copy.sub(line.start).getPerpendicular().normalize().scale(w);
+
+        const p1 = line.start.copy.add(n);
+        const p2 = line.end.copy.add(n);
+        const p3 = line.start.copy.sub(n);
+        const p4 = line.end.copy.sub(n);
+
+        let d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
+        d += `M ${p3.x} ${p3.y} L ${p4.x} ${p4.y}`;
+
+
+        c.attr("d", d)
+            .classed(ToolClasses.boundingBox, true);
+
+    }
+
+    protected renderCircleBRep(g: Selection<any>, circle: GrCircle) {
+        let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
+        if (c.empty()) {
+            // Not yet drawing a bounding representation
+            c = g.select("g" + ToolClassSelectors.boundingBox).append("circle")
+                .classed(ToolClasses.boundingBox, true);
+        }
+
+        c.attr("cx", circle.center.x)
+            .attr("cy", circle.center.y)
+            .attr("r", circle.radius + circle.style.strokeWidth / 2)
+            .classed(ToolClasses.boundingBox, true);
     }
 
     public removeBoundingRepresentation(object: GrObject) {
