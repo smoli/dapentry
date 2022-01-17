@@ -5,6 +5,7 @@ import {GrObjectList} from "../../Geo/GrObjectList";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {ArrayParameter} from "../interpreter/types/ArrayParameter";
 import {Point2D} from "../../Geo/Point2D";
+import {AtParameter} from "../interpreter/types/AtParameter";
 
 
 export class GfxOperation extends Operation {
@@ -53,6 +54,7 @@ export class GfxOperation extends Operation {
  *
  * If a parameter is of type Point2Parameter it is represented as a '2'.
  * If a parameter is of type ArrayParameter it is represented as an 'A'.
+ * If a parameter is of type AtParameter it is represented as a '@'.
  * If a parameter is of type Parameter it is represented as a 'P'.
  *
  *  So for parameters of types
@@ -66,6 +68,8 @@ export class GfxOperation extends Operation {
 export function getParameterConfig(...parameters): string {
     return parameters.filter(p => !!p)
         .map(p => {
-            return p instanceof Point2Parameter ? "2" : p instanceof ArrayParameter ? "A" : "P";
+            return p instanceof AtParameter ? "@" :
+                p instanceof Point2Parameter ? "2" :
+                p instanceof ArrayParameter ? "A" : "P";
         }).join("");
 }

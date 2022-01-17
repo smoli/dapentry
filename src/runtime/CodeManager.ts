@@ -241,7 +241,7 @@ export class CodeManager {
             // Here we have an actual code statement
 
 
-            let newLine = codeLine.split("@")[0].trim();
+            let newLine = Parser.constructCodeLine(tokens.filter(t => t.type !== TokenTypes.ANNOTATION));
 
             for (const t of tokens) {
                 if (t.type === TokenTypes.ANNOTATION) {

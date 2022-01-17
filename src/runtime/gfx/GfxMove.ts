@@ -4,77 +4,63 @@ import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GrObject, POI} from "../../Geo/GrObject";
 import {getParameterConfig, GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../Geo/GrObjectList";
+import {AtParameter} from "../interpreter/types/AtParameter";
+import {Point2D} from "../../Geo/Point2D";
 
 export class GfxMove extends GfxOperation {
     private _vector: Point2Parameter;
-    private readonly _targetObject: Parameter;
-    private _targetPoi: Parameter;
-    private _poi: Parameter;
+    private _targetPoint: Parameter;
+    private _movingPoint: Parameter;
 
 
-    constructor(opcode: string, object: Parameter, poiOrVector: Point2Parameter | Parameter, vectorOrObject: Point2Parameter | Parameter, targetPoi: Parameter) {
-        super(opcode, object);
+    constructor(opcode: string, a: Parameter | AtParameter, b: Point2Parameter | Parameter) {
+        let object;
 
-        switch (getParameterConfig(poiOrVector, vectorOrObject, targetPoi)) {
-            case "2":
-                this._poi = new Parameter(false, POI[POI.center]);
-                this._vector = poiOrVector as Point2Parameter;
-                break;
-
+        switch (getParameterConfig(a, b)) {
             case "P2":
-                this._poi = poiOrVector;
-                this._vector = vectorOrObject as Point2Parameter;
+                object = a;
+                super(opcode, object);
+                this._movingPoint = new Parameter(false, POI[POI.center]);
+                this._vector = b as Point2Parameter;
                 break;
 
-            case "PPP":
-                this._poi = poiOrVector;
-                this._targetObject = vectorOrObject;
-                this._targetPoi = targetPoi;
+            case "@2":
+                object = new Parameter(true, a.name);
+                super(opcode, object);
+                this._movingPoint = a;
+                this._targetPoint = b;
+                break;
+
+            case "P@":
+                object = a;
+                super(opcode, object);
+                this._movingPoint = new Parameter(false, POI[POI.center]);
+                this._targetPoint = b;
+                break;
+
+            case "@@":
+                object = new Parameter(true, a.name);
+                super(opcode, object);
+                this._movingPoint = a;
+                this._targetPoint = b;
                 break;
         }
 
-    }
-
-    get poi(): (string|number) {
-        return this._poi.finalized(this.closure);
-    }
-
-    get targetPoi(): (string|number) {
-        return this._targetPoi.finalized(this.closure);
-    }
-
-    get targetObject(): GrObject {
-        return this._targetObject.finalized(this.closure);
     }
 
     get vector(): any {
-        if (this._targetObject) {
-            let o1 = this.target;
-            let o2 = this.targetObject;
-            if (this.target === this.targetObject) {
-                if (this.target instanceof GrObjectList) {
-                    o1 = this.target.objects[this.target.objects.length - 1];
-                    o2 = this.target.objects[this.target.objects.length - 2];
-                } else {
-                    // This is a move operation that moves the same object upon a poi of itself.
-                    // We're most likely at the first iteration of a loop and ignore that move.
-                    // TODO: Is this the correct approach?
-                    return { x: 0, y: 0 }
-                }
-            }
-            const p = this.objPoiToPoint(o1, this.poi);
-            const t = this.objPoiToPoint(o2, this.targetPoi)
-            return {x: t.x - p.x, y: t.y - p.y}
-        } else {
-            return this._vector.finalized(this.closure);
-        }
+        const from = this._movingPoint.finalized(this.closure);
+        const to = this._targetPoint.finalized(this.closure);
+
+        return to.copy.sub(from);
+
     }
 
     async execute(): Promise<any> {
         if (this.target instanceof GrObjectList) {
-            this.target.objects[this.target.objects.length - 1].movePOI(POI[this.poi], this.vector);
+            this.target.objects[this.target.objects.length - 1].movePOI(POI.center, this.vector);
         } else {
-            this.target.movePOI(POI[this.poi], this.vector);
+            this.target.movePOI(POI.center, this.vector);
         }
     }
 }

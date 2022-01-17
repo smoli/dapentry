@@ -1,6 +1,7 @@
 import {Style} from "../controls/drawing/Objects/StyleManager";
 import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
+import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 
 export enum ObjectType {
     Circle,
@@ -372,6 +373,16 @@ export abstract class GrObject {
 
     public projectPoint(point: Point2D): Point2D {
         return null;
+    }
+
+    public at(where: WHERE_VALUE): Point2D {
+        if (typeof where === "number") {
+            return this.getPointAtPercentage(where);
+        } else if (typeof where === "string") {
+            return this.pointsOfInterest[POI[where]];
+        } else {
+            throw new Error(`Unknown location ${where} on ${ObjectType[this.type]}`);
+        }
     }
 }
 

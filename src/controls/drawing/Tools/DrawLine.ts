@@ -97,17 +97,17 @@ export class DrawLine extends Tool {
         if (this._firstSnapInfo.object) {
             if (this._firstSnapInfo.poiId === undefined) {
                 const pct = this._firstSnapInfo.object.projectPointAsPercentage(this._firstSnapInfo.point);
-                one = `${this._firstSnapInfo.object.name}, ${pct}`
+                one = `${this._firstSnapInfo.object.name}@${pct}`
             } else {
-                one = `${this._firstSnapInfo.object.name}, "${POI[this._firstSnapInfo.poiId]}"`
+                one = `${this._firstSnapInfo.object.name}@${POI[this._firstSnapInfo.poiId]}`
             }
         }
         if (this._secondSnapInfo.object) {
             if (this._secondSnapInfo.poiId === undefined) {
                 const pct = this._secondSnapInfo.object.projectPointAsPercentage(this._secondSnapInfo.point);
-                two = `${this._secondSnapInfo.object.name}, ${pct}`
+                two = `${this._secondSnapInfo.object.name}@${pct}`
             } else {
-                two = `${this._secondSnapInfo.object.name}, "${POI[this._secondSnapInfo.poiId]}"`
+                two = `${this._secondSnapInfo.object.name}@${POI[this._secondSnapInfo.poiId]}`
             }
         }
 

@@ -39,17 +39,9 @@ export default class Step extends Control {
 
     getTextIdForTokens(tokens: Array<Token>): string {
         const firstToken = tokens[0];
-
         switch (firstToken.value) {
 
-            case 'MOVE':
-                if (tokens.length === 3) {
-                    return "opMoveByCenter"
-                } else if (tokens.length === 4) {
-                    return "opMoveBy"
-                } else {
-                    return "opMoveTo"
-                }
+
 
             default:
                 return firstToken.value as string;

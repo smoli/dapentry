@@ -371,6 +371,24 @@ describe('Code manager', () => {
 
         });
 
+        it("is not confused by at-access", () => {
+            const code = `CIRCLE Circle1, $styles.default, (224, 269), 74.43117626371358
+                        CIRCLE Circle2, $styles.default, (319, 493), 94.64142856064674
+                        MOVE Circle2@bottom, Circle1@top
+            `;
+            const m = new CodeManager();
+            m.addCodeString(code);
+            const annotated = m.annotatedCode;
+            
+            expect(annotated).to.deep.equal([
+                { originalLine: 0, code: "CIRCLE Circle1, $styles.default, ( 224, 269 ), 74.43117626371358", level: 0 },
+                { originalLine: 1, code: "CIRCLE Circle2, $styles.default, ( 319, 493 ), 94.64142856064674", level: 0 },
+                { originalLine: 2, code: "MOVE Circle2@bottom, Circle1@top", level: 0 }
+            ])
+            
+            
+        })
+
         it("can create blocks", () => {
             const code = `
                 @EACH f1 @REPLACE Rectangle1-Tmp Rectangle1 @REPLACE f1iter.value f1

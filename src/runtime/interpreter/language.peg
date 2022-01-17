@@ -12,15 +12,16 @@
   	OPCODE: 0,
     REGISTER: 1,
     NONLOCALREGISTER: 2,
-    NUMBER: 3,
-    STRING: 4,
-    LABEL: 5,
-    POINT: 6,
-    ARRAY: 7,
-    EXPRESSION: 8,
-    OPERATOR: 9,
-    ANNOTATION: 10,
-    OTHER: 11
+    REGISTERPROP: 3,
+    NUMBER: 4,
+    STRING: 5,
+    LABEL: 6,
+    POINT: 7,
+    ARRAY: 8,
+    EXPRESSION: 9,
+    OPERATOR: 10,
+    ANNOTATION: 11,
+    OTHER: 12
   }
 
 }
@@ -33,6 +34,7 @@
       if (anno) r.push(...anno);
       return r.filter(x => !!x);
       }
+
 
 
 
@@ -69,8 +71,10 @@
 
   Factor
     = "(" _ expr:Eval _ ")"
+    / RegPropAccess
     / Number
     / Register
+
 
 
 
@@ -95,6 +99,11 @@
       return arg
       }
 
+
+	RegPropAccess "RegisterPropertyAccess"
+    = head:Register "@" tail:(Register/Number) {
+    	return { type: TokenTypes.REGISTERPROP, value: [head, tail]}
+    }
 
    Register "Register"
       = nonlocal:"^"? reg:([$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*) {

@@ -24,6 +24,7 @@ export class AppModel extends JSONModelAccess {
                     .map(c => {
                         return {
                             index: c.originalLine,
+                            code: c.code,
                             tokens: Parser.parseLine(c.code),
                             level: c.level,
                             selected: false

@@ -9,7 +9,7 @@ import {Point2D} from "../../Geo/Point2D";
 
 
 export class GfxLine extends GfxObject {
-    private readonly _p1: Point2Parameter;
+    private readonly _p1: Parameter;
     private readonly _p2: Parameter;
     private _fromObject: Parameter;
     private _fromPoint: Parameter;
@@ -24,27 +24,8 @@ export class GfxLine extends GfxObject {
             case "P2":
             case "2P":
             case "22" :
-                this._p1 = a as Point2Parameter;
-                this._p2 = b as Point2Parameter;
-                break;
-
-            case "PP2":
-                this._fromObject = a;
-                this._fromPoint = b;
-                this._p2 = c as Point2Parameter;
-                break;
-
-            case "2PP":
-                this._p1 = a as Point2Parameter;
-                this._toObject = b;
-                this._toPoint = c;
-                break;
-
-            case "PPPP":
-                this._fromObject = a;
-                this._fromPoint = b;
-                this._toObject = c;
-                this._toPoint = d;
+                this._p1 = a;
+                this._p2 = b;
                 break;
         }
 

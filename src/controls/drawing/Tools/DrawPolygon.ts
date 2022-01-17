@@ -180,7 +180,7 @@ export class DrawPolygon extends Tool {
             const snapInfo = this._snapInfoForPoint[i];
 
             if (snapInfo && snapInfo.object && snapInfo.poiId) {
-                return `${snapInfo.object.uniqueName}.${POI[snapInfo.poiId]}`;
+                return `${snapInfo.object.uniqueName}@${POI[snapInfo.poiId]}`;
             } else {
                 return `(${p.x}, ${p.y})`;
             }

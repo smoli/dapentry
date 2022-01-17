@@ -147,9 +147,9 @@ export class MoveTool extends Tool {
             if (this._lastSnapInfo && this._lastSnapInfo.object) {
                 let name2 = this._lastSnapInfo.object.name;
 
-                return `MOVE ${name1}, "${POI[this._movingPOI]}", ${name2}, "${POI[this._lastSnapInfo.poiId]}"`
+                return `MOVE ${name1}@${POI[this._movingPOI]}, ${name2}@${POI[this._lastSnapInfo.poiId]}`
             } else {
-                return `MOVE ${name1}, "${POI[this._movingPOI]}", (${dx}, ${dy})`
+                return `MOVE ${name1}@${POI[this._movingPOI]}, (${dx}, ${dy})`
             }
 
         } else {

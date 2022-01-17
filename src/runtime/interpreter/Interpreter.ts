@@ -7,6 +7,7 @@ import {StackFrame} from "./StackFrame";
 import {Point2Parameter} from "./types/Point2Parameter";
 import {ArrayParameter} from "./types/ArrayParameter";
 import {ExpressionParameter} from "./types/ExpressionParameter";
+import {AtParameter} from "./types/AtParameter";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -367,6 +368,9 @@ export class Interpreter {
 
             case TokenTypes.NONLOCALREGISTER:
                 return new Parameter(token.type === TokenTypes.NONLOCALREGISTER, token.value, true);
+
+            case TokenTypes.REGISTERAT:
+                return new AtParameter(token.value[0].value, token.value[1].value);
 
             case TokenTypes.POINT:
                 return new Point2Parameter(
