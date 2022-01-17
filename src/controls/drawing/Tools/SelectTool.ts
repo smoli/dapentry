@@ -23,6 +23,11 @@ export class SelectTool extends Tool {
         this._state.add(state(States.Done), 0, state(States.Done));
     }
 
+
+    get isDone(): boolean {
+        return false;
+    }
+
     initialize() {
         if (!this._object) {
             return;
