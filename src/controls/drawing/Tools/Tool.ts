@@ -112,6 +112,7 @@ export abstract class Tool {
         }
         this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
             if (hit) {
+                console.log("snap")
                 this._snappingObject = object;
                 this._snappingPOI = poiId;
                 this._snapPoint = this._snappingObject.pointsOfInterest[this._snappingPOI]

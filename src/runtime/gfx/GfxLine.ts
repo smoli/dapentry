@@ -20,6 +20,9 @@ export class GfxLine extends GfxObject {
         super(opcode, target, style);
 
         switch (getParameterConfig(a, b, c, d)) {
+            case "PP":
+            case "P2":
+            case "2P":
             case "22" :
                 this._p1 = a as Point2Parameter;
                 this._p2 = b as Point2Parameter;

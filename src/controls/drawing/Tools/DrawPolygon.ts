@@ -1,9 +1,10 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrPolygon, GrPolygonBase} from "../../../Geo/GrPolygon";
 import {Point2D} from "../../../Geo/Point2D";
+import {POI} from "../../../Geo/GrObject";
 
 enum States {
     Wait = "DrawPolygon.Wait",
@@ -23,6 +24,7 @@ export class DrawPolygon extends Tool {
     protected _opCode: string;
     protected _extending: boolean;
     private _originalPolyLength: number;
+    private _snapInfoForPoint: { [key: number]: SnapInfo } = {};
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done);
@@ -41,12 +43,14 @@ export class DrawPolygon extends Tool {
         this._opCode = "POLY";
 
         this._state.start(state(States.Wait));
+        this.enablePOISnapping();
     }
 
     public reset() {
         super.reset();
         this._poly = null;
         this._extending = false;
+        this._snapInfoForPoint = {};
     }
 
     protected handleInteractionOnWait(interactionEvent: InteractionEvents, eventData: InteractionEventData) {
@@ -55,7 +59,9 @@ export class DrawPolygon extends Tool {
         }
 
         let newp: Point2D;
-        newp = new Point2D(eventData.x, eventData.y);
+        const snapInfo = this.tryToPOISnap(eventData);
+        newp = new Point2D(snapInfo.event.x, snapInfo.event.y);
+
         switch (interactionEvent) {
             case InteractionEvents.MouseMove:
                 this._poly.setPoint(this._poly.points.length - 1, newp);
@@ -69,7 +75,6 @@ export class DrawPolygon extends Tool {
                     if (this._poly.points.length === 0) {
                         this._poly = null;
                     } else {
-                        newp = new Point2D(eventData.x, eventData.y);
                         this._poly.setPoint(this._poly.points.length - 1, newp);
                         this._renderer.remove(this._poly);
                     }
@@ -81,13 +86,16 @@ export class DrawPolygon extends Tool {
         let newp: Point2D;
 
         if (interactionEvent == InteractionEvents.Click) {
-            newp = new Point2D(eventData.x, eventData.y);
+            const snapInfo = this.tryToPOISnap(eventData);
+            newp = new Point2D(snapInfo.event.x, snapInfo.event.y);
+
 
             if (!this._poly) {
                 this._poly = this._objectClass.create(null, [newp], false);
             } else {
                 this._poly.setPoint(this._poly.points.length - 1, newp);
             }
+            this._snapInfoForPoint[this._poly.points.length - 1] = snapInfo;
 
             // Add a point for dragging
             this._poly.addPoint(newp);
@@ -146,6 +154,7 @@ export class DrawPolygon extends Tool {
                 break;
 
             case States.Done:
+                this.disablePOISnapping();
                 if (!this._poly) {
                     break;
                 }
@@ -162,14 +171,32 @@ export class DrawPolygon extends Tool {
         return this.isDone;
     }
 
+    protected createPointListCode(): Array<string> {
+        if (!this._poly) {
+            return null;
+        }
+
+        const p = this._poly.points.map((p, i) => {
+            const snapInfo = this._snapInfoForPoint[i];
+
+            if (snapInfo && snapInfo.object && snapInfo.poiId) {
+                return `${snapInfo.object.uniqueName}.${POI[snapInfo.poiId]}`;
+            } else {
+                return `(${p.x}, ${p.y})`;
+            }
+        });
+
+        return p;
+    }
+
     public get result(): any {
         if (this._poly && this._poly.points.length > 0) {
             if (!this._extending) {
-                return `${this._opCode} ${this._poly.uniqueName}, $styles.default, [ ${this._poly.points.map(p => `(${p.x}, ${p.y})`).join(", ")} ], ${this._closed ? 1 : 0}`;
+                return `${this._opCode} ${this._poly.uniqueName}, $styles.default, [ ${this.createPointListCode().join(", ")} ], ${this._closed ? 1 : 0}`;
             } else {
-                const points = this._poly.points.filter((p, i) => i >= this._originalPolyLength);
+                const points = this.createPointListCode().filter((p, i) => i >= this._originalPolyLength);
                 if (points.length) {
-                    return `EXTPOLY ${this._poly.uniqueName}, [ ${points.map(p => `(${p.x}, ${p.y})`).join(", ")} ]`
+                    return `EXTPOLY ${this._poly.uniqueName}, [ ${points.join(", ")} ]`
                 } else {
                     return null;
                 }
