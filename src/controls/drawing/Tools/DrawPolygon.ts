@@ -10,6 +10,7 @@ enum States {
     Drag = "DrawPolygon.Drag",
     FirstPoint = "DrawPolygon.FirstPoint",
     Point = "DrawPolygon.Point",
+    Select = "DrawPolygon.Select",
     Done = "DrawPolygon.Done",
 }
 
@@ -25,6 +26,9 @@ export class DrawPolygon extends Tool {
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done);
+
+        this._state.add(state(States.Wait), InteractionEvents.Selection, state(States.Select));
+        this._state.add(state(States.Select), InteractionEvents.Click, state(States.Drag));
 
         this._state.add(state(States.Wait), InteractionEvents.Click, state(States.FirstPoint));
         this._state.add(state(States.FirstPoint), InteractionEvents.Click, state(States.Drag));
@@ -94,26 +98,6 @@ export class DrawPolygon extends Tool {
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
 
-        if (interactionEvent === InteractionEvents.Selection) {
-            if (eventData.selection &&
-                eventData.selection.length === 1 &&
-                eventData.selection[0] instanceof GrPolygon &&
-                eventData.selection[0] !== this._poly) {
-                this._extending = true;
-                this._poly = eventData.selection[0];
-                this._originalPolyLength = this._poly.points.length;
-                this._state.start(state(States.Point));
-
-                // add a point for dragging
-
-                this._poly.addPoint(this._poly.points[this._originalPolyLength - 1])
-                this._state.next(InteractionEvents.Click);
-
-            }
-
-        }
-
-
         if (interactionEvent === InteractionEvents.Cancel) {
             this.reset();
             return false;
@@ -122,6 +106,23 @@ export class DrawPolygon extends Tool {
         this._state.next(interactionEvent);
 
         switch (this._state.state.id) {
+
+            case States.Select:
+                if (eventData.selection &&
+                    eventData.selection.length === 1 &&
+                    eventData.selection[0] instanceof GrPolygon &&
+                    eventData.selection[0] !== this._poly) {
+                    this._extending = true;
+                    this._poly = eventData.selection[0];
+                    this._originalPolyLength = this._poly.points.length;
+                    this._state.start(state(States.Point));
+
+                    // add a point for dragging
+
+                    this._poly.addPoint(this._poly.points[this._originalPolyLength - 1])
+                    this._state.next(InteractionEvents.Click);
+                }
+                break;
 
             case States.Wait:
             case States.Drag:
@@ -159,7 +160,11 @@ export class DrawPolygon extends Tool {
                 return `${this._opCode} ${this._poly.uniqueName}, $styles.default, [ ${this._poly.points.map(p => `(${p.x}, ${p.y})`).join(", ")} ], ${this._closed ? 1 : 0}`;
             } else {
                 const points = this._poly.points.filter((p, i) => i >= this._originalPolyLength);
-                return `EXTPOLY ${this._poly.uniqueName}, [ ${points.map(p => `(${p.x}, ${p.y})`).join(", ")} ]`
+                if (points.length) {
+                    return `EXTPOLY ${this._poly.uniqueName}, [ ${points.map(p => `(${p.x}, ${p.y})`).join(", ")} ]`
+                } else {
+                    return null;
+                }
             }
 
         } else {
