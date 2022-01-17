@@ -7,6 +7,8 @@ import {Point2D} from "../../../Geo/Point2D";
 
 enum States {
     Wait = "DrawPolygon.Wait",
+    Drag = "DrawPolygon.Drag",
+    FirstPoint = "DrawPolygon.FirstPoint",
     Point = "DrawPolygon.Point",
     Done = "DrawPolygon.Done",
 }
@@ -18,12 +20,17 @@ export class DrawPolygon extends Tool {
     private _closed: boolean;
     protected _renderMethod: any;
     protected _opCode: string;
+    protected _extending: boolean;
+    private _originalPolyLength: number;
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done);
 
-        this._state.add(state(States.Wait), InteractionEvents.Click, state(States.Point));
-        this._state.add(state(States.Point), InteractionEvents.Click, state(States.Wait));
+        this._state.add(state(States.Wait), InteractionEvents.Click, state(States.FirstPoint));
+        this._state.add(state(States.FirstPoint), InteractionEvents.Click, state(States.Drag));
+        this._state.add(state(States.Drag), InteractionEvents.Click, state(States.Point));
+        this._state.add(state(States.Point), InteractionEvents.Click, state(States.Drag));
+        this._state.add(state(States.Drag), InteractionEvents.AlternateClick, state(States.Done));
         this._state.add(state(States.Wait), InteractionEvents.AlternateClick, state(States.Done));
 
         this._renderMethod = renderer.renderPolygon.bind(renderer);
@@ -35,6 +42,7 @@ export class DrawPolygon extends Tool {
     public reset() {
         super.reset();
         this._poly = null;
+        this._extending = false;
     }
 
     protected handleInteractionOnWait(interactionEvent: InteractionEvents, eventData: InteractionEventData) {
@@ -65,18 +73,20 @@ export class DrawPolygon extends Tool {
         }
     }
 
-    protected handlePointState(interactionEvent: InteractionEvents, eventData: InteractionEventData = null) {
+    protected handlePointState(interactionEvent: InteractionEvents, eventData: InteractionEventData = null, first: boolean) {
         let newp: Point2D;
 
         if (interactionEvent == InteractionEvents.Click) {
             newp = new Point2D(eventData.x, eventData.y);
 
             if (!this._poly) {
-                this._poly = this._objectClass.create(null, [newp, newp], false);
+                this._poly = this._objectClass.create(null, [newp], false);
             } else {
-                this._poly.addPoint(newp);
+                this._poly.setPoint(this._poly.points.length - 1, newp);
             }
 
+            // Add a point for dragging
+            this._poly.addPoint(newp);
             this._renderMethod(RenderLayer.Interaction, this._poly);
             this._state.next(InteractionEvents.Click);
         }
@@ -84,35 +94,57 @@ export class DrawPolygon extends Tool {
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
 
+        if (interactionEvent === InteractionEvents.Selection) {
+            if (eventData.selection &&
+                eventData.selection.length === 1 &&
+                eventData.selection[0] instanceof GrPolygon &&
+                eventData.selection[0] !== this._poly) {
+                this._extending = true;
+                this._poly = eventData.selection[0];
+                this._originalPolyLength = this._poly.points.length;
+                this._state.start(state(States.Point));
+
+                // add a point for dragging
+
+                this._poly.addPoint(this._poly.points[this._originalPolyLength - 1])
+                this._state.next(InteractionEvents.Click);
+
+            }
+
+        }
+
+
         if (interactionEvent === InteractionEvents.Cancel) {
             this.reset();
             return false;
         }
 
-
         this._state.next(interactionEvent);
-
-        let newp: Point2D;
 
         switch (this._state.state.id) {
 
             case States.Wait:
+            case States.Drag:
                 this.handleInteractionOnWait(interactionEvent, eventData);
                 break;
 
+            case States.FirstPoint:
+                this.handlePointState(interactionEvent, eventData, true);
+                break;
+
             case States.Point:
-                this.handlePointState(interactionEvent, eventData);
+                this.handlePointState(interactionEvent, eventData, false);
                 break;
 
             case States.Done:
                 if (!this._poly) {
                     break;
                 }
+                this._poly.removeLastPoint();
                 if (eventData.shift) {
                     this._closed = false;
                 } else {
                     this._closed = true;
-                    this._poly.removeLastPoint();
                 }
                 break;
 
@@ -123,7 +155,12 @@ export class DrawPolygon extends Tool {
 
     public get result(): any {
         if (this._poly && this._poly.points.length > 0) {
-            return `${this._opCode} ${this._poly.uniqueName}, $styles.default, [ ${this._poly.points.map(p => `(${p.x}, ${p.y})`).join(", ")} ], ${this._closed ? 1 : 0}`;
+            if (!this._extending) {
+                return `${this._opCode} ${this._poly.uniqueName}, $styles.default, [ ${this._poly.points.map(p => `(${p.x}, ${p.y})`).join(", ")} ], ${this._closed ? 1 : 0}`;
+            } else {
+                const points = this._poly.points.filter((p, i) => i >= this._originalPolyLength);
+                return `EXTPOLY ${this._poly.uniqueName}, [ ${points.map(p => `(${p.x}, ${p.y})`).join(", ")} ]`
+            }
 
         } else {
             return null;

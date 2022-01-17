@@ -13,6 +13,7 @@ import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GrObject} from "./Geo/GrObject";
 import {GfxObjectList} from "./runtime/gfx/GfxObject";
 import {GfxScale} from "./runtime/gfx/GfxScale";
+import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -47,6 +48,7 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("RECT", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
         this.addOperation("LINE", makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
         this.addOperation("POLY", makeGfxOperation(GfxPolygon, this.objectCallBack.bind(this)));
+        this.addOperation("EXTPOLY", makeGfxOperation(GfxExtendPolygon, this.objectCallBack.bind(this)));
         this.addOperation("QUAD", makeGfxOperation(GfxQuadratic, this.objectCallBack.bind(this)));
         this.addOperation("BEZIER", makeGfxOperation(GfxBezier, this.objectCallBack.bind(this)));
         this.addOperation("MOVE", makeGfxOperation(GfxMove, this.objectCallBack.bind(this)));

@@ -521,7 +521,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 .classed(ToolClasses.boundingBox, true);
         }
 
-        const w = line.style.strokeWidth / 2 + 1;
+        let w;
+        if (!line.style) {
+            w = 3;
+        } else {
+            w = line.style.strokeWidth / 2 + 1;
+        }
         const n:Point2D = line.end.copy.sub(line.start).getPerpendicular().normalize().scale(w);
 
         const p1 = line.start.copy.add(n);
