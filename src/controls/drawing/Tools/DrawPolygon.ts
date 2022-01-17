@@ -96,6 +96,12 @@ export class DrawPolygon extends Tool {
         }
     }
 
+    abort() {
+        super.abort();
+        this._extending = false;
+        this._originalPolyLength = 0;
+    }
+
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
 
         if (interactionEvent === InteractionEvents.Cancel) {
@@ -121,6 +127,8 @@ export class DrawPolygon extends Tool {
 
                     this._poly.addPoint(this._poly.points[this._originalPolyLength - 1])
                     this._state.next(InteractionEvents.Click);
+                } else {
+                    this._state.start(state(States.Wait));
                 }
                 break;
 
