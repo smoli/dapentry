@@ -44,33 +44,6 @@ export default class OperationEditor extends Control {
 
         switch (firstToken.value) {
 
-            case 'RECT':
-                return "opRectangle";
-
-            case 'CIRCLE':
-                return "opCircleCR";
-
-            case 'LINE':
-                return "opLine";
-
-            case 'FILL':
-                return "opFill";
-
-            case 'STROKE':
-                return "opStroke";
-
-            case 'ROTATE':
-                return "opRotate";
-
-            case "POLY":
-                return "opQuadratic";
-
-           case "QUAD":
-                return "opQuadratic";
-
-            case "APP":
-                return "opAppend"
-
             case 'MOVE':
                 if (tokens.length === 3) {
                     return "opMoveByCenter"
