@@ -370,7 +370,7 @@ describe('Code manager', () => {
             ]);
 
         });
-
++
         it("is not confused by at-access", () => {
             const code = `CIRCLE Circle1, $styles.default, (224, 269), 74.43117626371358
                         CIRCLE Circle2, $styles.default, (319, 493), 94.64142856064674

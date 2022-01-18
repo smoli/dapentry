@@ -42,7 +42,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     protected _renderedObjects: Array<GrObject> = [];
     protected _objectLayer: Selection<any>;
-    protected _infoLayer: Selection<any>;
+    protected _snappingLayer: Selection<any>;
     protected _interactionLayer: Selection<any>;
     private _poiRenderingEnabled: boolean;
     private _objectInfo: { [key: string]: ObjectInfo };
@@ -55,8 +55,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     protected _setupLayers(container: Selection<any>): void {
         this._objectLayer = container.append("g");
-        this._infoLayer = container.append("g");
         this._interactionLayer = container.append("g");
+        this._snappingLayer = container.append("g");
     }
 
 
@@ -124,7 +124,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     enablePOI(enabled: boolean, poiCallback: POICallback, except: Array<GrObject>) {
         if (this._poiRenderingEnabled) {
-            this._infoLayer.selectAll("*").remove();
+            this._snappingLayer.selectAll("*").remove();
         }
 
         if (enabled) {
@@ -140,11 +140,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
     protected renderPOI(object: GrObject, poiCallback: POICallback) {
         this._objectLayer.selectAll("*").classed("noPointerEvents", false);
 
-        let svgGroup = this._infoLayer.select("#" + object.id + "-info");
+        let svgGroup = this._snappingLayer.select("#" + object.id + "-info");
         if (!svgGroup.empty()) {
             svgGroup.selectAll("*").remove();
         } else {
-            svgGroup = this._infoLayer.append("g").attr("id", object.id + "-info")
+            svgGroup = this._snappingLayer.append("g").attr("id", object.id + "-info")
         }
 
         const poiIds = Object.keys(object.pointsOfInterest);
