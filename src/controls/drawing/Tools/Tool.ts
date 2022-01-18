@@ -11,6 +11,12 @@ export interface SnapInfo {
     event: InteractionEventData
 }
 
+function stepper(step) {
+    return v => Math.floor(v / step) * step;
+}
+
+const s0_1 = stepper(0.01);
+
 /**
  * Abstract class for tools that create or manipulate objects on the drawing
  */
@@ -116,6 +122,7 @@ export abstract class Tool {
         if (!this._renderer) {
             return;
         }
+        this._renderer.clearInfo();
 
         let handle;
 
@@ -142,9 +149,16 @@ export abstract class Tool {
     }
 
     protected snapToObject(object: GrObject, eventData): SnapInfo {
-        const p = object.projectPoint( new Point2D(eventData.x, eventData.y));
-       /* const pct = object.projectPointAsPercentage(new Point2D(eventData.x, eventData.y));
-        console.log(pct);*/
+        let p = object.projectPoint( new Point2D(eventData.x, eventData.y));
+        let pct = object.projectPointAsPercentage(new Point2D(eventData.x, eventData.y));
+
+        if (eventData.shift) {
+            pct = s0_1(pct);
+            p = object.getPointAtPercentage(pct);
+        }
+
+
+        this._renderer.renderInfoText(p, (100 * pct).toFixed(1) + "%");
 
         return {
             event: {

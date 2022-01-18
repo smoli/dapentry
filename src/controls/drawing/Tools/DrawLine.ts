@@ -35,6 +35,7 @@ export class DrawLine extends Tool {
     public reset() {
         super.reset();
         this._line = null;
+        this._otherObject = null;
     }
 
     public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
