@@ -37,11 +37,14 @@ export class Parser {
                     return token.value
 
                 case TokenTypes.OPERATOR:
-                case TokenTypes.STRING:
                 case TokenTypes.NUMBER:
                 case TokenTypes.REGISTER:
                         sep = newSep;
-                        return oldSep + token.value
+                        return oldSep + token.value;
+
+                case TokenTypes.STRING:
+                        sep = newSep;
+                        return oldSep + `"${token.value}"`;
 
                 case TokenTypes.NONLOCALREGISTER:
                         sep = newSep;
