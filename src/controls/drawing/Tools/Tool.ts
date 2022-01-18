@@ -1,7 +1,7 @@
 import {state, StateMachine} from "../../../runtime/tools/StateMachine";
 import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject} from "../../../Geo/GrObject";
+import {GrObject, POI} from "../../../Geo/GrObject";
 import {Point2D} from "../../../Geo/Point2D";
 
 export interface SnapInfo {
@@ -110,14 +110,19 @@ export abstract class Tool {
         if (!this._renderer) {
             return;
         }
+
+        let handle;
+
         this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
             if (hit) {
                 console.log("snap")
                 this._snappingObject = object;
                 this._snappingPOI = poiId;
                 this._snapPoint = this._snappingObject.pointsOfInterest[this._snappingPOI]
+                handle = this._renderer.renderInfoText(this._snapPoint, POI[poiId]);
             } else {
                 this._snapPoint = this._snappingPOI = this._snappingObject = null;
+                this._renderer.removeInfo(handle);
             }
         }, objectsToExclude);
     }
@@ -126,6 +131,7 @@ export abstract class Tool {
         this.clearSnapInfo();
         if (this._renderer) {
             this._renderer.enablePOI(false);
+            this._renderer.clearInfo();
         }
     }
 

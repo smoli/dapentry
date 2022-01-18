@@ -36,6 +36,8 @@ export type ObjectClickCallback = (object: GrObject) => void;
 
 export type POICallback = (object:GrObject, poiId:string, hit:boolean) => void;
 
+export type InfoHandle = string;
+
 /**
  * Callback signature for functions that are invoked when an a handle (e.g. for resizing) on an
  * object is interacted with by the user.
@@ -152,6 +154,20 @@ export abstract class ObjectRenderer {
     public abstract removeAllHandles(object): void;
 
     public abstract enablePOI(enabled:boolean, poiCallback?: POICallback, except?:Array<GrObject>):void;
+
+    /**
+     * Render informative text at position given.
+     * @param position
+     * @param text
+     * @returns A handle that can be used to manipulate the rendered info object
+     */
+    public abstract renderInfoText(position: Point2D, text: string):InfoHandle;
+
+    public abstract updateInfoText(handle:InfoHandle, text: string, position?: Point2D);
+
+    public abstract removeInfo(handle:InfoHandle);
+
+    public abstract clearInfo();
 }
 
 

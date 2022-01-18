@@ -1,7 +1,14 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
 import {GrObject, ObjectType} from "../../../Geo/GrObject";
-import {HandleMouseCallBack, ObjectClickCallback, ObjectRenderer, POICallback, RenderLayer} from "./ObjectRenderer";
+import {
+    HandleMouseCallBack,
+    InfoHandle,
+    ObjectClickCallback,
+    ObjectRenderer,
+    POICallback,
+    RenderLayer
+} from "./ObjectRenderer";
 import {Selection} from "d3";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {GrCircle} from "../../../Geo/GrCircle";
@@ -34,6 +41,8 @@ interface ObjectInfo {
     handles: Array<Point2D>
 }
 
+let infoHandle = 0;
+
 
 /**
  * Renderer using SVG. This uses d3 (3.4) for rendering.
@@ -44,6 +53,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     protected _objectLayer: Selection<any>;
     protected _snappingLayer: Selection<any>;
     protected _interactionLayer: Selection<any>;
+    protected _infoLayer: Selection<any>;
     private _poiRenderingEnabled: boolean;
     private _objectInfo: { [key: string]: ObjectInfo };
 
@@ -57,6 +67,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._objectLayer = container.append("g");
         this._interactionLayer = container.append("g");
         this._snappingLayer = container.append("g");
+        this._infoLayer = container.append("g").style("pointer-events", "none");
     }
 
 
@@ -448,20 +459,20 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 case ObjectType.Polygon:
                     this.renderPolygonBRep(g, object as GrPolygon);
                     break;
-/*
-                case ObjectType.Rectangle:
-                    break;
-                case ObjectType.Ellipse:
-                    break;
-                case ObjectType.Square:
-                    break;
-                case ObjectType.Quadratic:
-                    break;
-                case ObjectType.Bezier:
-                    break;
-                case ObjectType.List:
-                    break;
-*/
+                /*
+                                case ObjectType.Rectangle:
+                                    break;
+                                case ObjectType.Ellipse:
+                                    break;
+                                case ObjectType.Square:
+                                    break;
+                                case ObjectType.Quadratic:
+                                    break;
+                                case ObjectType.Bezier:
+                                    break;
+                                case ObjectType.List:
+                                    break;
+                */
                 default:
                     let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
                     if (c.empty()) {
@@ -527,7 +538,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         } else {
             w = line.style.strokeWidth / 2 + 1;
         }
-        const n:Point2D = line.end.copy.sub(line.start).getPerpendicular().normalize().scale(w);
+        const n: Point2D = line.end.copy.sub(line.start).getPerpendicular().normalize().scale(w);
 
         const p1 = line.start.copy.add(n);
         const p2 = line.end.copy.add(n);
@@ -626,4 +637,48 @@ export class SvgObjectRenderer extends ObjectRenderer {
             handler(object, makeEvent(InteractionEvents.Click), data)
         });
     }
+
+
+    protected makeInfoHandle(): InfoHandle {
+        return "__svg_rndr_info_" + (infoHandle++);
+    }
+
+    public renderInfoText(position: Point2D, text: string): InfoHandle {
+        const handle = this.makeInfoHandle();
+
+        this._infoLayer.select("#" + handle).remove();
+
+        this._infoLayer.append("text")
+            .attr("x", position.x)
+            .attr("y", position.y)
+            .attr("id", handle)
+            .text(text);
+
+        return handle;
+    }
+
+    public updateInfoText(handle: InfoHandle, text: string, position?: Point2D) {
+        const i = this._infoLayer.select("#" + handle);
+
+        if (i.empty()) {
+            return;
+        }
+
+        i.append("text")
+            .text(text);
+
+        if (position) {
+            i.attr("x", position.x)
+                .attr("y", position.y)
+        }
+    }
+
+    public removeInfo(handle: InfoHandle) {
+        this._infoLayer.selectAll("#" + handle).remove();
+    }
+
+    public clearInfo() {
+        this._infoLayer.selectAll("*").remove();
+    }
+
 }
