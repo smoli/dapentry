@@ -206,7 +206,7 @@ export class DrawPolygon extends Tool {
                     return `${snapInfo.object.uniqueName}@${POI[snapInfo.poiId]}`;
                 } else {
                     const pct = snapInfo.object.projectPointAsPercentage(snapInfo.point);
-                    return `${snapInfo.object.uniqueName}@${pct}`;
+                    return `${snapInfo.object.uniqueName}@${pct.toFixed(2)}`;
                 }
             } else {
                 return `(${p.x}, ${p.y})`;
