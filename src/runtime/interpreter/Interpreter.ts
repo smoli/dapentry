@@ -370,7 +370,7 @@ export class Interpreter {
                 return new Parameter(token.type === TokenTypes.NONLOCALREGISTER, token.value, true);
 
             case TokenTypes.REGISTERAT:
-                return new AtParameter(token.value[0].value, token.value[1].value);
+                return new AtParameter(token.value[0].value, token.value[1].value, token.value[1].type);
 
             case TokenTypes.POINT:
                 return new Point2Parameter(

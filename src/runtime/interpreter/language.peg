@@ -21,7 +21,8 @@
     EXPRESSION: 9,
     OPERATOR: 10,
     ANNOTATION: 11,
-    OTHER: 12
+    NAME: 12,
+    OTHER: 13
   }
 
 }
@@ -101,17 +102,26 @@
 
 
 	RegPropAccess "RegisterPropertyAccess"
-    = head:Register "@" tail:(Register/Number) {
+    = head:Register "@" tail:(PropRegister/PropName/Number) {
     	return { type: TokenTypes.REGISTERPROP, value: [head, tail]}
     }
 
+  PropName "PropName"
+  = Name { return { type: TokenTypes.NAME, value: text() } }
+  PropRegister "PropRegister"
+  = "(" reg:Name ")" { return { type: TokenTypes.REGISTER, value: reg }}
+
    Register "Register"
-      = nonlocal:"^"? reg:([$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*) {
+      = nonlocal:"^"? reg:Name {
       return {
         type: nonlocal? TokenTypes.NONLOCALREGISTER : TokenTypes.REGISTER,
-            value: [...reg.map(r => r.join ? r.join("") : r)].join("")
+            value: [...reg].join("")
             }
       }
+
+  Name "Name"
+  = [$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]* { return text() }
+
 
   Annotations "Annotations"
   = first:Annotation rest:(_ Annotation)* {
