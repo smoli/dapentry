@@ -62,6 +62,9 @@ export abstract class Tool {
      */
     public finish(): void {
         this.clearSnapInfo();
+        if (this._renderer) {
+            this._renderer.clearInfo();
+        }
         return;
     }
 
@@ -70,6 +73,9 @@ export abstract class Tool {
      */
     public abort(): void {
         this.disablePOISnapping();
+        if (this._renderer) {
+            this._renderer.clearInfo();
+        }
         return;
     }
 

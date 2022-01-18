@@ -10,38 +10,41 @@ import {Point2D} from "../../Geo/Point2D";
 export class GfxMove extends GfxOperation {
     private _vector: Point2Parameter;
     private _targetPoint: Parameter;
-    private _movingPoint: Parameter;
+    private _movingPoint: string | number;
 
 
-    constructor(opcode: string, a: Parameter | AtParameter, b: Point2Parameter | Parameter) {
-        let object;
+    constructor(opcode: string, a: Parameter | AtParameter, b: Point2Parameter | Parameter | AtParameter) {
+        let object
+        let at;
 
         switch (getParameterConfig(a, b)) {
             case "P2":
                 object = a;
                 super(opcode, object);
-                this._movingPoint = new Parameter(false, POI[POI.center]);
+                this._movingPoint = "center";
                 this._vector = b as Point2Parameter;
                 break;
 
             case "@2":
                 object = new Parameter(true, a.name);
                 super(opcode, object);
-                this._movingPoint = a;
-                this._targetPoint = b;
+                at = a as AtParameter
+                this._movingPoint = at.where;
+                this._vector = b as Point2Parameter;
                 break;
 
             case "P@":
                 object = a;
                 super(opcode, object);
-                this._movingPoint = new Parameter(false, POI[POI.center]);
+                this._movingPoint = "center";
                 this._targetPoint = b;
                 break;
 
             case "@@":
                 object = new Parameter(true, a.name);
                 super(opcode, object);
-                this._movingPoint = a;
+                at = a as AtParameter
+                this._movingPoint = at.where;
                 this._targetPoint = b;
                 break;
         }
@@ -49,18 +52,34 @@ export class GfxMove extends GfxOperation {
     }
 
     get vector(): any {
-        const from = this._movingPoint.finalized(this.closure);
+        if (this._vector) {
+            return this._vector.finalized(this.closure);
+        }
+
+        let from;
+        if (typeof this._movingPoint === "number") {
+            from = this.target.getPointAtPercentage(this._movingPoint);
+        } else {
+            from = this.target.pointsOfInterest[POI[this._movingPoint]];
+        }
+
         const to = this._targetPoint.finalized(this.closure);
 
         return to.copy.sub(from);
-
     }
 
     async execute(): Promise<any> {
+        let poi = this._movingPoint;
+        if (typeof poi === "number") {
+            poi = "center";
+        }
+
+        poi = POI[poi];
+
         if (this.target instanceof GrObjectList) {
-            this.target.objects[this.target.objects.length - 1].movePOI(POI.center, this.vector);
+            this.target.objects[this.target.objects.length - 1].movePOI(poi as POI, this.vector);
         } else {
-            this.target.movePOI(POI.center, this.vector);
+            this.target.movePOI(poi as POI, this.vector);
         }
     }
 }
