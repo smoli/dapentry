@@ -11,62 +11,19 @@ import {Point2D} from "../../Geo/Point2D";
 export class GfxLine extends GfxObject {
     private readonly _p1: Parameter;
     private readonly _p2: Parameter;
-    private _fromObject: Parameter;
-    private _fromPoint: Parameter;
-    private _toObject: Parameter;
-    private _toPoint: Parameter;
 
     constructor(opcode: string, target: Parameter, style: Parameter, a: Parameter, b: Parameter, c: Parameter, d: Parameter) {
         super(opcode, target, style);
-
-        switch (getParameterConfig(a, b, c, d)) {
-            case "PP":
-            case "P2":
-            case "2P":
-            case "22" :
-                this._p1 = a;
-                this._p2 = b;
-                break;
-        }
-
+        this._p1 = a;
+        this._p2 = b;
     }
 
-    get fromObject():GrObject {
-        return this._fromObject.finalized(this.closure);
-    }
-
-    get fromPoint():(string|number) {
-        return this._fromPoint.finalized(this.closure);
-    };
-
-    get fromPoi(): Point2D {
-        return this.objPoiToPoint(this.fromObject, this.fromPoint);
-    }
 
     get p1(): Point2D {
-        if (this._fromObject) {
-            return this.fromPoi;
-        }
         return this._p1.finalized(this.closure);
     }
 
-    get toObject():GrObject {
-        return this._toObject.finalized(this.closure);
-    }
-
-    get toPoint():(string|number) {
-        return this._toPoint.finalized(this.closure);
-    };
-
-
-    get toPoi(): Point2D {
-        return this.objPoiToPoint(this.toObject, this.toPoint);
-    }
-
     get p2(): Point2D {
-        if (this._toObject) {
-            return this.toPoi;
-        }
         return this._p2.finalized(this.closure);
     }
 
