@@ -4,7 +4,7 @@ import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrPolygon, GrPolygonBase} from "../../../Geo/GrPolygon";
 import {Point2D} from "../../../Geo/Point2D";
-import {POI} from "../../../Geo/GrObject";
+import {GrObject, POI} from "../../../Geo/GrObject";
 
 enum States {
     Wait = "DrawPolygon.Wait",
@@ -25,6 +25,7 @@ export class DrawPolygon extends Tool {
     protected _extending: boolean;
     private _originalPolyLength: number;
     private _snapInfoForPoint: { [key: number]: SnapInfo } = {};
+    private _otherObject: GrObject;
 
     constructor(renderer) {
         super(renderer, States.Wait, States.Done);
@@ -59,7 +60,13 @@ export class DrawPolygon extends Tool {
         }
 
         let newp: Point2D;
-        const snapInfo = this.tryToPOISnap(eventData);
+        let snapInfo;
+        if (this._otherObject) {
+            this.disablePOISnapping();
+            snapInfo = this.snapToObject(this._otherObject, eventData);
+        } else {
+            snapInfo = this.tryToPOISnap(eventData);
+        }
         newp = new Point2D(snapInfo.event.x, snapInfo.event.y);
 
         switch (interactionEvent) {
@@ -86,7 +93,13 @@ export class DrawPolygon extends Tool {
         let newp: Point2D;
 
         if (interactionEvent == InteractionEvents.Click) {
-            const snapInfo = this.tryToPOISnap(eventData);
+            let snapInfo;
+            if (this._otherObject) {
+                this.disablePOISnapping();
+                snapInfo = this.snapToObject(this._otherObject, eventData);
+            } else {
+                snapInfo = this.tryToPOISnap(eventData);
+            }
             newp = new Point2D(snapInfo.event.x, snapInfo.event.y);
 
 
@@ -116,6 +129,14 @@ export class DrawPolygon extends Tool {
             this.reset();
             return false;
         }
+
+        if (interactionEvent === InteractionEvents.OtherObject) {
+            this._otherObject = eventData.object;
+            if (!this._otherObject) {
+                this.enablePOISnapping();
+            }
+        }
+
 
         this._state.next(interactionEvent);
 
@@ -179,8 +200,14 @@ export class DrawPolygon extends Tool {
         const p = this._poly.points.map((p, i) => {
             const snapInfo = this._snapInfoForPoint[i];
 
-            if (snapInfo && snapInfo.object && snapInfo.poiId) {
-                return `${snapInfo.object.uniqueName}@${POI[snapInfo.poiId]}`;
+            if (snapInfo && snapInfo.object) {
+
+                if (snapInfo.poiId) {
+                    return `${snapInfo.object.uniqueName}@${POI[snapInfo.poiId]}`;
+                } else {
+                    const pct = snapInfo.object.projectPointAsPercentage(snapInfo.point);
+                    return `${snapInfo.object.uniqueName}@${pct}`;
+                }
             } else {
                 return `(${p.x}, ${p.y})`;
             }
