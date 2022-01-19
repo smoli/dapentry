@@ -88,31 +88,8 @@ export class DrawLine extends Tool {
     }
 
     public get result(): any {
-        const x1 = this._line.x1;
-        const y1 = this._line.y1;
-        const x2 = this._line.x2;
-        const y2 = this._line.y2;
-
-        let one = `(${x1}, ${y1})`;
-        let two = `(${x2}, ${y2})`;
-        if (this._firstSnapInfo.object) {
-            if (this._firstSnapInfo.poiId === undefined) {
-                const pct = this._firstSnapInfo.object.projectPointAsPercentage(this._firstSnapInfo.point);
-                one = `${this._firstSnapInfo.object.name}@${pct.toFixed(2)}`
-            } else {
-                one = `${this._firstSnapInfo.object.name}@${POI[this._firstSnapInfo.poiId]}`
-            }
-        }
-        if (this._secondSnapInfo.object) {
-            if (this._secondSnapInfo.poiId === undefined) {
-                const pct = this._secondSnapInfo.object.projectPointAsPercentage(this._secondSnapInfo.point);
-                two = `${this._secondSnapInfo.object.name}@${pct.toFixed(2)}`
-            } else {
-                two = `${this._secondSnapInfo.object.name}@${POI[this._secondSnapInfo.poiId]}`
-            }
-        }
-
-
+        let one = this.makePointCodeFromSnapInfo(this._firstSnapInfo);
+        let two = this.makePointCodeFromSnapInfo(this._secondSnapInfo);
         return [`LINE ${this._line.uniqueName}, $styles.default, ${one}, ${two}`]
 
     }

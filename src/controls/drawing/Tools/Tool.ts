@@ -184,6 +184,18 @@ export abstract class Tool {
         } else return {
             event: eventData, object: null, poiId: null, point: null
         }
+    }
 
+
+    protected makePointCodeFromSnapInfo(snapInfo:SnapInfo) {
+        if (snapInfo.object) {
+            if (snapInfo.poiId === undefined) {
+                const pct = snapInfo.object.projectPointAsPercentage(snapInfo.point);
+                return `${snapInfo.object.name}@${pct.toFixed(2)}`
+            } else {
+                return `${snapInfo.object.name}@${POI[snapInfo.poiId]}`
+            }
+        }
+        return `(${snapInfo.event.x}, ${snapInfo.event.y})`
     }
 }

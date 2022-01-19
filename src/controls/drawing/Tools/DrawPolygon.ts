@@ -200,14 +200,8 @@ export class DrawPolygon extends Tool {
         const p = this._poly.points.map((p, i) => {
             const snapInfo = this._snapInfoForPoint[i];
 
-            if (snapInfo && snapInfo.object) {
-
-                if (snapInfo.poiId) {
-                    return `${snapInfo.object.uniqueName}@${POI[snapInfo.poiId]}`;
-                } else {
-                    const pct = snapInfo.object.projectPointAsPercentage(snapInfo.point);
-                    return `${snapInfo.object.uniqueName}@${pct.toFixed(2)}`;
-                }
+            if (snapInfo) {
+                return this.makePointCodeFromSnapInfo(snapInfo);
             } else {
                 return `(${p.x}, ${p.y})`;
             }
