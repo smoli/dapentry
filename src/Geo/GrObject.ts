@@ -95,7 +95,6 @@ export abstract class GrObject {
     protected _center: Point2D;
     protected _xAxis: Point2D = new Point2D(1, 0);
     protected _yAxis: Point2D = new Point2D(0, 1);
-    protected _rotation: number = 0;
     protected _style: Style = null;
     protected _instanceCount = GrObject._instanceCounter++;
 
@@ -121,7 +120,7 @@ export abstract class GrObject {
      */
     public createProxy():GrObject {
         const copy = this.copy();
-        copy.rotate(this._rotation);
+        copy._style = {... this._style };
         return copy;
     }
 
@@ -229,14 +228,9 @@ export abstract class GrObject {
         this._center.x = value;
     }
 
-    get rotation(): number {
-        return this._rotation;
-    }
-
     public rotate(value: number) {
         this._xAxis.rotate(deg2rad(value));
         this._yAxis.rotate(deg2rad(value));
-        this._rotation += value;
     }
 
 

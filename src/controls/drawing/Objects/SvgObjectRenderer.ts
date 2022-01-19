@@ -37,12 +37,15 @@ const HANDLE_RADIUS: string = "7px";
 interface ObjectInfo {
     x: number,
     y: number,
-    rot: number,
     handles: Array<Point2D>
 }
 
 let infoHandle = 0;
 
+
+function p2d(p:Point2D, operation: string = "L") {
+    return `${operation} ${p.x} ${p.y}`;
+}
 
 /**
  * Renderer using SVG. This uses d3 (3.4) for rendering.
@@ -204,7 +207,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
             const info = {
                 x: object.x,
                 y: object.y,
-                rot: object.rotation,
                 handles: []
             }
 
@@ -261,7 +263,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         c.attr("cy", circle.y);
         c.attr("r", circle.radius);
 
-        this.addRotation(circle, o)
         this._createStyle(c, circle);
 
 
@@ -272,16 +273,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const o = this._renderCircle(this.getLayer(layer), circle);
     }
 
-    protected addRotation(object: GrObject, svgGroup: Selection<any>) {
-
-        svgGroup.select(ToolClassSelectors.object).attr("transform", `rotate( ${object.rotation} ${object.x} ${object.y})`)
-
-        const bb = svgGroup.select(ToolClassSelectors.boundingBox)
-        if (!bb.empty()) {
-            bb.attr("transform", `rotate( ${object.rotation} ${object.x} ${object.y})`)
-        }
-
-    }
 
     /**
      * Render rectangle on layer
@@ -290,15 +281,19 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @protected
      */
     protected _renderRectangle(layer: Selection<any>, rectangle: GrRectangle) {
-        const o = this.getObjectOrCreate(layer, rectangle, "rect");
+        const o = this.getObjectOrCreate(layer, rectangle, "path");
 
         const r = o.select(ToolClassSelectors.object);
-        r.attr("x", -rectangle.width / 2 + rectangle.x);
-        r.attr("y", -rectangle.height / 2 + rectangle.y);
-        r.attr("width", rectangle.width);
-        r.attr("height", rectangle.height);
+
+
+
+        const d = [
+            p2d(rectangle.topLeft, "M"),
+            p2d(rectangle.topRight),
+            p2d(rectangle.bottomRight),
+            p2d(rectangle.bottomLeft), "Z"].join(" ");
+        r.attr("d", d);
         this._createStyle(r, rectangle);
-        this.addRotation(rectangle, o)
 
         return r;
     }
@@ -356,7 +351,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
         this._createPathStyle(p, polygon);
-        this.addRotation(polygon, o.select(ToolClassSelectors.boundingBox));
         return p;
     }
 
@@ -459,9 +453,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 case ObjectType.Polygon:
                     this.renderPolygonBRep(g, object as GrPolygon);
                     break;
+
+                case ObjectType.Rectangle:
+                    this.renderRectangleBRep(g, object as GrRectangle);
+                    break;
                 /*
-                                case ObjectType.Rectangle:
-                                    break;
                                 case ObjectType.Ellipse:
                                     break;
                                 case ObjectType.Square:
@@ -477,7 +473,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                     let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
                     if (c.empty()) {
                         // Not yet drawing a bounding representation
-                        c = g.select("g" + ToolClassSelectors.boundingBox).append("rect")
+                        c = g.select("g" + ToolClassSelectors.boundingBox).append("path")
                             .classed(ToolClasses.boundingBox, true);
                     }
 
@@ -566,6 +562,22 @@ export class SvgObjectRenderer extends ObjectRenderer {
             .attr("cy", circle.center.y)
             .attr("r", circle.radius + circle.style.strokeWidth / 2)
             .classed(ToolClasses.boundingBox, true);
+    }
+
+    protected renderRectangleBRep(g: Selection<any>, rectangle: GrRectangle) {
+        let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
+        if (c.empty()) {
+            // Not yet drawing a bounding representation
+            c = g.select("g" + ToolClassSelectors.boundingBox).append("path")
+                .classed(ToolClasses.boundingBox, true);
+        }
+
+        const d = [
+            p2d(rectangle.topLeft, "M"),
+            p2d(rectangle.topRight),
+            p2d(rectangle.bottomRight),
+            p2d(rectangle.bottomLeft), "Z"].join(" ");
+        c.attr("d", d);
     }
 
     public removeBoundingRepresentation(object: GrObject) {
