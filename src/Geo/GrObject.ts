@@ -93,8 +93,8 @@ export abstract class GrObject {
     protected _parent: GrObject = null;
 
     protected _center: Point2D;
-    private _xAxis: Point2D = new Point2D(1, 0);
-    private _yAxis: Point2D = new Point2D(0, 1);
+    protected _xAxis: Point2D = new Point2D(1, 0);
+    protected _yAxis: Point2D = new Point2D(0, 1);
     protected _rotation: number = 0;
     protected _style: Style = null;
     protected _instanceCount = GrObject._instanceCounter++;
@@ -237,6 +237,25 @@ export abstract class GrObject {
         this._xAxis.rotate(deg2rad(value));
         this._yAxis.rotate(deg2rad(value));
         this._rotation += value;
+    }
+
+
+    /**
+     * Rotate the object. The poi determines the
+     * pivot point. I.e. object implementation might
+     * decide to rotate around bottom, when poi is top.
+     *
+     * poi is basically the point a user would grab in
+     * order to rotate the object.
+     *
+     * By default this will rotate around the center. Specific
+     * object implementations may decide otherwise.
+     *
+     * @param poi
+     * @param value
+     */
+    public rotatePOI(poi:POI, value: number) {
+        this.rotate(value);
     }
 
     public scale(fx: number, fy: number, pivot: Point2D = null) { }

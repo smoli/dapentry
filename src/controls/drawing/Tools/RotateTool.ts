@@ -25,6 +25,7 @@ export class RotateTool extends Tool {
     private _startVector: Point2D;
     private _finalAngle: number = 0;
     private _rotationObject: GrObject;
+    private _rotationPoi: POI;
 
     constructor(renderer: ObjectRenderer) {
         super(renderer, States.Wait, States.Done);
@@ -71,6 +72,7 @@ export class RotateTool extends Tool {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             const poi = this._object.pointsOfInterest[poiId];
+            this._rotationPoi = poiId;
 
             this._rotationObject = this._object.createProxy();
 
@@ -113,7 +115,7 @@ export class RotateTool extends Tool {
 
                 let a = vector.angleTo(this._startVector);
                 a = rad2deg(a);
-                this._rotationObject.rotate(a);
+                this._rotationObject.rotatePOI(this._rotationPoi, a);
                 this._renderer.render(this._rotationObject, true);
                 this._finalAngle += a;
                 this._object.rotate(this._finalAngle);
@@ -126,7 +128,7 @@ export class RotateTool extends Tool {
 
                     let a = vector.angleTo(this._startVector);
                     a = rad2deg(a);
-                    this._rotationObject.rotate(a)
+                    this._rotationObject.rotatePOI(this._rotationPoi, a)
                     this._startVector = vector;
                     this._finalAngle += a;
 

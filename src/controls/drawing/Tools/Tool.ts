@@ -157,7 +157,6 @@ export abstract class Tool {
             p = object.getPointAtPercentage(pct);
         }
 
-
         this._renderer.renderInfoText(p, (100 * pct).toFixed(1) + "%");
 
         return {

@@ -83,6 +83,7 @@ export class GrLine extends GrObject {
         this.updateCenter();
     }
 
+
     rotate(value: number) {
         super.rotate(value);
 
@@ -94,8 +95,8 @@ export class GrLine extends GrObject {
 
         this._start = this._center.copy.add(p1);
         this._end = this._center.copy.add(p2);
-
     }
+
 
     get start(): Point2D {
         return this._start;
