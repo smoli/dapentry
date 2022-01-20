@@ -10,7 +10,7 @@ export class ReplaceCode extends BaseAction {
         this._statements = statements;
     }
 
-    perform() {
+    _execute() {
         this.appModel.replaceCode(this._statements);
         return null;
     }

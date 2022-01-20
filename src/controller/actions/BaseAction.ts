@@ -24,19 +24,19 @@ export abstract class BaseAction {
 
 
     async execute(data: any): Promise<ActionResult> {
-        const isAsync = this.perform.constructor.name === "AsyncFunction";
+        const isAsync = this._execute.constructor.name === "AsyncFunction";
 
         let result;
         if (isAsync) {
-            result = await this.perform(data);
+            result = await this._execute(data);
         } else {
-            result = this.perform(data)
+            result = this._execute(data)
         }
 
         return {data: result};
     }
 
-    protected abstract perform(data: any): any;
+    protected abstract _execute(data: any): any;
 
 }
 

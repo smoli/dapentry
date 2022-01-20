@@ -12,7 +12,7 @@ export class AddStatements extends BaseAction {
         this._insertionIndex = insertionIndex;
     }
 
-    perform() {
+    _execute() {
         if (this._insertionIndex !== -1) {
             this.appModel.insertStatements(this._statements, this._insertionIndex);
         } else {

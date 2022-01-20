@@ -52,7 +52,7 @@ export class UpdateStatement extends BaseAction {
         return newStatements;
     }
 
-    perform() {
+    _execute() {
         const statement = this.component.getCodeManager().code[this._statementIndex];
         const tokens = Parser.parseLine(statement);
         let token = tokens[this._tokenIndex];
