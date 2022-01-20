@@ -11,7 +11,7 @@ export enum AppModelKeys {
     codeString = "codeString",
     segmentedCode = "segmentedCode",
     selectedCode = "selectedCode",
-    editableCode = "editableCode",
+    editableCodeLine = "editableCodeLine",
     data = "data",
     drawing = "drawing",
     selectedObjects = "selectedObjects"
@@ -27,7 +27,7 @@ export class AppModel extends JSONModelAccess {
             [AppModelKeys.codeString]: "",
             [AppModelKeys.segmentedCode]: [],
             [AppModelKeys.selectedCode]: [],
-            [AppModelKeys.editableCode]: null,
+            [AppModelKeys.editableCodeLine]: null,
             [AppModelKeys.data]: [ { name: "f1", value: [10, 20, 30, 40] }],
             [AppModelKeys.drawing]: [],
             [AppModelKeys.selectedObjects]: []
@@ -151,6 +151,13 @@ export class AppModel extends JSONModelAccess {
         });
 
         this.set(AppModelKeys.selectedCode).to(lines);
+
+        if (indexes.length) {
+            const last = this.get(AppModelKeys.selectedCode, c => c.index === Math.max(...indexes));
+            this.set(AppModelKeys.editableCodeLine).to(last);
+        } else {
+            this.set(AppModelKeys.editableCodeLine).to(null);
+        }
     }
 
     getSegmentedCodeLine(index: number): SegmentedCodeLine {
