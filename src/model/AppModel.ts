@@ -1,13 +1,38 @@
 import {JSONModelAccess} from "../JSONModelAccess";
 import {CodeManager} from "../runtime/CodeManager";
 import {Parser} from "../runtime/interpreter/Parser";
+import JSONModel from "sap/ui/model/json/JSONModel";
+import {GrObject, ObjectType} from "../Geo/GrObject";
+import {SegmentedCodeLine} from "../SegmentedCodeLine";
+
+
+
+export enum AppModelKeys {
+    codeString = "codeString",
+    segmentedCode = "segmentedCode",
+    selectedCode = "selectedCode",
+    editableCode = "editableCode",
+    data = "data",
+    drawing = "drawing",
+    selectedObjects = "selectedObjects"
+}
 
 export class AppModel extends JSONModelAccess {
 
     private readonly _codeManager: CodeManager;
-    private _haltIndex: number;
 
-    constructor(model, codeManager: CodeManager) {
+    constructor(codeManager: CodeManager) {
+
+        const model = new JSONModel({
+            [AppModelKeys.codeString]: "",
+            [AppModelKeys.segmentedCode]: [],
+            [AppModelKeys.selectedCode]: [],
+            [AppModelKeys.editableCode]: null,
+            [AppModelKeys.data]: [ { name: "f1", value: [10, 20, 30, 40] }],
+            [AppModelKeys.drawing]: [],
+            [AppModelKeys.selectedObjects]: []
+        });
+
         super(model);
         this._codeManager = codeManager;
         this._codeManager.clear();
@@ -18,7 +43,7 @@ export class AppModel extends JSONModelAccess {
     }
 
     protected updateSegmentedCode() {
-        this.set("segmentedCode")
+        this.set(AppModelKeys.segmentedCode)
             .to(
                 this._codeManager.annotatedCode
                     .map(c => {
@@ -34,7 +59,7 @@ export class AppModel extends JSONModelAccess {
     }
 
     protected updateCodeString() {
-        this.set("codeString").to(this._codeManager.code.join("\n"));
+        this.set(AppModelKeys.codeString).to(this._codeManager.code.join("\n"));
     }
 
 
@@ -89,7 +114,46 @@ export class AppModel extends JSONModelAccess {
         this.updateCodeString();
     }
 
-    setSelectedCodeLines(indexes: Array<number>) {
+    setSelectedObjects(objects: Array<GrObject>) {
+        let s = [];
+        if (objects) {
 
+            s = objects.map(object => {
+                return {
+                    "name": object.uniqueName,
+                    "type": ObjectType[object.type],
+                    "style": {...object.style},
+                    object
+                }
+            });
+        }
+
+        this.set(AppModelKeys.selectedObjects).to(s);
+    }
+
+    getSelectedObjects():Array<GrObject> {
+        return this.get(AppModelKeys.selectedObjects);
+    }
+
+    getSelectedCodeLines(): Array<SegmentedCodeLine> {
+        return this.get(AppModelKeys.selectedCode);
+    }
+
+    setSelectedCodeLines(indexes: Array<number>) {
+        let lines = this.getSelectedCodeLines();
+        lines.forEach(sc => {
+                this.set(AppModelKeys.segmentedCode, c => c.index === sc.index, "selected").to(false);
+            });
+
+        lines = indexes.map(i => this.getSegmentedCodeLine(i));
+        lines.forEach(sc => {
+            this.set(AppModelKeys.segmentedCode, c => c.index === sc.index, "selected").to(true);
+        });
+
+        this.set(AppModelKeys.selectedCode).to(lines);
+    }
+
+    getSegmentedCodeLine(index: number): SegmentedCodeLine {
+        return this.get(AppModelKeys.segmentedCode, c => c.index === index);
     }
 }

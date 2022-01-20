@@ -7,7 +7,7 @@
         xmlns:mvc="sap.ui.core.mvc">
 
     <Page>
-        <VBox items="{appModel>/selection}">
+        <VBox items="{appModel>/selectedObjects}">
             <items>
                 <VBox>
                     <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}"

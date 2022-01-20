@@ -19,7 +19,7 @@ export abstract class BaseAction {
     }
 
     get appModel(): AppModel {
-        return this._component.getAppModel();
+        return this.component.getAppModel();
     }
 
 

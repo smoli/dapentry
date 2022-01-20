@@ -68,6 +68,10 @@ export class JSONModelAccess {
         return "/" + pathParts.join("/");
     }
 
+    get model():JSONModel {
+        return this._model;
+    }
+
     get(...parts: Array<pathPart>) {
         return this._model.getProperty(this.constructPath(parts));
     }

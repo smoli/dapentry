@@ -10,6 +10,8 @@ import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
 import {AppModel} from "./model/AppModel";
 import {SegmentedCodeLine} from "./SegmentedCodeLine";
+import {SelectObjects} from "./controller/actions/SelectObjects";
+import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 
 
 
@@ -85,44 +87,27 @@ export class ComponentController extends BaseComponentController {
     }
 
 
-    public setSelectedCodeLines(indexes:  Array<number>) {
-        if (indexes.length === 1) {
-            this.setSelectedCodeLine(indexes[0]);
-        } else if (indexes.length === 0) {
-            this.setSelectedCodeLine(-1);
-            this.updateAll();
+    public async setSelectedCodeLines(indexes:  Array<number>) {
+        await this.execute(new SetSelectedCodeLines(this._component, indexes))
+
+        if (indexes.length === 0) {
+            this._interpreter.clearPauseAfter()
         } else {
-            indexes.forEach(index => {
-                this.getAppModel().set("segmentedCode", c => c.index === index, "selected").to(true);
-            });
-            this.setSelectedCodeLine(Math.max(...indexes));
+            this._interpreter.pauseAfter(Math.max(...indexes));
         }
     }
 
-    public setSelectedCodeLine(index: number = -1) {
-        // this.getAppModel().set("segmentedCode", c => c.selected, "selected").to(false);
+    public async setSelectedCodeLine(index: number = -1) {
         if (index === -1) {
-            this.getAppModel().set("selectedCodeLine").to(null);
+            await this.execute(new SetSelectedCodeLines(this._component, []))
+        } else {
+            await this.execute(new SetSelectedCodeLines(this._component, [index]))
+        }
+
+        if (index === -1) {
             this._interpreter.clearPauseAfter()
         } else {
-            this.getAppModel().set("segmentedCode", c => c.index === index, "selected").to(true);
-            const line = this.getAppModel().get("segmentedCode", c => c.index === index);
-            this.getAppModel().set("selectedCodeLine").to(line);
-
-            const code = this.getAppModel().get("segmentedCode");
-            let inEach = false;
-            let i = code.findIndex(c => c.index === index);
-            while(i--) {
-                if (code[i].tokens[0].value === "EACH") {
-                    inEach = true;
-                    break;
-                }
-                if (code[i].tokens[0].value === "ENDEACH") {
-                    break;
-                }
-            }
-
-            this._interpreter.pauseAfter(index, inEach ? 2 : 1);
+            this._interpreter.pauseAfter(index);
         }
         this.runCode().then(() => {
             this.updateDrawing();
@@ -191,7 +176,7 @@ export class ComponentController extends BaseComponentController {
 
         await this.runCode();
         this.updateDrawing();
-        this.setSelectedCodeLine(nextIndex)
+        await this.setSelectedCodeLine(nextIndex)
     }
 
     async addOperations(code: Array<string>) {
@@ -212,7 +197,7 @@ export class ComponentController extends BaseComponentController {
         }
 
         nextIndex = nextIndex + code.length - 1;
-        this.setSelectedCodeLine(nextIndex);
+        await this.setSelectedCodeLine(nextIndex);
     }
 
     async replaceCode(code: Array<string>) {
@@ -225,24 +210,11 @@ export class ComponentController extends BaseComponentController {
 
 
     getSelection(): Array<GrObject> {
-        return this.getAppModel().get("selection");
+        return this.getAppModel().getSelectedObjects();
     }
 
-    setSelection(selection: Array<GrObject>) {
-        let s = [];
-        if (selection) {
-
-            s = selection.map(object => {
-                return {
-                    "name": object.uniqueName,
-                    "type": ObjectType[object.type],
-                    "style": {...object.style},
-                    object
-                }
-            });
-        }
-
-        this.getAppModel().set("selection").to(s);
+    async setSelection(selection: Array<GrObject>) {
+        await this.execute(new SelectObjects(this._component, selection))
     }
 
     protected preloadDemoCode(): void {

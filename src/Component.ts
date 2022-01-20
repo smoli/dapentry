@@ -41,17 +41,8 @@ export default class Component extends UIComponent {
             RECT: 1
         });
 
-        const appModel = new JSONModel({
-            codeString: "",
-            segmentedCode: [],
-            selectedCodeLine: null,
-            data: [ { name: "f1", value: [10, 20, 30, 40] }],
-            drawing: [],
-            poi: [],
-            selection: []
-        });
-        this.setModel(appModel, "appModel");
-        this._appModel = new AppModel(appModel, this._codeManager);
+        this._appModel = new AppModel(this._codeManager);
+        this.setModel(this._appModel.model, "appModel");
 
         this._appController = new ComponentController(this);
     }
