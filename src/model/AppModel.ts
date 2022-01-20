@@ -88,4 +88,8 @@ export class AppModel extends JSONModelAccess {
         this.updateSegmentedCode();
         this.updateCodeString();
     }
+
+    setSelectedCodeLines(indexes: Array<number>) {
+
+    }
 }

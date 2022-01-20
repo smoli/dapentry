@@ -15,7 +15,7 @@ export default class StepList extends Control {
         },
 
         events: {
-            selectionChange: { selection: "Array"}
+            selectionChange: {selection: "Array"}
         },
 
         aggregations: {
@@ -33,7 +33,7 @@ export default class StepList extends Control {
     }
 
 
-    protected singleSelect(id):Array<Step> {
+    protected singleSelect(id): Array<Step> {
         const selection = [];
         this.getSteps().forEach(step => {
             if (step.getId() === id) {
@@ -50,15 +50,50 @@ export default class StepList extends Control {
         return selection;
     }
 
+    protected rangeSelect(id): Array<Step> {
+        let inSelection = false;
+        let afterSelection = false;
+
+        const selection = [];
+
+        const steps = this.getSteps();
+
+        for (const step of steps) {
+            if (afterSelection && step.getSelected()) {
+                step.setSelected(false);
+            } else if (inSelection && !step.getSelected()) {
+                step.setSelected(true);
+                selection.push(step);
+            } else if (step.getSelected()) {
+                selection.push(step);
+                inSelection = true;
+            }
+
+            if (step.getId() === id) {
+                afterSelection = true;
+                inSelection = false;
+            }
+        }
+        return selection;
+    }
+
     onclick(event) {
         const id = event.target.getAttribute("id"); // ID of the clicked step
-        const step:Step = this.getSteps().find(s => s.getId() === id);
+        const step: Step = this.getSteps().find(s => s.getId() === id);
+
+        const shift = event.originalEvent.shiftKey;
 
         if (step) {
             // The user clicked on a step
-            const newSelection = this.singleSelect(id);
+            let newSelection;
+            if (shift) {
+                // select a range
+                newSelection = this.rangeSelect(id);
+            } else {
+                newSelection = this.singleSelect(id);
+            }
 
-            this.fireSelectionChange({ selection: newSelection });
+            this.fireSelectionChange({selection: newSelection});
         }
     }
 
