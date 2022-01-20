@@ -8,7 +8,6 @@ import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
 import {AppModel} from "./model/AppModel";
-import {SegmentedCodeLine} from "./SegmentedCodeLine";
 import {SelectObjects} from "./controller/actions/SelectObjects";
 import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 
@@ -30,11 +29,19 @@ export class ComponentController extends BaseComponentController {
         this.preloadDemoCode();
     }
 
+
     /**
-     * TODO: This is hacky
-     * @param clearAllFirst
-     * @protected
+     * In the end this is way more efficient than making the drawing control
+     * truly data driven.
+     * @param value
      */
+    public set drawing(value: Drawing) {
+        this._drawing = value;
+        this.runCode().then(() => {
+            this.updateDrawing();
+        });
+    }
+
     protected updateDrawing(clearAllFirst: boolean = false) {
         this._drawing.setObjects(this._interpreter.objects);
         this._drawing.update(clearAllFirst);
@@ -43,9 +50,9 @@ export class ComponentController extends BaseComponentController {
         }
     }
 
+
     public updateAll() {
         this.runCode().then(() => {
-
             this.updateDrawing();
         });
     }
@@ -73,38 +80,16 @@ export class ComponentController extends BaseComponentController {
         this.updateDrawing();
     }
 
-    /**
-     * TODO: this is hacky. We need to figure out a way to make the drawing control
-     *       actually data driven.
-     * @param value
-     */
-    public set drawing(value: Drawing) {
-        this._drawing = value;
-        this.runCode().then(() => {
-            this.updateDrawing();
-        });
-    }
 
     public async setSelectedCodeLines(indexes: Array<number> = []) {
         await this.execute(new SetSelectedCodeLines(this._component, indexes))
         this.updateAll();
     }
 
-    protected getDataFromDataFields() {
-        const scope = {};
-        const d = this.getAppModel().get("data");
-
-        for (const field of d) {
-            scope[field.name] = field.value;
-        }
-
-        return scope;
-    }
-
 
     protected async runCode(): Promise<any> {
         this._interpreter.clearObjects();
-        const data = this.getDataFromDataFields();
+        const data = this.getAppModel().createScopeFromData();
         this._interpreter.parse(this._component.getCodeManager().code);
 
         const index = this.getAppModel().getLastSelectedCodeLineIndex();
@@ -124,10 +109,6 @@ export class ComponentController extends BaseComponentController {
 
     getAppModel(): AppModel {
         return this._component.getAppModel();
-    }
-
-    getSelectedCodeLine():SegmentedCodeLine {
-        return this.getAppModel().get("selectedCodeLine")
     }
 
     async updateOperation(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {

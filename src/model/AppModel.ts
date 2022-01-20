@@ -176,4 +176,16 @@ export class AppModel extends JSONModelAccess {
     getSegmentedCodeLine(index: number): SegmentedCodeLine {
         return this.get(AppModelKeys.segmentedCode, c => c.index === index);
     }
+
+
+    public createScopeFromData() {
+        const scope = {};
+        const d = this.get(AppModelKeys.data);
+
+        for (const field of d) {
+            scope[field.name] = field.value;
+        }
+
+        return scope;
+    }
 }
