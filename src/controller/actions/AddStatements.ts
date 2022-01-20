@@ -1,22 +1,26 @@
 import Component from "../../Component";
-import {Parser} from "../../runtime/interpreter/Parser";
 import {BaseAction} from "./BaseAction";
 
 export class AddStatements extends BaseAction {
     private readonly _statements: string[];
-    private readonly _insertionIndex: number;
 
-    constructor(component: Component, statements: string[], insertionIndex: number = -1) {
+    constructor(component: Component, statements: string[]) {
         super(component);
         this._statements = statements;
-        this._insertionIndex = insertionIndex;
     }
 
     _execute() {
-        if (this._insertionIndex !== -1) {
-            this.appModel.insertStatements(this._statements, this._insertionIndex);
+        let index = this.appModel.getLastSelectedCodeLineIndex();
+
+        if (index !== -1) {
+            this.appModel.insertStatements(this._statements, index + 1);
+            this.appModel.setSelectedCodeLines([index + this._statements.length])
         } else {
             this.appModel.addStatements(this._statements);
+            index = Math.max(...this.appModel.getSegmentedCode().map(s => s.index));
+            this.appModel.setSelectedCodeLines([index])
         }
+
+
     }
 }

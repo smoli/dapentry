@@ -62,6 +62,10 @@ export class AppModel extends JSONModelAccess {
         this.set(AppModelKeys.codeString).to(this._codeManager.code.join("\n"));
     }
 
+    getSegmentedCode():Array<SegmentedCodeLine> {
+        return this.get(AppModelKeys.segmentedCode);
+    }
+
 
     insertStatement(code: string, atIndex:number) {
         this.codeManager.insertStatement(code, atIndex);
@@ -137,6 +141,15 @@ export class AppModel extends JSONModelAccess {
 
     getSelectedCodeLines(): Array<SegmentedCodeLine> {
         return this.get(AppModelKeys.selectedCode);
+    }
+
+    getLastSelectedCodeLineIndex(): number {
+        const selection = this.getSelectedCodeLines()
+        if (selection && selection.length) {
+            return Math.max(...selection.map(s => s.index));
+        } else {
+            return -1;
+        }
     }
 
     setSelectedCodeLines(indexes: Array<number>) {
