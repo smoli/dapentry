@@ -12,6 +12,9 @@
         <l:Splitter orientation="Horizontal">
             <l:contentAreas>
                 <l:Splitter orientation="Vertical">
+                    <l:layoutData>
+                        <l:SplitterLayoutData size="{= ${appModel>/structureEditor} ? 'auto' : '0px' }" resizable="{appModel>/structureEditor}"/>
+                    </l:layoutData>
                     <l:contentAreas>
 
                         <VBox>
@@ -35,7 +38,7 @@
 
                 <VBox>
                     <layoutData>
-                        <l:SplitterLayoutData size="65%"/>
+                        <l:SplitterLayoutData size="{= ${appModel>/structureEditor} ? '65%' : 'auto' }"/>
                     </layoutData>
                     <mvc:XMLView viewName="sts.drawable.view.Drawing"/>
                 </VBox>
@@ -55,7 +58,8 @@
                 <layoutData>
                     <l:SplitterLayoutData size="2rem" resizable="false"/>
                 </layoutData>
-                <ToggleButton text="Code" pressed="{appModel>/codeEditor}"/>
+                <ToggleButton text="Structure" pressed="{appModel>/structureEditor}"/>
+                <ToggleButton text="Code" pressed="{appModel>/codeEditor}" visible="{appModel>/structureEditor}"/>
                 <ToolbarSpacer/>
                 <ToggleButton text="Style" pressed="{appModel>/styleEditor}" />
 
