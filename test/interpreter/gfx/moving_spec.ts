@@ -2,6 +2,7 @@ import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GfxInterpreter} from "../../../src/GfxInterpreter";
 import {StyleManager} from "../../../src/controls/drawing/Objects/StyleManager";
+import exp = require("constants");
 
 
 describe('Moving', () => {
@@ -19,6 +20,38 @@ describe('Moving', () => {
 
         return interpreter;
     }
+
+    describe("a object list", () => {
+
+        it("will move the last entry in the object list", async () => {
+
+           const code = `
+            CIRCLE Circle1, $styles.default, (100, 100), 50
+            CIRCLE Circle1, $styles.default, (100, 100), 75
+            MOVE Circle1@center, ( 50, 50 )            
+           `;
+
+            const i = await runCode(code);
+
+            expect(i.getRegister("Circle1").objects.length).to.equal(2);
+            expect(i.getRegister("Circle1").objects[0].center).to.deep.equal({ x: 100, y: 100 })
+            expect(i.getRegister("Circle1").objects[1].center).to.deep.equal({ x: 150, y: 150 })
+        });
+
+        it("will move the last entry in reference to the second but last entry if the list is moved upon itself", async () => {
+            const code = `
+            CIRCLE Circle1, $styles.default, (100, 100), 50
+            CIRCLE Circle1, $styles.default, (100, 100), 75
+            MOVE Circle1@bottom, Circle1@top            
+           `;
+
+            const i = await runCode(code);
+
+            expect(i.getRegister("Circle1").objects.length).to.equal(2);
+            expect(i.getRegister("Circle1").objects[0].center).to.deep.equal({ x: 100, y: 100 })
+            expect(i.getRegister("Circle1").objects[1].center).to.deep.equal({ x: 100, y: -25 })
+        })
+    });
 
 
     describe("a circle", () => {

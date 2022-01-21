@@ -1,4 +1,6 @@
 import {GrObject, ObjectType, POIMap} from "./GrObject";
+import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
+import {Point2D} from "./Point2D";
 
 class ObjectArray extends Array<GrObject> {
     private _baseName: string;
@@ -58,5 +60,13 @@ export class GrObjectList extends GrObject {
             return this._objects.last.pointsOfInterest;
         }
         return {};
+    }
+
+    at(where: WHERE_VALUE): Point2D {
+        if (!this._objects.last) {
+            return null;
+        }
+
+        return this._objects.last.at(where);
     }
 }

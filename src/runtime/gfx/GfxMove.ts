@@ -9,46 +9,62 @@ import {Point2D} from "../../Geo/Point2D";
 
 export class GfxMove extends GfxOperation {
     private _vector: Point2Parameter;
-    private _targetPoint: Parameter;
-    private _movingPoint: string | number;
+    private _targetPoint: string | number;
+    private _referencePoint: string | number;
+    private _reference: Parameter;
 
 
     constructor(opcode: string, a: Parameter | AtParameter, b: Point2Parameter | Parameter | AtParameter) {
-        let object
+        let target;
+        let reference;
         let at;
 
         switch (getParameterConfig(a, b)) {
             case "P2":
-                object = a;
-                super(opcode, object);
-                this._movingPoint = "center";
+                target = a;
+                super(opcode, target);
+                this._targetPoint = "center";
                 this._vector = b as Point2Parameter;
                 break;
 
             case "@2":
-                object = new Parameter(true, a.name);
-                super(opcode, object);
+                target = new Parameter(true, a.name);
+                super(opcode, target);
                 at = a as AtParameter
-                this._movingPoint = at.where;
+                this._targetPoint = at.where;
                 this._vector = b as Point2Parameter;
                 break;
 
             case "P@":
-                object = a;
-                super(opcode, object);
-                this._movingPoint = "center";
-                this._targetPoint = b;
+                target = a;
+                reference = new Parameter(true, b.name);
+
+                super(opcode, target);
+
+                this._reference = reference;
+                this._targetPoint = "center";
+                this._referencePoint = (b as AtParameter).where;
                 break;
 
             case "@@":
-                object = new Parameter(true, a.name);
-                super(opcode, object);
-                at = a as AtParameter
-                this._movingPoint = at.where;
-                this._targetPoint = b;
+                target = new Parameter(true, a.name);
+                reference = new Parameter(true, b.name);
+                super(opcode, target);
+
+                this._reference = reference;
+                this._targetPoint = (a as AtParameter).where;
+                this._referencePoint = (b as AtParameter).where;
+
                 break;
+
+            default:
+                super(opcode, null);
         }
 
+    }
+
+    get reference():GrObject {
+        return this._reference.finalized(this.closure);
     }
 
     get vector(): any {
@@ -56,20 +72,22 @@ export class GfxMove extends GfxOperation {
             return this._vector.finalized(this.closure);
         }
 
-        let from;
-        if (typeof this._movingPoint === "number") {
-            from = this.target.getPointAtPercentage(this._movingPoint);
-        } else {
-            from = this.target.pointsOfInterest[POI[this._movingPoint]];
+        let target = this.target;
+        let reference = this.reference;
+
+        if (target === reference && target instanceof GrObjectList) {
+            reference = target.objects[target.objects.length - 2];
+            target = target.objects[target.objects.length - 1];
         }
 
-        const to = this._targetPoint.finalized(this.closure);
+        const from = target.at(this._targetPoint);
+        const to = reference.at(this._referencePoint);
 
         return to.copy.sub(from);
     }
 
     async execute(): Promise<any> {
-        let poi = this._movingPoint;
+        let poi = this._targetPoint
         if (typeof poi === "number") {
             poi = "center";
         }
