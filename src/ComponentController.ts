@@ -74,8 +74,7 @@ export class ComponentController extends BaseComponentController {
             await this._interpreter.next();
         }
 
-        this.getAppModel().set("segmentedCode", c => c.selected, "selected").to(false);
-        this.getAppModel().set("segmentedCode", c => c.index === this._interpreter.pc, "selected").to(true);
+        this.getAppModel().setSelectedCodeLines([this._interpreter.pc]);
 
         this.updateDrawing();
     }
