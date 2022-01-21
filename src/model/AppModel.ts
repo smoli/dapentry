@@ -14,7 +14,11 @@ export enum AppModelKeys {
     editableCodeLine = "editableCodeLine",
     data = "data",
     drawing = "drawing",
-    selectedObjects = "selectedObjects"
+    selectedObjects = "selectedObjects",
+    codeEditor = "codeEditor",
+    codeEditorSize = "codeEditorSize",
+    styleEditor = "styleEditor",
+    dataEditorSize = "dataEditorSize"
 }
 
 export class AppModel extends JSONModelAccess {
@@ -30,7 +34,11 @@ export class AppModel extends JSONModelAccess {
             [AppModelKeys.editableCodeLine]: null,
             [AppModelKeys.data]: [ { name: "f1", value: [10, 20, 30, 40] }],
             [AppModelKeys.drawing]: [],
-            [AppModelKeys.selectedObjects]: []
+            [AppModelKeys.selectedObjects]: [],
+            [AppModelKeys.codeEditor]: false,
+            [AppModelKeys.styleEditor]: false,
+            [AppModelKeys.codeEditorSize]: "20%",
+            [AppModelKeys.dataEditorSize]: "20%"
         });
 
         super(model);

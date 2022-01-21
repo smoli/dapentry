@@ -92,7 +92,7 @@ export default class Drawing extends Control {
         this._containerId = this._makeId("container");
 
         this.setAggregation("_svg", new HTML({
-            content: `<svg id="${this._containerId}" style="height: 90vh; width: 100%" tabindex="1000000000"></svg>`
+            content: `<svg id="${this._containerId}" width="100%" height="80vh"  preserveAspectRatio="xMidYMid meet" tabindex="1000000000"></svg>`
         }));
     }
 

@@ -6,7 +6,6 @@
         xmlns:unified="sap.ui.unified"
         xmlns:mvc="sap.ui.core.mvc">
 
-    <Page>
         <VBox items="{appModel>/selectedObjects}">
             <items>
                 <VBox>
@@ -26,6 +25,5 @@
                 </VBox>
             </items>
         </VBox>
-    </Page>
 
 </mvc:View>

@@ -1,0 +1,18 @@
+<mvc:View
+        controllerName="sts.drawable.controller.StepList"
+        displayBlock="true"
+        xmlns="sap.m"
+        xmlns:step="sts.drawable.controls.steps"
+        xmlns:mvc="sap.ui.core.mvc">
+
+    <step:StepList steps="{appModel>/segmentedCode}" selectionChange="onStepSelectionChange">
+        <step:steps>
+            <step:Step tokens="{appModel>tokens}"
+                       codeIndex="{appModel>index}"
+                       selected="{appModel>selected}"
+                       level="{appModel>level}"
+            />
+        </step:steps>
+    </step:StepList>
+
+</mvc:View>

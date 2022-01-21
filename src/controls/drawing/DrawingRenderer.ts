@@ -6,6 +6,7 @@ const renderer = {
 
     render(rm, control: Drawing) {
         const root = C("div", control);
+        root.class("stsDrawingWrapper");
         root.appendControl(control.getAggregation("_svg") as Control);
         root.render(rm)
     }

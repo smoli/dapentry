@@ -7,32 +7,25 @@
         xmlns:step="sts.drawable.controls.steps"
         xmlns:mvc="sap.ui.core.mvc">
 
-    <Page>
-        <l:Splitter orientation="Vertical">
-            <l:contentAreas>
+    <l:Splitter orientation="Vertical">
+        <l:contentAreas>
 
-                <VBox>
-                <mvc:XMLView viewName="sts.drawable.view.DataEditor" />
-                </VBox>
+            <VBox>
+                <layoutData>
+                    <l:SplitterLayoutData size="{appModel>/dataEditorSize}"/>
+                </layoutData>
+                <mvc:XMLView viewName="sts.drawable.view.DataEditor"/>
+            </VBox>
 
+            <mvc:XMLView viewName="sts.drawable.view.StepList"/>
 
-                <VBox items="{ path: 'appModel>/segmentedCode' }">
-                    <Text text="{appModel>code}" />
-                </VBox>
-                
-                <step:StepList steps="{appModel>/segmentedCode}" selectionChange="onStepSelectionChange">
-                    <step:steps>
-                        <step:Step tokens="{appModel>tokens}"
-                                   codeIndex="{appModel>index}"
-                                   selected="{appModel>selected}"
-                                   level="{appModel>level}"
-                        />
-                    </step:steps>
-                </step:StepList>
+                <code:CodeEditor value="{appModel>/codeString}" change="onCodeChanged" syntaxHints="false">
+                    <code:layoutData>
+                        <l:SplitterLayoutData size="{appModel>/codeEditorSize}"/>
+                    </code:layoutData>
+                </code:CodeEditor>
 
-                <code:CodeEditor value="{appModel>/codeString}" change="onCodeChanged" syntaxHints="false"/>
-            </l:contentAreas>
-        </l:Splitter>
-    </Page>
+        </l:contentAreas>
+    </l:Splitter>
 
 </mvc:View>

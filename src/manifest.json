@@ -41,11 +41,16 @@
         {
           "pattern": "",
           "name": "default",
-          "target": ["structure", "drawing", "style"],
-          "layout": "TwoColumnsMidExpanded"
+          "target": "fixed",
+          "layout": "OneColumn"
         }
       ],
       "targets": {
+        "fixed": {
+          "viewName": "fixed",
+          "viewId": "fixed",
+          "controlAggregation": "beginColumnPages"
+        },
         "structure": {
           "viewName": "Structure",
           "viewId": "structure",
