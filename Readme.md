@@ -20,6 +20,13 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * ~~[ ] denote expressions with () instead of {}~~ Don't do that because we want to use () in expressions
 * [x] Make a parameter type that evaluates an expression
 * [x] Properly recognize when the user enters an expression when editing a statement
+* [ ] Switch the complex array iteration to FOREACH in updateStatement
+* [ ] Make DO/ENDDO work without an index register
+* [ ] Enable the user to wrap the selected code into a DO/ENDDO 2
+* [ ] Enable the user to switch an DO/ENDDO to a FOREACH when assigning an array as the count
+* [ ] Delete Objects
+* [ ] Hide Objects
+* [ ] Language Version annotation
 * [x] Add a method getPointAtPercentage to GrObject
   * [x] implement for lines
   * [x] implement for circles
@@ -35,7 +42,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
   * [ ] create rectangle
   * [ ] create polygon
 * [ ] extend parser to recognize 43.34% as  the number 0.4334
-* [ ] create operation to append a point to a polygon
+* [x] create operation to append a point to a polygon
 * [ ] make polygons open by default
 * [ ] autoclose polygons
 * [ ] enable fill rendering for open polygons
