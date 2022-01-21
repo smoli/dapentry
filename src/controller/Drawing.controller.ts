@@ -1,6 +1,7 @@
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Drawing from "../controls/drawing/Drawing";
 import BaseController from "./BaseController";
+import {AppModelKeys} from "../model/AppModel";
 
 /**
  * @namespace sts.drawable.controller
@@ -51,7 +52,7 @@ export default class DrawingController extends BaseController {
 
     onCodeLineChanged(event) {
         this.getComponentController().updateOperation(
-            this.getAppModel().get("selectedCodeLine/index"),
+            this.getAppModel().get(AppModelKeys.editableCodeLine, "index"),
             event.getParameter("tokenIndex"),
             event.getParameter("tokenSubIndex"),
             event.getParameter("newValue"));
