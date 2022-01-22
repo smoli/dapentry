@@ -7,10 +7,11 @@ import {GfxInterpreter} from "./GfxInterpreter";
 import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
-import {AppModel} from "./model/AppModel";
+import {AppModel, SelectionInfo} from "./model/AppModel";
 import {SelectObjects} from "./controller/actions/SelectObjects";
 import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 import {DeleteSelection} from "./controller/actions/DeleteSelection";
+import {WrapInLoop} from "./controller/actions/WrapInLoop";
 
 
 
@@ -141,8 +142,16 @@ export class ComponentController extends BaseComponentController {
     }
 
 
-    getSelection(): Array<GrObject> {
+    getSelection(): Array<SelectionInfo> {
         return this.getAppModel().getSelectedObjects();
+    }
+
+    async wrapSelectionInLoop() {
+        await this.execute(new WrapInLoop(this._component));
+        if (this._drawing) {
+            await this.runCode();
+            this.updateDrawing();
+        }
     }
 
     async deleteSelection() {

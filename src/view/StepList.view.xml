@@ -5,6 +5,10 @@
         xmlns:step="sts.drawable.controls.steps"
         xmlns:mvc="sap.ui.core.mvc">
 
+    <VBox>
+        <Toolbar>
+            <Button type="Transparent" text="Loop" press="onLoopPressed" />
+        </Toolbar>
     <step:StepList steps="{appModel>/segmentedCode}" selectionChange="onStepSelectionChange">
         <step:steps>
             <step:Step tokens="{appModel>tokens}"
@@ -14,5 +18,6 @@
             />
         </step:steps>
     </step:StepList>
+    </VBox>
 
 </mvc:View>

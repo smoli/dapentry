@@ -15,4 +15,8 @@ export default class StepListController extends BaseController {
             await this.getComponentController().setSelectedCodeLines(indexes);
         }
     }
+
+    async onLoopPressed() {
+        await this.getComponentController().wrapSelectionInLoop();
+    }
 }

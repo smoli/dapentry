@@ -23,7 +23,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * [x] Switch the complex array iteration to FOREACH in updateStatement
 * [x] Make DO/ENDDO work without an index register
 * [ ] Fix scaling of rotated objects
-* [ ] Enable the user to wrap the selected code into a DO/ENDDO 2
+* [x] Enable the user to wrap the selected code into a DO/ENDDO 2
 * [ ] Enable the user to switch an DO/ENDDO to a FOREACH when assigning an array as the count
 * [x] Delete Objects
 * [ ] Hide Objects
@@ -81,4 +81,4 @@ See [doc/Readme.md](doc/Readme.md)
 
 Pending
 
-(c) 2021 Stephan Smola
+(c) 2021, 2022 Stephan Smola
