@@ -2,6 +2,7 @@ import Control from "sap/ui/core/Control";
 import {Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
+import {getTextIdForTokens} from "../../i18n/getTextIDForTokens";
 
 /**
  *
@@ -35,24 +36,6 @@ export default class Step extends Control {
         const bundle:ResourceBundle = (this.getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;
         return bundle.getText(textId, parameters);
     }
-
-
-    getTextIdForTokens(tokens: Array<Token>): string {
-        const firstToken = tokens[0];
-        switch (firstToken.value) {
-
-            case 'MOVE':
-                if (tokens.length === 3) {
-                    if (tokens[2].type === TokenTypes.REGISTERAT) {
-                        return "MOVE_TO"
-                    }
-                }
-
-            default:
-                return firstToken.value as string;
-        }
-    }
-
 
     public constructText(): string {
         const tokens: Array<Token> = this.getTokens();
@@ -89,7 +72,7 @@ export default class Step extends Control {
             }
         }
 
-        return this.getResourceText(this.getTextIdForTokens(tokens), ...tokenTexts);
+        return this.getResourceText(getTextIdForTokens(tokens), ...tokenTexts);
     }
 
 

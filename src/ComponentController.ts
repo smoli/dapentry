@@ -167,6 +167,7 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
+        return;
         const code = `RECT Rectangle1, $styles.default, (368.5, 541.5), 155, 93
 CIRCLE Circle2, $styles.default, (370, 230), 83.60023923410746
 MOVE Circle2@bottom, Rectangle1@top`;

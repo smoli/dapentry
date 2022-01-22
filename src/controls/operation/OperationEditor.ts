@@ -1,7 +1,7 @@
 import Control from "sap/ui/core/Control";
-import {Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
+import {getTextIdForTokens} from "../../i18n/getTextIDForTokens";
 
 /**
  *
@@ -36,26 +36,6 @@ export default class OperationEditor extends Control {
         super.init();
     }
 
-    getTextIdForTokens(tokens:Array<Token>):string {
-        if (!tokens || !tokens.length) {
-            return null;
-        }
-        const firstToken = tokens[0];
-
-        switch (firstToken.value) {
-
-            case 'MOVE':
-                if (tokens.length === 3) {
-                   if (tokens[2].type === TokenTypes.REGISTERAT) {
-                       return "MOVE_TO"
-                   }
-                }
-
-            default:
-                return firstToken.value as string;
-        }
-    }
-
     getResourceText(textId:string):string {
         const bundle:ResourceBundle = (this.getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;
         return bundle.getText(textId);
@@ -67,7 +47,7 @@ export default class OperationEditor extends Control {
             return []
         }
 
-        const t = this.getResourceText(this.getTextIdForTokens(tokens));
+        const t = this.getResourceText(getTextIdForTokens(tokens));
 
         const matches = t.match(/([\w\s]+|\{\d+\})/g);
 
