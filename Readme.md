@@ -20,11 +20,13 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 ## Next steps
 
 ### Drawing
-* [x] Add a method getPointAtPercentage to GrObject
+* [ ] Add a method getPointAtPercentage to GrObject
   * [ ] implement for rects
   * [ ] implement for polygons
 * [ ] rotate around pivot
 * [ ] enable move and creation tools to use percentage points
+  * [ ] make it available for the firs point of a polygon
+  * [ ] better show where the point lies when using as the first point on a line or a polygon
 * [ ] enable move and creation operations to use percentage points
   * [ ] create circle
   * [ ] create rectangle
@@ -38,6 +40,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 ### Data editor
 * [ ] Create tables
 * [ ] Load data from file
+* [ ] Rename fields
 
 ### Style editor
 * [ ] define stroke color separately
