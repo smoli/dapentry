@@ -25,6 +25,10 @@ const renderer = {
                         root.appendControl(new Text({ text: ","}))
                         root.appendControl(new Input({ value: s.token.value[1].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 1)}))
                         root.appendControl(new Text({ text: ")"}))
+                    } else if (s.token.type === TokenTypes.REGISTERAT) {
+                        root.appendControl(new Input({ value: s.token.value[0].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 0)}))
+                        root.appendControl(new Text({ text: "s"}))
+                        root.appendControl(new Input({ value: s.token.value[1].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 1)}))
                     } else {
                         root.appendControl(new Input({ value: s.token.value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, -1)}))
                     }

@@ -22,6 +22,10 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * [x] Properly recognize when the user enters an expression when editing a statement
 * [x] Switch the complex array iteration to FOREACH in updateStatement
 * [x] Make DO/ENDDO work without an index register
+* [ ] Operation Editor
+  * [x] Make at-access working
+  * [ ] DO/FOREACH
+* [ ] Auto growing input field
 * [ ] Fix scaling of rotated objects
 * [x] Enable the user to wrap the selected code into a DO/ENDDO 2
 * [ ] Enable the user to switch an DO/ENDDO to a FOREACH when assigning an array as the count

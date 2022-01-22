@@ -1,5 +1,5 @@
 import Control from "sap/ui/core/Control";
-import {Parser, Token, TokenTypes} from "../../runtime/interpreter/Parser";
+import {Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 
@@ -46,11 +46,9 @@ export default class OperationEditor extends Control {
 
             case 'MOVE':
                 if (tokens.length === 3) {
-                    return "opMoveByCenter"
-                } else if (tokens.length === 4) {
-                    return "opMoveBy"
-                } else {
-                    return "opMoveTo"
+                   if (tokens[2].type === TokenTypes.REGISTERAT) {
+                       return "MOVE_TO"
+                   }
                 }
 
             default:

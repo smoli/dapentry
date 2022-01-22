@@ -41,7 +41,12 @@ export default class Step extends Control {
         const firstToken = tokens[0];
         switch (firstToken.value) {
 
-
+            case 'MOVE':
+                if (tokens.length === 3) {
+                    if (tokens[2].type === TokenTypes.REGISTERAT) {
+                        return "MOVE_TO"
+                    }
+                }
 
             default:
                 return firstToken.value as string;
@@ -65,6 +70,13 @@ export default class Step extends Control {
 
                 case TokenTypes.POINT:
                     return `(${t.value[0].value}, ${t.value[1].value})`;
+
+                case TokenTypes.REGISTERAT:
+                    if (t.value[1].type === TokenTypes.NUMBER) {
+                        return `${t.value[0].value} at ${t.value[1].value}`;
+                    } else {
+                        return `${t.value[0].value}'s ${t.value[1].value}`;
+                    }
 
                 default:
                     return t.value;
