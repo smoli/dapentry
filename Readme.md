@@ -20,7 +20,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * ~~[ ] denote expressions with () instead of {}~~ Don't do that because we want to use () in expressions
 * [x] Make a parameter type that evaluates an expression
 * [x] Properly recognize when the user enters an expression when editing a statement
-* [ ] Switch the complex array iteration to FOREACH in updateStatement
+* [x] Switch the complex array iteration to FOREACH in updateStatement
 * [x] Make DO/ENDDO work without an index register
 * [ ] Fix scaling of rotated objects
 * [ ] Enable the user to wrap the selected code into a DO/ENDDO 2

@@ -19,35 +19,20 @@ export class UpdateStatement extends BaseAction {
     }
 
 
-    replace(codeManager: CodeManager, reg: string, argumentToReplace: number, dataName: string): Array<string> {
+    forEach(codeManager: CodeManager, reg: string, argumentToReplace: number, dataName: string): Array<string> {
         let index: number = codeManager.getCreationStatement(reg);
         const original = codeManager.code[index];
         const tokens = Parser.parseLine(original);
 
-        const iteratorName = codeManager.makeUniqueRegisterName(dataName + "iter");
-
         const newStatements = [];
 
-        newStatements.push("@EACH " + dataName + `@REPLACE ${iteratorName}.value ${dataName}`);
-        tokens[argumentToReplace].value = iteratorName + ".value";
+        newStatements.push(`FOREACH ${dataName}`);
+
+        tokens[argumentToReplace].value = dataName;
         const newCreationStatement = Parser.constructCodeLine(tokens);
-
-
-        newStatements.push(`ITER ${iteratorName}, ${dataName}`);
-
-        // newStatements.push(newCreationStatement);
-        // newStatements.push(`NEXT ${iteratorName}`);
-
-        const labelName = codeManager.makeUniqueLabelName("LOOP" + dataName.toUpperCase());
-        newStatements.push(`${labelName}:`);
-
-        newStatements.push("@BODY");
         newStatements.push(newCreationStatement);
-        newStatements.push("@ENDBODY");
 
-        newStatements.push(`NEXT ${iteratorName}`);
-        newStatements.push(`JINE ${iteratorName}, ${labelName}:`);
-        newStatements.push("@ENDEACH");
+        newStatements.push("ENDEACH @HIDE");
 
         return newStatements;
     }
@@ -78,7 +63,7 @@ export class UpdateStatement extends BaseAction {
             if (dataValue && Array.isArray(dataValue.value)) {
                 // Replace code to make the statement a loop over the data
                 const reg = this.component.getCodeManager().getCreatedRegisterForStatement(this._statementIndex);
-                newStatements = this.replace(this.component.getCodeManager(),
+                newStatements = this.forEach(this.component.getCodeManager(),
                     reg, this._tokenIndex, this._newValue);
 
             } else {

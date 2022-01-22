@@ -8,7 +8,7 @@ import {getParameterConfig} from "../../../gfx/GfxOperation";
 interface LoopInfo {
     label: string,
     iterator: ArrayIterator,
-    valueName: string,
+    loopValueName: string,
     indexName: string
 }
 
@@ -22,6 +22,10 @@ export class ForEach extends Operation {
 
     constructor(opcode: string, target: Parameter, a: Parameter, b: Parameter) {
         super(opcode);
+
+        if (!a && !b) {
+            this._value = target;
+        }
 
 
         switch(getParameterConfig(a, b)) {
@@ -41,7 +45,7 @@ export class ForEach extends Operation {
 
         }
 
-        this._target = target;
+        this._target = new Parameter(true, target.name);
     }
 
     public static get topLoopInfo():LoopInfo {
@@ -77,7 +81,7 @@ export class ForEach extends Operation {
         const labelName = "$FOREACH" + ForEach._info.length;
         interpreter.setLabel(labelName);
 
-        const valueName = this._target.name;
+        const loopValueName = this._target.name;
         let indexName = null;
         if (this._index) {
             indexName = this._index.name;
@@ -86,13 +90,13 @@ export class ForEach extends Operation {
         ForEach._info.push({
             label: labelName,
             iterator,
-            valueName,
+            loopValueName: loopValueName,
             indexName
         })
 
         const sf = new StackFrame();
         interpreter.pushStack(sf);
-        sf.setRegister(valueName, iterator.value);
+        sf.setRegister(loopValueName, iterator.value);
 
         if (indexName) {
             sf.setRegister(indexName, iterator.index);
@@ -111,7 +115,7 @@ export class EndForEach extends Operation {
         if (info.iterator.done) {
             interpreter.popStack(null)
         } else {
-            this.closure.setRegister(info.valueName, info.iterator.value);
+            this.closure.setRegister(info.loopValueName, info.iterator.value);
             if (info.indexName) {
                 this.closure.setRegister(info.indexName, info.iterator.index);
             }
