@@ -90,8 +90,7 @@ export class ComponentController extends BaseComponentController {
 
     protected async runCode(): Promise<any> {
         this._interpreter.clearObjects();
-        const data = this.getAppModel().createScopeFromData();
-        this._interpreter.parse(this._component.getCodeManager().code);
+        this._interpreter.parse(this.getAppModel().fullCode);
 
         const index = this.getAppModel().getLastSelectedCodeLineIndex();
 
@@ -103,8 +102,7 @@ export class ComponentController extends BaseComponentController {
 
         return this._interpreter.run({
             "$styles": this._styleManager.styles,
-            "$lastObject": null,
-            ...data
+            "$lastObject": null
         });
     }
 
@@ -167,10 +165,14 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-        return;
-        const code = `RECT Rectangle1, $styles.default, (368.5, 541.5), 155, 93
-CIRCLE Circle2, $styles.default, (370, 230), 83.60023923410746
-MOVE Circle2@bottom, Rectangle1@top`;
+        const code = `LINE Line1, $styles.default, (231, 358), (635, 361)
+POLY Polygon2, $styles.default, [ Line1@end ], 1
+DO f2
+ROTATE Line1, 180 / f2
+EXTPOLY Polygon2, [ Line1@0.75 ]
+ROTATE Line1, 180 / f2
+EXTPOLY Polygon2, [ Line1@end ]
+ENDDO`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }

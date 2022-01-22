@@ -15,6 +15,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * [ ] Expressions are not displayed in steps and operation editor
 * [ ] Fix scaling of rotated objects
 * [ ] Hide Objects
+* [ ] Program not always run as far as expected (better description needed)
 
 ## Next steps
 

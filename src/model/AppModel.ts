@@ -41,7 +41,7 @@ export class AppModel extends JSONModelAccess {
             [AppModelKeys.segmentedCode]: [],
             [AppModelKeys.selectedCode]: [],
             [AppModelKeys.editableCodeLine]: null,
-            [AppModelKeys.data]: [ { name: "f1", value: [10, 20, 30, 40] }],
+            [AppModelKeys.data]: [ { name: "f1", value: [10, 20, 30, 40] }, { name: "f2", value: 5 }],
             [AppModelKeys.drawing]: [],
             [AppModelKeys.selectedObjects]: [],
             [AppModelKeys.codeEditor]: false,
@@ -58,6 +58,10 @@ export class AppModel extends JSONModelAccess {
 
     get codeManager(): CodeManager {
         return this._codeManager;
+    }
+
+    get fullCode():Array<string> {
+        return [...this.createScopeCodeFromData(), ...this.codeManager.code];
     }
 
     protected updateSegmentedCode() {
@@ -205,14 +209,13 @@ export class AppModel extends JSONModelAccess {
     }
 
 
-    public createScopeFromData() {
-        const scope = {};
+    protected createScopeCodeFromData() {
         const d = this.get(AppModelKeys.data);
-
+        const code = [];
         for (const field of d) {
-            scope[field.name] = field.value;
+            code.push(`LOAD ${field.name}, ${field.value}`)
         }
 
-        return scope;
+        return code;
     }
 }
