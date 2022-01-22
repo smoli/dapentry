@@ -10,6 +10,7 @@ import {ReplaceCode} from "./controller/actions/ReplaceCode";
 import {AppModel} from "./model/AppModel";
 import {SelectObjects} from "./controller/actions/SelectObjects";
 import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
+import {DeleteSelection} from "./controller/actions/DeleteSelection";
 
 
 
@@ -142,6 +143,14 @@ export class ComponentController extends BaseComponentController {
 
     getSelection(): Array<GrObject> {
         return this.getAppModel().getSelectedObjects();
+    }
+
+    async deleteSelection() {
+        await this.execute(new DeleteSelection(this._component))
+        if (this._drawing) {
+            await this.runCode();
+            this.updateDrawing();
+        }
     }
 
     async setSelection(selection: Array<GrObject>) {

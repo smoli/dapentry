@@ -250,6 +250,8 @@ export default class Drawing extends Control {
 
         if (d3.event.code === "ArrowDown") {
             this.fireNextStep();
+        } else if (d3.event.code === "Delete") {
+            this.fireObjectDeleted();
         } else if (d3.event.code === "AltLeft") {
             d3.event.preventDefault();
             this._pumpToTool(InteractionEvents.OtherObject);

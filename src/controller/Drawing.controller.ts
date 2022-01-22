@@ -26,12 +26,7 @@ export default class DrawingController extends BaseController {
     }
 
     onObjectDeleted(event) {
-        const o = this.viewModel().getProperty("/objects");
-        const i = o.indexOf(event.getParameter("object"));
-        if (i !== -1) {
-            o.splice(i, 1);
-        }
-        this.viewModel().setProperty("/objects", o);
+        this.getComponentController().deleteSelection();
     }
 
     onSelectionChange(event) {

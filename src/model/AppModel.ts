@@ -4,6 +4,7 @@ import {Parser} from "../runtime/interpreter/Parser";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import {GrObject, ObjectType} from "../Geo/GrObject";
 import {SegmentedCodeLine} from "../SegmentedCodeLine";
+import {Style} from "../controls/drawing/Objects/StyleManager";
 
 
 
@@ -20,6 +21,13 @@ export enum AppModelKeys {
     styleEditor = "styleEditor",
     structureEditor = "structureEditor",
     dataEditorSize = "dataEditorSize"
+}
+
+export interface SelectionInfo {
+    name: string,
+    style: Style,
+    object: GrObject,
+    type: string
 }
 
 export class AppModel extends JSONModelAccess {
@@ -76,6 +84,15 @@ export class AppModel extends JSONModelAccess {
         return this.get(AppModelKeys.segmentedCode);
     }
 
+    deleteSelection() {
+        const sel:Array<SelectionInfo> = this.getSelectedObjects();
+        for (const obj of sel) {
+            const r = obj.object.name;
+            this.codeManager.removeStatementsForRegister(r);
+        }
+        this.updateSegmentedCode();
+        this.updateCodeString();
+    }
 
     insertStatement(code: string, atIndex:number) {
         this.codeManager.insertStatement(code, atIndex);
@@ -145,7 +162,7 @@ export class AppModel extends JSONModelAccess {
         this.set(AppModelKeys.selectedObjects).to(s);
     }
 
-    getSelectedObjects():Array<GrObject> {
+    getSelectedObjects():Array<SelectionInfo> {
         return this.get(AppModelKeys.selectedObjects);
     }
 
