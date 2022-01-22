@@ -73,7 +73,6 @@ export default class DataEditorController extends BaseController {
         const t = new Text({text: "{appModel>name} ="});
         const i = new Input({
             value: "{appModel>value}",
-            type: InputType.Number,
             change: this.onFieldValueChanged.bind(this),
             layoutData: new FlexItemData({growFactor: 0})
         });

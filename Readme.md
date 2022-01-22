@@ -36,7 +36,8 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
   * [ ] Maybe determine bounding box for drawing automatically when storing
 
 ### Data editor
-* [ ] Data Editor
+* [ ] Create tables
+* [ ] Load data from file
 
 ### Style editor
 * [ ] define stroke color separately
@@ -81,7 +82,8 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
   * [x] move
   * [x] create line
 * [x] create operation to append a point to a polygon
-
+* [ ] Data Editor
+  * [x] Allow for expression in fields
 
 
 ## Tests
