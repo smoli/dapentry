@@ -142,7 +142,7 @@ describe('Code manager', () => {
             .to.deep.equal([])
     });
 
-    describe("removing all statments with a given register as an argument", () => {
+    describe("removing all statements with a given register as an argument", () => {
 
 
         it("can be done", () => {
@@ -151,7 +151,9 @@ describe('Code manager', () => {
             LOAD r1, 23
             ADD r1, 23
             LOAD r2, r1
-            ADD r3, r1, r2
+            ADD r3, r1, r2@d
+            ADD r3, r1, r4@(r2)
+            ADD ^r2, 12
             LOAD r4, 1        
         `;
 

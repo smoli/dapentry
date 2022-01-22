@@ -370,6 +370,15 @@ export class CodeManager {
                 if (token.type === TokenTypes.REGISTER && token.value === registerName) {
                     ret.push(i);
                     break;
+                } else if (token.type === TokenTypes.REGISTERAT && token.value[0].value === registerName) {
+                    ret.push(i);
+                    break;
+                } else if (token.type === TokenTypes.REGISTERAT && token.value[1].type === TokenTypes.REGISTER && token.value[1].value === registerName) {
+                    ret.push(i);
+                    break;
+                } else if (token.type === TokenTypes.NONLOCALREGISTER && token.value === registerName) {
+                    ret.push(i);
+                    break;
                 }
             }
         }

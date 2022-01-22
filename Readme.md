@@ -47,6 +47,9 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * [ ] make polygons open by default
 * [ ] autoclose polygons
 * [ ] enable fill rendering for open polygons
+* [ ] Define aspect ratio for a drawing
+  * [ ] Maybe determine bounding box for drawing automatically when storing
+* [ ] Library
 * Maybe configure what kind of Parameter-Class to use for a given token type. This removes dependency of Point2D from core runtime
 * Array index like r1[0]?
 
