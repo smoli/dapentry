@@ -9,7 +9,7 @@ interface LoopInfo {
     label: string,
     iteration: number,
     maxIterations: number,
-    valueName: string
+    targetName: string
 }
 
 export class Do extends Operation {
@@ -19,11 +19,15 @@ export class Do extends Operation {
     private _value: Parameter;
     private _target: Parameter;
 
-    constructor(opcode: string, target: Parameter, a: Parameter) {
+    constructor(opcode: string, valueOrTarget: Parameter, value: Parameter = null) {
         super(opcode);
 
-        this._value = a;
-        this._target = target;
+        if (!value) {
+            this._value = valueOrTarget
+        } else {
+            this._value = value;
+            this._target = valueOrTarget;
+        }
     }
 
     public static get topLoopInfo():LoopInfo {
@@ -61,18 +65,25 @@ export class Do extends Operation {
         const labelName = "$DO" + Do._info.length;
         interpreter.setLabel(labelName);
 
-        const valueName = this._target.name;
+        let targetName;
+
+        if (this._target) {
+            targetName = this._target.name;
+        }
 
         Do._info.push({
             label: labelName,
             iteration,
             maxIterations: max,
-            valueName
+            targetName: targetName
         })
 
         const sf = new StackFrame();
         interpreter.pushStack(sf);
-        sf.setRegister(valueName, iteration);
+
+        if (targetName) {
+            sf.setRegister(targetName, iteration);
+        }
     }
 }
 
@@ -87,7 +98,9 @@ export class EndDo extends Operation {
         if (info.iteration >= info.maxIterations) {
             interpreter.popStack(null)
         } else {
-            this.closure.setRegister(info.valueName, info.iteration);
+            if (info.targetName) {
+                this.closure.setRegister(info.targetName, info.iteration);
+            }
             interpreter.gotoLabel(info.label);
         }
     }

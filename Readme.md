@@ -21,10 +21,11 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * [x] Make a parameter type that evaluates an expression
 * [x] Properly recognize when the user enters an expression when editing a statement
 * [ ] Switch the complex array iteration to FOREACH in updateStatement
-* [ ] Make DO/ENDDO work without an index register
+* [x] Make DO/ENDDO work without an index register
+* [ ] Fix scaling of rotated objects
 * [ ] Enable the user to wrap the selected code into a DO/ENDDO 2
 * [ ] Enable the user to switch an DO/ENDDO to a FOREACH when assigning an array as the count
-* [ ] Delete Objects
+* [x] Delete Objects
 * [ ] Hide Objects
 * [ ] Language Version annotation
 * [x] Add a method getPointAtPercentage to GrObject

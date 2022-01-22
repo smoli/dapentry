@@ -55,4 +55,19 @@ describe('DO', () => {
 
         expect(i.getRegister("r1")).to.equal(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9)
     });
+
+    it("does not need a register to put the index in", async () => {
+        const code = `
+            LOAD r1, 0
+            DO 10
+            ADD ^r1, 1
+            ENDDO
+        `
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(10)
+    })
 });
