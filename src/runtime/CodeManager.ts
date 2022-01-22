@@ -191,27 +191,28 @@ export class CodeManager {
         const blockStack = new Stack<{ code: string, replaces: Array<Token> }>();
         let level = 0;
 
-        const find = (tokens, value) => tokens.find(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
-        const findAll = (tokens, value) => tokens.filter(t => t.type === TokenTypes.ANNOTATION && t.value as string === value)
+        const findOpCode = (tokens, value) => tokens.find(t => t.type === TokenTypes.OPCODE && t.value as string === value);
+        const findAnnotation = (tokens, value) => tokens.find(t => t.type === TokenTypes.ANNOTATION && t.value as string === value);
+        const findAllAnnotations = (tokens, value) => tokens.filter(t => t.type === TokenTypes.ANNOTATION && t.value as string === value);
 
         let originalLine = -1;
         for (const codeLine of this._code) {
             originalLine++;
             const tokens = Parser.parseLine(codeLine);
 
-            if (!!find(tokens, "HIDE")) {
+            if (!!findAnnotation(tokens, "HIDE")) {
                 continue;
             }
 
 
-            const body = find(tokens, "BODY");
+            const body = findAnnotation(tokens, "BODY");
             if (body) {
-                blockStack.push({code: "BODY", replaces: findAll(tokens, "REPLACE")});
+                blockStack.push({code: "BODY", replaces: findAllAnnotations(tokens, "REPLACE")});
                 continue;
             }
 
 
-            const endeach = find(tokens, "ENDEACH");
+            const endeach = findAnnotation(tokens, "ENDEACH");
             if (endeach) {
                 blockStack.pop();
                 level--;
@@ -219,20 +220,31 @@ export class CodeManager {
                 continue;
             }
 
+            const doOpCode = findOpCode(tokens, "DO");
+            if (doOpCode) {
+                blockStack.push({ code: "DO", replaces: findAllAnnotations(tokens, "REPLACE")})
+            }
+
+            const endDo = findOpCode(tokens, "ENDDO");
+            if (endDo) {
+                blockStack.pop();
+                level--;
+            }
+
             if (blockStack.length && blockStack.top.code === "EACH") {
                 continue;
             }
 
-            const each = find(tokens, "EACH");
+            const each = findAnnotation(tokens, "EACH");
             if (each) {
                 ret.push({originalLine, code: "@EACH " + each.args.join(" "), level});
                 level++;
-                blockStack.push({code: "EACH", replaces: findAll(tokens, "REPLACE")});
+                blockStack.push({code: "EACH", replaces: findAllAnnotations(tokens, "REPLACE")});
                 continue;
             }
 
 
-            const endbody = find(tokens, "ENDBODY");
+            const endbody = findAnnotation(tokens, "ENDBODY");
             if (endbody) {
                 blockStack.pop();
                 continue;
@@ -263,6 +275,10 @@ export class CodeManager {
 
 
             ret.push({originalLine, code: newLine, level});
+
+            if (doOpCode) {
+                level++;
+            }
         }
 
         return ret;

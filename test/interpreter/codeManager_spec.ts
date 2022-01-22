@@ -424,79 +424,34 @@ describe('Code manager', () => {
                 { originalLine: 11, code: "LOAD r1, renault", level: 1 }
             ])
 
-        })
-    });
+        });
 
+        it("can create blocks from DO/ENDDO", () => {
 
-    it("can be used to replace a statement with a complex block of statements", async () => {
-        const m = new CodeManager({LOAD: 1, ADD: 1});
-        const code = `
-                LOAD globalResult, [ ]
-                LOAD data, [ 1, 2, 3, 4 ]
-                LOAD r1, 1
-                ADD r2, r1, 10
-                APP globalResult, r2
-                LOAD r3, 2
-        `;
+            const code = `
+                    LOAD r0, 0
+                    DO 23
+                    ADD r0, 1
+                    MUL r0, 2
+                    ENDDO
+                    ADD r0, 12
+            `;
+            const m = new CodeManager();
+            m.addCodeString(code);
 
-        const target = `
-                LOAD data, [ 1, 2, 3, 4 ]
-                LOAD r1, 1
-                
-                ITER dataIt, data
-                LOAD r2, [ ]
-              LOOP:
-                ADD tmp, r1, dataIt.value  # CIRCLE...
-                APP r2, tmp
-                NEXT dataIt
-                JINE dataIt, LOOP:                
-        `
+            const annotated = m.annotatedCode;
 
+            expect(annotated).to.deep.equal([
+                { originalLine: 0, code: "LOAD r0, 0", level: 0 },
+                { originalLine: 1, code: "DO 23", level: 0 },
+                { originalLine: 2, code: "ADD r0, 1", level: 1 },
+                { originalLine: 3, code: "MUL r0, 2", level: 1 },
+                { originalLine: 4, code: "ENDDO", level: 0 },
+                { originalLine: 5, code: "ADD r0, 12", level: 0 },
 
-        m.addCodeString(code);
-
-        function replace(reg: string, argumentToReplace: number, dataName: string) {
-            let index: number = m.getCreationStatement(reg);
-            const original = m.code[index];
-            const tokens = Parser.parseLine(original);
-
-            const tempRegName = m.makeUniqueRegisterName(reg + "Looped");
-            const iteratorName = m.makeUniqueRegisterName(dataName + "iter");
-
-            for (const t of tokens) {
-                if (t.type === TokenTypes.REGISTER && t.value === reg) {
-                    t.value = tempRegName;
-                }
-            }
-
-            tokens[argumentToReplace + 1].value = iteratorName + ".value";
-            const newCodeLine = Parser.constructCodeLine(tokens);
-
-            m.removeStatement(index);
-
-            m.insertStatement(`ITER ${iteratorName}, data`, index++);
-            m.insertStatement(`LOAD ${reg}, [ ]`, index++);
-
-            m.insertStatement("PUSHSF", index++);
-            const labelName = m.makeUniqueLabelName("LOOP" + dataName.toUpperCase());
-            m.insertStatement(`${labelName}:`, index++);
-            m.insertStatement(newCodeLine, index++);
-            m.insertStatement(`APP ${reg}, ${tempRegName}`, index++);
-            m.insertStatement(`NEXT ${iteratorName}`, index++);
-            m.insertStatement(`JINE ${iteratorName}, ${labelName}:`, index++);
-            m.insertStatement("POPSF", index++);
-        }
-
-        replace("r2", 2, "data");
-
-        const i = new Interpreter();
-        i.parse(m.code);
-        await i.run();
-
-        console.log(m.code.join("\n"));
-
-        expect(i.getRegister("r2")).to.deep.equal([2, 3, 4, 5]);
-        expect(i.getRegister("globalResult")).to.deep.equal([[2, 3, 4, 5]]);
+            ])
+        });
 
     });
+
 });
