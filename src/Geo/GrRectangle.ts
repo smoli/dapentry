@@ -67,10 +67,7 @@ export class GrRectangle extends GrObject {
     scale(fx: number, fy: number, pivot: Point2D = null) {
         this._width *= fx;
         this._height *= fy;
-        if (pivot) {
-            this.center.x = (this._center.x - pivot.x) * fx + pivot.x
-            this.center.y = (this._center.y - pivot.y) * fy + pivot.y
-        }
+
 
     }
 

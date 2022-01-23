@@ -1,5 +1,5 @@
 import {Style} from "../controls/drawing/Objects/StyleManager";
-import {deg2rad} from "./GeoMath";
+import {deg2rad, eq} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 
@@ -121,6 +121,8 @@ export abstract class GrObject {
     public createProxy():GrObject {
         const copy = this.copy();
         copy._style = {... this._style };
+        copy._xAxis = this._xAxis.copy;
+        copy._yAxis = this._yAxis.copy;
         return copy;
     }
 
@@ -397,5 +399,26 @@ export abstract class GrObject {
             throw new Error(`Unknown location ${where} on ${ObjectType[this.type]}`);
         }
     }
+
+
+    mapPointToLocal(g: Point2D): Point2D {
+        let lx;
+        let ly;
+        if (eq(this._yAxis.y, 0)) {
+            ly = g.y - this._center.y - (this._xAxis.y / this._xAxis.x) * (g.x - this._center.x);
+            ly /= this._yAxis.y - this._xAxis.y * this._yAxis.x / this._xAxis.x;
+
+            lx = (g.x - this._center.x - this._yAxis.x * ly) / this._xAxis.x;
+        } else {
+            lx = g.x - this.center.x - (this.yAxis.x / this.yAxis.y) * (g.y - this.center.y);
+            lx /= this.xAxis.x - this.yAxis.x * this.xAxis.y / this.yAxis.y;
+
+            ly = (g.y - this.center.y - this.xAxis.y * lx) / this.yAxis.y;
+        }
+
+        return new Point2D(lx, ly);
+    }
+
+
 }
 

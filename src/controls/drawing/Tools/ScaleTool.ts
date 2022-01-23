@@ -4,6 +4,8 @@ import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
 import {Point2D} from "../../../Geo/Point2D";
+import {Line2D} from "../../../Geo/Line2D";
+import {eq} from "../../../Geo/GeoMath";
 
 
 enum States {
@@ -89,11 +91,24 @@ export class ScaleTool extends Tool {
     }
 
     protected _scale(dx, dy) {
-        let np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._pivot);
-        const fx = np.x !== 0 ? (np.x + dx) / np.x : 1;
-        const fy = np.y !== 0 ? (np.y + dy) / np.y : 1;
+        let np = this._scalingObject.pointsOfInterest[this._scalingPOI];
 
-        console.log(np, dx, dy);
+        const ol = this._scalingObject.mapPointToLocal(np);
+
+        console.log(this._scalingObject.pointsOfInterest[this._scalingPOI], np, ol)
+
+        const mp = np.copy;
+        mp.x += dx;
+        mp.y += dy;
+
+        const nl = this._scalingObject.mapPointToLocal(mp);
+
+        const ndx = nl.x - ol.x;
+        const ndy = nl.y - ol.y;
+
+        const fx = eq(ol.x, 0) ? 1 : (ol.x + ndx) / ol.x;
+        const fy = eq(ol.y, 0) ? 1 : (ol.y + ndy) / ol.y;
+
         this._scalingObject.scale(Math.abs(fx), Math.abs(fy), this._pivot);
 
         this._finalX *= Math.abs(fx);
@@ -130,7 +145,6 @@ export class ScaleTool extends Tool {
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._scale(dx, dy);
                     let np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy;
-                    console.log(np, eventData.x, eventData.y);
                     this._renderer.render(this._scalingObject, true);
                     const poi: POIMap = this._scalingObject.pointsOfInterest;
                     Object.keys(poi)
