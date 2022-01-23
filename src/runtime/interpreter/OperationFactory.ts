@@ -30,6 +30,7 @@ import {Halt} from "./operations/Halt";
 import {Append} from "./operations/array/Append";
 import {EndForEach, ForEach} from "./operations/array/ForEach";
 import {Do, EndDo} from "./operations/Do";
+import {FuncDecl} from "./operations/FuncDecl";
 
 export class OperationFactory {
 
@@ -91,6 +92,7 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("ENDDO", EndDo);
     operationFactory.addOperationClass("HALT", Halt);
     operationFactory.addOperationClass("___LBL___", Label);
+    operationFactory.addOperationClass("___FUNC___", FuncDecl);
 
     return operationFactory;
 }

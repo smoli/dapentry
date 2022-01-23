@@ -1,4 +1,4 @@
-import {Parameter} from "./Parameter";
+import {LabelParameter, Parameter} from "./Parameter";
 import {Operation} from "./Operation";
 import {Parser, TokenTypes} from "./Parser";
 import {defaultOperationFactory, OperationFactory} from "./OperationFactory";
@@ -8,6 +8,7 @@ import {Point2Parameter} from "./types/Point2Parameter";
 import {ArrayParameter} from "./types/ArrayParameter";
 import {ExpressionParameter} from "./types/ExpressionParameter";
 import {AtParameter} from "./types/AtParameter";
+import {FuncDecl} from "./operations/FuncDecl";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -132,6 +133,8 @@ export class Interpreter {
         this._program.forEach((op, i) => {
             if (op instanceof Label) {
                 ret[op.label] = i;
+            } else if (op instanceof FuncDecl) {
+                ret[op.label] = i - 1;
             }
         });
 
@@ -355,7 +358,7 @@ export class Interpreter {
         }
         lines = lines.filter(s => s.trim().length > 0)
 
-        this._program = lines.map(l => this.parseLine(l));
+        this._program = lines.map((l, i) => this.parseLine(l, i));
     }
 
     private makeParameter(token): Parameter {
@@ -395,8 +398,8 @@ export class Interpreter {
         }
     }
 
-    private parseLine(line: string): any {
-        const tokens = Parser.parseLine(line);
+    private parseLine(line: string, index:number): any {
+        const tokens = Parser.parseLine(line, index);
 
         let opcode = null;
 
@@ -407,11 +410,15 @@ export class Interpreter {
                     opcode = token.value;
                     return null;
 
+                case TokenTypes.FUNCDECL:
+                    opcode = "___FUNC___";
+                    return new Parameter(false, token.value);
+
                 case TokenTypes.LABEL:
                     if (i === 0) {
                         opcode = "___LBL___";
                     }
-                    return new Parameter(false, token.value);
+                    return new LabelParameter(false, token.value);
 
                 default:
                     return this.makeParameter(token)

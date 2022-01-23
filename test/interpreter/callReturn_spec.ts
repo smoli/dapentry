@@ -5,6 +5,87 @@ import {Interpreter} from "../../src/runtime/interpreter/Interpreter";
 
 describe('Call and Return', () => {
 
+    it("can receive arguments", async () => {
+
+        let code = `
+                LOAD r1, 100
+                CALL r2, SUBBER:, r1, 1
+                CALL r2, SUBBER:, r2, 2
+                CALL r2, SUBBER:, r2, 3
+                CALL r2, SUBBER:, r2, 4
+                CALL r2, SUBBER:, r2, 5
+                HALT
+                
+             SUBBER: a, b      
+                SUB a, b
+                RET a                             
+        `;
+
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(100);
+        expect(i.getRegister("r2")).to.equal(100 - 1 - 2 - 3 - 4 - 5);
+    });
+
+    it("do not need a receiver", async () => {
+
+        let code = `
+            
+            CALL SUBBER:, 100, 1     #Useless but valid
+            HALT
+            
+            SUBBER: a, b
+                SUB a, b
+                RET a
+            
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        expect(async () => {
+            await i.run();
+        }).to.be.ok;
+    });
+
+    it("expects regular registers as arguments in function declarations", async () => {
+        let code = `
+                LOAD r1, 100
+                CALL r2, SUBBER:, r1, 5
+                HALT
+                
+             SUBBER: ^a, b  # Nonlocal registers make no sense      
+                SUB a, b
+                RET a                             
+        `;
+
+
+        const i = new Interpreter();
+        expect(() => {
+            i.parse(code);
+        }).to.throw;
+
+
+        code = `
+                LOAD r1, 100
+                CALL r2, SUBBER:, r1, 5
+                HALT
+                
+             SUBBER: 12, b  # Literals make no sense      
+                SUB a, b
+                RET a                             
+        `;
+
+        expect(() => {
+            i.parse(code);
+        }).to.throw;
+
+
+    });
+
+
 
     it("enable us to implement functions", async () => {
 

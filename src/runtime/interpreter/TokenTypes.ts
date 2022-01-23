@@ -6,6 +6,7 @@ export enum TokenTypes {
     NUMBER,
     STRING,
     LABEL,
+    FUNCDECL,
     POINT,
     ARRAY,
     EXPRESSION,

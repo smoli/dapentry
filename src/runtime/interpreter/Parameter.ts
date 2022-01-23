@@ -63,3 +63,5 @@ export class Parameter {
         throw new Error("This param is a value and has no name");
     }
 }
+
+export class LabelParameter extends Parameter {}

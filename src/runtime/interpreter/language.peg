@@ -16,19 +16,21 @@
     NUMBER: 4,
     STRING: 5,
     LABEL: 6,
-    POINT: 7,
-    ARRAY: 8,
-    EXPRESSION: 9,
-    OPERATOR: 10,
-    ANNOTATION: 11,
-    NAME: 12,
-    OTHER: 13
+    FUNCDECL: 7,
+    POINT: 8,
+    ARRAY: 9,
+    EXPRESSION: 10,
+    OPERATOR: 11,
+    ANNOTATION: 12,
+    NAME: 13,
+    OTHER: 14
   }
 
 }
 
   Expression "Expression"
-      = exp:Label { return [exp] }
+      = exp:FuncDecl { return exp }
+      / exp:Label { return [exp] }
       / exp:(Operation/Comment/Annotations) _ anno:(Annotations)? _ Comment? {
       const r = []
       if (exp) r.push(...exp);
@@ -37,6 +39,11 @@
       }
 
 
+  FuncDecl "Function declatation"
+  	= label:Label _ arg1:ArgumentOrTuple args:(S ArgumentOrTuple)* {
+    	label.type = TokenTypes.FUNCDECL;
+    	return [label, arg1, ...args.map(a => a[1])]
+    }
 
 
   Eval
