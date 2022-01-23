@@ -218,4 +218,8 @@ export class AppModel extends JSONModelAccess {
 
         return code;
     }
+
+    public get scopeCodeLength(): number {
+        return Object.keys(this.get(AppModelKeys.data)).length;
+    }
 }

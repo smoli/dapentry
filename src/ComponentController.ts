@@ -95,7 +95,7 @@ export class ComponentController extends BaseComponentController {
         const index = this.getAppModel().getLastSelectedCodeLineIndex();
 
         if (index !== -1) {
-            this._interpreter.pauseAfter(index);
+            this._interpreter.pauseAfter(index + this.getAppModel().scopeCodeLength);
         } else {
             this._interpreter.clearPauseAfter();
         }
@@ -165,6 +165,7 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
+        return
         const code = `LINE Line1, $styles.default, (231, 358), (635, 361)
 POLY Polygon2, $styles.default, [ Line1@end ], 1
 DO f2
