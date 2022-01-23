@@ -19,6 +19,8 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 ## Next steps
 
+## Todos
+
 ### Drawing
 * [ ] Add a method getPointAtPercentage to GrObject
   * [ ] implement for rects
@@ -71,21 +73,21 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 * [x] Properly recognize when the user enters an expression when editing a statement
 * [x] Switch the complex array iteration to FOREACH in updateStatement
 * [x] Make DO/ENDDO work without an index register
-* [x] Operation Editor
+* Operation Editor
   * [x] Make at-access working
   * [x] DO
 * [x] Enable the user to wrap the selected code into a DO/ENDDO 2
 * [x] Delete Objects
-* [x] Add a method getPointAtPercentage to GrObject
+* Add a method getPointAtPercentage to GrObject
   * [x] implement for lines
   * [x] implement for circles
-* [ ] enable move and creation tools to use percentage points
+* enable move and creation tools to use percentage points
   * [x] create line on lines and circles
-* [ ] enable move and creation operations to use percentage points
+* enable move and creation operations to use percentage points
   * [x] move
   * [x] create line
 * [x] create operation to append a point to a polygon
-* [ ] Data Editor
+* Data Editor
   * [x] Allow for expression in fields
 
 
