@@ -102,7 +102,6 @@ class GfxMake extends GfxOperation {
         this._code = `COMPOSITE o
 LINE Line1, $styles.default, (362, 364), (832, 364)
 POLY Polygon2, $styles.default, [ Line1@end ], 1
-APP o.objects, Polygon2
 DO 5
 ROTATE Line1, 180  / 5
 EXTPOLY Polygon2, [ Line1@0.75]
@@ -110,6 +109,7 @@ ROTATE Line1, 180 / 5
 EXTPOLY Polygon2, [ Line1@end ]
 ENDDO
 FILL Polygon2, "#fce654", 0.1
+APP o.objects, Polygon2
 `;
 
         this._interpreter = new GfxInterpreter();

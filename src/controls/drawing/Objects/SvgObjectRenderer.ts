@@ -483,6 +483,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 case ObjectType.Rectangle:
                     this.renderRectangleBRep(g, object as GrRectangle);
                     break;
+
+                case ObjectType.Composite:
+                    this.renderCompositeBRep(g, object as GrCompositeObject);
+                    break;
                 /*
                                 case ObjectType.Ellipse:
                                     break;
@@ -603,6 +607,23 @@ export class SvgObjectRenderer extends ObjectRenderer {
             p2d(rectangle.topRight),
             p2d(rectangle.bottomRight),
             p2d(rectangle.bottomLeft), "Z"].join(" ");
+        c.attr("d", d);
+    }
+
+
+    protected renderCompositeBRep(g: Selection<any>, compositeObject: GrCompositeObject) {
+        let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
+        if (c.empty()) {
+            // Not yet drawing a bounding representation
+            c = g.select("g" + ToolClassSelectors.boundingBox).append("path")
+                .classed(ToolClasses.boundingBox, true);
+        }
+
+        const d = [
+            p2d(compositeObject.topLeft, "M"),
+            p2d(compositeObject.topRight),
+            p2d(compositeObject.bottomRight),
+            p2d(compositeObject.bottomLeft), "Z"].join(" ");
         c.attr("d", d);
     }
 
