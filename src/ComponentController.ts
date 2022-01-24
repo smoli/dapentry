@@ -61,6 +61,9 @@ export class ComponentController extends BaseComponentController {
 
     public async nextStep() {
 
+        // We prepend the code with code that loads the scope, so we can use expression in the data declarations
+        const offset = this.getAppModel().scopeCodeLength;
+
         if (this._interpreter.stopped) {
             return;
         }
@@ -68,7 +71,7 @@ export class ComponentController extends BaseComponentController {
         const segmentedCode = this.getAppModel().get("segmentedCode");
         await this._interpreter.next()
         let max = 100;
-        while ((max--) && !segmentedCode.find(c => c.index === this._interpreter.pc)) {
+        while ((max--) && !segmentedCode.find(c => c.index + offset === this._interpreter.pc)) {
 
             if (this._interpreter.stopped) {
                 break;
@@ -76,7 +79,7 @@ export class ComponentController extends BaseComponentController {
             await this._interpreter.next();
         }
 
-        this.getAppModel().setSelectedCodeLines([this._interpreter.pc]);
+        this.getAppModel().setSelectedCodeLines([this._interpreter.pc - offset]);
 
         this.updateDrawing();
     }
