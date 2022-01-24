@@ -1,14 +1,13 @@
 import {Operation} from "../Operation";
 import {LabelParameter, Parameter} from "../Parameter";
 import {FunctionStackFrame} from "../FunctionStackFrame";
-import {C} from "../../../controls/ControlHelper";
 
 export class Call extends Operation {
 
     private static callStack: Array<any> = [];
 
     private readonly _label: Parameter;
-    private readonly _receiver: Parameter;
+    protected readonly _receiver: Parameter;
     private readonly _args: Array<Parameter>;
 
     constructor(opcode, p1: Parameter, p2: Parameter, ...args: Array<Parameter>) {

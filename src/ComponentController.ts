@@ -165,15 +165,17 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-        return
-        const code = `LINE Line1, $styles.default, (231, 358), (635, 361)
-POLY Polygon2, $styles.default, [ Line1@end ], 1
-DO f2
-ROTATE Line1, 180 / f2
-EXTPOLY Polygon2, [ Line1@0.75 ]
-ROTATE Line1, 180 / f2
-EXTPOLY Polygon2, [ Line1@end ]
-ENDDO`;
+
+        const code = `MAKE sun1, $styles
+MAKE sun2, $styles
+MAKE sun3, $styles
+MAKE sun4, $styles
+MAKE sun5, $styles
+MAKE sun6, $styles
+MAKE sun7, $styles
+MAKE sun8, $styles
+MAKE sun9, $styles
+MAKE sun10, $styles`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }

@@ -11,9 +11,11 @@ import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxFill} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GrObject} from "./Geo/GrObject";
-import {GfxObjectList} from "./runtime/gfx/GfxObject";
+import {GfxComposite, GfxObjectList} from "./runtime/gfx/GfxObject";
 import {GfxScale} from "./runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
+import {Parameter} from "./runtime/interpreter/Parameter";
+import {GrCompositeObject} from "./Geo/GrCompositeObject";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -28,7 +30,7 @@ import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
 function makeGfxOperation(OpClass: (typeof Operation), objectCallBack: (GrObject) => void) {
     return class C extends OpClass {
         async execute(interpreter: Interpreter): Promise<any> {
-            const r = super.execute(interpreter);
+            const r = await super.execute(interpreter);
             objectCallBack((this as unknown as GfxOperation).target);
             return r;
         }
@@ -43,7 +45,6 @@ export class GfxInterpreter extends Interpreter {
 
     constructor() {
         super();
-
         this.addOperation("CIRCLE", makeGfxOperation(GfxCircle, this.objectCallBack.bind(this)));
         this.addOperation("RECT", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
         this.addOperation("LINE", makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
@@ -56,7 +57,10 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
         this.addOperation("FILL", makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
         this.addOperation("STROKE", makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));
+        this.addOperation("MAKE", makeGfxOperation(GfxMake, this.objectCallBack.bind(this)));
+
         this.addOperation("OBLIST", GfxObjectList);
+        this.addOperation("COMPOSITE", GfxComposite);
     }
 
     get code():Array<string> {
@@ -64,6 +68,11 @@ export class GfxInterpreter extends Interpreter {
     }
 
     protected objectCallBack(object:GrObject) {
+        if (object.uniqueName.startsWith("$")) {
+            return;
+        }
+
+
         this._objects[object.uniqueName] = object;
         this._lastObjectTouched = object;
     }
@@ -79,4 +88,50 @@ export class GfxInterpreter extends Interpreter {
     get lastObjectTouched():GrObject {
         return this._lastObjectTouched;
     }
+}
+
+class GfxMake extends GfxOperation {
+    private _interpreter: GfxInterpreter;
+    private _styles: Parameter;
+    private _code: string;
+
+
+    constructor(opcode, target: Parameter, styles: Parameter) {
+        super(opcode, target);
+        this._styles = styles;
+        this._code = `COMPOSITE o
+LINE Line1, $styles.default, (362, 364), (832, 364)
+APP o.objects, Line1
+POLY Polygon2, $styles.default, [ Line1@end ], 1
+APP o.objects, Polygon2
+DO 5
+ROTATE Line1, 180  / 5
+EXTPOLY Polygon2, [ Line1@0.75]
+ROTATE Line1, 180 / 5
+EXTPOLY Polygon2, [ Line1@end ]
+ENDDO
+FILL Polygon2, "#fce654", 0.1
+`;
+
+        this._interpreter = new GfxInterpreter();
+        this._interpreter.parse(this._code);
+    }
+
+    get styles(): any {
+        return this._styles.finalized(this.closure);
+    }
+
+    async execute(): Promise<any> {
+        this._interpreter.clearObjects();
+        await this._interpreter.run({
+            "$styles": this.styles
+        });
+
+        const resultObject:GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;
+
+        resultObject.updateName(this._target.name);
+
+        this.target = resultObject;
+    }
+
 }

@@ -20,6 +20,7 @@ import {ScaleTool} from "./Tools/ScaleTool";
 import {Point2D} from "../../Geo/Point2D";
 import {Tool} from "./Tools/Tool";
 import {SelectTool} from "./Tools/SelectTool";
+import {GrCompositeObject} from "../../Geo/GrCompositeObject";
 
 
 enum ToolNames {
@@ -170,7 +171,7 @@ export default class Drawing extends Control {
     private _renderAll(): void {
         this._objectRenderer.reset();
         this._objects.forEach(obj => {
-            if (obj instanceof GrObjectList) {
+            if (obj instanceof GrObjectList || obj instanceof GrCompositeObject) {
                 obj.objects.forEach(obj => {
                     this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
                 })

@@ -2,6 +2,7 @@ import {Parameter} from "../interpreter/Parameter";
 import {Style} from "../../controls/drawing/Objects/StyleManager";
 import {GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../Geo/GrObjectList";
+import {GrCompositeObject} from "../../Geo/GrCompositeObject";
 
 export class GfxObject extends GfxOperation {
 
@@ -32,5 +33,17 @@ export class GfxObjectList extends GfxOperation {
 
     async execute(): Promise<any> {
         this.target = new GrObjectList(this.targetName)
+    }
+}
+
+
+export class GfxComposite extends GfxOperation {
+
+    constructor(opcode:string, target: Parameter) {
+        super(opcode, target);
+    }
+
+    async execute(): Promise<any> {
+        this.target = new GrCompositeObject(this.targetName)
     }
 }

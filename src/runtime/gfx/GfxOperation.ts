@@ -49,6 +49,7 @@ export class GfxOperation extends Operation {
 
 }
 
+
 /**
  * Returns a string that represents the type info for the given parameters
  *

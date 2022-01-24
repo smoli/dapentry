@@ -62,7 +62,6 @@ export class Interpreter {
     private _pauseAtAfterIterations: number;
     private _currentHaltIterations: number;
 
-
     constructor() {
         this._operationFactory = defaultOperationFactory();
         this._currentFrame = this._globals;
