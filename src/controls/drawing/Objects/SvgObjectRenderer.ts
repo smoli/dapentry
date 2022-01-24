@@ -234,7 +234,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 });
             }
 
-            // Slots to better control that handles are always painted on top of handles
+            // Slots to better control that handles are always painted on top of objects
             svgGroup.append("g").classed(ToolClasses.boundingBox, true);
             svgGroup.append("g").classed(ToolClasses.handle, true);
         }
@@ -651,7 +651,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public updateHandle(object: GrObject, id: string, p: Point2D) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.select("g" + ToolClassSelectors.handle).select(`#${object.uniqueName}-handle-${id}`)
+            g.select(`#${object.uniqueName}-handle-${id}`)
                 .attr("cx", p.x)
                 .attr("cy", p.y)
         }
@@ -661,7 +661,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             this._objectInfo[object.uniqueName].handles.push(p);
-            const handle = g.select("g" + ToolClassSelectors.handle).append("circle")
+            const handle = g.append("circle")
                 .attr("cx", p.x)
                 .attr("cy", p.y)
                 .attr("r", HANDLE_RADIUS)
@@ -678,7 +678,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public removeAllHandles(object): void {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.select("g" + ToolClassSelectors.handle).selectAll(ToolClassSelectors.handle).remove();
+            g.selectAll(ToolClassSelectors.handle).remove();
         }
     }
 
