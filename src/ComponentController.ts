@@ -165,17 +165,7 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-
-        const code = `MAKE sun1, $styles
-MAKE sun2, $styles
-MAKE sun3, $styles
-MAKE sun4, $styles
-MAKE sun5, $styles
-MAKE sun6, $styles
-MAKE sun7, $styles
-MAKE sun8, $styles
-MAKE sun9, $styles
-MAKE sun10, $styles`;
+        const code = `MAKE sun1, $styles`;
 
         this.addOperations(code.split("\n").filter(l => !!l));
     }

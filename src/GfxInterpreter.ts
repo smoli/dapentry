@@ -101,7 +101,6 @@ class GfxMake extends GfxOperation {
         this._styles = styles;
         this._code = `COMPOSITE o
 LINE Line1, $styles.default, (362, 364), (832, 364)
-APP o.objects, Line1
 POLY Polygon2, $styles.default, [ Line1@end ], 1
 APP o.objects, Polygon2
 DO 5

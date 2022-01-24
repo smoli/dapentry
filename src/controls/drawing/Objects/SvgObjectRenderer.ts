@@ -94,12 +94,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     render(object: GrObject, selected: boolean) {
+        this._renderedObjects.push(object);
         return this._render(object, selected);
     }
 
     _render(object: GrObject, selected: boolean, parent: Selection<any> = null) {
 
-        this._renderedObjects.push(object);
 
         switch (object.type) {
             case ObjectType.Circle:
@@ -267,7 +267,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         if (g) {
             comp.objects.forEach(child => {
-                this.render(child, false);
+                this._render(child, false, g.select(ToolClassSelectors.object));
             })
         }
     }

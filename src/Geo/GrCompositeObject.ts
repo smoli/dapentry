@@ -102,6 +102,12 @@ export class GrCompositeObject extends GrObject {
         }
     }
 
+
+    movePOI(poi: POI, byVector: Point2D) {
+        this._objects.forEach(o => o.movePOI(POI.center, byVector));
+        super.movePOI(POI.center, byVector);
+    }
+
     at(where: WHERE_VALUE): Point2D {
         return null;
     }
