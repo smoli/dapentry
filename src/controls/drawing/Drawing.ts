@@ -288,7 +288,14 @@ export default class Drawing extends Control {
         }
     }
 
-    private _onObjectClick(object: GrObject) {
+    private _onObjectClick(selObject: GrObject) {
+
+        let object = selObject;
+
+        if (object.parent && object.parent instanceof  GrCompositeObject) {
+            object = object.parent;
+        }
+
         if (this._toolManager.isSelected(object)) {
             this._toolManager.deselectObject(object);
             this._objectRenderer.removeBoundingRepresentation(object);

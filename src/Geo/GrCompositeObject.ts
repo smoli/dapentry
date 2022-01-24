@@ -4,7 +4,11 @@ import {Point2D} from "./Point2D";
 
 class ObjectArray extends Array<GrObject> {
     private _baseName: string;
+    private _parent: GrCompositeObject;
 
+    set parent(value: GrCompositeObject) {
+        this._parent = value;
+    }
     
     set baseName(value:string) {
         this._baseName = value;
@@ -18,6 +22,7 @@ class ObjectArray extends Array<GrObject> {
         this.baseName = baseName;
 
         this.forEach((o, i) => {
+            o.setParent(this._parent);
             const u = o.uniqueName.replace(r, baseName);
             o.uniqueName = u;
         })
@@ -48,6 +53,7 @@ export class GrCompositeObject extends GrObject {
         super(ObjectType.List, name, 0, 0);
         this._objects = new ObjectArray();
         this._objects.baseName = this.uniqueName;
+        this._objects.parent = this;
     }
 
     public updateName(baseName: string) {
