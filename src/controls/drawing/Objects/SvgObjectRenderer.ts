@@ -1,6 +1,6 @@
 // @ts-ignore
 import d3 from "sap/ui/thirdparty/d3";
-import {GrObject, ObjectType} from "../../../Geo/GrObject";
+import {GrObject, ObjectType, POIPurpose} from "../../../Geo/GrObject";
 import {
     HandleMouseCallBack,
     InfoHandle,
@@ -17,6 +17,7 @@ import {GrLine} from "../../../Geo/GrLine";
 import {GrBezier, GrPolygon, GrPolygonBase, GrQuadratic} from "../../../Geo/GrPolygon";
 import {Point2D} from "../../../Geo/Point2D";
 import {GrCompositeObject} from "../../../Geo/GrCompositeObject";
+import {GrObjectList} from "../../../Geo/GrObjectList";
 
 enum ToolClasses {
     object = "grObject",
@@ -134,6 +135,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
             case ObjectType.Composite:
                 this._renderComposite(this._objectLayer, object as GrCompositeObject, parent, enableMouseEvents);
 
+            case ObjectType.List:
+                this._renderList(this._objectLayer, object as GrObjectList, parent, enableMouseEvents);
+
         }
 
         if (selected && object.type !== ObjectType.List) {
@@ -168,8 +172,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
             svgGroup = this._snappingLayer.append("g").attr("id", object.id + "-info")
         }
 
-        const poiIds = Object.keys(object.pointsOfInterest);
-        Object.values(object.pointsOfInterest)
+        const poiIds = Object.keys(object.pointsOfInterest(POIPurpose.SNAPPING));
+        Object.values(object.pointsOfInterest(POIPurpose.SNAPPING))
             .forEach((poi, i) => {
                 const c = svgGroup.append("circle")
                     .attr("cx", poi.x)
@@ -268,6 +272,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
         if (g) {
             comp.objects.forEach(child => {
+                this._render(child, false, g.select(ToolClassSelectors.object), false);
+            })
+        }
+    }
+
+    private _renderList(layer: Selection<any>, list: GrObjectList, parent: Selection<any>, enableMouseEvents: boolean) {
+        const g = this.getObjectOrCreate(layer, list, "g", parent, enableMouseEvents);
+
+        if (g) {
+            list.objects.forEach(child => {
                 this._render(child, false, g.select(ToolClassSelectors.object), false);
             })
         }

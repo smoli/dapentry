@@ -71,14 +71,14 @@ export class DrawLine extends Tool {
         switch (this._state.state.id) {
             case States.P1:
                 this._line = GrLine.create(null, eventData.x, eventData.y, eventData.x, eventData.y);
-                this._renderer.renderLine(RenderLayer.Interaction, this._line);
+                this._renderer.renderLine(RenderLayer.Interaction, this._line, false);
                 this._firstSnapInfo = snapInfo;
                 break;
 
             case States.Drag:
                 this._line.x2 = eventData.x;
                 this._line.y2 = eventData.y
-                this._renderer.renderLine(RenderLayer.Interaction, this._line);
+                this._renderer.renderLine(RenderLayer.Interaction, this._line, false);
                 break;
 
             case States.Done:

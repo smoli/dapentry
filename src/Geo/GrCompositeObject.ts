@@ -1,4 +1,4 @@
-import {BoundingBox, GrObject, ObjectType, POI, POIMap} from "./GrObject";
+import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {Point2D} from "./Point2D";
 
@@ -152,7 +152,7 @@ export class GrCompositeObject extends GrObject {
     }
 
 
-    get pointsOfInterest(): POIMap {
+    pointsOfInterest(purpose:POIPurpose): POIMap {
         return {
             ...super.pointsOfInterest,
             [POI.topLeft]: this.topLeft,
@@ -170,7 +170,7 @@ export class GrCompositeObject extends GrObject {
 
     at(where: WHERE_VALUE): Point2D {
         if (typeof where === "string") {
-            return this.pointsOfInterest[POI[where]];
+            return this.pointsOfInterest(POIPurpose.MANIPULATION)[POI[where]];
         }
 
         return null;

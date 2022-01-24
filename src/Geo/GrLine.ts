@@ -1,4 +1,4 @@
-import {GrObject, ObjectType, POI, POIMap} from "./GrObject";
+import {GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {Line2D} from "./Line2D";
@@ -107,7 +107,7 @@ export class GrLine extends GrObject {
 
     }
 
-    get pointsOfInterest(): POIMap {
+    pointsOfInterest(purpose:POIPurpose): POIMap {
         return {
             [POI.start]: this.start,
             [POI.end]: this.end,

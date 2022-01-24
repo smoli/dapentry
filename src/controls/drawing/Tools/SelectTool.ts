@@ -32,12 +32,6 @@ export class SelectTool extends Tool {
         if (!this._object) {
             return;
         }
-        // const poi: POIMap = this._object.pointsOfInterest;
-        //
-        // Object.keys(poi)
-        //     .forEach(poiId => {
-        //         this._renderer.renderHandle(this._object, poiId, poi[poiId], null, Number(poiId));
-        //     });
 
         this._renderer.renderBoundingRepresentation(this._object);
     }

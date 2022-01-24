@@ -1,6 +1,6 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {GrObject, POI} from "../../Geo/GrObject";
+import {GrObject, POI, POIPurpose} from "../../Geo/GrObject";
 import {GrObjectList} from "../../Geo/GrObjectList";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {ArrayParameter} from "../interpreter/types/ArrayParameter";
@@ -43,7 +43,7 @@ export class GfxOperation extends Operation {
             return obj.getPointAtPercentage(poi);
         } else {
             const p = POI[poi]
-            return obj.pointsOfInterest[p];
+            return obj.pointsOfInterest(POIPurpose.MANIPULATION)[p];
         }
     }
 

@@ -42,12 +42,12 @@ export class DrawCircle extends Tool {
         switch (this._state.state.id) {
             case States.CenterPoint:
                 this._circle = GrCircle.create(null, eventData.x, eventData.y, 0);
-                this._renderer.renderCircle(RenderLayer.Interaction, this._circle);
+                this._renderer.renderCircle(RenderLayer.Interaction, this._circle, false);
                 break;
 
             case States.DragRadius:
                 this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
-                this._renderer.renderCircle(RenderLayer.Interaction, this._circle);
+                this._renderer.renderCircle(RenderLayer.Interaction, this._circle, false);
                 break;
 
             case States.Done:

@@ -1,7 +1,7 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
+import {GrObject, POI, POIMap, POIPurpose} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
 import {rad2deg} from "../../../Geo/GeoMath";
 import {Point2D} from "../../../Geo/Point2D";
@@ -58,7 +58,7 @@ export class RotateTool extends Tool {
             return;
         }
         this._finalAngle = 0;
-        const poi: POIMap = this._object.pointsOfInterest;
+        const poi: POIMap = this._object.pointsOfInterest(POIPurpose.MANIPULATION);
         Object.keys(poi)
             .forEach(poiId => {
                 console.log(POI[poiId], poi[poiId])
@@ -71,7 +71,7 @@ export class RotateTool extends Tool {
     protected _onHandleEvent(object: GrObject, eventData: InteractionEventData, poiId): void {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
-            const poi = this._object.pointsOfInterest[poiId];
+            const poi = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[poiId];
             this._rotationPoi = poiId;
 
             this._rotationObject = this._object.createProxy();
@@ -134,7 +134,7 @@ export class RotateTool extends Tool {
 
                     this._renderer.render(this._rotationObject, true);
 
-                    const poi: POIMap = this._rotationObject.pointsOfInterest;
+                    const poi: POIMap = this._rotationObject.pointsOfInterest(POIPurpose.MANIPULATION);
 
                     Object.keys(poi)
                         .forEach(poiId => {

@@ -41,6 +41,11 @@ export enum POI {
     P51,P52, P53, P54, P55, P56, P57, P58, P59, P60
 }
 
+export enum POIPurpose {
+    MANIPULATION,
+    SNAPPING
+}
+
 export type POIMap = { [key in POI]?: Point2D };
 
 let objCounter = 1;
@@ -315,13 +320,13 @@ export abstract class GrObject {
      * Get "points of interest" for the object. These can be
      * used for snapping and other things.
      */
-    get pointsOfInterest(): POIMap {
+    pointsOfInterest(purpose:POIPurpose): POIMap {
         return {
-            [POI.center]: this.center,
-            [POI.top]: this.top,
-            [POI.bottom]: this.bottom,
-            [POI.left]: this.left,
-            [POI.right]: this.right
+            [POI.center]: this.center.copy,
+            [POI.top]: this.top.copy,
+            [POI.bottom]: this.bottom.copy,
+            [POI.left]: this.left.copy,
+            [POI.right]: this.right.copy
         }
     }
 
@@ -357,6 +362,7 @@ export abstract class GrObject {
      * @param byVector        The vector to move the POI by
      */
     public movePOI(poi: POI, byVector: Point2D): void {
+        console.log("Moving", this.uniqueName);
         this._center.add(byVector);
     }
 
@@ -396,7 +402,7 @@ export abstract class GrObject {
         if (typeof where === "number") {
             return this.getPointAtPercentage(where);
         } else if (typeof where === "string") {
-            return this.pointsOfInterest[POI[where]];
+            return this.pointsOfInterest(POIPurpose.MANIPULATION)[POI[where]];
         } else {
             throw new Error(`Unknown location ${where} on ${ObjectType[this.type]}`);
         }

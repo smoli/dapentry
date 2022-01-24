@@ -48,7 +48,7 @@ export class DrawRectangle extends Tool {
                 this._x1 = eventData.x
                 this._y1 = eventData.y
                 this._rect = GrRectangle.create(null, eventData.x, eventData.y, 0, 0);
-                this._renderer.renderRectangle(RenderLayer.Interaction, this._rect);
+                this._renderer.renderRectangle(RenderLayer.Interaction, this._rect, false);
                 break;
 
             case States.Done: // pass through
@@ -58,7 +58,7 @@ export class DrawRectangle extends Tool {
                 this._rect.y = calcRect.y1 + calcRect.h / 2;
                 this._rect.width = calcRect.w;
                 this._rect.height = calcRect.h;
-                this._renderer.renderRectangle(RenderLayer.Interaction, this._rect);
+                this._renderer.renderRectangle(RenderLayer.Interaction, this._rect, false);
                 break;
 
         }

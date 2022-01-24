@@ -1,7 +1,7 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
+import {GrObject, POI, POIMap, POIPurpose} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
 import {Point2D} from "../../../Geo/Point2D";
 
@@ -46,7 +46,7 @@ export class MoveTool extends Tool {
         if (!this._object) {
             return;
         }
-        const poi: POIMap = this._object.pointsOfInterest;
+        const poi: POIMap = this._object.pointsOfInterest(POIPurpose.MANIPULATION);
 
         Object.keys(poi)
             .forEach(poiId => {
@@ -63,7 +63,7 @@ export class MoveTool extends Tool {
             this._movingObject = object;
             this._movingPOI = poiId;
 
-            const poi = object.pointsOfInterest[poiId];
+            const poi = object.pointsOfInterest(POIPurpose.MANIPULATION)[poiId];
             this._ox = poi.x;
             this._oy = poi.y;
 
@@ -96,12 +96,11 @@ export class MoveTool extends Tool {
 
         this._lastSnapInfo = this.tryToPOISnap(eventData);
         eventData = this._lastSnapInfo.event;
-
         let dx;
         let dy;
         if (this._object && this._movingPOI !== null) {
-            dx = eventData.x - this._object.pointsOfInterest[this._movingPOI].x;
-            dy = eventData.y - this._object.pointsOfInterest[this._movingPOI].y;
+            dx = eventData.x - this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._movingPOI].x;
+            dy = eventData.y - this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._movingPOI].y;
         } else {
             return;
         }
@@ -123,7 +122,7 @@ export class MoveTool extends Tool {
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._movingObject.movePOI(this._movingPOI, new Point2D(dx, dy))
                     this._renderer.render(this._object, true);
-                    const poi: POIMap = this._object.pointsOfInterest;
+                    const poi: POIMap = this._object.pointsOfInterest(POIPurpose.MANIPULATION);
 
                     Object.keys(poi)
                         .forEach(poiId => {
@@ -137,7 +136,7 @@ export class MoveTool extends Tool {
     }
 
     public get result(): any {
-        const poi = this._object.pointsOfInterest[this._movingPOI];
+        const poi = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._movingPOI];
         const dx = poi.x - this._ox;
         const dy = poi.y - this._oy;
 

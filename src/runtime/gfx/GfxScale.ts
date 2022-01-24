@@ -1,7 +1,7 @@
 import {Parameter} from "../interpreter/Parameter";
 import {GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../Geo/GrObjectList";
-import {POI} from "../../Geo/GrObject";
+import {POI, POIPurpose} from "../../Geo/GrObject";
 import {Point2D} from "../../Geo/Point2D";
 
 export class GfxScale extends GfxOperation {
@@ -27,7 +27,7 @@ export class GfxScale extends GfxOperation {
     }
 
     get pivot(): Point2D {
-        return this.target.pointsOfInterest[POI[this._pivot.finalized(this.closure)]]
+        return this.target.pointsOfInterest(POIPurpose.MANIPULATION)[POI[this._pivot.finalized(this.closure)]]
     }
 
     async execute(): Promise<any> {

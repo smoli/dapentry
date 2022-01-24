@@ -1,4 +1,4 @@
-import {GrObject, ObjectType, POIMap} from "./GrObject";
+import {GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {Point2D} from "./Point2D";
 
@@ -55,11 +55,28 @@ export class GrObjectList extends GrObject {
         object.setParent(this);
     }
 
-    get pointsOfInterest(): POIMap {
-        if (this._objects.last) {
-            return this._objects.last.pointsOfInterest;
+    pointsOfInterest(purpose: POIPurpose): POIMap {
+
+        if (purpose === POIPurpose.MANIPULATION) {
+            if (this._objects.last) {
+                return this._objects.last.pointsOfInterest(POIPurpose.MANIPULATION);
+            }
+        } else if (purpose === POIPurpose.SNAPPING) {
+            if (this._objects.length === 1) {
+                return this._objects.last.pointsOfInterest(POIPurpose.SNAPPING);
+            } else if (this._objects.length > 1) {
+                return this._objects[this._objects.length - 2].pointsOfInterest(POIPurpose.SNAPPING)
+            }
+        } else {
+            return {};
         }
-        return {};
+
+    }
+
+    movePOI(poi: POI, byVector: Point2D) {
+        if (this._objects.last) {
+            return this._objects.last.movePOI(poi, byVector);
+        }
     }
 
     at(where: WHERE_VALUE): Point2D {

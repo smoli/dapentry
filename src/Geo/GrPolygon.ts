@@ -1,4 +1,4 @@
-import {BoundingBox, GrObject, ObjectType, POI, POIMap} from "./GrObject";
+import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
 
@@ -95,7 +95,7 @@ export class GrPolygonBase extends GrObject {
         this._points.forEach(p => p.rotate(a, this.center));
     }
 
-    get pointsOfInterest(): POIMap {
+    pointsOfInterest(purpose:POIPurpose): POIMap {
         const r = {};
 
         this._points.forEach((p, i) => {

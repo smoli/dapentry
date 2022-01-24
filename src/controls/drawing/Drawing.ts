@@ -81,6 +81,7 @@ export default class Drawing extends Control {
 
     // The following three lines were generated and should remain as-is to make TypeScript aware of the constructor signatures
     private _otherObjectIndex: number = -1;
+
     constructor(idOrSettings?: string | $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings);
     constructor(id?: string, settings?: $DrawingSettings) {
@@ -171,14 +172,7 @@ export default class Drawing extends Control {
     private _renderAll(): void {
         this._objectRenderer.reset();
         this._objects.forEach(obj => {
-            if (obj instanceof GrObjectList) {
-                obj.objects.forEach(obj => {
-                    this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
-                })
-            } else {
-                this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
-            }
-
+            this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
         });
     }
 

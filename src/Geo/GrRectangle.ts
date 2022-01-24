@@ -1,4 +1,4 @@
-import {BoundingBox, GrObject, ObjectType, POI, POIMap} from "./GrObject";
+import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {Point2D} from "./Point2D";
 
 export class GrRectangle extends GrObject {
@@ -67,13 +67,11 @@ export class GrRectangle extends GrObject {
     scale(fx: number, fy: number, pivot: Point2D = null) {
         this._width *= fx;
         this._height *= fy;
-
-
     }
 
-    get pointsOfInterest(): POIMap {
+    pointsOfInterest(purpose:POIPurpose): POIMap {
         return {
-            ...super.pointsOfInterest,
+            ...super.pointsOfInterest(purpose),
             [POI.topLeft]: this.topLeft,
             [POI.topRight]: this.topRight,
             [POI.bottomLeft]: this.bottomLeft,

@@ -1,8 +1,9 @@
 import {state, StateMachine} from "../../../runtime/tools/StateMachine";
 import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI} from "../../../Geo/GrObject";
+import {GrObject, POI, POIPurpose} from "../../../Geo/GrObject";
 import {Point2D} from "../../../Geo/Point2D";
+import {GrObjectList} from "../../../Geo/GrObjectList";
 
 export interface SnapInfo {
     object: GrObject,
@@ -128,16 +129,19 @@ export abstract class Tool {
 
         this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
             if (hit) {
-                console.log("snap")
                 this._snappingObject = object;
                 this._snappingPOI = poiId;
-                this._snapPoint = this._snappingObject.pointsOfInterest[this._snappingPOI]
+                console.log("snap", this._snappingObject, this._snappingPOI )
+                this._snapPoint = this._snappingObject.pointsOfInterest(POIPurpose.SNAPPING)[this._snappingPOI]
                 handle = this._renderer.renderInfoText(this._snapPoint, POI[poiId]);
             } else {
                 this._snapPoint = this._snappingPOI = this._snappingObject = null;
                 this._renderer.removeInfo(handle);
             }
-        }, objectsToExclude);
+            // Even if the tool want to exclude an object we will include it, if it is a List with more
+            // than one entry, because then manipulation and snapping is actually done on two different
+            // objects of that list.
+        }, objectsToExclude.filter(o => (o instanceof GrObjectList && o.objects.length < 2) || !(o instanceof GrObjectList)));
     }
 
     protected disablePOISnapping() {

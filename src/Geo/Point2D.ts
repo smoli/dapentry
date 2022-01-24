@@ -1,7 +1,7 @@
 import {Line2D} from "./Line2D";
 import {eq} from "./GeoMath";
-
 export class Point2D {
+
     public x: number;
     public y: number;
 

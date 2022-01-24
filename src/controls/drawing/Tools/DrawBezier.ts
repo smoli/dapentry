@@ -14,7 +14,6 @@ enum States {
 export class DrawBezier extends Tool {
 
     private _poly: GrPolygonBase;
-    protected _objectClass: any = GrPolygon;
     private _closed: boolean;
     protected _renderMethod: any;
     protected _opCode: string;

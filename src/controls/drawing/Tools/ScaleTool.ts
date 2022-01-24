@@ -1,7 +1,7 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
+import {GrObject, POI, POIMap, POIPurpose} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
 import {Point2D} from "../../../Geo/Point2D";
 import {Line2D} from "../../../Geo/Line2D";
@@ -50,7 +50,7 @@ export class ScaleTool extends Tool {
         if (!this._object) {
             return;
         }
-        const poi: POIMap = this._object.pointsOfInterest;
+        const poi: POIMap = this._object.pointsOfInterest(POIPurpose.MANIPULATION);
 
         Object.keys(poi)
             .forEach(poiId => {
@@ -67,8 +67,8 @@ export class ScaleTool extends Tool {
             this._scalingObject = object.createProxy();
             this._scalingPOI = poiId;
             this._pivotPOI = object.getOppositePoi(this._scalingPOI);
-            this._pivot = this._scalingObject.pointsOfInterest[this._pivotPOI];
-            this._op = this._scalingObject.pointsOfInterest[this._scalingPOI].copy.sub(this._scalingObject.center);
+            this._pivot = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._pivotPOI];
+            this._op = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI].copy.sub(this._scalingObject.center);
             this._finalX = 1;
             this._finalY = 1;
         }
@@ -91,11 +91,11 @@ export class ScaleTool extends Tool {
     }
 
     protected _scale(dx, dy) {
-        let np = this._scalingObject.pointsOfInterest[this._scalingPOI];
+        let np = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI];
 
         const ol = this._scalingObject.mapPointToLocal(np);
 
-        console.log(this._scalingObject.pointsOfInterest[this._scalingPOI], np, ol)
+        console.log(this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI], np, ol)
 
         const mp = np.copy;
         mp.x += dx;
@@ -125,7 +125,7 @@ export class ScaleTool extends Tool {
         let dx;
         let dy;
         if (this._object && this._scalingPOI !== null) {
-            const thePOI = this._scalingObject.pointsOfInterest[this._scalingPOI].copy;
+            const thePOI = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI].copy;
             dx = eventData.x - thePOI.x;
             dy = eventData.y - thePOI.y;
         } else {
@@ -144,9 +144,9 @@ export class ScaleTool extends Tool {
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._scale(dx, dy);
-                    let np = this._scalingObject.pointsOfInterest[this._scalingPOI].copy;
+                    let np = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI].copy;
                     this._renderer.render(this._scalingObject, true);
-                    const poi: POIMap = this._scalingObject.pointsOfInterest;
+                    const poi: POIMap = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION);
                     Object.keys(poi)
                         .forEach(poiId => {
                             this._renderer.updateHandle(this._scalingObject, poiId, poi[poiId]);
