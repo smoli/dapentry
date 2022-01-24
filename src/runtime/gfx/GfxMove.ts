@@ -75,9 +75,13 @@ export class GfxMove extends GfxOperation {
         let target = this.target;
         let reference = this.reference;
 
-        if (target === reference && target instanceof GrObjectList) {
-            reference = target.objects[target.objects.length - 2];
-            target = target.objects[target.objects.length - 1];
+        if (target === reference) {
+            if (target instanceof GrObjectList) {
+                reference = target.objects[target.objects.length - 2];
+                target = target.objects[target.objects.length - 1];
+            } else {
+                return new Point2D(0, 0);
+            }
         }
 
         const from = target.at(this._targetPoint);
