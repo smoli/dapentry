@@ -11,6 +11,11 @@ http://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/
 
 then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
+## How does it work?
+
+It uses an interpreted language that resembles something like assembly to draw pictures. User interactions
+creates the program in the background. [See here](doc/opcodes.md) for more details on the language and the interpreter.
+
 ## Bugs
 * [ ] Expressions are not displayed in steps and operation editor
 * [ ] Fix scaling of rotated objects
@@ -60,6 +65,13 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 ### Library
 * [ ] Library
+
+### Publishing
+* [ ] Create a published version of the drawing
+  * [ ] Static SVG
+  * [ ] Static Bitmap
+  * [ ] Dynamic component to embed on a website
+    * [ ] Generate JS-Code for the program
 
 
 

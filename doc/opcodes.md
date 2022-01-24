@@ -1,7 +1,9 @@
-Opcodes
-=======
+The language
+============
 
 ## General
+
+It is kind of an interpreted assembly language with tailor made features for the creation of 2D graphics. 
 
 ### Opcodes
 
@@ -14,6 +16,46 @@ Number and string literals are supported. Strings use double quotes.
 ### Registers
 
 Are arbitrary names. If it's not a number and not a string it's a register.
+
+#### Components of register
+
+If a register stores an object, it's components can be accessed using the `.`-operator. This works for 
+arrays as well
+
+```
+    LOAD r1, [1, 2, 3, 4]
+    LOAD r2, r1.0           # Get's the first element
+    LOAD r3, r1.length
+```
+
+### At-Access
+
+If the value of a register implements a method called `at` this can be called.
+
+The at-method can should receive a string or a number and return a value.
+
+```
+    LOAD r1, Circle1@0.34
+    LOAD r1, Circle1@center
+    LOAD r2, 0.3
+    LOAD r1, Circle1@(r2)
+```
+
+This is mostly used on 2D objects to access specific points or make a parametrized access on the outline:
+
+```typescript
+
+    function at(where) {
+        if (typeof where === "number") {
+            return this.getPointAtPercentage(where);
+        } else if (typeof where === "string") {
+            return this.pointsOfInterest[POI[where]];
+        } else {
+            throw new Error(`Unknown location ${where} on ${ObjectType[this.type]}`);
+        }
+    }
+
+```
 
 ## Labels
 
@@ -44,7 +86,19 @@ Using labels and `CALL` and `RET` you can make function calls:
     END:
 ```
 
-Function calls do support update after execution.
+### Arguments
+
+Function declaration and calls can use arguments to pass data to the function.
+
+```
+    LOAD r1, 100
+        CALL r2, SUBBER:, r1, 1
+        HALT
+                    
+    SUBBER: a, b      
+        SUB a, b
+        RET a       
+```
 
 ### Recursion
 
@@ -164,6 +218,29 @@ is store in `arg1`. If only two are given then the result of `arg1 op arg2` is s
 | EXP    | target op1 \[op2\] | calculate op1 ^ op2              |
 | INC    | target             | increase target by one           |
 | DEC    | target             | decrease target by one           |
+
+
+### Graphics
+
+For drawing and manipulating drawings there are special Opcodes
+
+| Opcode  | Arguments | Description                               |
+|---------|-----------|-------------------------------------------|
+| CIRCLE  |           | Create a circle                           |
+| RECT    |           | Create a rectangle                        |
+| LINE    |           | Create a line                             |
+| POLY    |           | Create/start a polygon                    |
+| EXTPOLY |           | Add points to a polygon                   |
+| QUAD    |           | Create a quadratic bezier (experiemental) |
+| BEZIER  |           | Create a bezier (experiemental)           |
+| MOVE    |           | Move an object                            |
+| ROTATE  |           | Rotate an object                          |
+| SCALE   |           | Scale an object                           |
+| FILL    |           | Define the fill color                     |
+| STROKE  |           | Define the outline width                  |
+| MAKE    |           | Make an instance                          |
+
+
 
 
 ### Expressions
