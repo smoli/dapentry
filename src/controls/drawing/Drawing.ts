@@ -171,7 +171,7 @@ export default class Drawing extends Control {
     private _renderAll(): void {
         this._objectRenderer.reset();
         this._objects.forEach(obj => {
-            if (obj instanceof GrObjectList || obj instanceof GrCompositeObject) {
+            if (obj instanceof GrObjectList) {
                 obj.objects.forEach(obj => {
                     this._objectRenderer.render(obj as GrObject, this._toolManager.isSelected(obj));
                 })
@@ -290,11 +290,7 @@ export default class Drawing extends Control {
 
     private _onObjectClick(selObject: GrObject) {
 
-        let object = selObject;
-
-        if (object.parent && object.parent instanceof  GrCompositeObject) {
-            object = object.parent;
-        }
+        let object = selObject.selectionDelegate;
 
         if (this._toolManager.isSelected(object)) {
             this._toolManager.deselectObject(object);

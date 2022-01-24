@@ -15,8 +15,8 @@ import {GrCircle} from "../../../Geo/GrCircle";
 import {GrRectangle} from "../../../Geo/GrRectangle";
 import {GrLine} from "../../../Geo/GrLine";
 import {GrBezier, GrPolygon, GrPolygonBase, GrQuadratic} from "../../../Geo/GrPolygon";
-import {GrObjectList} from "../../../Geo/GrObjectList";
 import {Point2D} from "../../../Geo/Point2D";
+import {GrCompositeObject} from "../../../Geo/GrCompositeObject";
 
 enum ToolClasses {
     object = "grObject",
@@ -94,16 +94,20 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     render(object: GrObject, selected: boolean) {
+        return this._render(object, selected);
+    }
+
+    _render(object: GrObject, selected: boolean, parent: Selection<any> = null) {
 
         this._renderedObjects.push(object);
 
         switch (object.type) {
             case ObjectType.Circle:
-                this._renderCircle(this._objectLayer, object as GrCircle);
+                this._renderCircle(this._objectLayer, object as GrCircle, parent);
                 break;
 
             case ObjectType.Rectangle:
-                this._renderRectangle(this._objectLayer, object as GrRectangle);
+                this._renderRectangle(this._objectLayer, object as GrRectangle, parent);
                 break;
 
             case ObjectType.Ellipse:
@@ -112,20 +116,23 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 break;
 
             case ObjectType.Line:
-                this._renderLine(this._objectLayer, object as GrLine);
+                this._renderLine(this._objectLayer, object as GrLine, parent);
                 break;
 
             case ObjectType.Polygon:
-                this._renderPolygon(this._objectLayer, object as GrPolygon);
+                this._renderPolygon(this._objectLayer, object as GrPolygon, parent);
                 break;
 
             case ObjectType.Quadratic:
-                this._renderQuadratic(this._objectLayer, object as GrQuadratic);
+                this._renderQuadratic(this._objectLayer, object as GrQuadratic, parent);
                 break;
 
             case ObjectType.Bezier:
-                this._renderBezier(this._objectLayer, object as GrBezier);
+                this._renderBezier(this._objectLayer, object as GrBezier, parent);
                 break;
+
+            case ObjectType.Composite:
+                this._renderComposite(this._objectLayer, object as GrCompositeObject, parent);
 
         }
 
@@ -199,10 +206,14 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param svgTag
      * @protected
      */
-    protected getObjectOrCreate(layer: Selection<any>, object: GrObject, svgTag: string): Selection<any> {
-        let svgGroup = layer.select("#" + object.id);
+    protected getObjectOrCreate(layer: Selection<any>, object: GrObject, svgTag: string, parent: Selection<any>): Selection<any> {
+        let svgGroup;
+        let targetLayer = parent || layer;
+
+        svgGroup = targetLayer.select("#" + object.id);
+
         if (svgGroup.empty()) {
-            svgGroup = layer.append("g").attr("id", object.id);
+            svgGroup = targetLayer.append("g").attr("id", object.id);
 
             const info = {
                 x: object.x,
@@ -249,14 +260,28 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
     }
 
+
+
+    private _renderComposite(layer: Selection<any>, comp: GrCompositeObject, parent: Selection<any>) {
+        const g = this.getObjectOrCreate(layer, comp, "g", parent);
+
+        if (g) {
+            comp.objects.forEach(child => {
+                this.render(child, false);
+            })
+        }
+    }
+
+
     /**
      * Render circle on layer
      * @param layer
      * @param circle
+     * @param parent
      * @protected
      */
-    protected _renderCircle(layer: Selection<any>, circle: GrCircle) {
-        const o = this.getObjectOrCreate(layer, circle, "circle")
+    protected _renderCircle(layer: Selection<any>, circle: GrCircle, parent: Selection<any>) {
+        const o = this.getObjectOrCreate(layer, circle, "circle", parent)
         const c = o.select(ToolClassSelectors.object);
 
         c.attr("cx", circle.x);
@@ -270,7 +295,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     renderCircle(layer: RenderLayer, circle: GrCircle) {
-        const o = this._renderCircle(this.getLayer(layer), circle);
+        const o = this._renderCircle(this.getLayer(layer), circle, null);
     }
 
 
@@ -278,10 +303,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * Render rectangle on layer
      * @param layer
      * @param rectangle
+     * @param parent
      * @protected
      */
-    protected _renderRectangle(layer: Selection<any>, rectangle: GrRectangle) {
-        const o = this.getObjectOrCreate(layer, rectangle, "path");
+    protected _renderRectangle(layer: Selection<any>, rectangle: GrRectangle, parent: Selection<any>) {
+        const o = this.getObjectOrCreate(layer, rectangle, "path", parent);
 
         const r = o.select(ToolClassSelectors.object);
 
@@ -299,12 +325,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     renderRectangle(layer: RenderLayer, rectangle: GrRectangle) {
-        return this._renderRectangle(this.getLayer(layer), rectangle);
+        return this._renderRectangle(this.getLayer(layer), rectangle, null);
     }
 
 
-    private _renderLine(layer: d3.Selection<any>, line: GrLine) {
-        const o = this.getObjectOrCreate(layer, line, "line");
+    private _renderLine(layer: d3.Selection<any>, line: GrLine, parent: Selection<any>) {
+        const o = this.getObjectOrCreate(layer, line, "line", parent);
 
         const l = o.select(ToolClassSelectors.object);
         l.attr("x1", line.x1);
@@ -318,15 +344,15 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     renderLine(layer: RenderLayer, line: GrLine) {
-        return this._renderLine(this.getLayer(layer), line);
+        return this._renderLine(this.getLayer(layer), line, null);
     }
 
     renderPolygon(layer: RenderLayer, polygon: GrPolygon) {
-        return this._renderPolygon(this.getLayer(layer), polygon);
+        return this._renderPolygon(this.getLayer(layer), polygon, null);
     }
 
-    _renderPolygon(layer: Selection<any>, polygon: GrPolygonBase) {
-        const o = this.getObjectOrCreate(layer, polygon, "path");
+    _renderPolygon(layer: Selection<any>, polygon: GrPolygonBase, parent: Selection<any>) {
+        const o = this.getObjectOrCreate(layer, polygon, "path", parent);
 
         const p = o.select(ToolClassSelectors.object);
 
@@ -356,15 +382,15 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
     renderQuadratic(layer: RenderLayer, polygon: GrQuadratic) {
-        return this._renderQuadratic(this.getLayer(layer), polygon);
+        return this._renderQuadratic(this.getLayer(layer), polygon, null);
     }
 
-    _renderQuadratic(layer: Selection<any>, polygon: GrQuadratic) {
+    _renderQuadratic(layer: Selection<any>, polygon: GrQuadratic, parent: Selection<any>) {
         if (polygon.points.length < 3) {
-            return this._renderPolygon(layer, polygon);
+            return this._renderPolygon(layer, polygon, parent);
         }
 
-        const o = this.getObjectOrCreate(layer, polygon, "path");
+        const o = this.getObjectOrCreate(layer, polygon, "path", parent);
 
         const p = o.select(ToolClassSelectors.object);
 
@@ -389,15 +415,15 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
     public renderBezier(layer: RenderLayer, bezier: GrBezier) {
-        return this._renderBezier(this.getLayer(layer), bezier);
+        return this._renderBezier(this.getLayer(layer), bezier, null);
     }
 
-    private _renderBezier(layer: d3.Selection<any>, bezier: GrBezier) {
+    private _renderBezier(layer: d3.Selection<any>, bezier: GrBezier, parent: Selection<any>) {
         if (bezier.points.length < 4) {
             return;
         }
 
-        const o = this.getObjectOrCreate(layer, bezier, "path");
+        const o = this.getObjectOrCreate(layer, bezier, "path", parent);
 
         const p = o.select(ToolClassSelectors.object);
 

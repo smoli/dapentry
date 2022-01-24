@@ -2,6 +2,7 @@ import {Style} from "../controls/drawing/Objects/StyleManager";
 import {deg2rad, eq} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
+import {GrCompositeObject} from "./GrCompositeObject";
 
 export enum ObjectType {
     Circle,
@@ -12,7 +13,8 @@ export enum ObjectType {
     Polygon,
     Quadratic,
     Bezier,
-    List
+    List,
+    Composite
 }
 
 
@@ -154,6 +156,19 @@ export abstract class GrObject {
 
     public get parent(): GrObject {
         return this._parent;
+    }
+
+    /**
+     * Objects can be part of Lists and Composite Objects.
+     * Selecting an object in a list or a composite delegates
+     * that selection to the list/composite.
+     */
+    public get selectionDelegate(): GrObject {
+        if (this._parent) {
+            return this._parent;
+        }
+
+        return this;
     }
 
     get instanceCount(): number {

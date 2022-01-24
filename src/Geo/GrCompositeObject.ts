@@ -1,4 +1,4 @@
-import {GrObject, ObjectType, POIMap} from "./GrObject";
+import {BoundingBox, GrObject, ObjectType, POI, POIMap} from "./GrObject";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {Point2D} from "./Point2D";
 
@@ -50,7 +50,7 @@ export class GrCompositeObject extends GrObject {
     protected _objects: ObjectArray;
 
     constructor(name: string) {
-        super(ObjectType.List, name, 0, 0);
+        super(ObjectType.Composite, name, 0, 0);
         this._objects = new ObjectArray();
         this._objects.baseName = this.uniqueName;
         this._objects.parent = this;
@@ -77,11 +77,29 @@ export class GrCompositeObject extends GrObject {
         object.setParent(this);
     }
 
-    get pointsOfInterest(): POIMap {
-        if (this._objects.last) {
-            return this._objects.last.pointsOfInterest;
+    get boundingBox(): BoundingBox {
+        const boxes = this._objects.map(o => o.boundingBox);
+
+        const w = Math.max(...boxes.map(b => b.w));
+        const h = Math.max(...boxes.map(b => b.h));
+        const minX = Math.min(...boxes.map(b => b.x));
+        const maxX = Math.max(...boxes.map(b => b.x));
+        const minY = Math.min(...boxes.map(b => b.y));
+        const maxY = Math.max(...boxes.map(b => b.y));
+
+        return {
+            h, w,
+            x: (minX + maxX) / 2,
+            y: (minY + maxY) / 2,
         }
-        return {};
+    }
+
+    get pointsOfInterest(): POIMap {
+        const bbox = this.boundingBox;
+
+        return {
+            [POI.center]: new Point2D(bbox.x, bbox.y)
+        }
     }
 
     at(where: WHERE_VALUE): Point2D {
