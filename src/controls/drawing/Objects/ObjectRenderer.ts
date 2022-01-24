@@ -93,30 +93,30 @@ export abstract class ObjectRenderer {
      * @param layer
      * @param circle
      */
-    public abstract renderCircle(layer: RenderLayer, circle: GrCircle): void;
+    public abstract renderCircle(layer: RenderLayer, circle: GrCircle, enableMouseEvents: boolean): void;
 
     /**
      * Render a rectangle on the given layer.
      * @param layer
      * @param rect
      */
-    public abstract renderRectangle(layer:RenderLayer, rect: GrRectangle): void;
+    public abstract renderRectangle(layer:RenderLayer, rect: GrRectangle, enableMouseEvents: boolean): void;
 
     /**
      * Render a line on the given layer.
      * @param layer
      * @param line
      */
-    public abstract renderLine(layer:RenderLayer, line: GrLine): void;
+    public abstract renderLine(layer:RenderLayer, line: GrLine, enableMouseEvents: boolean): void;
 
     /**
      * Render a polygon on the given layer.
      * @param layer
      * @param polygon
      */
-    public abstract renderPolygon(layer:RenderLayer, polygon: GrPolygon): void;
-    public abstract renderQuadratic(layer:RenderLayer, quadric: GrQuadratic): void;
-    public abstract renderBezier(layer:RenderLayer, bezier: GrBezier): void;
+    public abstract renderPolygon(layer:RenderLayer, polygon: GrPolygon, enableMouseEvents: boolean): void;
+    public abstract renderQuadratic(layer:RenderLayer, quadric: GrQuadratic, enableMouseEvents: boolean): void;
+    public abstract renderBezier(layer:RenderLayer, bezier: GrBezier, enableMouseEvents: boolean): void;
 
 
     /**

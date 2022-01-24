@@ -288,9 +288,7 @@ export default class Drawing extends Control {
         }
     }
 
-    private _onObjectClick(selObject: GrObject) {
-
-        let object = selObject.selectionDelegate;
+    private _onObjectClick(object: GrObject) {
 
         if (this._toolManager.isSelected(object)) {
             this._toolManager.deselectObject(object);

@@ -150,6 +150,9 @@ export abstract class Tool {
 
     protected snapToObject(object: GrObject, eventData): SnapInfo {
         let p = object.projectPoint( new Point2D(eventData.x, eventData.y));
+        if (p === null) {
+            return null;
+        }
         let pct = object.projectPointAsPercentage(new Point2D(eventData.x, eventData.y));
 
         if (eventData.shift) {

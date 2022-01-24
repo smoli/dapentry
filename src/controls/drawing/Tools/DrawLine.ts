@@ -54,8 +54,13 @@ export class DrawLine extends Tool {
         let snapInfo;
 
         if (this._otherObject) {
-            this.disablePOISnapping();
             snapInfo = this.snapToObject(this._otherObject, eventData);
+            if (snapInfo !== null) {
+                // We only disable point snapping if the object supports at-access
+                this.disablePOISnapping();
+            } else {
+                snapInfo = this.tryToPOISnap(eventData);
+            }
         } else {
             snapInfo = this.tryToPOISnap(eventData);
         }

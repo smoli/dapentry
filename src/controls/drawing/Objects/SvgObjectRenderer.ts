@@ -43,7 +43,7 @@ interface ObjectInfo {
 let infoHandle = 0;
 
 
-function p2d(p:Point2D, operation: string = "L") {
+function p2d(p: Point2D, operation: string = "L") {
     return `${operation} ${p.x} ${p.y}`;
 }
 
@@ -98,16 +98,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return this._render(object, selected);
     }
 
-    _render(object: GrObject, selected: boolean, parent: Selection<any> = null) {
+    _render(object: GrObject, selected: boolean, parent: Selection<any> = null, enableMouseEvents: boolean = true) {
 
 
         switch (object.type) {
             case ObjectType.Circle:
-                this._renderCircle(this._objectLayer, object as GrCircle, parent);
+                this._renderCircle(this._objectLayer, object as GrCircle, parent, enableMouseEvents);
                 break;
 
             case ObjectType.Rectangle:
-                this._renderRectangle(this._objectLayer, object as GrRectangle, parent);
+                this._renderRectangle(this._objectLayer, object as GrRectangle, parent, enableMouseEvents);
                 break;
 
             case ObjectType.Ellipse:
@@ -116,23 +116,23 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 break;
 
             case ObjectType.Line:
-                this._renderLine(this._objectLayer, object as GrLine, parent);
+                this._renderLine(this._objectLayer, object as GrLine, parent, enableMouseEvents);
                 break;
 
             case ObjectType.Polygon:
-                this._renderPolygon(this._objectLayer, object as GrPolygon, parent);
+                this._renderPolygon(this._objectLayer, object as GrPolygon, parent, enableMouseEvents);
                 break;
 
             case ObjectType.Quadratic:
-                this._renderQuadratic(this._objectLayer, object as GrQuadratic, parent);
+                this._renderQuadratic(this._objectLayer, object as GrQuadratic, parent, enableMouseEvents);
                 break;
 
             case ObjectType.Bezier:
-                this._renderBezier(this._objectLayer, object as GrBezier, parent);
+                this._renderBezier(this._objectLayer, object as GrBezier, parent, enableMouseEvents);
                 break;
 
             case ObjectType.Composite:
-                this._renderComposite(this._objectLayer, object as GrCompositeObject, parent);
+                this._renderComposite(this._objectLayer, object as GrCompositeObject, parent, enableMouseEvents);
 
         }
 
@@ -206,7 +206,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param svgTag
      * @protected
      */
-    protected getObjectOrCreate(layer: Selection<any>, object: GrObject, svgTag: string, parent: Selection<any>): Selection<any> {
+    protected getObjectOrCreate(layer: Selection<any>, object: GrObject, svgTag: string, parent: Selection<any>, enableMouseEvents: boolean = true): Selection<any> {
         let svgGroup;
         let targetLayer = parent || layer;
 
@@ -224,9 +224,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
             this._objectInfo[object.uniqueName] = info;
 
             const svgObject = svgGroup.append(svgTag).attr("class", ToolClasses.object);
-            svgObject.on("click", () => {
-                this._fireSelect(object);
-            });
+            if (enableMouseEvents) {
+                svgObject.on("click", () => {
+                    this._fireSelect(object);
+                });
+            }
 
             // Slots to better control that handles are always painted on top of handles
             svgGroup.append("g").classed(ToolClasses.boundingBox, true);
@@ -261,13 +263,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
 
-
-    private _renderComposite(layer: Selection<any>, comp: GrCompositeObject, parent: Selection<any>) {
-        const g = this.getObjectOrCreate(layer, comp, "g", parent);
+    private _renderComposite(layer: Selection<any>, comp: GrCompositeObject, parent: Selection<any>, enableMouseEvents: boolean) {
+        const g = this.getObjectOrCreate(layer, comp, "g", parent, enableMouseEvents);
 
         if (g) {
             comp.objects.forEach(child => {
-                this._render(child, false, g.select(ToolClassSelectors.object));
+                this._render(child, false, g.select(ToolClassSelectors.object), false);
             })
         }
     }
@@ -280,8 +281,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param parent
      * @protected
      */
-    protected _renderCircle(layer: Selection<any>, circle: GrCircle, parent: Selection<any>) {
-        const o = this.getObjectOrCreate(layer, circle, "circle", parent)
+    protected _renderCircle(layer: Selection<any>, circle: GrCircle, parent: Selection<any>, enableMouseEvents: boolean) {
+        const o = this.getObjectOrCreate(layer, circle, "circle", parent, enableMouseEvents)
         const c = o.select(ToolClassSelectors.object);
 
         c.attr("cx", circle.x);
@@ -294,8 +295,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return o;
     }
 
-    renderCircle(layer: RenderLayer, circle: GrCircle) {
-        const o = this._renderCircle(this.getLayer(layer), circle, null);
+    renderCircle(layer: RenderLayer, circle: GrCircle, enableMouseEvents: boolean = false) {
+        const o = this._renderCircle(this.getLayer(layer), circle, null, enableMouseEvents);
     }
 
 
@@ -306,11 +307,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
      * @param parent
      * @protected
      */
-    protected _renderRectangle(layer: Selection<any>, rectangle: GrRectangle, parent: Selection<any>) {
-        const o = this.getObjectOrCreate(layer, rectangle, "path", parent);
+    protected _renderRectangle(layer: Selection<any>, rectangle: GrRectangle, parent: Selection<any>, enableMouseEvents: boolean) {
+        const o = this.getObjectOrCreate(layer, rectangle, "path", parent, enableMouseEvents);
 
         const r = o.select(ToolClassSelectors.object);
-
 
 
         const d = [
@@ -324,13 +324,13 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return r;
     }
 
-    renderRectangle(layer: RenderLayer, rectangle: GrRectangle) {
-        return this._renderRectangle(this.getLayer(layer), rectangle, null);
+    renderRectangle(layer: RenderLayer, rectangle: GrRectangle, enableMouseEvents: boolean = true) {
+        return this._renderRectangle(this.getLayer(layer), rectangle, null, enableMouseEvents);
     }
 
 
-    private _renderLine(layer: d3.Selection<any>, line: GrLine, parent: Selection<any>) {
-        const o = this.getObjectOrCreate(layer, line, "line", parent);
+    private _renderLine(layer: d3.Selection<any>, line: GrLine, parent: Selection<any>, enableMouseEvents: boolean) {
+        const o = this.getObjectOrCreate(layer, line, "line", parent, enableMouseEvents);
 
         const l = o.select(ToolClassSelectors.object);
         l.attr("x1", line.x1);
@@ -343,16 +343,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return l;
     }
 
-    renderLine(layer: RenderLayer, line: GrLine) {
-        return this._renderLine(this.getLayer(layer), line, null);
+    renderLine(layer: RenderLayer, line: GrLine, enableMouseEvents: boolean = true) {
+        return this._renderLine(this.getLayer(layer), line, null, enableMouseEvents);
     }
 
-    renderPolygon(layer: RenderLayer, polygon: GrPolygon) {
-        return this._renderPolygon(this.getLayer(layer), polygon, null);
+    renderPolygon(layer: RenderLayer, polygon: GrPolygon, enableMouseEvents: boolean = true) {
+        return this._renderPolygon(this.getLayer(layer), polygon, null, enableMouseEvents);
     }
 
-    _renderPolygon(layer: Selection<any>, polygon: GrPolygonBase, parent: Selection<any>) {
-        const o = this.getObjectOrCreate(layer, polygon, "path", parent);
+    _renderPolygon(layer: Selection<any>, polygon: GrPolygonBase, parent: Selection<any>, enableMouseEvents: boolean) {
+        const o = this.getObjectOrCreate(layer, polygon, "path", parent, enableMouseEvents);
 
         const p = o.select(ToolClassSelectors.object);
 
@@ -381,16 +381,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
 
-    renderQuadratic(layer: RenderLayer, polygon: GrQuadratic) {
-        return this._renderQuadratic(this.getLayer(layer), polygon, null);
+    renderQuadratic(layer: RenderLayer, polygon: GrQuadratic, enableMouseEvents: boolean = true) {
+        return this._renderQuadratic(this.getLayer(layer), polygon, null, enableMouseEvents);
     }
 
-    _renderQuadratic(layer: Selection<any>, polygon: GrQuadratic, parent: Selection<any>) {
+    _renderQuadratic(layer: Selection<any>, polygon: GrQuadratic, parent: Selection<any>, enableMouseEvents: boolean) {
         if (polygon.points.length < 3) {
-            return this._renderPolygon(layer, polygon, parent);
+            return this._renderPolygon(layer, polygon, parent, enableMouseEvents);
         }
 
-        const o = this.getObjectOrCreate(layer, polygon, "path", parent);
+        const o = this.getObjectOrCreate(layer, polygon, "path", parent, enableMouseEvents);
 
         const p = o.select(ToolClassSelectors.object);
 
@@ -414,16 +414,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
 
-    public renderBezier(layer: RenderLayer, bezier: GrBezier) {
-        return this._renderBezier(this.getLayer(layer), bezier, null);
+    public renderBezier(layer: RenderLayer, bezier: GrBezier, enableMouseEvents: boolean = true) {
+        return this._renderBezier(this.getLayer(layer), bezier, null, enableMouseEvents);
     }
 
-    private _renderBezier(layer: d3.Selection<any>, bezier: GrBezier, parent: Selection<any>) {
+    private _renderBezier(layer: d3.Selection<any>, bezier: GrBezier, parent: Selection<any>, enableMouseEvents: boolean) {
         if (bezier.points.length < 4) {
             return;
         }
 
-        const o = this.getObjectOrCreate(layer, bezier, "path", parent);
+        const o = this.getObjectOrCreate(layer, bezier, "path", parent, enableMouseEvents);
 
         const p = o.select(ToolClassSelectors.object);
 

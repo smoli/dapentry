@@ -169,6 +169,10 @@ export class GrCompositeObject extends GrObject {
     }
 
     at(where: WHERE_VALUE): Point2D {
+        if (typeof where === "string") {
+            return this.pointsOfInterest[POI[where]];
+        }
+
         return null;
     }
 }
