@@ -1,8 +1,12 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GrLine} from "../../../src/Geo/GrLine";
-import exp = require("constants");
+import {eq} from "../../../src/Geo/GeoMath";
+import {POI} from "../../../src/Geo/GrObject";
 
+function eqp(p1, p2) {
+    return eq(p1.x, p2.x) && eq(p1.y, p2.y);
+}
 
 describe('GrLIne', () => {
 
@@ -31,11 +35,31 @@ describe('GrLIne', () => {
 
     it("rotate", () => {
 
-        let l = GrLine.create(null, -1, 0, 1, 0);
+        let l = GrLine.create(null, -10, 0, 10, 0);
 
-        l.rotate(45);
+        l.rotate(90);
 
-        console.log(l.start, l.end);
+        console.log(l.start)
+        console.log(l.end)
+        expect(eqp(l.start, { x: 0, y: -10})).to.be.true;
+        expect(eqp(l.end, { x: 0, y: 10})).to.be.true;
+
+
+        l = GrLine.create(null, -10, 0, 10, 0);
+
+        l.rotate(90, l.start);
+        console.log(l.start)
+        console.log(l.end)
+
+        l = GrLine.create(null, -10, 0, 10, 0);
+
+        for (let i = 0; i < 180; i++)
+            l.rotatePOI(POI.end, 0.5);
+        console.log(l.start)
+        console.log(l.end)
+
+
+        l.rotate(90);
 
     });
 

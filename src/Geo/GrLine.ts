@@ -84,17 +84,15 @@ export class GrLine extends GrObject {
     }
 
 
-    rotate(value: number) {
-        super.rotate(value);
+    rotate(value: number, pivot: Point2D = null) {
+        super.rotate(value, pivot);
 
-        const p1 = this._start.copy.sub(this._center);
-        const p2 = this._end.copy.sub(this._center);
+        if (!pivot) {
+            pivot = this.center;
+        }
 
-        p1.rotate(deg2rad(value));
-        p2.rotate(deg2rad(value));
-
-        this._start = this._center.copy.add(p1);
-        this._end = this._center.copy.add(p2);
+        this._start.rotate(deg2rad(value), pivot);
+        this._end.rotate(deg2rad(value), pivot);
     }
 
 

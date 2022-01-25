@@ -13,19 +13,19 @@ import {Library, LibraryEntryArgumentType} from "./Library";
 
 
 const starCode = `COMPOSITE o
-LINE Line1, $styles.default, (362, 364), (832, 364)
-POLY Polygon2, $styles.default, [ Line1@end ], 1
+LINE Line1, $styles.default, Canvas@bottom, Canvas@top
+POLY Polygon1, $styles.default, [ Line1@end ], 1
 DO 5
-ROTATE Line1, 180  / 5
-EXTPOLY Polygon2, [ Line1@0.75]
+ROTATE Line1, 180/ 5
+EXTPOLY Polygon1, [ Line1@0.79 ]
 ROTATE Line1, 180 / 5
-EXTPOLY Polygon2, [ Line1@end ]
+EXTPOLY Polygon1, [ Line1@end ]
 ENDDO
-FILL Polygon2, "#fce654", 0.1
-APP o.objects, Polygon2`;
+FILL Polygon1, "#fce654", 0.1
+APP o.objects, Polygon1`;
 
 const ngonCode = `COMPOSITE o
-LINE Line1, $styles.default, (344, 357), (660, 359)
+LINE Line1, $styles.default, Canvas@bottom, Canvas@top
 POLY Polygon1, $styles.default, [ Line1@end ], 1
 DO 5
 ROTATE Line1, 360 / 5

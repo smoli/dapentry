@@ -26,6 +26,8 @@ export class RotateTool extends Tool {
     private _finalAngle: number = 0;
     private _rotationObject: GrObject;
     private _rotationPoi: POI;
+    private _pivotPoi: POI;
+    private _pivotPoint: Point2D;
 
     constructor(renderer: ObjectRenderer) {
         super(renderer, States.Wait, States.Done);
@@ -62,7 +64,7 @@ export class RotateTool extends Tool {
         Object.keys(poi)
             .forEach(poiId => {
                 console.log(POI[poiId], poi[poiId])
-                this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), poiId);
+                this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), Number(poiId));
             });
 
         this._renderer.renderBoundingRepresentation(this._object);
@@ -72,7 +74,9 @@ export class RotateTool extends Tool {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             const poi = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[poiId];
-            this._rotationPoi = poiId;
+            this._rotationPoi = Number(poiId);
+            this._pivotPoi = this._object.getOppositePoi(this._rotationPoi);
+            this._pivotPoint = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._pivotPoi];
 
             this._rotationObject = this._object.createProxy();
 
@@ -149,6 +153,11 @@ export class RotateTool extends Tool {
     }
 
     public get result(): any {
-        return `ROTATE ${this._object.name}, ${this._finalAngle}`
+        if (this._pivotPoint) {
+            return `ROTATE ${this._object.name}, ${this._finalAngle}, ${this._object.name}@${POI[this._pivotPoi]}`
+        } else {
+            return `ROTATE ${this._object.name}, ${this._finalAngle}`
+        }
+
     }
 }

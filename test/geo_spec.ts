@@ -1,14 +1,34 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {eq} from "../src/Geo/GeoMath"
+import {deg2rad, eq} from "../src/Geo/GeoMath"
 import {Line2D} from "../src/Geo/Line2D";
 import {Point2D} from "../src/Geo/Point2D";
 
+
+function eqp(p1, p2) {
+    return eq(p1.x, p2.x) && eq(p1.y, p2.y);
+}
 
 describe('Geometry functions', () => {
 
     it('equality checks provide a means to check for equality with a margin of error', () => {
         expect(eq(100, 100.000000000003)).to.be.true;
+    });
+
+    describe("Point", () => {
+        it("can be rotated", () => {
+            let p = new Point2D(0, 100);
+            p.rotate(deg2rad(90));
+
+            expect(eqp(p, { x: -100, y: 0})).to.be.true;
+
+            p = new Point2D(0, 100);
+
+            p.rotate(deg2rad(90), new Point2D(0, 50));
+
+            expect(eqp(p, { x: -50, y: 50})).to.be.true;
+
+        });
     });
 
     describe("Line", () => {
@@ -22,7 +42,7 @@ describe('Geometry functions', () => {
             expect(l.n).to.deep.equal({x: 0, y: 1});
         });
 
-        it("can determine of a point lies on it", () => {
+        it("can determine if a point lies on it", () => {
             const l = new Line2D(new Point2D(0, 1), 0);
             expect(l.pointOnLine(new Point2D(100, 0))).to.be.true;
             expect(l.pointOnLine(new Point2D(100, 1))).to.be.false;
