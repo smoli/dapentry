@@ -175,4 +175,16 @@ export class GrCompositeObject extends GrObject {
 
         return null;
     }
+
+    set fillColor(value: string) {
+        this._objects.forEach(o => o.fillColor = value);
+    }
+
+    set fillOpacity(value: number) {
+        this._objects.forEach(o => o.fillOpacity = value);
+    }
+
+    set strokeColor(value: string) {
+        this._objects.forEach(o => o.strokeColor = value);
+    }
 }

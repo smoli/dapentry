@@ -16,7 +16,7 @@ import {GfxScale} from "./runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
 import {Parameter} from "./runtime/interpreter/Parameter";
 import {GrCompositeObject} from "./Geo/GrCompositeObject";
-import {Library, LibraryEntry, LibraryEntryArgument} from "./Library";
+import {Library, LibraryEntry} from "./Library";
 import {GrCanvas} from "./Geo/GrCanvas";
 
 /**
@@ -118,7 +118,7 @@ class GfxMake extends GfxOperation {
     private _entryID: Parameter;
     private _canvas: GrCanvas;
     private _width: Parameter;
-    private _args: Array<Parameter>;
+    private readonly _args: Array<Parameter>;
 
 
     constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter, width: Parameter, ...args: Array<Parameter>) {

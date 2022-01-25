@@ -22,13 +22,13 @@ export class ComponentController extends BaseComponentController {
     private _drawing: Drawing;
     private _canvas: GrCanvas;
 
-    constructor(component: Component) {
+    constructor(component: Component, canvas) {
         super();
 
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter(component.getLibrary());
-        this._canvas = GrCanvas.create_16_9(1000)
+        this._canvas = canvas;
         this.preloadDemoCode();
     }
 

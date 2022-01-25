@@ -10,7 +10,7 @@ import {ComponentController} from "./ComponentController";
 import {CodeManager} from "./runtime/CodeManager";
 import {AppModel} from "./model/AppModel";
 import {Library, LibraryEntryArgumentType} from "./Library";
-import {AspectRatio} from "./Geo/GrCanvas";
+import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 
 
 const starCode = `COMPOSITE o
@@ -22,7 +22,7 @@ EXTPOLY Polygon1, [ Line1@(spokeRatio) ]
 ROTATE Line1, 180 / spokes
 EXTPOLY Polygon1, [ Line1@end ]
 ENDDO
-FILL Polygon1, "#fce654", 0.1
+FILL Polygon1, "#fce654", 1
 APP o.objects, Polygon1`;
 
 const ngonCode = `COMPOSITE o
@@ -69,7 +69,7 @@ export default class Component extends UIComponent {
         this.setModel(this._appModel.model, "appModel");
         this._library = new Library(this._appModel);
 
-        this._appController = new ComponentController(this);
+        this._appController = new ComponentController(this, GrCanvas.create_1_1(1000));
 
         this._library.addEntry({
             "id": "star",
