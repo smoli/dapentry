@@ -28,7 +28,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter(component.getLibrary());
-        this._canvas = new GrCanvas(0, 0, 1000, 1000)
+        this._canvas = GrCanvas.create_1_1(1000);
         this.preloadDemoCode();
     }
 
