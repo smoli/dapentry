@@ -10,6 +10,7 @@ import {ComponentController} from "./ComponentController";
 import {CodeManager} from "./runtime/CodeManager";
 import {AppModel} from "./model/AppModel";
 import {Library, LibraryEntryArgumentType} from "./Library";
+import {AspectRatio} from "./Geo/GrCanvas";
 
 
 const starCode = `COMPOSITE o
@@ -77,6 +78,7 @@ export default class Component extends UIComponent {
             "author": "",
             "lastUpdate": null,
             "version": "",
+            aspectRatio: AspectRatio.ar1_1,
             "arguments": {
                 "spokes": {
                     "type": LibraryEntryArgumentType.Number,
@@ -99,6 +101,7 @@ export default class Component extends UIComponent {
             "author": "",
             lastUpdate: null,
             "version": "",
+            aspectRatio: AspectRatio.ar1_1,
             "arguments": {
                 "n": {
                     "type": LibraryEntryArgumentType.Number,

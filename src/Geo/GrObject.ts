@@ -291,9 +291,7 @@ export abstract class GrObject {
      * @param value
      */
     public rotatePOI(poi: POI, value: number) {
-        console.log("rotate", poi, value)
         this.rotate(value, this.pointsOfInterest(POIPurpose.MANIPULATION)[this.getOppositePoi(poi)]);
-        // this.rotate(value);
     }
 
     public scale(fx: number, fy: number, pivot: Point2D = null) {

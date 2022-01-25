@@ -116,6 +116,7 @@ class GfxMake extends GfxOperation {
     private _styles: Parameter;
     private _setup: boolean = false;
     private _entryID: Parameter;
+    private _canvas: GrCanvas;
 
 
     constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter) {
@@ -136,6 +137,7 @@ class GfxMake extends GfxOperation {
             const entry = outerInterpreter.library.getEntry(this._entryID.value);
             this._interpreter.parse(entry.code);
             this._setup = true;
+            this._canvas = GrCanvas.create(entry.aspectRatio, 100);
         }
     }
 
@@ -148,7 +150,8 @@ class GfxMake extends GfxOperation {
 
         this._interpreter.clearObjects();
         await this._interpreter.run({
-            "$styles": this.styles
+            "$styles": this.styles,
+            [this._canvas.uniqueName]: this._canvas
         });
 
         const resultObject:GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;

@@ -1,4 +1,5 @@
 import {AppModel, AppModelKeys} from "./model/AppModel";
+import {AspectRatio} from "./Geo/GrCanvas";
 
 export enum LibraryEntryArgumentType {
      Number = "number"
@@ -17,6 +18,7 @@ interface LibraryEntry {
     author: string,
     lastUpdate: Date,
     version: string,
+    aspectRatio: AspectRatio,
     arguments: { [key:string]: LibraryEntryArgument }
     code: string
 }
@@ -39,6 +41,5 @@ export class Library {
     getEntry(id: string):LibraryEntry {
         return this._appModel.get(AppModelKeys.library, e => e.id === id);
     }
-
 
 }

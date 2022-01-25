@@ -23,6 +23,25 @@ export class GrCanvas extends GrObject {
         this._height = height;
     }
 
+    static create(aspectRatio: AspectRatio, width: number): GrCanvas {
+        switch (aspectRatio) {
+            case AspectRatio.ar1_1:
+                return GrCanvas.create_1_1(width);
+
+            case AspectRatio.ar3_2:
+                return GrCanvas.create_3_2(width);
+
+            case AspectRatio.ar4_3:
+                return GrCanvas.create_4_3(width);
+
+            case AspectRatio.ar16_9:
+                return GrCanvas.create_16_9(width);
+
+            case AspectRatio.ar16_10:
+                return GrCanvas.create_16_10(width);
+        }
+    }
+
     static create_1_1(width: number): GrCanvas {
         return new GrCanvas(0, 0, width, width);
     }
