@@ -21,6 +21,7 @@ import {Point2D} from "../../Geo/Point2D";
 import {Tool} from "./Tools/Tool";
 import {SelectTool} from "./Tools/SelectTool";
 import {GrCompositeObject} from "../../Geo/GrCompositeObject";
+import {GrCanvas} from "../../Geo/GrCanvas";
 
 
 enum ToolNames {
@@ -94,8 +95,14 @@ export default class Drawing extends Control {
         this._containerId = this._makeId("container");
 
         this.setAggregation("_svg", new HTML({
-            content: `<svg id="${this._containerId}" viewBox="0, 0, 1600,900" tabindex="1000000000"></svg>`
+            content: `<svg id="${this._containerId}" viewBox="0, 0, 100,100" tabindex="1000000000"></svg>`
         }));
+    }
+
+    public setCanvas(canvas: GrCanvas) {
+        const svg = d3.select(this.getDomRef()).select("svg");
+        const bb = canvas.boundingBox;
+        svg.attr("viewBox", `${bb.x - bb.w / 2}, ${bb.y - bb.h / 2}, ${bb.w}, ${bb.h}`);
     }
 
 

@@ -28,7 +28,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter(component.getLibrary());
-        this._canvas = new GrCanvas(0, 0, 1600, 900)
+        this._canvas = new GrCanvas(0, 0, 1000, 1000)
         this.preloadDemoCode();
     }
 
@@ -43,6 +43,7 @@ export class ComponentController extends BaseComponentController {
         this.runCode().then(() => {
             this.updateDrawing();
         });
+        this._drawing.setCanvas(this._canvas);
     }
 
     protected updateDrawing(clearAllFirst: boolean = false) {
@@ -170,6 +171,7 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
+        return
         const code = `MAKE sun1, "star", $styles
         MAKE ngon1, "ngon", $styles`;
 /*
