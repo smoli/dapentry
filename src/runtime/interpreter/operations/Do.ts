@@ -1,9 +1,6 @@
 import {Operation} from "../Operation";
 import {Parameter} from "../Parameter";
-import {ArrayIterator} from "../types/ArrayIterator";
-import {StackFrame} from "../StackFrame";
 import {Interpreter} from "../Interpreter";
-import {getParameterConfig} from "../../gfx/GfxOperation";
 
 interface LoopInfo {
     label: string,
@@ -78,8 +75,7 @@ export class Do extends Operation {
             targetName: targetName
         })
 
-        const sf = new StackFrame();
-        interpreter.pushStack(sf);
+        const sf = this.closure;
 
         if (targetName) {
             sf.setRegister(targetName, iteration);
@@ -95,9 +91,7 @@ export class EndDo extends Operation {
 
         info.iteration++;
 
-        if (info.iteration >= info.maxIterations) {
-            interpreter.popStack(null)
-        } else {
+        if (info.iteration < info.maxIterations) {
             if (info.targetName) {
                 this.closure.setRegister(info.targetName, info.iteration);
             }

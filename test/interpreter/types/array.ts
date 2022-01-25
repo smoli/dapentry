@@ -130,7 +130,6 @@ describe('Array', () => {
         const code = `
             LOAD a, [1, 2, 3, 4, 5, 6, 7]
             LOAD r, 0
-            LOAD v, 100     # Will stay untouched
                                         
             FOREACH v, a  
                 ADD ^r, v
@@ -144,7 +143,7 @@ describe('Array', () => {
 
         expect(i.getRegister("r")).to.equal((1 + 2 + 3 + 4 + 5 + 6 + 7))
         expect(i.getRegister("a")).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
-        expect(i.getRegister("v")).to.equal(100)
+        expect(i.getRegister("v")).to.equal(7)
     });
 
     it("iteration is provided the index as well", async () => {
