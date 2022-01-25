@@ -33,12 +33,12 @@ export enum POI {
     topRight,
     bottomLeft,
     bottomRight,
-    P1,P2, P3, P4, P5, P6, P7, P8, P9, P10,
-    P11,P12, P13, P14, P15, P16, P17, P18, P19, P20,
-    P21,P22, P23, P24, P25, P26, P27, P28, P29, P30,
-    P31,P32, P33, P34, P35, P36, P37, P38, P39, P40,
-    P41,P42, P43, P44, P45, P46, P47, P48, P49, P50,
-    P51,P52, P53, P54, P55, P56, P57, P58, P59, P60
+    P1, P2, P3, P4, P5, P6, P7, P8, P9, P10,
+    P11, P12, P13, P14, P15, P16, P17, P18, P19, P20,
+    P21, P22, P23, P24, P25, P26, P27, P28, P29, P30,
+    P31, P32, P33, P34, P35, P36, P37, P38, P39, P40,
+    P41, P42, P43, P44, P45, P46, P47, P48, P49, P50,
+    P51, P52, P53, P54, P55, P56, P57, P58, P59, P60
 }
 
 export enum POIPurpose {
@@ -50,9 +50,6 @@ export type POIMap = { [key in POI]?: Point2D };
 
 let objCounter = 1;
 
-export function getNewObjectName(prefix: string): string {
-    return prefix + objCounter++;
-}
 
 /**
  * Bounding box of an object
@@ -89,12 +86,14 @@ export abstract class GrObject {
     get yAxis(): Point2D {
         return this._yAxis;
     }
+
     get xAxis(): Point2D {
         return this._xAxis;
     }
 
     private static _instanceCounter: number = 0;
     private static _pool: { [key: string]: GrObject } = {}
+    private static _objectNames: string[] = [];
 
     protected _uniqueName: string;
     protected _parent: GrObject = null;
@@ -107,6 +106,32 @@ export abstract class GrObject {
 
     private readonly _type: ObjectType;
 
+
+    protected static nameExists(name): boolean {
+        return GrObject._objectNames.indexOf(name) !== -1;
+    }
+
+    protected static removeName(name) {
+        const i = GrObject._objectNames.indexOf(name);
+        if (i !== -1) {
+            GrObject._objectNames.splice(i, 1);
+        }
+    }
+
+    protected static addName(name) {
+        GrObject._objectNames.push(name);
+    }
+
+    protected static getNewObjectName(prefix: string): string {
+        let counter = 1;
+
+        while (GrObject.nameExists(prefix + counter)) counter++;
+
+        GrObject.addName(prefix + counter);
+
+        return prefix + counter;
+    }
+
     protected constructor(type: ObjectType, name: string, x: number, y: number) {
         this._uniqueName = name;
         this._center = new Point2D(x, y);
@@ -114,7 +139,10 @@ export abstract class GrObject {
 
         if (name === null) {
             this._makeName();
+        } else {
+            GrObject.addName(this._uniqueName)
         }
+
     }
 
     /**
@@ -125,9 +153,9 @@ export abstract class GrObject {
      * Use the e.g. to represent the potential update of the object
      * during manipulation.
      */
-    public createProxy():GrObject {
+    public createProxy(): GrObject {
         const copy = this.copy();
-        copy._style = {... this._style };
+        copy._style = {...this._style};
         copy._xAxis = this._xAxis.copy;
         copy._yAxis = this._yAxis.copy;
         return copy;
@@ -137,7 +165,7 @@ export abstract class GrObject {
      * Make a new object of the same type with the same name.
      * @protected
      */
-    protected abstract copy():GrObject;
+    protected abstract copy(): GrObject;
 
     protected static getPoolInstance(name: string) {
         return null;
@@ -172,7 +200,7 @@ export abstract class GrObject {
     }
 
     protected _makeName() {
-        this._uniqueName = getNewObjectName(ObjectType[this._type]);
+        this._uniqueName = GrObject.getNewObjectName(ObjectType[this._type]);
     }
 
     get id(): string {
@@ -181,7 +209,11 @@ export abstract class GrObject {
 
 
     set uniqueName(value: string) {
+        GrObject.removeName(this._uniqueName);
         this._uniqueName = value;
+        if (!GrObject.nameExists(value)) {
+            GrObject.addName(value);
+        }
     }
 
     get uniqueName(): string {
@@ -257,11 +289,12 @@ export abstract class GrObject {
      * @param poi
      * @param value
      */
-    public rotatePOI(poi:POI, value: number) {
+    public rotatePOI(poi: POI, value: number) {
         this.rotate(value);
     }
 
-    public scale(fx: number, fy: number, pivot: Point2D = null) { }
+    public scale(fx: number, fy: number, pivot: Point2D = null) {
+    }
 
 
     /**
@@ -320,7 +353,7 @@ export abstract class GrObject {
      * Get "points of interest" for the object. These can be
      * used for snapping and other things.
      */
-    pointsOfInterest(purpose:POIPurpose): POIMap {
+    pointsOfInterest(purpose: POIPurpose): POIMap {
         return {
             [POI.center]: this.center.copy,
             [POI.top]: this.top.copy,
@@ -330,7 +363,7 @@ export abstract class GrObject {
         }
     }
 
-    getOppositePoi(poi: POI):POI {
+    getOppositePoi(poi: POI): POI {
         switch (poi) {
             case POI.center:
                 return null;
@@ -383,7 +416,7 @@ export abstract class GrObject {
         return this.center;
     }
 
-    protected makePoint(x, y) :Point2D {
+    protected makePoint(x, y): Point2D {
         return new Point2D(
             this._center.x + this._xAxis.x * x + this._yAxis.x * y,
             this._center.y + this._xAxis.y * x + this._yAxis.y * y
