@@ -11,7 +11,7 @@ export interface LibraryEntryArgument {
     description: string
 }
 
-interface LibraryEntry {
+export interface LibraryEntry {
     id: string,
     name: string,
     description: string,

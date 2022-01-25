@@ -84,14 +84,6 @@ export interface BoundingBox {
  * The instances are pooled by their name.
  */
 export abstract class GrObject {
-    get yAxis(): Point2D {
-        return this._yAxis;
-    }
-
-    get xAxis(): Point2D {
-        return this._xAxis;
-    }
-
     private static _instanceCounter: number = 0;
     private static _pool: { [key: string]: GrObject } = {}
     private static _objectNames: string[] = ["Canvas"];
@@ -268,6 +260,14 @@ export abstract class GrObject {
 
     set x(value: number) {
         this._center.x = value;
+    }
+
+    get yAxis(): Point2D {
+        return this._yAxis;
+    }
+
+    get xAxis(): Point2D {
+        return this._xAxis;
     }
 
     public rotate(value: number, pivot: Point2D = null) {

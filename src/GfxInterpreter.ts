@@ -16,7 +16,7 @@ import {GfxScale} from "./runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
 import {Parameter} from "./runtime/interpreter/Parameter";
 import {GrCompositeObject} from "./Geo/GrCompositeObject";
-import {Library} from "./Library";
+import {Library, LibraryEntry, LibraryEntryArgument} from "./Library";
 import {GrCanvas} from "./Geo/GrCanvas";
 
 /**
@@ -114,12 +114,14 @@ export class GfxInterpreter extends Interpreter {
 class GfxMake extends GfxOperation {
     private _interpreter: GfxInterpreter;
     private _styles: Parameter;
-    private _setup: boolean = false;
+    private _entry: LibraryEntry;
     private _entryID: Parameter;
     private _canvas: GrCanvas;
+    private _width: Parameter;
+    private _args: Array<Parameter>;
 
 
-    constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter) {
+    constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter, width: Parameter, ...args: Array<Parameter>) {
         super(opcode, target);
         this._styles = styles;
         this._entryID = entryID;
@@ -127,18 +129,42 @@ class GfxMake extends GfxOperation {
         if (this._entryID.isRegister) {
             throw new Error("Only string literals are allowed when providing a library entry")
         }
-        this._interpreter = new GfxInterpreter(null);
+        this._args = args;
+        this._width = width;
 
+        this._interpreter = new GfxInterpreter(null);
     }
 
 
     protected setup(outerInterpreter: GfxInterpreter) {
-        if (!this._setup) {
-            const entry = outerInterpreter.library.getEntry(this._entryID.value);
-            this._interpreter.parse(entry.code);
-            this._setup = true;
-            this._canvas = GrCanvas.create(entry.aspectRatio, 100);
+        if (!this._entry) {
+            this._entry = outerInterpreter.library.getEntry(this._entryID.value);
+            this._interpreter.parse(this._entry.code);
         }
+
+        // We do this everytime, because when we're in a loop and width points to a register
+        // the value of width might change between iterations.
+        this._canvas = GrCanvas.create(this._entry.aspectRatio, this._width.finalized(this.closure));
+    }
+
+    protected getScope(): { [key: string]: any } {
+        const ret = {};
+
+        if (!this._entry) {
+            return {};
+        }
+
+        let i = 0;
+        for (const k in this._entry.arguments) {
+            if (this._args && this._args[i]) {
+                ret[k] = this._args[i].finalized(this.closure);
+            } else {
+                ret[k] = this._entry.arguments[k].default;
+            }
+            i++;
+        }
+
+        return ret;
     }
 
     get styles(): any {
@@ -151,7 +177,8 @@ class GfxMake extends GfxOperation {
         this._interpreter.clearObjects();
         await this._interpreter.run({
             "$styles": this.styles,
-            [this._canvas.uniqueName]: this._canvas
+            [this._canvas.uniqueName]: this._canvas,
+            ...this.getScope()
         });
 
         const resultObject:GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;

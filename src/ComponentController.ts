@@ -199,8 +199,7 @@ export class ComponentController extends BaseComponentController {
 
     protected preloadDemoCode(): void {
 
-        const code = `MAKE sun1, "star", $styles
-        MAKE ngon1, "ngon", $styles`;
+        const code = `MAKE sun1, "star", $styles, 400`;
 /*
 const code = `RECT Rectangle1, $styles.default, (279, 525), 20, 82
 DO 2

@@ -16,10 +16,10 @@ import {AspectRatio} from "./Geo/GrCanvas";
 const starCode = `COMPOSITE o
 LINE Line1, $styles.default, Canvas@bottom, Canvas@top
 POLY Polygon1, $styles.default, [ Line1@end ], 1
-DO 5
-ROTATE Line1, 180/ 5
-EXTPOLY Polygon1, [ Line1@0.79 ]
-ROTATE Line1, 180 / 5
+DO spokes
+ROTATE Line1, 180/ spokes
+EXTPOLY Polygon1, [ Line1@(spokeRatio) ]
+ROTATE Line1, 180 / spokes
 EXTPOLY Polygon1, [ Line1@end ]
 ENDDO
 FILL Polygon1, "#fce654", 0.1
