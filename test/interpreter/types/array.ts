@@ -132,7 +132,7 @@ describe('Array', () => {
             LOAD r, 0
                                         
             FOREACH v, a  
-                ADD ^r, v
+                ADD r, v
             ENDEACH          
        `;
 
