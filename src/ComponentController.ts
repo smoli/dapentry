@@ -12,7 +12,7 @@ import {SelectObjects} from "./controller/actions/SelectObjects";
 import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 import {DeleteSelection} from "./controller/actions/DeleteSelection";
 import {WrapInLoop} from "./controller/actions/WrapInLoop";
-import {GrCanvas} from "./Geo/GrCanvas";
+import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 
 
 export class ComponentController extends BaseComponentController {
@@ -30,6 +30,32 @@ export class ComponentController extends BaseComponentController {
         this._interpreter = new GfxInterpreter(component.getLibrary());
         this._canvas = GrCanvas.create_1_1(1000);
         this.preloadDemoCode();
+    }
+
+    public setAspectRatio(ar: AspectRatio) {
+        switch (ar) {
+            case AspectRatio.ar1_1:
+                this._canvas = GrCanvas.create_1_1(1000);
+                break;
+            case AspectRatio.ar3_2:
+                this._canvas = GrCanvas.create_3_2(1000);
+                break;
+            case AspectRatio.ar4_3:
+                this._canvas = GrCanvas.create_4_3(1000);
+                break;
+            case AspectRatio.ar16_9:
+                this._canvas = GrCanvas.create_16_9(1000);
+                break;
+            case AspectRatio.ar16_10:
+                this._canvas = GrCanvas.create_16_10(1000);
+                break;
+
+        }
+
+        if (this._drawing) {
+            this._drawing.setCanvas(this._canvas);
+        }
+
     }
 
 

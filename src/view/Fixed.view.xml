@@ -9,7 +9,18 @@
 
     <l:Splitter orientation="Vertical">
         <l:contentAreas>
-
+            <Toolbar>
+                <layoutData>
+                    <l:SplitterLayoutData size="2rem"
+                                          resizable="false"/>
+                </layoutData>
+                <ToolbarSpacer/>
+                <Button text="1:1" press="onAspectRatio1_1"/>
+                <Button text="3:2" press="onAspectRatio3_2"/>
+                <Button text="4:3" press="onAspectRatio4_3"/>
+                <Button text="16:9" press="onAspectRatio16_9"/>
+                <Button text="16:10" press="onAspectRatio16_10"/>
+            </Toolbar>
             <l:Splitter orientation="Horizontal">
                 <l:contentAreas>
                     <l:Splitter orientation="Vertical">

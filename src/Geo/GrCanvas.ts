@@ -1,5 +1,13 @@
 import {BoundingBox, GrObject, ObjectType} from "./GrObject";
 
+export enum AspectRatio {
+    ar1_1,
+    ar3_2,
+    ar4_3,
+    ar16_9,
+    ar16_10
+}
+
 export class GrCanvas extends GrObject {
     private _width: number;
     private _height: number;
