@@ -7,9 +7,9 @@ import {GrObjectList} from "../../../src/Geo/GrObjectList";
 import exp = require("constants");
 
 
-describe('Stacking', () => {
+describe('Scenarios 1', () => {
 
-    it('allows to stack multiple iterations of the same object', async () => {
+    it('Stacking by looping and moving object on themselves', async () => {
 
         const code = `
             DO 3
@@ -28,4 +28,5 @@ describe('Stacking', () => {
             expect(rects.objects[1].center).to.deep.equal({ x: 100, y: 50 });
             expect(rects.objects[2].center).to.deep.equal({ x: 100, y: 0 });
     });
+    
 });

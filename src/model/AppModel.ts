@@ -20,7 +20,8 @@ export enum AppModelKeys {
     codeEditorSize = "codeEditorSize",
     styleEditor = "styleEditor",
     structureEditor = "structureEditor",
-    dataEditorSize = "dataEditorSize"
+    dataEditorSize = "dataEditorSize",
+    library = "library"
 }
 
 export interface SelectionInfo {
@@ -48,7 +49,8 @@ export class AppModel extends JSONModelAccess {
             [AppModelKeys.styleEditor]: false,
             [AppModelKeys.structureEditor]: true,
             [AppModelKeys.codeEditorSize]: "20%",
-            [AppModelKeys.dataEditorSize]: "20%"
+            [AppModelKeys.dataEditorSize]: "20%",
+            [AppModelKeys.library]: []
         });
 
         super(model);

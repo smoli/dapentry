@@ -5,11 +5,33 @@
  */
 
 import UIComponent from "sap/ui/core/UIComponent";
-import { support } from "sap/ui/Device";
+import {support} from "sap/ui/Device";
 import {ComponentController} from "./ComponentController";
 import {CodeManager} from "./runtime/CodeManager";
-import JSONModel from "sap/ui/model/json/JSONModel";
 import {AppModel} from "./model/AppModel";
+import {Library, LibraryEntryArgumentType} from "./Library";
+
+
+const starCode = `COMPOSITE o
+LINE Line1, $styles.default, (362, 364), (832, 364)
+POLY Polygon2, $styles.default, [ Line1@end ], 1
+DO 5
+ROTATE Line1, 180  / 5
+EXTPOLY Polygon2, [ Line1@0.75]
+ROTATE Line1, 180 / 5
+EXTPOLY Polygon2, [ Line1@end ]
+ENDDO
+FILL Polygon2, "#fce654", 0.1
+APP o.objects, Polygon2`;
+
+const ngonCode = `COMPOSITE o
+LINE Line1, $styles.default, (344, 357), (660, 359)
+POLY Polygon1, $styles.default, [ Line1@end ], 1
+DO 5
+ROTATE Line1, 360 / 5
+EXTPOLY Polygon1, [ Line1@end ]
+ENDDO
+APP o.objects, Polygon1`;
 
 
 /**
@@ -21,15 +43,16 @@ export default class Component extends UIComponent {
         manifest: "json"
     };
 
-    private contentDensityClass : string;
+    private contentDensityClass: string;
     private _appController: ComponentController;
     private _codeManager: CodeManager;
     private _appModel: AppModel;
+    private _library: Library;
 
     /**
      * Initialize component.
      */
-    public init() : void {
+    public init(): void {
         super.init();
         this.getRouter().initialize();
 
@@ -43,8 +66,52 @@ export default class Component extends UIComponent {
 
         this._appModel = new AppModel(this._codeManager);
         this.setModel(this._appModel.model, "appModel");
+        this._library = new Library(this._appModel);
 
         this._appController = new ComponentController(this);
+
+        this._library.addEntry({
+            "id": "star",
+            "name": "Star",
+            "description": "not the celestial object",
+            "author": "",
+            "lastUpdate": null,
+            "version": "",
+            "arguments": {
+                "spokes": {
+                    "type": LibraryEntryArgumentType.Number,
+                    "default": 5,
+                    "description": "Number of spokes"
+                },
+                "spokeRatio": {
+                    "type": LibraryEntryArgumentType.Number,
+                    "default": 0.75,
+                    "description": "Determines the length of the spokes"
+                }
+            },
+            "code": starCode
+        });
+
+        this._library.addEntry({
+            "id": "ngon",
+            "name": "N-Gon",
+            "description": "Gon with n corners",
+            "author": "",
+            lastUpdate: null,
+            "version": "",
+            "arguments": {
+                "n": {
+                    "type": LibraryEntryArgumentType.Number,
+                    "default": 5,
+                    "description": "Number of corners"
+                }
+            },
+            "code": ngonCode
+        });
+    }
+
+    getLibrary(): Library {
+        return this._library;
     }
 
     getCodeManager(): CodeManager {
@@ -66,7 +133,7 @@ export default class Component extends UIComponent {
      * @public
      * @return {string} css class, either 'sapUiSizeCompact' or 'sapUiSizeCozy' - or an empty string if no css class should be set
      */
-    public getContentDensityClass() : string {
+    public getContentDensityClass(): string {
         if (this.contentDensityClass === undefined) {
             // check whether FLP has already set the content density class; do nothing in this case
             if (document.body.classList.contains("sapUiSizeCozy") || document.body.classList.contains("sapUiSizeCompact")) {

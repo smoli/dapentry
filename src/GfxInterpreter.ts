@@ -16,6 +16,7 @@ import {GfxScale} from "./runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
 import {Parameter} from "./runtime/interpreter/Parameter";
 import {GrCompositeObject} from "./Geo/GrCompositeObject";
+import {Library} from "./Library";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -37,14 +38,19 @@ function makeGfxOperation(OpClass: (typeof Operation), objectCallBack: (GrObject
     }
 }
 
+
 export class GfxInterpreter extends Interpreter {
 
     private _lastObjectTouched: GrObject;
     private _objects: { [key: string]: GrObject };
+    private _library: Library;
 
 
-    constructor() {
+    constructor(library: Library) {
         super();
+
+        this._library = library;
+
         this.addOperation("CIRCLE", makeGfxOperation(GfxCircle, this.objectCallBack.bind(this)));
         this.addOperation("RECT", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
         this.addOperation("LINE", makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
@@ -57,10 +63,20 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
         this.addOperation("FILL", makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
         this.addOperation("STROKE", makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));
-        this.addOperation("MAKE", makeGfxOperation(GfxMake, this.objectCallBack.bind(this)));
+
+        if (this._library) {
+            // This operation makes only sense if the interpreter has a library.
+            // This basically prevents nested instantiation for now.
+            // TODO: Do we want nested instantiation? How do we prevent recursion?
+            this.addOperation("MAKE", makeGfxOperation(GfxMake, this.objectCallBack.bind(this)));
+        }
 
         this.addOperation("OBLIST", GfxObjectList);
         this.addOperation("COMPOSITE", GfxComposite);
+    }
+
+    get library():Library {
+        return this._library;
     }
 
     get code():Array<string> {
@@ -93,34 +109,38 @@ export class GfxInterpreter extends Interpreter {
 class GfxMake extends GfxOperation {
     private _interpreter: GfxInterpreter;
     private _styles: Parameter;
-    private _code: string;
+    private _setup: boolean = false;
+    private _entryID: Parameter;
 
 
-    constructor(opcode, target: Parameter, styles: Parameter) {
+    constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter) {
         super(opcode, target);
         this._styles = styles;
-        this._code = `COMPOSITE o
-LINE Line1, $styles.default, (362, 364), (832, 364)
-POLY Polygon2, $styles.default, [ Line1@end ], 1
-DO 5
-ROTATE Line1, 180  / 5
-EXTPOLY Polygon2, [ Line1@0.75]
-ROTATE Line1, 180 / 5
-EXTPOLY Polygon2, [ Line1@end ]
-ENDDO
-FILL Polygon2, "#fce654", 0.1
-APP o.objects, Polygon2
-`;
+        this._entryID = entryID;
 
-        this._interpreter = new GfxInterpreter();
-        this._interpreter.parse(this._code);
+        if (this._entryID.isRegister) {
+            throw new Error("Only string literals are allowed when providing a library entry")
+        }
+        this._interpreter = new GfxInterpreter(null);
+
+    }
+
+
+    protected setup(outerInterpreter: GfxInterpreter) {
+        if (!this._setup) {
+            const entry = outerInterpreter.library.getEntry(this._entryID.value);
+            this._interpreter.parse(entry.code);
+            this._setup = true;
+        }
     }
 
     get styles(): any {
         return this._styles.finalized(this.closure);
     }
 
-    async execute(): Promise<any> {
+    async execute(outerInterpreter: GfxInterpreter): Promise<any> {
+        this.setup(outerInterpreter);
+
         this._interpreter.clearObjects();
         await this._interpreter.run({
             "$styles": this.styles

@@ -25,7 +25,7 @@ export class ComponentController extends BaseComponentController {
 
         this._component = component;
         this._styleManager = new StyleManager();
-        this._interpreter = new GfxInterpreter();
+        this._interpreter = new GfxInterpreter(component.getLibrary());
         this.preloadDemoCode();
     }
 
@@ -166,12 +166,15 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
-        //const code = `MAKE sun1, $styles`;
+        const code = `MAKE sun1, "star", $styles
+        MAKE ngon1, "ngon", $styles`;
+/*
 const code = `RECT Rectangle1, $styles.default, (279, 525), 20, 82
 DO 2
 RECT Rectangle2, $styles.default, (400, 525), 168, 82
 MOVE Rectangle2@bottom, Rectangle2@top
 ENDDO`
+*/
         this.addOperations(code.split("\n").filter(l => !!l));
     }
 
