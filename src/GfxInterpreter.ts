@@ -17,6 +17,7 @@ import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
 import {Parameter} from "./runtime/interpreter/Parameter";
 import {GrCompositeObject} from "./Geo/GrCompositeObject";
 import {Library} from "./Library";
+import {GrCanvas} from "./Geo/GrCanvas";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -93,8 +94,12 @@ export class GfxInterpreter extends Interpreter {
         this._lastObjectTouched = object;
     }
 
-    clearObjects() {
+    clearObjects(canvas: GrCanvas = null) {
         this._objects = {};
+
+        if (canvas) {
+            this._objects[canvas.uniqueName] = canvas;
+        }
     }
 
     get objects():Array<GrObject> {

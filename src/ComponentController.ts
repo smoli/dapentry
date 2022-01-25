@@ -12,6 +12,7 @@ import {SelectObjects} from "./controller/actions/SelectObjects";
 import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 import {DeleteSelection} from "./controller/actions/DeleteSelection";
 import {WrapInLoop} from "./controller/actions/WrapInLoop";
+import {GrCanvas} from "./Geo/GrCanvas";
 
 
 export class ComponentController extends BaseComponentController {
@@ -19,6 +20,7 @@ export class ComponentController extends BaseComponentController {
     private _interpreter: GfxInterpreter;
     private _styleManager: StyleManager;
     private _drawing: Drawing;
+    private _canvas: GrCanvas;
 
     constructor(component: Component) {
         super();
@@ -26,6 +28,7 @@ export class ComponentController extends BaseComponentController {
         this._component = component;
         this._styleManager = new StyleManager();
         this._interpreter = new GfxInterpreter(component.getLibrary());
+        this._canvas = new GrCanvas(0, 0, 1600, 900)
         this.preloadDemoCode();
     }
 
@@ -90,7 +93,7 @@ export class ComponentController extends BaseComponentController {
 
 
     protected async runCode(): Promise<any> {
-        this._interpreter.clearObjects();
+        this._interpreter.clearObjects(this._canvas);
         this._interpreter.parse(this.getAppModel().fullCode);
 
         const index = this.getAppModel().getLastSelectedCodeLineIndex();
@@ -103,7 +106,8 @@ export class ComponentController extends BaseComponentController {
 
         return this._interpreter.run({
             "$styles": this._styleManager.styles,
-            "$lastObject": null
+            "$lastObject": null,
+            [this._canvas.name]: this._canvas
         });
     }
 

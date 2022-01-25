@@ -18,6 +18,7 @@ import {GrBezier, GrPolygon, GrPolygonBase, GrQuadratic} from "../../../Geo/GrPo
 import {Point2D} from "../../../Geo/Point2D";
 import {GrCompositeObject} from "../../../Geo/GrCompositeObject";
 import {GrObjectList} from "../../../Geo/GrObjectList";
+import {GrCanvas} from "../../../Geo/GrCanvas";
 
 enum ToolClasses {
     object = "grObject",
@@ -134,9 +135,14 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
             case ObjectType.Composite:
                 this._renderComposite(this._objectLayer, object as GrCompositeObject, parent, enableMouseEvents);
+                break;
 
             case ObjectType.List:
                 this._renderList(this._objectLayer, object as GrObjectList, parent, enableMouseEvents);
+                break;
+
+            case ObjectType.Canvas:
+                break;
 
         }
 
@@ -513,6 +519,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
                                 case ObjectType.List:
                                     break;
                 */
+
+                case ObjectType.Canvas:
+                    break;
+
                 default:
                     let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
                     if (c.empty()) {
@@ -642,6 +652,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     public removeBoundingRepresentation(object: GrObject) {
+        if (object instanceof GrCanvas) {
+            return;
+        }
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox).remove();

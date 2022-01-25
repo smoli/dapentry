@@ -5,6 +5,7 @@ import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {GrCompositeObject} from "./GrCompositeObject";
 
 export enum ObjectType {
+    Canvas,
     Circle,
     Rectangle,
     Ellipse,
@@ -93,7 +94,7 @@ export abstract class GrObject {
 
     private static _instanceCounter: number = 0;
     private static _pool: { [key: string]: GrObject } = {}
-    private static _objectNames: string[] = [];
+    private static _objectNames: string[] = ["Canvas"];
 
     protected _uniqueName: string;
     protected _parent: GrObject = null;
