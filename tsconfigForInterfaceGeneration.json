@@ -5,11 +5,12 @@
     "sourceMap": true
   },
   "include": [
-    "src/**/*.generated.tsinterface.ts",
+    "xsrc/**/*.generated.tsinterface.ts",
     "xsrc/controls/drawing/Drawing.ts",
     "src/controls/operation/OperationEditor.ts",
     "src/controls/steps/Step.ts",
-    "src/controls/steps/StepList.ts"
+    "src/controls/steps/StepList.ts",
+    "src/controls/color/ColorButton.ts"
   ],
   "exclude": [
     "node_modules"

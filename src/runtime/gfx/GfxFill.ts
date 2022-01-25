@@ -23,9 +23,27 @@ export class GfxFill extends GfxOperation {
 
     async execute(): Promise<any> {
         this.target.fillColor = this.color;
-        this.target.strokeColor = this.color;
         if (this._alpha) {
             this.target.fillOpacity = this.alpha;
         }
+    }
+}
+
+
+export class GfxStrokeColor extends GfxOperation {
+    private readonly _color: Parameter;
+
+    constructor(opcode: string, object: Parameter, color: Parameter) {
+        super(opcode, object);
+        this._color = color;
+
+    }
+
+    get color(): string {
+        return this._color.finalized(this.closure);
+    }
+
+    async execute(): Promise<any> {
+        this.target.strokeColor = this.color;
     }
 }

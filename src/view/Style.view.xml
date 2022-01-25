@@ -2,28 +2,38 @@
         controllerName="sts.drawable.controller.Style"
         displayBlock="true"
         xmlns="sap.m"
-        xmlns:l="sap.ui.layout"
         xmlns:unified="sap.ui.unified"
-        xmlns:mvc="sap.ui.core.mvc">
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns:sts="sts.drawable.controls.color"
+>
 
-        <VBox items="{appModel>/selectedObjects}">
-            <items>
-                <VBox>
-                    <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}"
-                                         change="onColorChange"/>
-                    <HBox width="100%" justifyContent="Stretch">
-                        <Text text="{i18n>strokeWidth}" />
+    <VBox items="{appModel>/selectedObjects}">
+        <items>
+            <VBox>
+                <sts:ColorButton text="{appModel>style/fillColor}" press="onFillColor" color="{appModel>style/fillColor}"/>
+<!--
+                                    <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}"
+                                                         change="onColorChange"/>
+-->
+                <sts:ColorButton text="{appModel>style/strokeColor}" press="onStrokeColor" color="{appModel>style/strokeColor}"/>
+
+<!--
+                                    <unified:ColorPicker id="cp2" mode="HSL" colorString="{appModel>style/strokeColor}"
+                                                         change="onStrokeColorChange"/>
+-->
+
+                    <Text text="{i18n>strokeWidth}"/>
                     <Slider value="{appModel>style/strokeWidth}" width="100%"
                             min="{= ${appModel>type} === 'Line' ? 1 : 0 }"
-                            max="25"
+                            max="100"
                             showAdvancedTooltip="true"
                             showHandleTooltip="false"
                             inputsAsTooltips="true"
                             change="onStrokeWidthChange"
                             class="sapUiMediumMarginBottom"/>
-                    </HBox>
-                </VBox>
-            </items>
-        </VBox>
+
+            </VBox>
+        </items>
+    </VBox>
 
 </mvc:View>

@@ -60,7 +60,7 @@
 
                     <VBox>
                         <layoutData>
-                            <l:SplitterLayoutData size="{= ${appModel>/styleEditor} ? '300px' : '0px'}"
+                            <l:SplitterLayoutData size="{= ${appModel>/styleEditor} ? '330px' : '0px'}"
                                                   resizable="false"/>
                         </layoutData>
 

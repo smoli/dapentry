@@ -8,7 +8,7 @@ import {GfxPolygon} from "./runtime/gfx/GfxPolygon";
 import {GfxBezier, GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
 import {GfxMove} from "./runtime/gfx/GfxMove";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
-import {GfxFill} from "./runtime/gfx/GfxFill";
+import {GfxFill, GfxStrokeColor} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GrObject} from "./Geo/GrObject";
 import {GfxComposite, GfxObjectList} from "./runtime/gfx/GfxObject";
@@ -63,6 +63,7 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.objectCallBack.bind(this)));
         this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
         this.addOperation("FILL", makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
+        this.addOperation("STROKECOLOR", makeGfxOperation(GfxStrokeColor, this.objectCallBack.bind(this)));
         this.addOperation("STROKE", makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));
 
         if (this._library) {

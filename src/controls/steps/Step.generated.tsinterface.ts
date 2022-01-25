@@ -1,6 +1,6 @@
+import any[] from "any[]";
 import Event from "sap/ui/base/Event";
 import { $ControlSettings } from "sap/ui/core/Control";
-import {Token} from "../../runtime/interpreter/Parser";
 
 declare module "./Step" {
 
@@ -8,7 +8,7 @@ declare module "./Step" {
      * Interface defining the settings object used in constructor calls
      */
     interface $StepSettings extends $ControlSettings {
-        tokens?: Array<Token>;
+        tokens?: any[];
         codeIndex?: number;
         level?: number;
         selected?: boolean;
@@ -18,8 +18,8 @@ declare module "./Step" {
     export default interface Step {
 
         // property: tokens
-        getTokens(): Array<Token>;
-        setTokens(tokens: Array<Token>): this;
+        getTokens(): any[];
+        setTokens(tokens: any[]): this;
 
         // property: codeIndex
         getCodeIndex(): number;
