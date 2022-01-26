@@ -1,4 +1,8 @@
 import {BoundingBox, GrObject, ObjectType} from "./GrObject";
+import {Point2D} from "./Point2D";
+import {Line2D} from "./Line2D";
+import {Circle2D} from "./Circle2D";
+import {TWO_PI} from "./GeoMath";
 
 export enum AspectRatio {
     ar1_1,
@@ -62,6 +66,9 @@ export class GrCanvas extends GrObject {
         return new GrCanvas(0, 0, width, 9 * width / 16);
     }
 
+    get selectable(): boolean {
+        return false;
+    }
 
     protected copy(): GrObject {
         throw new Error("GrObject.copy: You cannot copy the canvas");
@@ -85,6 +92,5 @@ export class GrCanvas extends GrObject {
     set width(value: number) {
         this._width = value;
     }
-
 
 }

@@ -160,6 +160,10 @@ export abstract class GrObject {
      */
     protected abstract copy(): GrObject;
 
+    get selectable():boolean {
+        return true;
+    }
+
     protected static getPoolInstance(name: string) {
         return null;
         /*

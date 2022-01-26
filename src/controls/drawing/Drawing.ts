@@ -229,12 +229,17 @@ export default class Drawing extends Control {
 
         if (interactionEvent === InteractionEvents.OtherObject) {
             this._otherObjectIndex++;
-
-            if (this._otherObjectIndex >= this._objects.length) {
-                this._otherObjectIndex = -1;
-                ed.object = null;
-            } else {
+            ed.object = this._objects[this._otherObjectIndex];
+            while (ed.object && !ed.object.selectable) {
+                this._otherObjectIndex++;
                 ed.object = this._objects[this._otherObjectIndex];
+                if (this._otherObjectIndex >= this._objects.length) {
+                    ed.object = null;
+                    break;
+                }
+            }
+            if (!ed.object) {
+                this._otherObjectIndex = -1;
             }
         }
 
@@ -306,6 +311,9 @@ export default class Drawing extends Control {
     }
 
     public selectObject(object: GrObject) {
+        if (!object.selectable) {
+            return;
+        }
         if (this._toolManager.isSelected(object)) {
             this._toolManager.deselectObject(object);
         } else {
@@ -314,6 +322,10 @@ export default class Drawing extends Control {
     }
 
     private _onObjectClick(object: GrObject) {
+
+        if (!object.selectable) {
+            return;
+        }
 
         if (this._toolManager.isSelected(object)) {
             this._toolManager.deselectObject(object);
