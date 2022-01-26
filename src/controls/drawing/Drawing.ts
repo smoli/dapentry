@@ -50,6 +50,9 @@ export default class Drawing extends Control {
     private _svg: Selection<any>;
     private _toolManager: ToolManager;
     private _objectRenderer: ObjectRenderer;
+    private _bezelSize = 10;
+    private _width = 10;
+    private _height = 10;
 
     static readonly metadata = {
         properties: {},
@@ -102,9 +105,10 @@ export default class Drawing extends Control {
     public setCanvas(canvas: GrCanvas) {
         const svg = d3.select(this.getDomRef()).select("svg");
         const bb = canvas.boundingBox;
-        svg.attr("viewBox", `${bb.x - bb.w / 2}, ${bb.y - bb.h / 2}, ${bb.w}, ${bb.h}`);
+        svg.attr("viewBox", `${bb.x - bb.w / 2 - this._bezelSize}, ${bb.y - bb.h / 2 - this._bezelSize}, ${bb.w + 2 * this._bezelSize}, ${bb.h + 2 * this._bezelSize}`);
+        this._width = bb.w;
+        this._height = bb.h;
     }
-
 
     protected _onToolDone(result) {
         this.fireNewOperation({code: result});
@@ -196,6 +200,26 @@ export default class Drawing extends Control {
             key: d3Ev.key, keyCode: d3Ev.keyCode,
             selection: null
         };
+
+        // Constrain to bezel
+        if (ed.x < 0) {
+            ed.dx -= 0 - ed.x;
+            ed.x = 0;
+        }
+        if (ed.x > this._width) {
+            ed.dx -= ed.x - this._width;
+            ed.x = this._width;
+        }
+
+        if (ed.y < 0) {
+            ed.dy -= 0 - ed.y;
+            ed.y = 0;
+        }
+        if (ed.y > this._height) {
+            ed.dy -= ed.y - this._height;
+            ed.y = this._height;
+        }
+
         if (!isNaN(ed.x)) {
             this._lastMouse = new Point2D(ed.x, ed.y)
         } else if (this._lastMouse) {

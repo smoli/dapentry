@@ -11,42 +11,6 @@
             left: -1000vw;
         }
 
-        .stsDrawingWrapper {
-            margin: 15px;
-        }
-
-        svg {
-            /*border: 1px solid lightgreen;*/
-            outline: none;
-            box-shadow: 5px 5px 15px 0px rgba(20, 20, 20, 0.2);
-            max-height: 80vh;
-        }
-
-        svg circle, svg rect, svg path {
-            stroke-width: 2;
-            stroke: coral;
-            fill: coral;
-            fill-opacity: 0.2;
-        }
-
-        line {
-            stroke-width: 2;
-            stroke: coral;
-        }
-
-        svg g .boundingBox {
-            stroke-width: 3;
-            stroke: lightseagreen;
-            fill: none !important;
-        }
-
-        circle.transformationHandle {
-            fill-opacity: 1;
-            stroke-width: 1;
-            stroke: #3f3f3f;
-            fill: url(#handleGradient);
-        }
-
         noPointerEvents {
             pointer-events: none;
         }
@@ -76,6 +40,46 @@
         .sapUiLoSplitterBarGripIcon {
             background: none !important;
         }
+
+        .stsDrawingWrapper {
+            margin: 15px;
+        }
+
+        svg {
+            box-shadow: 5px 5px 15px 0 rgba(20, 20, 20, 0.2);
+            border: 1px dotted #d5d5d5;
+            background: none;
+            outline: none;
+            max-height: 80vh;
+            margin-top: -10px;
+            margin-left: -10px;
+        }
+
+        svg circle, svg rect, svg path {
+            stroke-width: 2;
+            stroke: coral;
+            fill: coral;
+            fill-opacity: 0.2;
+        }
+
+        line {
+            stroke-width: 2;
+            stroke: coral;
+        }
+
+        svg g .boundingBox {
+            stroke-width: 3;
+            stroke: lightseagreen;
+            fill: none !important;
+        }
+
+        circle.transformationHandle {
+            fill-opacity: 1;
+            stroke-width: 1;
+            stroke: #3f3f3f;
+            fill: url(#handleGradient);
+        }
+
 
         .stsDrawableStep {
             margin: 0.2em;
