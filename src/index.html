@@ -46,8 +46,8 @@
         }
 
         svg {
-            box-shadow: 5px 5px 15px 0 rgba(20, 20, 20, 0.2);
-            border: 1px dotted #d5d5d5;
+            /*box-shadow: 5px 5px 15px 0 rgba(20, 20, 20, 0.2);*/
+            /*border: 1px dotted #d5d5d5;*/
             background: none;
             outline: none;
             max-height: 80vh;
@@ -71,6 +71,14 @@
             stroke-width: 3;
             stroke: lightseagreen;
             fill: none !important;
+        }
+
+        svg .stsDrawableCanvasDisplay {
+            fill-opacity: 1;
+            fill: #fbfbfb !important;
+            stroke-width: 0;
+            stroke: none;
+            filter: url(#dropShadow);
         }
 
         circle.transformationHandle {
@@ -137,6 +145,16 @@
             <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1.00"/>
             <stop offset="65%" style="stop-color:rgb(213,211,211);stop-opacity:1.00"/>
         </radialGradient>
+
+        <filter id="dropShadow">
+            <feDropShadow
+                    dx="1"
+                    dy="1"
+                    stdDeviation="5"
+                    floodColor="#aaa"
+                    floodOpacity="0.2"
+            />
+        </filter>
     </defs>
 
 </svg>

@@ -50,7 +50,7 @@ export default class Drawing extends Control {
     private _svg: Selection<any>;
     private _toolManager: ToolManager;
     private _objectRenderer: ObjectRenderer;
-    private _bezelSize = 10;
+    private _bezelSize = 15;
     private _width = 10;
     private _height = 10;
 

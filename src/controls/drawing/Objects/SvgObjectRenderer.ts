@@ -55,6 +55,8 @@ function p2d(p: Point2D, operation: string = "L") {
 export class SvgObjectRenderer extends ObjectRenderer {
 
     protected _renderedObjects: Array<GrObject> = [];
+
+    protected _backgroundLayer: Selection<any>;
     protected _objectLayer: Selection<any>;
     protected _snappingLayer: Selection<any>;
     protected _interactionLayer: Selection<any>;
@@ -69,6 +71,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     protected _setupLayers(container: Selection<any>): void {
+        this._backgroundLayer = container.append("g");
         this._objectLayer = container.append("g");
         this._interactionLayer = container.append("g");
         this._snappingLayer = container.append("g");
@@ -142,6 +145,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 break;
 
             case ObjectType.Canvas:
+                this._renderCanvas(this._backgroundLayer, object as GrCanvas, parent, false);
                 break;
 
         }
@@ -767,4 +771,18 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._infoLayer.selectAll("*").remove();
     }
 
+    private _renderCanvas(_backgroundLayer: d3.Selection<any>, object: GrCanvas, parent: d3.Selection<any>, b: boolean) {
+        let c = _backgroundLayer.selectAll(".stsDrawableCanvasDisplay");
+
+        if (c.empty()) {
+            c = _backgroundLayer.append("rect");
+        }
+
+        c.attr("x", object.x - object.width / 2)
+            .attr("y", object.y - object.height / 2)
+            .attr("width", object.width)
+            .attr("height", object.height)
+            .classed("stsDrawableCanvasDisplay", true);
+
+    }
 }
