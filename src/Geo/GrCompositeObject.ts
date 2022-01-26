@@ -155,10 +155,10 @@ export class GrCompositeObject extends GrObject {
     pointsOfInterest(purpose:POIPurpose): POIMap {
         return {
             ...super.pointsOfInterest(purpose),
-            [POI.topLeft]: this.topLeft,
-            [POI.topRight]: this.topRight,
-            [POI.bottomLeft]: this.bottomLeft,
-            [POI.bottomRight]: this.bottomRight
+            [POI.topLeft]: this.topLeft.copy,
+            [POI.topRight]: this.topRight.copy,
+            [POI.bottomLeft]: this.bottomLeft.copy,
+            [POI.bottomRight]: this.bottomRight.copy
         }
     }
 

@@ -46,7 +46,7 @@ export class AppModel extends JSONModelAccess {
             [AppModelKeys.drawing]: [],
             [AppModelKeys.selectedObjects]: [],
             [AppModelKeys.codeEditor]: false,
-            [AppModelKeys.styleEditor]: true,
+            [AppModelKeys.styleEditor]: false,
             [AppModelKeys.structureEditor]: false,
             [AppModelKeys.codeEditorSize]: "20%",
             [AppModelKeys.dataEditorSize]: "20%",

@@ -1,4 +1,3 @@
-import any[] from "any[]";
 import Event from "sap/ui/base/Event";
 import { $ControlSettings } from "sap/ui/core/Control";
 

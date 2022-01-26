@@ -107,9 +107,9 @@ export class GrLine extends GrObject {
 
     pointsOfInterest(purpose:POIPurpose): POIMap {
         return {
-            [POI.start]: this.start,
-            [POI.end]: this.end,
-            [POI.center]: this.center
+            [POI.start]: this.start.copy,
+            [POI.end]: this.end.copy,
+            [POI.center]: this.center.copy
         }
     }
 
