@@ -187,21 +187,7 @@ export default class Drawing extends Control {
         });
     }
 
-    private _pumpToTool(interactionEvent: InteractionEvents) {
-        const d3Ev = d3.event;
-        const d3MEv = d3.mouse(this._svg.node());
-        const ed: InteractionEventData = {
-            interactionEvent,
-            x: d3MEv[0],
-            y: d3MEv[1],
-            dx: d3Ev.movementX,
-            dy: d3Ev.movementY,
-            alt: d3Ev.altKey, button: d3Ev.button, buttons: d3Ev.buttons, ctrl: d3Ev.ctrlKey, shift: d3Ev.shiftKey,
-            key: d3Ev.key, keyCode: d3Ev.keyCode,
-            selection: null
-        };
-
-        // Constrain to bezel
+    protected _constrainToBezel(ed:InteractionEventData) {
         if (ed.x < 0) {
             ed.dx -= 0 - ed.x;
             ed.x = 0;
@@ -219,6 +205,23 @@ export default class Drawing extends Control {
             ed.dy -= ed.y - this._height;
             ed.y = this._height;
         }
+    }
+
+    private _pumpToTool(interactionEvent: InteractionEvents) {
+        const d3Ev = d3.event;
+        const d3MEv = d3.mouse(this._svg.node());
+        const ed: InteractionEventData = {
+            interactionEvent,
+            x: d3MEv[0],
+            y: d3MEv[1],
+            dx: d3Ev.movementX,
+            dy: d3Ev.movementY,
+            alt: d3Ev.altKey, button: d3Ev.button, buttons: d3Ev.buttons, ctrl: d3Ev.ctrlKey, shift: d3Ev.shiftKey,
+            key: d3Ev.key, keyCode: d3Ev.keyCode,
+            selection: null
+        };
+
+        this._constrainToBezel(ed);
 
         if (!isNaN(ed.x)) {
             this._lastMouse = new Point2D(ed.x, ed.y)
