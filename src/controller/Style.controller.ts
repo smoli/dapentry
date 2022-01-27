@@ -15,7 +15,7 @@ import ToolbarSpacer from "sap/m/ToolbarSpacer";
  */
 export default class StyleController extends Controller {
     private fillColorPicker: ColorPickerPopover;
-    private strokeColorPicker: Popover;
+    private strokeColorPicker: ColorPickerPopover;
 
     getComponentController():ComponentController {
         return (this.getOwnerComponent() as Component).getComponentController();
@@ -68,16 +68,14 @@ export default class StyleController extends Controller {
 
     onStrokeColor(event) {
         if (!this.strokeColorPicker) {
-            this.strokeColorPicker = this.makeColorPickerPopOver("{appModel>style/strokeColor}");
+            // this.strokeColorPicker = this.makeColorPickerPopOver("{appModel>style/strokeColor}");
 
-/*
             this.strokeColorPicker = new ColorPickerPopover("stsStrokeColorPickerPopover", {
                 colorString: "{appModel>style/strokeColor}",
                 mode: ColorPickerMode.HSL,
                 change: this.onStrokeColorChange.bind(this)
             });
-*/
-            this.strokeColorPicker.openBy(event.getSource(), true);
+            this.strokeColorPicker.openBy(event.getSource());
         } else {
             this.strokeColorPicker.close();
             this.strokeColorPicker.destroy();

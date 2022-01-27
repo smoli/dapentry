@@ -21,7 +21,8 @@ export enum AppModelKeys {
     styleEditor = "styleEditor",
     structureEditor = "structureEditor",
     dataEditorSize = "dataEditorSize",
-    library = "library"
+    library = "library",
+    rightPanel = "rightPanel"
 }
 
 export interface SelectionInfo {
@@ -47,15 +48,20 @@ export class AppModel extends JSONModelAccess {
             [AppModelKeys.selectedObjects]: [],
             [AppModelKeys.codeEditor]: false,
             [AppModelKeys.styleEditor]: false,
-            [AppModelKeys.structureEditor]: false,
+            [AppModelKeys.structureEditor]: true,
             [AppModelKeys.codeEditorSize]: "20%",
             [AppModelKeys.dataEditorSize]: "20%",
-            [AppModelKeys.library]: []
+            [AppModelKeys.library]: [],
+            [AppModelKeys.rightPanel]: "none"
         });
 
         super(model);
         this._codeManager = codeManager;
         this._codeManager.clear();
+    }
+
+    get modelName():string {
+        return "appModel";
     }
 
     get codeManager(): CodeManager {

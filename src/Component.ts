@@ -66,7 +66,7 @@ export default class Component extends UIComponent {
         });
 
         this._appModel = new AppModel(this._codeManager);
-        this.setModel(this._appModel.model, "appModel");
+        this.setModel(this._appModel.model, this._appModel.modelName);
         this._library = new Library(this._appModel);
 
         this._appController = new ComponentController(this, GrCanvas.create_1_1(1000));

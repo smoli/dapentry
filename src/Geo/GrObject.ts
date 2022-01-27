@@ -115,14 +115,20 @@ export abstract class GrObject {
         GrObject._objectNames.push(name);
     }
 
-    protected static getNewObjectName(prefix: string): string {
+    protected static makeNewObjectName(prefix: string): string {
         let counter = 1;
 
         while (GrObject.nameExists(prefix + counter)) counter++;
 
-        GrObject.addName(prefix + counter);
-
         return prefix + counter;
+    }
+
+
+    public static getNewObjectName(prefix: string): string {
+        const name = GrObject.makeNewObjectName(prefix);
+        GrObject.addName(name);
+
+        return name;
     }
 
     protected constructor(type: ObjectType, name: string, x: number, y: number) {

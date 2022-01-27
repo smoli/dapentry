@@ -60,13 +60,21 @@
 
                     <VBox>
                         <layoutData>
-                            <l:SplitterLayoutData size="{= ${appModel>/styleEditor} ? '330px' : '0px'}"
+                            <l:SplitterLayoutData size="{= ${appModel>/rightPanel} === 'style' ? '330px' : '0px'}"
                                                   resizable="false"/>
                         </layoutData>
 
                         <mvc:XMLView viewName="sts.drawable.view.Style"/>
                     </VBox>
 
+                    <VBox>
+                        <layoutData>
+                            <l:SplitterLayoutData size="{= ${appModel>/rightPanel} === 'library' ? '330px' : '0px'}"
+                                                  resizable="false"/>
+                        </layoutData>
+
+                        <mvc:XMLView viewName="sts.drawable.view.Library"/>
+                    </VBox>
                 </l:contentAreas>
             </l:Splitter>
 
@@ -77,7 +85,13 @@
                 <ToggleButton text="Structure" pressed="{appModel>/structureEditor}"/>
                 <ToggleButton text="Code" pressed="{appModel>/codeEditor}" visible="{appModel>/structureEditor}"/>
                 <ToolbarSpacer/>
-                <ToggleButton text="Style" pressed="{appModel>/styleEditor}"/>
+                <SegmentedButton selectedKey="{appModel>/rightPanel}">
+                    <items>
+                        <SegmentedButtonItem key="none" text="None"/>
+                        <SegmentedButtonItem key="style" text="Style"/>
+                        <SegmentedButtonItem key="library" text="Library"/>
+                    </items>
+                </SegmentedButton>
 
             </Toolbar>
         </l:contentAreas>

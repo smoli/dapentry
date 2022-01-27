@@ -20,6 +20,10 @@ export default class BaseController extends Controller {
         return this.getComponentController().getAppModel();
     }
 
+    getAppModelName():string {
+        return this.getComponentController().getAppModel().modelName;
+    }
+
 
     getResourceText(textId:string, ...parameters:Array<any>):string {
         const bundle:ResourceBundle = (this.getView().getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;

@@ -6,7 +6,7 @@
         xmlns:mvc="sap.ui.core.mvc"
         xmlns:sts="sts.drawable.controls.color"
 >
-
+    <Title text="Style" />
     <VBox items="{appModel>/selectedObjects}">
         <items>
             <VBox>
