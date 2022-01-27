@@ -2,23 +2,39 @@
   "ignore": [
     "**/*.d.ts"
   ],
-  "presets": [
-    [
-      "transform-ui5",
-      {
-        "modulesMap": {}
-      }
-    ],
-    [
-      "@babel/typescript",
-      {
-        "module": "commonjs"
-      }
-    ]
-  ],
   "plugins": [
     "babel-plugin-transform-async-to-promises",
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-proposal-class-properties"
-  ]
+  ],
+
+  "env": {
+    "dev": {
+      "presets": [
+        [
+          "transform-ui5",
+          {
+            "modulesMap": {}
+          }
+        ],
+        [
+          "@babel/typescript",
+          {
+            "module": "commonjs"
+          }
+        ]
+      ]
+    },
+    "perf": {
+      "presets": [
+        [
+          "@babel/preset-typescript",
+          {
+            "module": "commonjs"
+          }
+        ],
+        "@babel/preset-env"
+      ]
+    }
+  }
 }

@@ -1,8 +1,8 @@
-import {runCode} from "../test/interpreter/toolRunCode";
+import {runCode} from "./toolRunCode";
 import {performance} from "perf_hooks";
-import {GrLine} from "../src/Geo/GrLine";
-import {GrPolygon} from "../src/Geo/GrPolygon";
-import {POI} from "../src/Geo/GrObject";
+import {GrLine} from "../Geo/GrLine";
+import {GrPolygon} from "../Geo/GrPolygon";
+import {POI} from "../Geo/GrObject";
 
 
 const code = `LOAD f2, 1000

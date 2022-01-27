@@ -20,3 +20,5 @@ dist/
 /src/controls/*.tsinterface.ts
 /doc/reference/
 
+/buildPerf/
+/isolate*.log
