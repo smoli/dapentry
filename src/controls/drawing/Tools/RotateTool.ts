@@ -81,7 +81,7 @@ export class RotateTool extends Tool {
 
             this._rotationObject = this._object.createProxy();
 
-            this._startVector = poi.copy.sub(this._object.center);
+            this._startVector = poi.copy.sub(this._pivotPoint);
             this._finalAngle = 0;
             this._state.next(Events.HandleDown);
         }
@@ -117,7 +117,7 @@ export class RotateTool extends Tool {
                 break;
 
             case States.Done:
-                const vector = new Point2D(eventData.x - this._rotationObject.center.x, eventData.y - this._rotationObject.center.y);
+                const vector = new Point2D(eventData.x - this._pivotPoint.x, eventData.y - this._pivotPoint.y);
 
                 let a = vector.angleTo(this._startVector);
                 a = rad2deg(a);
@@ -130,7 +130,7 @@ export class RotateTool extends Tool {
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
-                    const vector = new Point2D(eventData.x - this._rotationObject.center.x, eventData.y - this._rotationObject.center.y);
+                    const vector = new Point2D(eventData.x - this._pivotPoint.x, eventData.y - this._pivotPoint.y);
 
                     let a = vector.angleTo(this._startVector);
                     a = rad2deg(a);
