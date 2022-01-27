@@ -29,7 +29,7 @@ const i = runCode(code).then(() => {
     start = performance.now();
     const Line1 = GrLine.create("line1", 500, 500, 500, 0);
     const Poly1 = GrPolygon.create("poly1", [Line1.end], true);
-    const f2 = 1000;
+    const f2 = 10000;
     for (let i = 0; i < f2; i++) {
         Line1.rotatePOI(POI.start, 180 / f2);
         Poly1.addPoint(Line1.at(0.5));

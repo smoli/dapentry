@@ -135,6 +135,12 @@ then simply
 
 Then open [coverage/index.html](coverage/index.html)
 
+## Profiling
+
+You first need to build the code for node-js. Use WebstormConfig buildPerf for that.
+There are some WebstormConfigs for profiling. They run the buildPerf beforehand but complain about
+the test file not being there if the build didn't run once.
+
 ## Documentation
 
 See [doc/Readme.md](doc/Readme.md)
