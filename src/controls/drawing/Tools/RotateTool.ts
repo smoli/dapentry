@@ -1,5 +1,5 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject, POI, POIMap, POIPurpose} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
@@ -98,7 +98,8 @@ export class RotateTool extends Tool {
         return this._selection.length && this._selection[0];
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        let eventData = snapInfo.event;
         this._state.next(interactionEvent);
 
         if (interactionEvent === InteractionEvents.Selection) {

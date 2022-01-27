@@ -19,6 +19,7 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 ## Bugs
 * [ ] Fix scaling of rotated objects
 * [ ] Hide Objects
+* [ ] Percentage-Point on vertical lines does not work
 * [x] Expressions are not displayed in steps and operation editor
 * [x] Program does not always run as far as expected (better description needed)
 
@@ -28,7 +29,7 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 
 ### Drawing
 * [ ] Snapping
-  * Move Snapping outside the tool into drawing 
+  * [x] Generalize snap handling 
   * [ ] Allow for cycling through overlapping snappoints - use k-d-tree instead of Browser-Mouse-Events? https://en.wikipedia.org/wiki/K-d_tree
   * [ ] Allow to disable poi snapping
   * [ ] snap on intersections
@@ -38,7 +39,7 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 * [ ] rotate around pivot
   * [x] GrLine
 * [ ] enable move and creation tools to use percentage points
-  * [ ] make it available for the firs point of a polygon
+  * [ ] make it available for the first point of a polygon
   * [ ] better show where the point lies when using as the first point on a line or a polygon
 * [ ] enable move and creation operations to use percentage points
   * [ ] create circle

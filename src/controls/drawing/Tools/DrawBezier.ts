@@ -1,6 +1,6 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrPolygon, GrPolygonBase} from "../../../Geo/GrPolygon";
 import {Point2D} from "../../../Geo/Point2D";
@@ -95,17 +95,15 @@ export class DrawBezier extends Tool {
         }
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        const eventData = snapInfo.event;
 
         if (interactionEvent === InteractionEvents.Cancel) {
             this.reset();
             return false;
         }
 
-
         this._state.next(interactionEvent);
-
-        let newp: Point2D;
 
         switch (this._state.state.id) {
 

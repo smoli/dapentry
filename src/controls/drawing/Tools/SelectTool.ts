@@ -2,7 +2,7 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 
 
 enum States {
@@ -60,7 +60,13 @@ export class SelectTool extends Tool {
         return this._selection.length && this._selection[0];
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
+    update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
+
+        return this._update(interactionEvent, this.dontSnap(eventData));
+    }
+
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        let eventData = snapInfo.event;
         if (interactionEvent === InteractionEvents.Selection) {
             this.selection = eventData.selection;
         }

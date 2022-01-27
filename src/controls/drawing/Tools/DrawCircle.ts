@@ -1,6 +1,6 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrCircle} from "../../../Geo/GrCircle";
 
@@ -14,6 +14,8 @@ enum States {
 
 export class DrawCircle extends Tool {
     private _circle:GrCircle;
+    private _centerSnap: SnapInfo;
+    private _secondSnap: SnapInfo;
 
     constructor(renderer) {
         super(renderer);
@@ -24,6 +26,7 @@ export class DrawCircle extends Tool {
         this._state.add(state(States.DragRadius), InteractionEvents.MouseMove, state(States.DragRadius));
         this._state.add(state(States.DragRadius), InteractionEvents.Click, state(States.Done));
         this._state.start(state(States.Wait));
+        this.enablePOISnapping();
     }
 
     public reset() {
@@ -31,7 +34,8 @@ export class DrawCircle extends Tool {
         this._circle = null;
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        const eventData = snapInfo.event;
         if (interactionEvent === InteractionEvents.Cancel) {
             this.reset();
             return false;
@@ -42,11 +46,13 @@ export class DrawCircle extends Tool {
         switch (this._state.state.id) {
             case States.CenterPoint:
                 this._circle = GrCircle.create(null, eventData.x, eventData.y, 0);
+                this._centerSnap = snapInfo;
                 this._renderer.renderCircle(RenderLayer.Interaction, this._circle, false);
                 break;
 
             case States.DragRadius:
                 this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                this._secondSnap = snapInfo;
                 this._renderer.renderCircle(RenderLayer.Interaction, this._circle, false);
                 break;
 
@@ -59,6 +65,11 @@ export class DrawCircle extends Tool {
     }
 
     public get result(): any {
-        return `CIRCLE ${this._circle.uniqueName}, $styles.default, (${this._circle.x}, ${this._circle.y}), ${this._circle.radius}`
+        if (!this._secondSnap.object) {
+            return `CIRCLE ${this._circle.uniqueName}, $styles.default, ${this.makePointCodeFromSnapInfo(this._centerSnap)}, ${this._circle.radius}`
+        } else {
+            return `CIRCLE ${this._circle.uniqueName}, $styles.default, ${this.makePointCodeFromSnapInfo(this._centerSnap)}, ${this.makePointCodeFromSnapInfo(this._secondSnap)}`
+        }
+
     }
 }

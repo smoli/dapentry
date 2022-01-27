@@ -88,14 +88,15 @@ export class MoveTool extends Tool {
         return this._selection.length && this._selection[0];
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        let eventData = snapInfo.event;
         this._state.next(interactionEvent);
 
         if (interactionEvent === InteractionEvents.Selection) {
             this.selection = eventData.selection;
         }
 
-        this._lastSnapInfo = this.tryToPOISnap(eventData);
+        this._lastSnapInfo = snapInfo;
         eventData = this._lastSnapInfo.event;
         let dx;
         let dy;

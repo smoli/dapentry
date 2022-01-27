@@ -116,7 +116,8 @@ export class ScaleTool extends Tool {
         this._finalY *= Math.abs(fy);
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        let eventData = snapInfo.event;
         this._state.next(interactionEvent);
 
         if (interactionEvent === InteractionEvents.Selection) {

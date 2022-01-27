@@ -18,7 +18,6 @@ export class DrawLine extends Tool {
     private _line: GrLine
     private _firstSnapInfo: SnapInfo;
     private _secondSnapInfo: SnapInfo;
-    private _otherObject: GrObject;
 
     constructor(renderer) {
         super(renderer);
@@ -36,36 +35,11 @@ export class DrawLine extends Tool {
     public reset() {
         super.reset();
         this._line = null;
-        this._otherObject = null;
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
-        if (interactionEvent === InteractionEvents.Cancel) {
-            this.reset();
-            return false;
-        }
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
 
-        if (interactionEvent === InteractionEvents.OtherObject) {
-            this._otherObject = eventData.object;
-            if (!this._otherObject) {
-                this.enablePOISnapping();
-            }
-        }
-
-        let snapInfo;
-
-        if (this._otherObject) {
-            snapInfo = this.snapToObject(this._otherObject, eventData);
-            if (snapInfo !== null) {
-                // We only disable point snapping if the object supports at-access
-                this.disablePOISnapping();
-            } else {
-                snapInfo = this.tryToPOISnap(eventData);
-            }
-        } else {
-            snapInfo = this.tryToPOISnap(eventData);
-        }
-        eventData = snapInfo.event;
+        const eventData = snapInfo.event;
 
         this._state.next(interactionEvent);
 

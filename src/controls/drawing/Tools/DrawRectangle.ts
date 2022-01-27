@@ -1,6 +1,6 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrRectangle} from "../../../Geo/GrRectangle";
 
@@ -16,6 +16,8 @@ export class DrawRectangle extends Tool {
     private _rect:GrRectangle;
     private _x1:number;
     private _y1:number;
+    private _firstSnap: SnapInfo;
+    private _secondSnap: SnapInfo;
 
     constructor(renderer) {
         super(renderer);
@@ -26,6 +28,8 @@ export class DrawRectangle extends Tool {
         this._state.add(state(States.DragSize), InteractionEvents.MouseMove, state(States.DragSize));
         this._state.add(state(States.DragSize), InteractionEvents.Click, state(States.Done));
         this._state.start(state(States.Wait));
+
+        this.enablePOISnapping();
     }
 
     public reset() {
@@ -33,7 +37,8 @@ export class DrawRectangle extends Tool {
         this._rect = null;
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        let eventData = snapInfo.event;
 
         if (interactionEvent === InteractionEvents.Cancel) {
             this.reset();
@@ -48,6 +53,7 @@ export class DrawRectangle extends Tool {
             case States.FirstPoint:
                 this._x1 = eventData.x
                 this._y1 = eventData.y
+                this._firstSnap = snapInfo;
                 this._rect = GrRectangle.create(null, eventData.x, eventData.y, 0, 0);
                 this._renderer.renderRectangle(RenderLayer.Interaction, this._rect, false);
                 break;
@@ -57,6 +63,7 @@ export class DrawRectangle extends Tool {
                 calcRect = this._calculateRect(eventData.x, eventData.y)
                 this._rect.x = calcRect.x1 + calcRect.w / 2;
                 this._rect.y = calcRect.y1 + calcRect.h / 2;
+                this._secondSnap = snapInfo;
                 this._rect.width = calcRect.w;
                 this._rect.height = calcRect.h;
                 this._renderer.renderRectangle(RenderLayer.Interaction, this._rect, false);
@@ -80,7 +87,11 @@ export class DrawRectangle extends Tool {
     }
 
     public get result(): any {
-        return `RECT ${this._rect.uniqueName}, $styles.default, (${this._rect.x}, ${this._rect.y}), ${this._rect.width}, ${this._rect.height}`;
+        if (!this._secondSnap.object && !this._firstSnap.object) {
+            return `RECT ${this._rect.uniqueName}, $styles.default, (${this._rect.x}, ${this._rect.y}), ${this._rect.width}, ${this._rect.height}`;
+        } else {
+            return `RECT ${this._rect.uniqueName}, $styles.default, ${this.makePointCodeFromSnapInfo(this._firstSnap)}, ${this.makePointCodeFromSnapInfo(this._secondSnap)}`;
+        }
     }
 
 }

@@ -25,7 +25,6 @@ export class DrawPolygon extends Tool {
     protected _extending: boolean;
     private _originalPolyLength: number;
     private _snapInfoForPoint: { [key: number]: SnapInfo } = {};
-    private _otherObject: GrObject;
 
     constructor(renderer) {
         super(renderer);
@@ -55,19 +54,14 @@ export class DrawPolygon extends Tool {
         this._snapInfoForPoint = {};
     }
 
-    protected handleInteractionOnWait(interactionEvent: InteractionEvents, eventData: InteractionEventData) {
+    protected handleInteractionOnWait(interactionEvent: InteractionEvents, snapInfo: SnapInfo) {
+        let eventData = snapInfo.event;
         if (!this._poly) {
             return;
         }
 
         let newp: Point2D;
-        let snapInfo;
-        if (this._otherObject) {
-            this.disablePOISnapping();
-            snapInfo = this.snapToObject(this._otherObject, eventData);
-        } else {
-            snapInfo = this.tryToPOISnap(eventData);
-        }
+
         newp = new Point2D(snapInfo.event.x, snapInfo.event.y);
 
         switch (interactionEvent) {
@@ -90,17 +84,12 @@ export class DrawPolygon extends Tool {
         }
     }
 
-    protected handlePointState(interactionEvent: InteractionEvents, eventData: InteractionEventData = null, first: boolean) {
+    protected handlePointState(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null, first: boolean) {
         let newp: Point2D;
 
         if (interactionEvent == InteractionEvents.Click) {
             let snapInfo;
-            if (this._otherObject) {
-                this.disablePOISnapping();
-                snapInfo = this.snapToObject(this._otherObject, eventData);
-            } else {
-                snapInfo = this.tryToPOISnap(eventData);
-            }
+
             newp = new Point2D(snapInfo.event.x, snapInfo.event.y);
 
 
@@ -124,20 +113,13 @@ export class DrawPolygon extends Tool {
         this._originalPolyLength = 0;
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        const eventData = snapInfo.event;
 
         if (interactionEvent === InteractionEvents.Cancel) {
             this.reset();
             return false;
         }
-
-        if (interactionEvent === InteractionEvents.OtherObject) {
-            this._otherObject = eventData.object;
-            if (!this._otherObject) {
-                this.enablePOISnapping();
-            }
-        }
-
 
         this._state.next(interactionEvent);
 
@@ -164,15 +146,15 @@ export class DrawPolygon extends Tool {
 
             case States.Wait:
             case States.Drag:
-                this.handleInteractionOnWait(interactionEvent, eventData);
+                this.handleInteractionOnWait(interactionEvent, snapInfo);
                 break;
 
             case States.FirstPoint:
-                this.handlePointState(interactionEvent, eventData, true);
+                this.handlePointState(interactionEvent, snapInfo, true);
                 break;
 
             case States.Point:
-                this.handlePointState(interactionEvent, eventData, false);
+                this.handlePointState(interactionEvent, snapInfo, false);
                 break;
 
             case States.Done:

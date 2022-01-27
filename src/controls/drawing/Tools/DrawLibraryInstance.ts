@@ -1,6 +1,6 @@
 import {state} from "../../../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {Tool} from "./Tool";
+import {SnapInfo, Tool} from "./Tool";
 import {Point2D} from "../../../Geo/Point2D";
 import {LibraryEntry} from "../../../Library";
 import {GrObject} from "../../../Geo/GrObject";
@@ -37,7 +37,9 @@ export class DrawLibraryInstance extends Tool {
         super.reset();
     }
 
-    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData = null): boolean {
+    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
+        const eventData = snapInfo.event;
+
         if (interactionEvent === InteractionEvents.Cancel) {
             this.reset();
             return false;

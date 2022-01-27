@@ -50,6 +50,7 @@ export abstract class Tool {
     private _snappingObject: GrObject;
     private _snappingPOI: string;
     private _snapPoint: Point2D;
+    private _otherObject: GrObject;
 
     protected constructor(renderer: ObjectRenderer, ...params: Array<any>) {
         this._renderer = renderer;
@@ -94,6 +95,7 @@ export abstract class Tool {
      * Reset the tool back to the waiting state.
      */
     public reset() {
+        this._otherObject = null;
         this._state.start(state(this._waitStateId));
     }
 
@@ -101,6 +103,7 @@ export abstract class Tool {
      * This tool instance will not be used again. Clean up.
      */
     public tearDown() {
+        this.disablePOISnapping();
         return;
     }
 
@@ -111,8 +114,41 @@ export abstract class Tool {
      * @param interactionEvent
      * @param eventData
      */
-    public abstract update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean;
+    public update(interactionEvent: InteractionEvents, eventData: InteractionEventData): boolean {
+        if (interactionEvent === InteractionEvents.Cancel) {
+            this.reset();
+            return false;
+        }
 
+        if (interactionEvent === InteractionEvents.OtherObject) {
+            this._otherObject = eventData.object;
+            if (!this._otherObject) {
+                this.enablePOISnapping();
+            }
+        }
+
+        let snapInfo;
+
+        if (this._otherObject) {
+            snapInfo = this.snapToObject(this._otherObject, eventData);
+            if (snapInfo !== null) {
+                // We only disable point snapping if the object supports at-access
+                this.disablePOISnapping();
+            } else {
+                snapInfo = this.tryToPOISnap(eventData);
+            }
+        } else {
+            snapInfo = this.tryToPOISnap(eventData);
+        }
+        if (!snapInfo) {
+            snapInfo = this.dontSnap(eventData);
+        }
+
+        return this._update(interactionEvent, snapInfo);
+    }
+
+
+    protected abstract _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo): boolean;
     /**
      * If the tool creates something, return it here.
      */
@@ -192,11 +228,16 @@ export abstract class Tool {
                     y: this._snapPoint.y
                 }
             }
-        } else return {
-            event: eventData, object: null, poiId: null, point: null
+        } else {
+            this.dontSnap(eventData);
         }
     }
 
+    dontSnap(eventData) {
+        return {
+            event: eventData, object: null, poiId: null, point: null
+        }
+    }
 
     protected makePointCodeFromSnapInfo(snapInfo:SnapInfo) {
         if (snapInfo.object) {
