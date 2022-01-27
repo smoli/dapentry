@@ -18,7 +18,7 @@ import {LibraryEntry} from "../Library";
  */
 export default class LibraryController extends BaseController {
 
-    async onLibraryEntrySelected(event) {
+    onLibraryEntrySelected(event) {
         const ctx = event.getSource().getBindingContext(this.getAppModelName());
 
         if (!ctx) {
@@ -31,10 +31,7 @@ export default class LibraryController extends BaseController {
             return;
         }
 
-        const name = GrObject.getNewObjectName(entry.id);
-        const code = `MAKE ${name}, "${entry.id}", $styles, 100`;
-
-        await this.getComponentController().addOperation(code);
+        this.getComponentController().insertLibraryEntry(entry);
     }
 
 }

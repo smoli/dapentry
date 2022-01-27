@@ -10,7 +10,7 @@ import {GfxMove} from "./runtime/gfx/GfxMove";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxFill, GfxStrokeColor} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
-import {GrObject} from "./Geo/GrObject";
+import {GrObject, POI} from "./Geo/GrObject";
 import {GfxComposite, GfxObjectList} from "./runtime/gfx/GfxObject";
 import {GfxScale} from "./runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
@@ -18,6 +18,7 @@ import {Parameter} from "./runtime/interpreter/Parameter";
 import {GrCompositeObject} from "./Geo/GrCompositeObject";
 import {Library, LibraryEntry} from "./Library";
 import {GrCanvas} from "./Geo/GrCanvas";
+import {Point2Parameter} from "./runtime/interpreter/types/Point2Parameter";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -119,10 +120,11 @@ class GfxMake extends GfxOperation {
     private _entryID: Parameter;
     private _canvas: GrCanvas;
     private _width: Parameter;
+    private _position: Point2Parameter;
     private readonly _args: Array<Parameter>;
 
 
-    constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter, width: Parameter, ...args: Array<Parameter>) {
+    constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter, width: Parameter, position: Point2Parameter, ...args: Array<Parameter>) {
         super(opcode, target);
         this._styles = styles;
         this._entryID = entryID;
@@ -132,6 +134,7 @@ class GfxMake extends GfxOperation {
         }
         this._args = args;
         this._width = width;
+        this._position = position;
 
         this._interpreter = new GfxInterpreter(null);
     }
@@ -185,6 +188,8 @@ class GfxMake extends GfxOperation {
         const resultObject:GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;
 
         resultObject.updateName(this._target.name);
+
+        resultObject.movePOI(POI.center, this._position.finalized(this.closure).sub(resultObject.center));
 
         this.target = resultObject;
     }

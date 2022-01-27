@@ -28,7 +28,8 @@ export class DrawPolygon extends Tool {
     private _otherObject: GrObject;
 
     constructor(renderer) {
-        super(renderer, States.Wait, States.Done);
+        super(renderer);
+        this.setWaitDoneStates(States.Wait, States.Done);
 
         this._state.add(state(States.Wait), InteractionEvents.Selection, state(States.Select));
         this._state.add(state(States.Select), InteractionEvents.Click, state(States.Drag));

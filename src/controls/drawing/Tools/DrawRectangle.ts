@@ -18,7 +18,8 @@ export class DrawRectangle extends Tool {
     private _y1:number;
 
     constructor(renderer) {
-        super(renderer, States.Wait, States.Done);
+        super(renderer);
+        this.setWaitDoneStates(States.Wait, States.Done);
 
         this._state.add(state(States.Wait), InteractionEvents.Click, state(States.FirstPoint));
         this._state.add(state(States.FirstPoint), InteractionEvents.MouseMove, state(States.DragSize));

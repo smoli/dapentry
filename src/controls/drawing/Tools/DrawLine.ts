@@ -21,7 +21,8 @@ export class DrawLine extends Tool {
     private _otherObject: GrObject;
 
     constructor(renderer) {
-        super(renderer, States.Wait, States.Done)
+        super(renderer);
+        this.setWaitDoneStates(States.Wait, States.Done);
 
         this._state.add(state(States.Wait), InteractionEvents.Click, state(States.P1));
         this._state.add(state(States.P1), InteractionEvents.MouseMove, state(States.Drag));

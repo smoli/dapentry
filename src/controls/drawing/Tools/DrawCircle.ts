@@ -3,7 +3,6 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrCircle} from "../../../Geo/GrCircle";
-import {getNewObjectName} from "../../../Geo/GrObject";
 
 enum States {
     Wait = "DrawCircle.Wait",
@@ -17,7 +16,8 @@ export class DrawCircle extends Tool {
     private _circle:GrCircle;
 
     constructor(renderer) {
-        super(renderer, States.Wait, States.Done)
+        super(renderer);
+        this.setWaitDoneStates(States.Wait, States.Done);
 
         this._state.add(state(States.Wait), InteractionEvents.Click, state(States.CenterPoint));
         this._state.add(state(States.CenterPoint), InteractionEvents.MouseMove, state(States.DragRadius));

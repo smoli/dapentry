@@ -39,22 +39,26 @@ export abstract class Tool {
      * ID of the state that indicates the tool is done
      * @protected
      */
-    protected readonly _doneStateId: string;
+    protected _doneStateId: string;
 
     /**
      * ID of the state that indicates that the tool waits for the user to perform the first actions
      * @protected
      */
-    protected readonly _waitStateId: string;
+    protected _waitStateId: string;
+
     private _snappingObject: GrObject;
     private _snappingPOI: string;
     private _snapPoint: Point2D;
 
-    protected constructor(renderer: ObjectRenderer, waitStateId?: string, doneStateId?: string) {
+    protected constructor(renderer: ObjectRenderer, ...params: Array<any>) {
         this._renderer = renderer;
+        this._state = new StateMachine();
+    }
+
+    public setWaitDoneStates(waitStateId?: string, doneStateId?: string) {
         this._waitStateId = waitStateId;
         this._doneStateId = doneStateId;
-        this._state = new StateMachine();
     }
 
     /**

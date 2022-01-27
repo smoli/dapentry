@@ -19,7 +19,8 @@ export class DrawBezier extends Tool {
     protected _opCode: string;
 
     constructor(renderer) {
-        super(renderer, States.Wait, States.Done);
+        super(renderer)
+        this.setWaitDoneStates(States.Wait, States.Done);
 
         this._state.add(state(States.Wait), InteractionEvents.MouseDown, state(States.Point));
         this._state.add(state(States.Point), InteractionEvents.MouseMove, state(States.Point));

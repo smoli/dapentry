@@ -76,9 +76,9 @@ export class ToolManager {
         return this._currentTool;
     }
 
-    protected _makeToolInstance(ToolClass: typeof Tool): Tool {
+    protected _makeToolInstance(ToolClass: typeof Tool, params: Array<any> = []): Tool {
         // @ts-ignore
-        return new ToolClass(this._objectRenderer);
+        return new ToolClass(this._objectRenderer, ...params);
     }
 
 
@@ -108,15 +108,16 @@ export class ToolManager {
     /**
      * Switch to another tool
      * @param event
+     * @param params
      */
-    public switch(event: (string | number | symbol)) {
+    public switch(event: (string | number | symbol), ...params: Array<any>) {
         const ToolClass = this._tools[event] || null;
 
         if (ToolClass) {
             if (this._currentTool) {
                 this._abortCurrentTool();
             }
-            this._currentTool = this._makeToolInstance(ToolClass);
+            this._currentTool = this._makeToolInstance(ToolClass, params);
             this._pumpSelection(false);
             if (this._switchCallBack) {
                 this._switchCallBack();

@@ -30,7 +30,8 @@ export class RotateTool extends Tool {
     private _pivotPoint: Point2D;
 
     constructor(renderer: ObjectRenderer) {
-        super(renderer, States.Wait, States.Done);
+        super(renderer);
+        this.setWaitDoneStates(States.Wait, States.Done);
 
         this._state.add(state(States.Wait), Events.HandleDown, state(States.Handle));
         this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));

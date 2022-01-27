@@ -1,9 +1,8 @@
 import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
-import {SnapInfo, Tool} from "./Tool";
 import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap} from "../../../Geo/GrObject";
+import {GrObject} from "../../../Geo/GrObject";
 import {state} from "../../../runtime/tools/StateMachine";
-import {Point2D} from "../../../Geo/Point2D";
+import {Tool} from "./Tool";
 
 
 enum States {
@@ -17,7 +16,8 @@ export class SelectTool extends Tool {
     protected _selection: Array<GrObject> = [];
 
     constructor(renderer: ObjectRenderer) {
-        super(renderer, States.Wait, States.Done);
+        super(renderer);
+        this.setWaitDoneStates(States.Wait, States.Done);
 
         this._state.add(state(States.Wait), 0, state(States.Wait));
         this._state.add(state(States.Done), 0, state(States.Done));

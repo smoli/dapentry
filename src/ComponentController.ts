@@ -13,6 +13,7 @@ import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 import {DeleteSelection} from "./controller/actions/DeleteSelection";
 import {WrapInLoop} from "./controller/actions/WrapInLoop";
 import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
+import {LibraryEntry} from "./Library";
 
 
 export class ComponentController extends BaseComponentController {
@@ -197,11 +198,13 @@ export class ComponentController extends BaseComponentController {
         await this.execute(new SelectObjects(this._component, selection))
     }
 
+    insertLibraryEntry(entry:LibraryEntry) {
+        this._drawing.startToolInsertLibraryEntry(entry);
+    }
+
     protected preloadDemoCode(): void {
 
-        const code = `DO 2
-MAKE sun1, "star", $styles, 400
-ENDDO`;
+        const code = `MAKE sun1, "star", $styles, 400, Canvas@center`;
 /*
 const code = `RECT Rectangle1, $styles.default, (279, 525), 20, 82
 DO 2

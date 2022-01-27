@@ -22,6 +22,8 @@ import {Tool} from "./Tools/Tool";
 import {SelectTool} from "./Tools/SelectTool";
 import {GrCompositeObject} from "../../Geo/GrCompositeObject";
 import {GrCanvas} from "../../Geo/GrCanvas";
+import {DrawLibraryInstance} from "./Tools/DrawLibraryInstance";
+import {LibraryEntry} from "../../Library";
 
 
 enum ToolNames {
@@ -31,6 +33,7 @@ enum ToolNames {
     Line,
     Polygon,
     Quadric,
+    Instance,
     Move,
     Rotate,
     Scale,
@@ -138,6 +141,7 @@ export default class Drawing extends Control {
         this._toolManager.addTool(DrawPolygon, ToolNames.Polygon);
         this._toolManager.addTool(DrawQuadratic, ToolNames.Quadric);
         this._toolManager.addTool(SelectTool, ToolNames.Select);
+        this._toolManager.addTool(DrawLibraryInstance, ToolNames.Instance);
 
         this._toolManager.setToolAfterDone(SelectTool);
 
@@ -277,6 +281,10 @@ export default class Drawing extends Control {
         } else {
             this._pumpToTool(InteractionEvents.Click)
         }
+    }
+
+    public startToolInsertLibraryEntry(entry: LibraryEntry) {
+        this._toolManager.switch(ToolNames.Instance, entry);
     }
 
     private _interActionKeyDown() {
