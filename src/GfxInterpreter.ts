@@ -48,7 +48,7 @@ export class GfxInterpreter extends Interpreter {
     private _library: Library;
 
 
-    constructor(library: Library) {
+    constructor(library: Library = null) {
         super();
 
         this._library = library;

@@ -41,6 +41,7 @@ export default class OperationEditor extends Control {
         return bundle.getText(textId);
     }
 
+
     public createSegments():Array<any> {
         const tokens = this.getTokens();
         if (!tokens || !tokens.length) {

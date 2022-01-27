@@ -1,5 +1,5 @@
 import Control from "sap/ui/core/Control";
-import {Token, TokenTypes} from "../../runtime/interpreter/Parser";
+import {Parser, Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import ResourceModel from "sap/ui/model/resource/ResourceModel";
 import {getTextIdForTokens} from "../../i18n/getTextIDForTokens";
@@ -60,6 +60,9 @@ export default class Step extends Control {
                     } else {
                         return `${t.value[0].value}'s ${t.value[1].value}`;
                     }
+
+                case TokenTypes.EXPRESSION:
+                    return Parser.constructCodeLine([t]);
 
                 default:
                     return t.value;

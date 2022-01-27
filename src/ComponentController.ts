@@ -198,20 +198,20 @@ export class ComponentController extends BaseComponentController {
         await this.execute(new SelectObjects(this._component, selection))
     }
 
-    insertLibraryEntry(entry:LibraryEntry) {
+    insertLibraryEntry(entry: LibraryEntry) {
         this._drawing.startToolInsertLibraryEntry(entry);
     }
 
     protected preloadDemoCode(): void {
-
-        const code = `MAKE sun1, "star", $styles, 400, Canvas@center`;
-/*
-const code = `RECT Rectangle1, $styles.default, (279, 525), 20, 82
-DO 2
-RECT Rectangle2, $styles.default, (400, 525), 168, 82
-MOVE Rectangle2@bottom, Rectangle2@top
-ENDDO`
-*/
+        const code = 'CIRCLE Circle1, $styles.default, Canvas@center, f2 * 50';
+        // const code = `MAKE sun1, "star", $styles, 400, Canvas@center`;
+        /*
+        const code = `RECT Rectangle1, $styles.default, (279, 525), 20, 82
+        DO 2
+        RECT Rectangle2, $styles.default, (400, 525), 168, 82
+        MOVE Rectangle2@bottom, Rectangle2@top
+        ENDDO`
+        */
         this.addOperations(code.split("\n").filter(l => !!l));
     }
 
