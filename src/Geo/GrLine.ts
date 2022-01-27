@@ -93,6 +93,8 @@ export class GrLine extends GrObject {
 
         this._start.rotate(deg2rad(value), pivot);
         this._end.rotate(deg2rad(value), pivot);
+
+        this._center = this._end.copy.sub(this._start).scale(0.5).add(this._start);
     }
 
 
