@@ -27,7 +27,7 @@ export class Do extends Operation {
         }
     }
 
-    public static get topLoopInfo():LoopInfo {
+    public static get topLoopInfo(): LoopInfo {
         if (!Do._info.length) {
             return null;
         }
@@ -96,6 +96,8 @@ export class EndDo extends Operation {
                 this.closure.setRegister(info.targetName, info.iteration);
             }
             interpreter.gotoLabel(info.label);
+        } else {
+            Do.endDo();
         }
     }
 

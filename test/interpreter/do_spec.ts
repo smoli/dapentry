@@ -69,5 +69,26 @@ describe('DO', () => {
         await i.run();
 
         expect(i.getRegister("r1")).to.equal(10)
-    })
+    });
+
+    it("can be nested", async () => {
+       const code = `
+            LOAD r1, 0
+            DO 3
+                LOAD r2, 0
+                DO 4
+                    ADD ^r2, 1
+                ENDDO
+                ADD ^r1, r2
+            ENDDO
+       `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(12)
+
+
+    });
 });
