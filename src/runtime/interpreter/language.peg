@@ -78,7 +78,7 @@
    }
 
   Factor
-    = "(" _ expr:Eval _ ")"
+    = "(" _ expr:Eval _ ")"  { return expr }
     / RegPropAccess
     / Number
     / Register

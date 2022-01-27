@@ -246,7 +246,34 @@ describe('Parser', () => {
             ]
 
             expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( ( 2 + r1 ) * 2 )");
-        })
+        });
+
+        it("parses expressions", () => {
+
+            const code = `LOAD r1, (r1 + 2 * (34 * r3))`;
+
+            const tokens = Parser.parseLine(code);
+
+            expect(tokens).to.deep.equal([
+                {type: TokenTypes.OPCODE, value: "LOAD"},
+                {type: TokenTypes.REGISTER, value: "r1"},
+                {
+                    type: TokenTypes.EXPRESSION, value: [
+                        {type: TokenTypes.REGISTER, value: "r1"},
+                        {type: TokenTypes.OPERATOR, value: "+"},
+                        {type: TokenTypes.EXPRESSION, value: [
+                                {type: TokenTypes.NUMBER, value: 2},
+                                {type: TokenTypes.OPERATOR, value: "*"},
+                                {type: TokenTypes.EXPRESSION, value: [
+                                        {type: TokenTypes.NUMBER, value: 34},
+                                        {type: TokenTypes.OPERATOR, value: "*"},
+                                        {type: TokenTypes.REGISTER, value: "r3"},
+                                    ]}
+                            ]}
+                    ]
+                }
+            ])
+        });
 
     });
 });
