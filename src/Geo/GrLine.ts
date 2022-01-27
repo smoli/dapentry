@@ -152,7 +152,12 @@ export class GrLine extends GrObject {
         const p = l.projectPoint(point);
 
         const u = this._end.copy.sub(this._start);
-        const n = (p.x - this._start.x) / u.x;
+        let n;
+        if (u.x !== 0) {
+            n = (p.x - this._start.x) / u.x;
+        } else {
+            n = (p.y - this._start.y) / u.y;
+        }
 
         if (n < 0) {
             return this.start;
@@ -168,7 +173,12 @@ export class GrLine extends GrObject {
         const p = l.projectPoint(point);
 
         const u = this._end.copy.sub(this._start);
-        const n = (p.x - this._start.x) / u.x;
+        let n;
+        if (u.x !== 0) {
+            n = (p.x - this._start.x) / u.x;
+        } else {
+            n = (p.y - this._start.y) / u.y;
+        }
 
         if (n < 0) {
             return 0;

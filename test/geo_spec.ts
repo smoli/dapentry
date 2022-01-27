@@ -62,6 +62,11 @@ describe('Geometry functions', () => {
 
             console.log(p2)
             expect(l2.pointOnLine(p2)).to.be.true;
+
+            const l3 = Line2D.createPP(new Point2D(0, 0), new Point2D(0, 100));
+            const p3 = l3.projectPoint(new Point2D(50, 50));
+            console.log(p3);
+            expect(l3.pointOnLine(p3)).to.be.true;
         });
 
         it("can intersect with another line", () => {

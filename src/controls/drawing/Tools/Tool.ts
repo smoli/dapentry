@@ -199,7 +199,6 @@ export abstract class Tool {
             return null;
         }
         let pct = object.projectPointAsPercentage(new Point2D(eventData.x, eventData.y));
-
         if (eventData.shift) {
             pct = s0_1(pct);
             p = object.getPointAtPercentage(pct);
