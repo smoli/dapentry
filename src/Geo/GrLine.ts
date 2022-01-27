@@ -151,9 +151,7 @@ export class GrLine extends GrObject {
         const l = Line2D.createPP(this.start, this.end);
         const p = l.projectPoint(point);
 
-        const u = this._end.copy.sub(this._start);
-        const n = (p.x - this._start.x) / u.x;
-
+        let n = this.getPercentageForPoint(p);
         if (n < 0) {
             return this.start;
         } else if (n > 1) {
@@ -163,13 +161,23 @@ export class GrLine extends GrObject {
         return p;
     }
 
+    getPercentageForPoint(p:Point2D): number {
+        const u = this._end.copy.sub(this._start);
+        let n;
+        if (u.x !== 0) {
+            n = (p.x - this._start.x) / u.x;
+        } else {
+            n = (p.y - this._start.y) / u.y;
+        }
+
+        return n;
+    }
+
     projectPointAsPercentage(point: Point2D): number {
         const l = Line2D.createPP(this.start, this.end);
         const p = l.projectPoint(point);
 
-        const u = this._end.copy.sub(this._start);
-        const n = (p.x - this._start.x) / u.x;
-
+        let n = this.getPercentageForPoint(p);
         if (n < 0) {
             return 0;
         } else if (n > 1) {
