@@ -71,7 +71,18 @@ export class GrPolygonBase extends GrObject {
 
     public addPoint(point: Point2D) {
         this._points.push(point.copy);
-        this.computeCenterAndBB();
+
+        // TODO: Possible performance optimisation. Needs a test to see if this is correct
+        const bb = this.boundingBox;
+        if (
+                point.x < (bb.x - bb.w / 2)
+            ||  point.x > (bb.x + bb.w / 2)
+            ||  point.y < (bb.y - bb.h / 2)
+            ||  point.y > (bb.y + bb.h / 2)
+        )  {
+            this.computeCenterAndBB();
+        }
+
     }
 
     public removeLastPoint() {
@@ -96,7 +107,9 @@ export class GrPolygonBase extends GrObject {
     }
 
     pointsOfInterest(purpose:POIPurpose): POIMap {
-        const r = {};
+        const r = {
+            [POI.center]: this.center.copy
+        };
 
         this._points.forEach((p, i) => {
             r[POI["P" + i]] = p.copy;

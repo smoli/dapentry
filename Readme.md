@@ -3,7 +3,7 @@ GFXBCTS
 
 ## What is this?
 
-http://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/
+This is heavily based on - some might call it a clone of - http://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/
 
 ## How to build and run
 
@@ -17,20 +17,26 @@ It uses an interpreted language that resembles something like assembly to draw p
 creates the program in the background. [See here](doc/opcodes.md) for more details on the language and the interpreter.
 
 ## Bugs
-* [ ] Expressions are not displayed in steps and operation editor
 * [ ] Fix scaling of rotated objects
 * [ ] Hide Objects
-* [ ] Program not always run as far as expected (better description needed)
+* [x] Expressions are not displayed in steps and operation editor
+* [x] Program does not always run as far as expected (better description needed)
 
 ## Next steps
 
 ## Todos
 
 ### Drawing
+* [ ] Snapping
+  * Move Snapping outside the tool into drawing 
+  * [ ] Allow for cycling through overlapping snappoints - use k-d-tree instead of Browser-Mouse-Events? https://en.wikipedia.org/wiki/K-d_tree
+  * [ ] Allow to disable poi snapping
+  * [ ] snap on intersections
 * [ ] Add a method getPointAtPercentage to GrObject
   * [ ] implement for rects
   * [ ] implement for polygons
 * [ ] rotate around pivot
+  * [x] GrLine
 * [ ] enable move and creation tools to use percentage points
   * [ ] make it available for the firs point of a polygon
   * [ ] better show where the point lies when using as the first point on a line or a polygon
@@ -41,7 +47,7 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 * [ ] make polygons open by default?
 * [ ] autoclose polygons?
 * [ ] enable fill rendering for open polygons
-* [ ] Define aspect ratio for a drawing
+* [x] Define aspect ratio for a drawing
   * [ ] Maybe determine bounding box for drawing automatically when storing
 
 ### Data editor
@@ -65,6 +71,11 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 
 ### Library
 * [ ] Library
+  * [x] Provide ability to insert a drawing
+  * [ ] Provide ability to define the size of the insertion
+  * [ ] Provide ability to alter arguments of an instance (e.g. change no of spokes on star)
+  * [ ] Provide ability to put a drawing into the library
+  * [ ] Provide ability to edit a drawing from the library
 
 ### Publishing
 * [ ] Create a published version of the drawing

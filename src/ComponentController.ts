@@ -16,12 +16,50 @@ import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 import {LibraryEntry} from "./Library";
 
 
+
+type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
+
+class PerformanceMeasure {
+    protected measurements:Array<PerformanceMeasurement> = [];
+    protected current = null;
+
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.current = {};
+        this.measurements.push(this.current);
+    }
+
+    now(key:string) {
+        this.current[key] = performance.now();
+    }
+
+    print() {
+        console.group("------------------Performance------------------");
+        let l = null;
+        for (const k in this.current) {
+            if (!l) {
+                l = this.current[k];
+            } else {
+                const e = this.current[k] - l;
+                console.log(k, e);
+                l = this.current[k];
+            }
+        }
+        console.groupEnd();
+    }
+}
+
 export class ComponentController extends BaseComponentController {
     private readonly _component: Component;
     private _interpreter: GfxInterpreter;
     private _styleManager: StyleManager;
     private _drawing: Drawing;
     private _canvas: GrCanvas;
+
+    private _performance: PerformanceMeasure = new PerformanceMeasure();
 
     constructor(component: Component, canvas) {
         super();
@@ -80,6 +118,8 @@ export class ComponentController extends BaseComponentController {
         if (this._interpreter.lastObjectTouched) {
             this._drawing.selectObject(this._interpreter.lastObjectTouched);
         }
+        this._performance.now("drawn");
+        this._performance.print();
     }
 
 
@@ -123,7 +163,10 @@ export class ComponentController extends BaseComponentController {
 
     protected async runCode(): Promise<any> {
         this._interpreter.clearObjects(this._canvas);
+        this._performance.reset();
+        this._performance.now("start");
         this._interpreter.parse(this.getAppModel().fullCode);
+        this._performance.now("parsed");
 
         const index = this.getAppModel().getLastSelectedCodeLineIndex();
 
@@ -133,11 +176,13 @@ export class ComponentController extends BaseComponentController {
             this._interpreter.clearPauseAfter();
         }
 
-        return this._interpreter.run({
+        await this._interpreter.run({
             "$styles": this._styleManager.styles,
             "$lastObject": null,
             [this._canvas.name]: this._canvas
         });
+        this._performance.now("computed");
+        return Promise.resolve();
     }
 
     getAppModel(): AppModel {
@@ -203,6 +248,7 @@ export class ComponentController extends BaseComponentController {
     }
 
     protected preloadDemoCode(): void {
+        return;
         const code = 'CIRCLE Circle1, $styles.default, Canvas@center, f2 * 50';
         // const code = `MAKE sun1, "star", $styles, 400, Canvas@center`;
         /*
