@@ -88,7 +88,6 @@ export class DrawPolygon extends Tool {
         let newp: Point2D;
 
         if (interactionEvent == InteractionEvents.Click) {
-            let snapInfo;
 
             newp = new Point2D(snapInfo.event.x, snapInfo.event.y);
 
