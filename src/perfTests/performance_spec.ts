@@ -5,7 +5,7 @@ import {GrPolygon} from "../Geo/GrPolygon";
 import {POI} from "../Geo/GrObject";
 
 
-const code = `LOAD f2, 1000
+const code = `LOAD f2, 10000
         LINE Line1, $styles.default, Canvas@center, Canvas@top
 POLY Polygon1, $styles.default, [ Line1@end ], 1
 DO f2

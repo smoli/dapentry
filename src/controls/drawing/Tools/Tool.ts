@@ -160,6 +160,7 @@ export abstract class Tool {
     }
 
     protected enablePOISnapping(objectsToExclude: Array<GrObject> = []) {
+
         if (!this._renderer) {
             return;
         }

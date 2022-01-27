@@ -6,10 +6,10 @@ import {Point2D} from "./Point2D";
 function computeCenterAndBB(points: Array<Point2D>) {
     let center = new Point2D(0, 0);
 
-    let maxX = Math.max(...points.map(p => p.x));
-    let minX = Math.min(...points.map(p => p.x));
-    let maxY = Math.max(...points.map(p => p.y));
-    let minY = Math.min(...points.map(p => p.y));
+    let maxX = Math.max.apply(null, points.map(p => p.x));
+    let minX = Math.min.apply(null, points.map(p => p.x));
+    let maxY = Math.max.apply(null, points.map(p => p.y));
+    let minY = Math.min.apply(null, points.map(p => p.y));
 
     center = new Point2D((minX + maxX) / 2, (minY + maxY) / 2);
 
