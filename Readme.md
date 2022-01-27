@@ -42,9 +42,9 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
   * [ ] make it available for the first point of a polygon
   * [ ] better show where the point lies when using as the first point on a line or a polygon
 * [ ] enable move and creation operations to use percentage points
-  * [ ] create circle
-  * [ ] create rectangle
-  * [ ] create polygon
+  * [x] create circle
+  * [x] create rectangle
+  * [x] create polygon
 * [ ] make polygons open by default?
 * [ ] autoclose polygons?
 * [ ] enable fill rendering for open polygons
