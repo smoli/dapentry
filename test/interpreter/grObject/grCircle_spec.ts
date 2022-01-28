@@ -1,7 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GrCircle} from "../../../src/Geo/GrCircle";
-import {eq} from "../../../src/Geo/GeoMath";
+import {eq, eqp} from "../../../src/Geo/GeoMath";
 
 
 
@@ -18,16 +18,16 @@ describe('GrCircle', () => {
         expect(c.right).to.deep.equal({ x: 100, y: 0});
     });
 
-    xit("rotating a circle rotates the points of interest", () => {
+    it("rotating a circle rotates the points of interest", () => {
         let c = GrCircle.create(null, 0, 0, 100);
 
         c.rotate(90);
 
-        expect(c.center).to.deep.equal({ x: 0, y: 0});
-        expect(c.top).to.deep.equal({ x: 100, y: 0});
-        expect(c.bottom).to.deep.equal({ x: -100, y: 0});
-        expect(c.left).to.deep.equal({ x: 0, y: -100});
-        expect(c.right).to.deep.equal({ x: 0, y: 100});
+        expect(eqp(c.center, { x: 0, y: 0})).to.be.true;
+        expect(eqp(c.top, { x: 100, y: 0 })).to.be.true;
+        expect(eqp(c.bottom, { x: -100, y: 0 })).to.be.true;
+        expect(eqp(c.left, { x: 0, y: -100 })).to.be.true;
+        expect(eqp(c.right, { x: 0, y: 100 })).to.be.true;
     });
 
     it("point at percentage", () => {

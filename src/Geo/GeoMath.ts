@@ -51,3 +51,7 @@ export const TWO_PI = Math.PI * 2;
 export function eq(a, b) {
     return Math.abs(a - b) <= EPSILON;
 }
+
+export function eqp(p1, p2) {
+    return eq(p1.x, p2.x) && eq(p1.y, p2.y);
+}
