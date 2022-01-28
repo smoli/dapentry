@@ -4,6 +4,7 @@ import {Point2D} from "../src/Geo/Point2D";
 import {KDTree} from "../src/Geo/KDTree";
 
 
+
 describe('KDTree', () => {
 
     function getClosestBruteForce(point: Point2D, points: Array<Point2D>):Point2D {
@@ -16,7 +17,7 @@ describe('KDTree', () => {
     }
 
 
-    it('can be created for 2d Points', () => {
+    it('can be used for nearest neighbour search on a list of points', () => {
         const points = [
             new Point2D(0, 0),
             new Point2D(-10, 0),
@@ -40,7 +41,34 @@ describe('KDTree', () => {
         ].forEach((p, i) => {
             const actual = tree.getNearestNeighbor(p);
             const expected = getClosestBruteForce(p, points);
-            expect(actual).to.deep.equal(expected, "Test " + i);
+            expect(actual.length).to.equal(1);
+            expect(actual[0]).to.deep.equal(expected, "Test " + i);
         })
     });
+
+    it('will return multiple points if they all have the same closest distance', () => {
+        const points = [
+            new Point2D(0, 0),
+            new Point2D(-10, 0),
+            new Point2D(-10, 0),
+            new Point2D(-10, 10),
+            new Point2D(-10, 10),
+            new Point2D(-10, 10)
+        ]
+
+        const tree = new KDTree(["x", "y"], points);
+
+        let p = tree.getNearestNeighbor(new Point2D(-9, 11));
+
+        expect(p.length).to.equal(3);
+        expect(p[0]).to.deep.equal({ x: -10, y: 10 })
+        expect(p[1]).to.deep.equal({ x: -10, y: 10 })
+        expect(p[2]).to.deep.equal({ x: -10, y: 10 })
+
+        p = tree.getNearestNeighbor(new Point2D(-11, 1));
+        expect(p.length).to.equal(2);
+        expect(p[0]).to.deep.equal({ x: -10, y: 0 })
+        expect(p[1]).to.deep.equal({ x: -10, y: 0 })
+
+    })
 });

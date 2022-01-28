@@ -80,10 +80,10 @@ export class KDTree {
     }
 
 
-    protected searchDown(point: Point2D, node: TreeNode, depth: number): Point2D {
+    protected searchDown(point: Point2D, node: TreeNode, depth: number): Array<Point2D> {
 
         if (!node.left || !node.right) {
-            return node.location;
+            return [node.location];
         }
 
         const axis = this.getAxisForDepth(depth);
@@ -102,11 +102,15 @@ export class KDTree {
         }
 
         // This constrains the implementation to two dimensions!
-        const bestDist = best.distanceSquared(point);
-        let otherDist = (best[axis] - node.location[axis]) ** 2;
+        const bestDist = best[0].distanceSquared(point);
+        let otherDist = (best[0][axis] - node.location[axis]) ** 2;
         if (otherDist < bestDist) {
             const otherBest = this.searchDown(point, otherSide, depth + 1);
-            const otherDist = otherBest.distanceSquared(point);
+            const otherDist = otherBest[0].distanceSquared(point);
+
+            if (otherDist === bestDist) {
+                best.push(...otherBest);
+            }
 
             if (otherDist < bestDist) {
                 return otherBest
@@ -116,7 +120,7 @@ export class KDTree {
         return best;
     }
 
-    public getNearestNeighbor(point: Point2D): Point2D {
+    public getNearestNeighbor(point: Point2D): Array<Point2D> {
         return this.searchDown(point, this._node, 0);
     }
 }
