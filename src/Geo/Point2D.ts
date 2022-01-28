@@ -83,6 +83,10 @@ export class Point2D {
         return p.copy.sub(this).length;
     }
 
+    distanceSquared(p: Point2D): number {
+        return (p.x - this.x) ** 2 + (p.y - this.y) ** 2;
+    }
+
     /**
      * Turns both components into their absolutes, removing signs.
      */
