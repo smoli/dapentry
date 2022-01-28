@@ -35,6 +35,11 @@ describe('KDTree', () => {
             new Point2D(-1, 1),
             new Point2D(100, 0),
             new Point2D(200, 10),
+            new Point2D(201, 10),
+            new Point2D(202, 10),
+            new Point2D(203, 10),
+            new Point2D(204, 10),
+            new Point2D(205, 10),
             new Point2D(200, 1000),
             new Point2D(200, 100),
             new Point2D(200, -100)

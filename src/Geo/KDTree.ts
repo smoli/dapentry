@@ -22,7 +22,6 @@ export class KDTree {
     private readonly _axisAccessors: Array<string>;
     private readonly _node: TreeNode;
 
-
     constructor(axisAccessors: Array<string>, points: Array<Point2D>) {
         this._axisAccessors = axisAccessors;
         this._node = this.constructFromPoints(points);
@@ -101,7 +100,6 @@ export class KDTree {
             otherSide = node.left;
         }
 
-        // This constrains the implementation to two dimensions!
         const bestDist = best[0].distanceSquared(point);
         let otherDist = (best[0][axis] - node.location[axis]) ** 2;
         if (otherDist < bestDist) {
