@@ -72,8 +72,11 @@ export class DrawPolygon extends Tool {
 
             case InteractionEvents.Key:
                 if (eventData.key === "Backspace") {
-                    console.log(eventData)
                     this._poly.removeLastPoint();
+                    this.clearLastSnapPoint();
+                    this.resetAxisAlignment(this._snapInfoForPoint[this._poly.points.length - 2]);
+
+
                     if (this._poly.points.length === 0) {
                         this._poly = null;
                     } else {
@@ -98,7 +101,8 @@ export class DrawPolygon extends Tool {
                 this._poly.setPoint(this._poly.points.length - 1, newp);
             }
             this._snapInfoForPoint[this._poly.points.length - 1] = snapInfo;
-
+            this.resetAxisAlignment();
+            this.snapInfoUsed(snapInfo);
             // Add a point for dragging
             this._poly.addPoint(newp);
             this._renderMethod(RenderLayer.Interaction, this._poly);

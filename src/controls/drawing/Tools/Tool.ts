@@ -91,6 +91,8 @@ export abstract class Tool {
         if (this._renderer) {
             this._renderer.clearInfo();
         }
+        this.clearSnapInfo();
+        this._usedSnapInfos = null;
         return;
     }
 
@@ -163,6 +165,15 @@ export abstract class Tool {
         } else {
             this._usedSnapInfos.push(snapInfo);
         }
+    }
+    protected clearLastSnapPoint() {
+        if (this._usedSnapInfos) {
+            this._usedSnapInfos.pop();
+        }
+    }
+
+    protected resetAxisAlignment(snapInfoForFirst: SnapInfo = null) {
+        this._snappingFirstInfo = snapInfoForFirst;
     }
 
 
