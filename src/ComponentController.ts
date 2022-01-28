@@ -14,6 +14,7 @@ import {DeleteSelection} from "./controller/actions/DeleteSelection";
 import {WrapInLoop} from "./controller/actions/WrapInLoop";
 import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 import {LibraryEntry} from "./Library";
+import {AppConfig} from "./AppConfig";
 
 
 
@@ -177,7 +178,7 @@ export class ComponentController extends BaseComponentController {
         }
 
         await this._interpreter.run({
-            "$styles": this._styleManager.styles,
+            [AppConfig.Runtime.styleRegisterName]: this._styleManager.styles,
             "$lastObject": null,
             [this._canvas.name]: this._canvas
         });

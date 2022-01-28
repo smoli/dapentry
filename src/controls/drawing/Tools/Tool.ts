@@ -4,6 +4,7 @@ import {ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject, POI, POIPurpose} from "../../../Geo/GrObject";
 import {Point2D} from "../../../Geo/Point2D";
 import {GrObjectList} from "../../../Geo/GrObjectList";
+import {AppConfig} from "../../../AppConfig";
 
 export interface SnapInfo {
     object: GrObject,
@@ -245,7 +246,7 @@ export abstract class Tool {
             return null;
         }
         let pct = object.projectPointAsPercentage(new Point2D(eventData.x, eventData.y));
-        if (eventData.shift) {
+        if (eventData[AppConfig.Keys.ToolAxisAlignModifierName]) {
             pct = s0_1(pct);
             p = object.getPointAtPercentage(pct);
         }

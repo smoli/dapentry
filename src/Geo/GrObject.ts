@@ -3,6 +3,7 @@ import {deg2rad, eq} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {GrCompositeObject} from "./GrCompositeObject";
+import {AppConfig} from "../AppConfig";
 
 export enum ObjectType {
     Canvas,
@@ -86,7 +87,7 @@ export interface BoundingBox {
 export abstract class GrObject {
     private static _instanceCounter: number = 0;
     private static _pool: { [key: string]: GrObject } = {}
-    private static _objectNames: string[] = ["Canvas"];
+    private static _objectNames: string[] = [AppConfig.Runtime.canvasObjectName];
 
     protected _uniqueName: string;
     protected _parent: GrObject = null;

@@ -3,6 +3,7 @@ import {Point2D} from "./Point2D";
 import {Line2D} from "./Line2D";
 import {Circle2D} from "./Circle2D";
 import {TWO_PI} from "./GeoMath";
+import {AppConfig} from "../AppConfig";
 
 export enum AspectRatio {
     ar1_1,
@@ -21,7 +22,7 @@ export class GrCanvas extends GrObject {
         const x = (width - x1) / 2 + x1;
         const y = (height - y1) / 2 + y1;
 
-        super(ObjectType.Canvas, "Canvas", x, y);
+        super(ObjectType.Canvas, AppConfig.Runtime.canvasObjectName, x, y);
 
         this._width = width;
         this._height = height;

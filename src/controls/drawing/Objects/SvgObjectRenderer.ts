@@ -19,6 +19,7 @@ import {Point2D} from "../../../Geo/Point2D";
 import {GrCompositeObject} from "../../../Geo/GrCompositeObject";
 import {GrObjectList} from "../../../Geo/GrObjectList";
 import {GrCanvas} from "../../../Geo/GrCanvas";
+import {AppConfig} from "../../../AppConfig";
 
 enum ToolClasses {
     object = "grObject",
@@ -33,8 +34,6 @@ enum ToolClassSelectors {
     poi = ".pointOfInterest",
     boundingBox = ".boundingBox"
 }
-
-const HANDLE_RADIUS: string = "7px";
 
 interface ObjectInfo {
     x: number,
@@ -188,7 +187,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 const c = svgGroup.append("circle")
                     .attr("cx", poi.x)
                     .attr("cy", poi.y)
-                    .attr("r", HANDLE_RADIUS)
+                    .attr("r", AppConfig.SVG.transformationHandleRadius)
                     .classed(ToolClasses.poi, true);
 
                 if (poiCallback) {
@@ -681,7 +680,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
             const handle = g.append("circle")
                 .attr("cx", p.x)
                 .attr("cy", p.y)
-                .attr("r", HANDLE_RADIUS)
+                .attr("r", AppConfig.SVG.transformationHandleRadius)
                 .attr("id", `${object.uniqueName}-handle-${id}`)
                 .data<Point2D>([p])
                 .classed(ToolClasses.handle, true);

@@ -3,6 +3,8 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrCircle} from "../../../Geo/GrCircle";
+import {Point2D} from "../../../Geo/Point2D";
+import {AppConfig} from "../../../AppConfig";
 
 enum States {
     Wait = "DrawCircle.Wait",
@@ -16,6 +18,7 @@ export class DrawCircle extends Tool {
     private _circle:GrCircle;
     private _centerSnap: SnapInfo;
     private _secondSnap: SnapInfo;
+    private _fromTo: boolean;
 
     constructor(renderer) {
         super(renderer);
@@ -51,12 +54,31 @@ export class DrawCircle extends Tool {
                 break;
 
             case States.DragRadius:
-                this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                if (eventData[AppConfig.Keys.CircleP2PModifierName]) {
+                    const np = new Point2D(eventData.x, eventData.y);
+                    const cp = new Point2D(this._centerSnap.event.x, this._centerSnap.event.y);
+                    const r = np.copy.sub(cp).length;
+                    const c = cp.copy.add(np.sub(cp).scale(0.5))
+                    this._circle.radius = r;
+                    this._circle.x = c.x;
+                    this._circle.y = c.y;
+                    this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                } else {
+                    this._circle.x = this._centerSnap.event.x;
+                    this._circle.y = this._centerSnap.event.y;
+                    this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
+                }
+
                 this._secondSnap = snapInfo;
                 this._renderer.renderCircle(RenderLayer.Interaction, this._circle, false);
                 break;
 
             case States.Done:
+                if (eventData.alt) {
+                    this._fromTo = true;
+                } else {
+                    this._fromTo = false;
+                }
                 this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
                 this._renderer.remove(this._circle);
         }

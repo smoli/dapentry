@@ -24,6 +24,7 @@ import {GrCompositeObject} from "../../Geo/GrCompositeObject";
 import {GrCanvas} from "../../Geo/GrCanvas";
 import {DrawLibraryInstance} from "./Tools/DrawLibraryInstance";
 import {LibraryEntry} from "../../Library";
+import {AppConfig} from "../../AppConfig";
 
 
 enum ToolNames {
@@ -53,7 +54,7 @@ export default class Drawing extends Control {
     private _svg: Selection<any>;
     private _toolManager: ToolManager;
     private _objectRenderer: ObjectRenderer;
-    private _bezelSize = 15;
+    private _bezelSize = AppConfig.SVG.canvasBezelSize;
     private _width = 10;
     private _height = 10;
 
@@ -290,31 +291,31 @@ export default class Drawing extends Control {
     private _interActionKeyDown() {
         console.log(d3.event.code);
 
-        if (d3.event.code === "ArrowDown") {
+        if (d3.event.code === AppConfig.Keys.NextStepCode) {
             this.fireNextStep();
-        } else if (d3.event.code === "Delete") {
+        } else if (d3.event.code === AppConfig.Keys.DeleteCode) {
             this.fireObjectDeleted();
-        } else if (d3.event.code === "AltLeft") {
+        } else if (d3.event.code === AppConfig.Keys.ObjectSnapCode) {
             d3.event.preventDefault();
             this._pumpToTool(InteractionEvents.OtherObject);
-        } else if (d3.event.keyCode === 27) {
+        } else if (d3.event.keyCode === AppConfig.Keys.AbortToolKeyCode) {
             this._pumpToTool(InteractionEvents.Cancel);
             this._toolManager.abortCurrentTool();
-        } else if (d3.event.key === "c") {
+        } else if (d3.event.key === AppConfig.Keys.DrawCircleKey) {
             this._toolManager.switch(ToolNames.Circle);
-        } else if (d3.event.key === "r") {
+        } else if (d3.event.key === AppConfig.Keys.DrawRectKey) {
             this._toolManager.switch(ToolNames.Rectangle);
-        } else if (d3.event.key === "l") {
+        } else if (d3.event.key === AppConfig.Keys.DrawLineKey) {
             this._toolManager.switch(ToolNames.Line);
-        } else if (d3.event.key === "p") {
+        } else if (d3.event.key === AppConfig.Keys.DrawPolygonKey) {
             this._toolManager.switch(ToolNames.Polygon);
-        } else if (d3.event.key === "q") {
+        } else if (d3.event.key === AppConfig.Keys.DrawQuadricKey) {
             this._toolManager.switch(ToolNames.Quadric);
-        } else if (d3.event.key === "g") {
+        } else if (d3.event.key === AppConfig.Keys.MoveKey) {
             this._toolManager.switch(ToolNames.Move);
-        } else if (d3.event.key === "t") {
+        } else if (d3.event.key === AppConfig.Keys.RotateKey) {
             this._toolManager.switch(ToolNames.Rotate);
-        } else if (d3.event.key === "s") {
+        } else if (d3.event.key === AppConfig.Keys.ScaleKey) {
             this._toolManager.switch(ToolNames.Scale);
         } else {
             this._pumpToTool(InteractionEvents.Key)
