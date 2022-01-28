@@ -1,10 +1,8 @@
 import {state} from "../../../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
+import {InteractionEvents} from "../InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrLine} from "../../../Geo/GrLine";
-import {GrObject, POI} from "../../../Geo/GrObject";
-import {Point2D} from "../../../Geo/Point2D";
 
 enum States {
     Wait = "DrawLine.Wait",
@@ -47,7 +45,7 @@ export class DrawLine extends Tool {
             case States.P1:
                 this._line = GrLine.create(null, eventData.x, eventData.y, eventData.x, eventData.y);
                 this._renderer.renderLine(RenderLayer.Interaction, this._line, false);
-                this._firstSnapInfo = snapInfo;
+                this.snapInfoUsed(snapInfo);
                 break;
 
             case States.Drag:
@@ -60,16 +58,16 @@ export class DrawLine extends Tool {
                 this._line.x2 = eventData.x;
                 this._line.y2 = eventData.y;
                 this._renderer.remove(this._line);
-                this._secondSnapInfo = snapInfo;
+                this.snapInfoUsed(snapInfo);
                 this.disablePOISnapping();
         }
 
         return this.isDone;
     }
 
-    public get result(): any {
-        let one = this.makePointCodeFromSnapInfo(this._firstSnapInfo);
-        let two = this.makePointCodeFromSnapInfo(this._secondSnapInfo);
+    getResult(snapInfos:Array<SnapInfo>): any {
+        let one = this.makePointCodeFromSnapInfo(snapInfos[0]);
+        let two = this.makePointCodeFromSnapInfo(snapInfos[1]);
         return [`LINE ${this._line.uniqueName}, $styles.default, ${one}, ${two}`]
 
     }

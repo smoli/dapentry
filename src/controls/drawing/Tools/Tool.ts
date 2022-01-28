@@ -16,6 +16,7 @@ function stepper(step) {
     return v => Math.floor(v / step) * step;
 }
 
+const MIN_DISTANCE_FOR_AXIS_SNAPPING: number = 20;
 const s0_1 = stepper(0.01);
 
 /**
@@ -47,10 +48,12 @@ export abstract class Tool {
      */
     protected _waitStateId: string;
 
+    private _snappingFirstInfo: SnapInfo;
     private _snappingObject: GrObject;
     private _snappingPOI: string;
     private _snapPoint: Point2D;
     private _otherObject: GrObject;
+    private _usedSnapInfos: Array<SnapInfo>;
 
     protected constructor(renderer: ObjectRenderer, ...params: Array<any>) {
         this._renderer = renderer;
@@ -96,6 +99,7 @@ export abstract class Tool {
      */
     public reset() {
         this._otherObject = null;
+        this.clearSnapInfo();
         this._state.start(state(this._waitStateId));
     }
 
@@ -140,23 +144,54 @@ export abstract class Tool {
         } else {
             snapInfo = this.tryToPOISnap(eventData);
         }
-        if (!snapInfo) {
-            snapInfo = this.dontSnap(eventData);
-        }
 
         return this._update(interactionEvent, snapInfo);
     }
 
+    /**
+     * Declare that the snapInfo was used. This information may
+     * then be used to snap on axis.
+     * @param snapInfo
+     * @protected
+     */
+    protected snapInfoUsed(snapInfo: SnapInfo) {
+        if (!this._snappingFirstInfo) {
+            this._snappingFirstInfo = snapInfo;
+        }
+        if (!this._usedSnapInfos) {
+            this._usedSnapInfos = [snapInfo];
+        } else {
+            this._usedSnapInfos.push(snapInfo);
+        }
+    }
+
 
     protected abstract _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo): boolean;
+
+
     /**
      * If the tool creates something, return it here.
      */
-    public abstract get result(): (string | Array<string>);
+    public get result(): (string | Array<string>) {
+        const r = this.getResult(this._usedSnapInfos);
+        this._usedSnapInfos = null;
+        return r;
+    }
+
+    protected getResult(usedSnapInfos: Array<SnapInfo>): (string | Array<string>) {
+        return null;
+    }
 
 
     protected clearSnapInfo() {
-        this._snapPoint = this._snappingObject = this._snappingPOI = null;
+        this._snapPoint =
+            this._snappingObject =
+                this._snappingPOI =
+                    this._snappingFirstInfo = null
+    }
+
+    protected get usedSnapInfos():Array<SnapInfo> {
+        return this._usedSnapInfos;
     }
 
     protected enablePOISnapping(objectsToExclude: Array<GrObject> = []) {
@@ -172,7 +207,7 @@ export abstract class Tool {
             if (hit) {
                 this._snappingObject = object;
                 this._snappingPOI = poiId;
-                console.log("snap", this._snappingObject, this._snappingPOI )
+                console.log("snap", this._snappingObject, this._snappingPOI)
                 this._snapPoint = this._snappingObject.pointsOfInterest(POIPurpose.SNAPPING)[this._snappingPOI]
                 handle = this._renderer.renderInfoText(this._snapPoint, POI[poiId]);
             } else {
@@ -194,7 +229,7 @@ export abstract class Tool {
     }
 
     protected snapToObject(object: GrObject, eventData): SnapInfo {
-        let p = object.projectPoint( new Point2D(eventData.x, eventData.y));
+        let p = object.projectPoint(new Point2D(eventData.x, eventData.y));
         if (p === null) {
             return null;
         }
@@ -217,7 +252,19 @@ export abstract class Tool {
     }
 
     protected tryToPOISnap(eventData: InteractionEventData): SnapInfo {
-        if (this._snappingObject) {
+        if (eventData.shift && this._snappingFirstInfo) {
+            // Try to axis-snap
+            const dx = Math.abs(eventData.x - this._snappingFirstInfo.event.x);
+            const dy = Math.abs(eventData.y - this._snappingFirstInfo.event.y);
+
+            const snapInfo = this.dontSnap(eventData);
+            if (dx > dy && dx > MIN_DISTANCE_FOR_AXIS_SNAPPING) {
+                snapInfo.event.y = this._snappingFirstInfo.event.y;
+            } else if (dy > dx && dy > MIN_DISTANCE_FOR_AXIS_SNAPPING) {
+                snapInfo.event.x = this._snappingFirstInfo.event.x;
+            }
+            return snapInfo;
+        } else if (this._snappingObject) {
             return {
                 object: this._snappingObject,
                 poiId: this._snappingPOI,
@@ -229,7 +276,7 @@ export abstract class Tool {
                 }
             }
         } else {
-            this.dontSnap(eventData);
+            return this.dontSnap(eventData);
         }
     }
 
@@ -239,7 +286,7 @@ export abstract class Tool {
         }
     }
 
-    protected makePointCodeFromSnapInfo(snapInfo:SnapInfo) {
+    protected makePointCodeFromSnapInfo(snapInfo: SnapInfo) {
         if (snapInfo.object) {
             if (snapInfo.poiId === undefined) {
                 const pct = snapInfo.object.projectPointAsPercentage(snapInfo.point);
