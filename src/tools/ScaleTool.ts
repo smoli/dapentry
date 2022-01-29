@@ -1,11 +1,11 @@
-import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {ObjectRenderer} from "../Objects/ObjectRenderer";
-import {GrObject, POI, POIMap, POIPurpose} from "../../../Geo/GrObject";
-import {state} from "../../../runtime/tools/StateMachine";
-import {Point2D} from "../../../Geo/Point2D";
-import {Line2D} from "../../../Geo/Line2D";
-import {eq} from "../../../Geo/GeoMath";
+import {ObjectRenderer} from "../controls/drawing/Objects/ObjectRenderer";
+import {GrObject, POI, POIMap, POIPurpose} from "../Geo/GrObject";
+import {state} from "../runtime/tools/StateMachine";
+import {Point2D} from "../Geo/Point2D";
+import {Line2D} from "../Geo/Line2D";
+import {eq} from "../Geo/GeoMath";
 
 
 enum States {

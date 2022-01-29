@@ -1,4 +1,4 @@
-import {Tool} from "./Tools/Tool";
+import {Tool} from "../../tools/Tool";
 import {ObjectRenderer} from "./Objects/ObjectRenderer";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {GrObject} from "../../Geo/GrObject";

@@ -1,10 +1,10 @@
-import {state} from "../../../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
+import {state} from "../runtime/tools/StateMachine";
+import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {Point2D} from "../../../Geo/Point2D";
-import {LibraryEntry} from "../../../Library";
-import {GrObject} from "../../../Geo/GrObject";
-import {AppConfig} from "../../../AppConfig";
+import {Point2D} from "../Geo/Point2D";
+import {LibraryEntry} from "../Library";
+import {GrObject} from "../Geo/GrObject";
+import {AppConfig} from "../AppConfig";
 
 enum States {
     Wait = "DrawLibraryInstance.Wait",

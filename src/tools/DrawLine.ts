@@ -1,9 +1,9 @@
-import {state} from "../../../runtime/tools/StateMachine";
-import {InteractionEvents} from "../InteractionEvents";
+import {state} from "../runtime/tools/StateMachine";
+import {InteractionEvents} from "../controls/drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {RenderLayer} from "../Objects/ObjectRenderer";
-import {GrLine} from "../../../Geo/GrLine";
-import {AppConfig} from "../../../AppConfig";
+import {RenderLayer} from "../controls/drawing/Objects/ObjectRenderer";
+import {GrLine} from "../Geo/GrLine";
+import {AppConfig} from "../AppConfig";
 
 enum States {
     Wait = "DrawLine.Wait",

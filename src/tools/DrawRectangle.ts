@@ -1,9 +1,9 @@
-import {state} from "../../../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
+import {state} from "../runtime/tools/StateMachine";
+import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {RenderLayer} from "../Objects/ObjectRenderer";
-import {GrRectangle} from "../../../Geo/GrRectangle";
-import {AppConfig} from "../../../AppConfig";
+import {RenderLayer} from "../controls/drawing/Objects/ObjectRenderer";
+import {GrRectangle} from "../Geo/GrRectangle";
+import {AppConfig} from "../AppConfig";
 
 enum States {
     Wait = "DrawRect.Wait",
