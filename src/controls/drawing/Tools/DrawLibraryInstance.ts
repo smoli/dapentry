@@ -62,7 +62,6 @@ export class DrawLibraryInstance extends Tool {
 
     public get result(): any {
         const name = GrObject.getNewObjectName(this._libraryEntry.id);
-        return `MAKE ${name}, "${this._libraryEntry.id}", ${AppConfig.Runtime.styleRegisterName},
-         ${this._width}, (${this._point.x}, ${this._point.y})`;
+        return `MAKE ${name}, "${this._libraryEntry.id}", ${AppConfig.Runtime.styleRegisterName}, ${this._width}, (${this._point.x}, ${this._point.y})`;
     }
 }
