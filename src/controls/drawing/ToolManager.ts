@@ -116,6 +116,7 @@ export class ToolManager {
         if (ToolClass) {
             if (this._currentTool) {
                 this._abortCurrentTool();
+                this._currentTool.tearDown();
             }
             this._currentTool = this._makeToolInstance(ToolClass, params);
             this._pumpSelection(false);

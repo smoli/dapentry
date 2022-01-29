@@ -149,7 +149,12 @@ export abstract class Tool {
             snapInfo = this.tryToPOISnap(eventData);
         }
 
-        return this._update(interactionEvent, snapInfo);
+        const done = this._update(interactionEvent, snapInfo);
+        if (done) {
+            this.disablePOISnapping();
+        }
+
+        return done;
     }
 
     /**
