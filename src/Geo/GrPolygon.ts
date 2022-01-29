@@ -100,8 +100,8 @@ export class GrPolygonBase extends GrObject {
         this.computeCenterAndBB();
     }
 
-    rotate(value: number) {
-        super.rotate(value);
+    rotateByDeg(value: number) {
+        super.rotateByDeg(value);
         const a = deg2rad(value);
         this._points.forEach(p => p.rotate(a, this.center));
     }

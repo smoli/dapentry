@@ -84,8 +84,8 @@ export class GrLine extends GrObject {
     }
 
 
-    rotate(value: number, pivot: Point2D = null) {
-        super.rotate(value, pivot);
+    rotateByDeg(value: number, pivot: Point2D = null) {
+        super.rotateByDeg(value, pivot);
 
         if (!pivot) {
             pivot = this.center;

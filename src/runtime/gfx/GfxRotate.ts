@@ -29,9 +29,9 @@ export class GfxRotate extends GfxOperation {
         const p = this.pivot;
 
         if (this.target instanceof GrObjectList) {
-            this.target.objects[this.target.objects.length - 1].rotate(this.angle, p);
+            this.target.objects[this.target.objects.length - 1].rotateByDeg(this.angle, p);
         } else {
-            this.target.rotate(this.angle, p);
+            this.target.rotateByDeg(this.angle, p);
         }
     }
 }

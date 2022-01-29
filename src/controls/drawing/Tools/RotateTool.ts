@@ -124,7 +124,7 @@ export class RotateTool extends Tool {
                 this._rotationObject.rotatePOI(this._rotationPoi, a);
                 this._renderer.render(this._rotationObject, true);
                 this._finalAngle += a;
-                this._object.rotate(this._finalAngle);
+                this._object.rotateByDeg(this._finalAngle);
                 this._rotationObject = null;
                 return true;
 
