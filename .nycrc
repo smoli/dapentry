@@ -1,16 +1,23 @@
 {
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "check-coverage": true,
   "cache": false,
-  "check-coverage": false,
   "extension": [
     ".ts"
   ],
   "include": [
-    "**/*.js",
-    "**/*.ts"
+    "src/**/*.js",
+    "src/**/*.ts"
   ],
   "exclude": [
     "coverage/**",
     "node_modules/**",
+    "src/controller/**",
+    "src/Component.ts",
+    "src/BaseComponentController.ts",
+    "src/ComponentController.ts",
+    "src/controls/**",
+    "src/perfTests/**",
     "dist/**",
     ".idea/**",
     "**/*.d.ts",
@@ -19,6 +26,7 @@
   "sourceMap": true,
   "reporter": [
     "html",
+    "lcov",
     "text",
     "text-summary"
   ],
