@@ -217,7 +217,12 @@ export class AppModel extends JSONModelAccess {
         const d = this.get(AppModelKeys.data);
         const code = [];
         for (const field of d) {
-            code.push(`LOAD ${field.name}, ${field.value}`)
+            if (Array.isArray(field.value)) {
+                code.push(`LOAD ${field.name}, [${field.value}]`)
+
+            } else {
+                code.push(`LOAD ${field.name}, ${field.value}`)
+            }
         }
 
         return code;
