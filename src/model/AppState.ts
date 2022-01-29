@@ -1,7 +1,9 @@
-import {AppModel} from "./AppModel";
+import {AppModel, AppModelKeys} from "./AppModel";
 import {SegmentedCodeLine} from "../SegmentedCodeLine";
 import {GrObject} from "../Geo/GrObject";
 import {Style} from "../controls/drawing/Objects/StyleManager";
+import {AbsStatePersistence} from "./AbsStatePersistence";
+import {LibraryEntry} from "../Library";
 
 export interface SelectionInfo {
     name: string,
@@ -17,9 +19,24 @@ export interface DataFieldInfo {
 
 export  class AppState {
     private _appModel: AppModel;
-    
-    constructor(appModel: AppModel) {
+    private _persistence: AbsStatePersistence;
+
+    constructor(appModel: AppModel, persistence: AbsStatePersistence) {
         this._appModel = appModel;
+        this._persistence = persistence;
+    }
+
+    public async loadFromPersistence() {
+        const library = await this._persistence.getLibraryEntries();
+        for (const e of library) {
+            this._appModel.addLibraryEntry(e);
+        }
+
+        const dataFields = await this._persistence.getDataFields();
+
+        for (const f of dataFields) {
+            this._appModel.addDataField(f);
+        }
     }
 
     get fullCode():Array<string> {
@@ -105,6 +122,14 @@ export  class AppState {
 
     public getDataField(name:string): DataFieldInfo {
         return this._appModel.getDataField(name);
+    }
+
+    public addLibraryEntry(info: LibraryEntry) {
+        return this._appModel.addLibraryEntry(info);
+    }
+
+    public getLibraryEntry(id: string): LibraryEntry {
+        return this._appModel.getLibraryEntry(id);
     }
 
 }

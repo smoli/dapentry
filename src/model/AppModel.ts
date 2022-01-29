@@ -5,6 +5,7 @@ import JSONModel from "sap/ui/model/json/JSONModel";
 import {GrObject, ObjectType} from "../Geo/GrObject";
 import {SegmentedCodeLine} from "../SegmentedCodeLine";
 import {DataFieldInfo, SelectionInfo} from "./AppState";
+import {LibraryEntry} from "../Library";
 
 
 export enum AppModelKeys {
@@ -255,5 +256,16 @@ export class AppModel extends JSONModelAccess {
 
     public getDataField(name:string): DataFieldInfo {
         return this.get("data", d => d.name === name);
+    }
+
+    public addLibraryEntry(info: LibraryEntry) {
+        if (this.get(AppModelKeys.library, e => e.id === info.id)) {
+            this.remove(e => e.name === info.id).from(AppModelKeys.library);
+        }
+        this.push(info).to(AppModelKeys.library);
+    }
+
+    public getLibraryEntry(id: string): LibraryEntry {
+        return this.get(AppModelKeys.library, e => e.id === id);
     }
 }
