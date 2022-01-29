@@ -88,6 +88,7 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 
 
 ## Done
+* [x] Store app configuration in a central point
 * [x] Annotate generated code to define
   * [x] what statements to display on the ui
   * [x] where to insert code

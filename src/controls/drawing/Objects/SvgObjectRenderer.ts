@@ -753,8 +753,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
             return;
         }
 
-        i.append("text")
-            .text(text);
+        i.text(text);
 
         if (position) {
             i.attr("x", position.x)

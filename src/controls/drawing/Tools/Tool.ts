@@ -1,6 +1,6 @@
 import {state, StateMachine} from "../../../runtime/tools/StateMachine";
 import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
-import {ObjectRenderer} from "../Objects/ObjectRenderer";
+import {InfoHandle, ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject, POI, POIPurpose} from "../../../Geo/GrObject";
 import {Point2D} from "../../../Geo/Point2D";
 import {GrObjectList} from "../../../Geo/GrObjectList";
@@ -54,6 +54,8 @@ export abstract class Tool {
     private _snapPoint: Point2D;
     private _otherObject: GrObject;
     private _usedSnapInfos: Array<SnapInfo>;
+    private _poiSnapping: boolean;
+    private _objectSnapInforHandle: InfoHandle;
 
     protected constructor(renderer: ObjectRenderer, ...params: Array<any>) {
         this._renderer = renderer;
@@ -198,7 +200,9 @@ export abstract class Tool {
         this._snapPoint =
             this._snappingObject =
                 this._snappingPOI =
-                    this._snappingFirstInfo = null
+                    this._snappingFirstInfo = null;
+        this._poiSnapping = null;
+        this._objectSnapInforHandle = null;
     }
 
     protected get usedSnapInfos():Array<SnapInfo> {
@@ -210,6 +214,7 @@ export abstract class Tool {
         if (!this._renderer) {
             return;
         }
+        this._poiSnapping = true;
         this._renderer.clearInfo();
 
         let handle;
@@ -232,6 +237,11 @@ export abstract class Tool {
     }
 
     protected disablePOISnapping() {
+        if (!this._poiSnapping) {
+            return;
+        }
+        this._objectSnapInforHandle = null;
+        this._poiSnapping = false;
         this.clearSnapInfo();
         if (this._renderer) {
             this._renderer.enablePOI(false);
@@ -250,7 +260,11 @@ export abstract class Tool {
             p = object.getPointAtPercentage(pct);
         }
 
-        this._renderer.renderInfoText(p, (100 * pct).toFixed(1) + "%");
+        if (!this._objectSnapInforHandle) {
+            this._objectSnapInforHandle = this._renderer.renderInfoText(p, (100 * pct).toFixed(1) + "%");
+        } else  {
+            this._renderer.updateInfoText(this._objectSnapInforHandle, (100 * pct).toFixed(1) + "%", p)
+        }
 
         return {
             event: {
