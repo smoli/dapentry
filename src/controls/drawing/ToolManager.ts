@@ -3,6 +3,10 @@ import {ObjectRenderer} from "./Objects/ObjectRenderer";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {GrObject} from "../../Geo/GrObject";
 
+
+/**
+ * Manages a set of tools and their lifecycle.
+ */
 export class ToolManager {
     private readonly _tools: { [key: (string | symbol | number)]: typeof Tool }
     private readonly _objectRenderer: ObjectRenderer;

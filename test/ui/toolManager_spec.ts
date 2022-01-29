@@ -44,10 +44,6 @@ class TestTool extends Tool {
         return "result";
     }
 
-    get code(): string {
-        return "";
-    }
-
     reset() {
         super.reset();
         this._mockDone = false;
@@ -177,6 +173,7 @@ describe('The ToolManager', () => {
             expect(messages).to.deep.equal([
                 "A-constructor",
                 "A-abort",
+                "A-tearDown",
                 "B-constructor"
             ]);
         })
@@ -299,6 +296,7 @@ describe('The ToolManager', () => {
                 "A-finish",         // A is done
                 "A-reset",          // A is kept
                 "A-abort",          // switch to B, abort A
+                "A-tearDown",
                 "B-constructor",
                 "B-update",
                 "B-finish",         // B is done

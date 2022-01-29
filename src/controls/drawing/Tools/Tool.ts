@@ -1,5 +1,5 @@
 import {state, StateMachine} from "../../../runtime/tools/StateMachine";
-import {InteractionEvents, InteractionEventData} from "../InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {InfoHandle, ObjectRenderer} from "../Objects/ObjectRenderer";
 import {GrObject, POI, POIPurpose} from "../../../Geo/GrObject";
 import {Point2D} from "../../../Geo/Point2D";
@@ -111,7 +111,7 @@ export abstract class Tool {
      * This tool instance will not be used again. Clean up.
      */
     public tearDown() {
-        this.disablePOISnapping();
+        this.disablePOISnapping(true);
         return;
     }
 
@@ -149,12 +149,7 @@ export abstract class Tool {
             snapInfo = this.tryToPOISnap(eventData);
         }
 
-        const done = this._update(interactionEvent, snapInfo);
-        if (done) {
-            this.disablePOISnapping();
-        }
-
-        return done;
+        return this._update(interactionEvent, snapInfo);
     }
 
     /**
@@ -241,8 +236,8 @@ export abstract class Tool {
         }, objectsToExclude.filter(o => (o instanceof GrObjectList && o.objects.length < 2) || !(o instanceof GrObjectList)));
     }
 
-    protected disablePOISnapping() {
-        if (!this._poiSnapping) {
+    protected disablePOISnapping(force: boolean = false) {
+        if (!this._poiSnapping && !force) {
             return;
         }
         this._objectSnapInforHandle = null;

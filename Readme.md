@@ -17,10 +17,10 @@ It uses an interpreted language that resembles something like assembly to draw p
 creates the program in the background. [See here](doc/opcodes.md) for more details on the language and the interpreter.
 
 ## Bugs
-* [ ] Tool Lifecycle: Abort/teardown is not called properly 
 * [ ] Fix scaling of rotated objects
 * [ ] Hide Objects
 * [ ] Percentage-Point on vertical lines does not work
+* [x] Tool Lifecycle: Abort/teardown is not called properly 
 * [x] Expressions are not displayed in steps and operation editor
 * [x] Program does not always run as far as expected (better description needed)
 
