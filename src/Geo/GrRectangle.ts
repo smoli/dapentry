@@ -13,15 +13,7 @@ export class GrRectangle extends GrObject {
     }
 
     public static create(name: string, x: number, y: number, w: number, h: number) {
-        const i = GrObject.getPoolInstance(name) as GrRectangle;
-        if (!i) {
-            return GrObject.setPoolInstance(new GrRectangle(name, x, y, w, h)) as GrRectangle;
-        }
-        i.x = x;
-        i.y = y;
-        i.width = w;
-        i.height = h;
-        return i;
+        return new GrRectangle(name, x, y, w, h);
     }
 
     protected copy(): GrObject {
@@ -67,9 +59,17 @@ export class GrRectangle extends GrObject {
     scale(fx: number, fy: number, pivot: Point2D = null) {
         this._width *= fx;
         this._height *= fy;
+
+        // Adjust center
+        this._center = this.center.sub(this._center).normalize();
+
+        const l = Math.sqrt(this._width ** 2 + this._height ** 2) / 2;
+
+        this._center = pivot.copy.add(this._center.scale(l));
+
     }
 
-    pointsOfInterest(purpose:POIPurpose): POIMap {
+    pointsOfInterest(purpose: POIPurpose): POIMap {
         return {
             ...super.pointsOfInterest(purpose),
             [POI.topLeft]: this.topLeft.copy,

@@ -2,8 +2,6 @@ import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GfxInterpreter} from "../../src/GfxInterpreter";
 import {StyleManager} from "../../src/controls/drawing/Objects/StyleManager";
-import {GrObjectList} from "../../src/Geo/GrObjectList";
-import {POI, POIPurpose} from "../../src/Geo/GrObject";
 
 
 describe('Moving', () => {

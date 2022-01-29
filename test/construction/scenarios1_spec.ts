@@ -1,10 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GfxInterpreter} from "../../src/GfxInterpreter";
-import {StyleManager} from "../../src/controls/drawing/Objects/StyleManager";
 import {runCode} from "../interpreter/toolRunCode";
 import {GrObjectList} from "../../src/Geo/GrObjectList";
-import exp = require("constants");
 
 
 describe('Scenarios 1', () => {

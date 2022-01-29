@@ -171,21 +171,6 @@ export abstract class GrObject {
         return true;
     }
 
-    protected static getPoolInstance(name: string) {
-        return null;
-        /*
-                const r = name && GrObject._pool[name];
-                if (r) {
-                    r.rotation = 0;
-                }
-                return r;
-        */
-    }
-
-    protected static setPoolInstance(object: GrObject): GrObject {
-        GrObject._pool[object.uniqueName] = object;
-        return object;
-    }
 
     public setParent(value: GrObject) {
         this._parent = value;

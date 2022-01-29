@@ -5,23 +5,14 @@ export class GrEllipse extends GrObject {
     private _width: number;
     private _height: number;
 
-    protected constructor(name: string, x: number, y: number, w: number, h: number) {
+    constructor(name: string, x: number, y: number, w: number, h: number) {
         super(ObjectType.Ellipse, name, x, y);
         this._width = w;
         this._height = h;
     }
 
     public static create(name: string, x: number, y: number, w: number, h: number) {
-        const i = GrObject.getPoolInstance(name) as GrEllipse;
-        if (!i) {
-            return GrObject.setPoolInstance(new GrEllipse(name, x, y, w, h)) as GrEllipse
-        }
-        i.x = x;
-        i.y = y;
-        i.width = w;
-        i.height = h;
-
-        return i;
+        return new GrEllipse(name, x, y, w, h);
     }
 
     protected copy(): GrObject {

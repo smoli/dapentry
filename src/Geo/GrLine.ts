@@ -8,7 +8,7 @@ export class GrLine extends GrObject {
     private _start: Point2D;
     private _end: Point2D;
 
-    protected constructor(name: string, x1: number, y1: number, x2: number, y2: number) {
+    constructor(name: string, x1: number, y1: number, x2: number, y2: number) {
         const x = (x1 + x2) / 2;
         const y = (y1 + y2) / 2;
 
@@ -20,16 +20,7 @@ export class GrLine extends GrObject {
     }
 
     public static create(name: string, x1: number, y1: number, x2: number, y2: number) {
-        const i = GrObject.getPoolInstance(name) as GrLine;
-        if (!i) {
-            return GrObject.setPoolInstance(new GrLine(name, x1, y1, x2, y2)) as GrLine
-        } else {
-            i._start = new Point2D(x1, y1);
-            i._end = new Point2D(x2, y2);
-            i.updateCenter();
-        }
-
-        return i;
+        return new GrLine(name, x1, y1, x2, y2);
     }
 
 
