@@ -1,5 +1,6 @@
 import BaseController from "./BaseController";
 import {LibraryEntry} from "../Library";
+import {AppConfig} from "../AppConfig";
 
 /**
  * @namespace sts.drawable.controller
@@ -7,7 +8,7 @@ import {LibraryEntry} from "../Library";
 export default class LibraryController extends BaseController {
 
     onLibraryEntrySelected(event) {
-        const ctx = event.getSource().getBindingContext(this.getAppModelName());
+        const ctx = event.getSource().getBindingContext(AppConfig.UICore.appModelName);
 
         if (!ctx) {
             return;

@@ -10,15 +10,16 @@ export interface SelectionInfo {
     type: string
 }
 
+export interface DataFieldInfo {
+    name: string,
+    value: any
+}
+
 export  class AppState {
     private _appModel: AppModel;
     
     constructor(appModel: AppModel) {
         this._appModel = appModel;
-    }
-
-    get appModelName():string {
-        return this._appModel.modelName;
     }
 
     get fullCode():Array<string> {
@@ -94,7 +95,7 @@ export  class AppState {
         return this._appModel.data;
     }
 
-    public addDataField(fieldInfo) {
+    public addDataField(fieldInfo:DataFieldInfo) {
         return this._appModel.addDataField(fieldInfo);
     }
 
@@ -102,7 +103,7 @@ export  class AppState {
         return this._appModel.removeFieldFromData(name);
     }
 
-    public getDataField(name:string): any {
+    public getDataField(name:string): DataFieldInfo {
         return this._appModel.getDataField(name);
     }
 

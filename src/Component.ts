@@ -13,6 +13,7 @@ import {Library, LibraryEntryArgumentType} from "./Library";
 import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 import {AppConfig} from "./AppConfig";
 import {AppState} from "./model/AppState";
+import JSONModel from "sap/ui/model/json/JSONModel";
 
 
 const starCode = `COMPOSITE o
@@ -59,21 +60,18 @@ export default class Component extends UIComponent {
         super.init();
         this.getRouter().initialize();
 
-        this._codeManager = new CodeManager({
-            LOAD: 1,
-            ADD: 1,
-            SUB: 1,
-            CIRCLE: 1,
-            RECT: 1
-        });
-
-        const _appModel = new AppModel(this._codeManager);
-        this.setModel(_appModel.model, _appModel.modelName);
+        const model = new JSONModel();
+        const _appModel = new AppModel(model);
+        this._codeManager = _appModel.codeManager;
+        this.setModel(model, AppConfig.UICore.appModelName);
         this._library = new Library(_appModel);
         this._appState = new AppState(_appModel);
 
-
         this._appController = new ComponentController(this, GrCanvas.create_1_1(1000));
+
+        _appModel.addDataField({ name: "f1", value: [10, 20, 30, 40] });
+        _appModel.addDataField({ name: "f2", value: 5 });
+
 
         this._library.addEntry({
             "id": "star",

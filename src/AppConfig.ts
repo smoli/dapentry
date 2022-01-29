@@ -35,5 +35,9 @@ export const AppConfig = {
         styleRegisterName: "$styles",
         defaultStyleRegisterName: "$styles.default",
         canvasObjectName: "Canvas"
+    },
+
+    UICore: {
+        appModelName: "appModel"
     }
 }

@@ -4,7 +4,7 @@ import {Parser} from "../runtime/interpreter/Parser";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import {GrObject, ObjectType} from "../Geo/GrObject";
 import {SegmentedCodeLine} from "../SegmentedCodeLine";
-import {SelectionInfo} from "./AppState";
+import {DataFieldInfo, SelectionInfo} from "./AppState";
 
 
 export enum AppModelKeys {
@@ -28,14 +28,14 @@ export class AppModel extends JSONModelAccess {
 
     private readonly _codeManager: CodeManager;
 
-    constructor(codeManager: CodeManager) {
+    constructor(model:JSONModel) {
 
-        const model = new JSONModel({
+        model.setData({
             [AppModelKeys.codeString]: "",
             [AppModelKeys.segmentedCode]: [],
             [AppModelKeys.selectedCode]: [],
             [AppModelKeys.editableCodeLine]: null,
-            [AppModelKeys.data]: [ { name: "f1", value: [10, 20, 30, 40] }, { name: "f2", value: 5 }],
+            [AppModelKeys.data]: [],
             [AppModelKeys.drawing]: [],
             [AppModelKeys.selectedObjects]: [],
             [AppModelKeys.codeEditor]: false,
@@ -48,12 +48,15 @@ export class AppModel extends JSONModelAccess {
         });
 
         super(model);
-        this._codeManager = codeManager;
-        this._codeManager.clear();
-    }
 
-    get modelName():string {
-        return "appModel";
+        this._codeManager = new CodeManager({
+            LOAD: 1,
+            ADD: 1,
+            SUB: 1,
+            CIRCLE: 1,
+            RECT: 1
+        });
+        this._codeManager.clear();
     }
 
     get codeManager(): CodeManager {
@@ -214,15 +217,21 @@ export class AppModel extends JSONModelAccess {
 
 
     protected createScopeCodeFromData() {
-        const d = this.get(AppModelKeys.data);
+        const d:Array<DataFieldInfo> = this.get(AppModelKeys.data);
         const code = [];
-        for (const field of d) {
-            if (Array.isArray(field.value)) {
-                code.push(`LOAD ${field.name}, [${field.value}]`)
 
+        const encValue = (value) => {
+            if (Array.isArray(value)) {
+                return `[${value.map(encValue).join(",")}]`;
+            } else if (typeof value === "string") {
+                return `"${value}"`;
             } else {
-                code.push(`LOAD ${field.name}, ${field.value}`)
+                return `${value}`;
             }
+        }
+
+        for (const field of d) {
+            code.push(`LOAD ${field.name}, ${encValue(field.value)}`)
         }
 
         return code;
@@ -236,15 +245,15 @@ export class AppModel extends JSONModelAccess {
         return this.get(AppModelKeys.data);
     }
 
-    public addDataField(fieldInfo) {
+    public addDataField(fieldInfo: DataFieldInfo) {
         this.push(fieldInfo).to(AppModelKeys.data);
     }
 
-    public removeFieldFromData(name) {
+    public removeFieldFromData(name: string) {
         this.remove(d => d.name === name).from(AppModelKeys.data);
     }
 
-    public getDataField(name:string) {
+    public getDataField(name:string): DataFieldInfo {
         return this.get("data", d => d.name === name);
     }
 }
