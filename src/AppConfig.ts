@@ -17,8 +17,15 @@ export const AppConfig = {
         AbortToolKeyCode: 27,
 
         CircleP2PModifierName: "alt",
-        ToolAxisAlignModifierName: "shift"
+        ToolAxisAlignModifierName: "shift",
+        ObjectSnappingStepModifierName: "shift"
     },
+
+    Tools: {
+        AxisAlignmentThreshold: 20,
+        ObjectSnappingStep: 0.01
+    },
+
     SVG: {
         canvasBezelSize: 15,
         transformationHandleRadius: 10,
@@ -26,7 +33,7 @@ export const AppConfig = {
     },
     Runtime: {
         styleRegisterName: "$styles",
-        defaultStyleRegisterName: "$styles",
+        defaultStyleRegisterName: "$styles.default",
         canvasObjectName: "Canvas"
     }
 }

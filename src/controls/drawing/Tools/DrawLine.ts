@@ -3,6 +3,7 @@ import {InteractionEvents} from "../InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrLine} from "../../../Geo/GrLine";
+import {AppConfig} from "../../../AppConfig";
 
 enum States {
     Wait = "DrawLine.Wait",
@@ -68,7 +69,7 @@ export class DrawLine extends Tool {
     getResult(snapInfos:Array<SnapInfo>): any {
         let one = this.makePointCodeFromSnapInfo(snapInfos[0]);
         let two = this.makePointCodeFromSnapInfo(snapInfos[1]);
-        return [`LINE ${this._line.uniqueName}, $styles.default, ${one}, ${two}`]
+        return [`LINE ${this._line.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${one}, ${two}`]
 
     }
 }

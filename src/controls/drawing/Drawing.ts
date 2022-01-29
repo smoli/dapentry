@@ -291,6 +291,10 @@ export default class Drawing extends Control {
     private _interActionKeyDown() {
         console.log(d3.event.code);
 
+        if (d3.event.code === "Tab") {
+            d3.event.preventDefault();
+        }
+
         if (d3.event.code === AppConfig.Keys.NextStepCode) {
             this.fireNextStep();
         } else if (d3.event.code === AppConfig.Keys.DeleteCode) {

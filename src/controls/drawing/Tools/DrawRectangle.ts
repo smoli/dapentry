@@ -3,6 +3,7 @@ import {InteractionEventData, InteractionEvents} from "../InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrRectangle} from "../../../Geo/GrRectangle";
+import {AppConfig} from "../../../AppConfig";
 
 enum States {
     Wait = "DrawRect.Wait",
@@ -88,9 +89,9 @@ export class DrawRectangle extends Tool {
 
     public get result(): any {
         if (!this._secondSnap.object && !this._firstSnap.object) {
-            return `RECT ${this._rect.uniqueName}, $styles.default, (${this._rect.x}, ${this._rect.y}), ${this._rect.width}, ${this._rect.height}`;
+            return `RECT ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, (${this._rect.x}, ${this._rect.y}), ${this._rect.width}, ${this._rect.height}`;
         } else {
-            return `RECT ${this._rect.uniqueName}, $styles.default, ${this.makePointCodeFromSnapInfo(this._firstSnap)}, ${this.makePointCodeFromSnapInfo(this._secondSnap)}`;
+            return `RECT ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${this.makePointCodeFromSnapInfo(this._firstSnap)}, ${this.makePointCodeFromSnapInfo(this._secondSnap)}`;
         }
     }
 

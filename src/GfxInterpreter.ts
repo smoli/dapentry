@@ -19,6 +19,7 @@ import {GrCompositeObject} from "./Geo/GrCompositeObject";
 import {Library, LibraryEntry} from "./Library";
 import {GrCanvas} from "./Geo/GrCanvas";
 import {Point2Parameter} from "./runtime/interpreter/types/Point2Parameter";
+import {AppConfig} from "./AppConfig";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -180,7 +181,7 @@ class GfxMake extends GfxOperation {
 
         this._interpreter.clearObjects();
         await this._interpreter.run({
-            "$styles": this.styles,
+            [AppConfig.Runtime.styleRegisterName]: this.styles,
             [this._canvas.uniqueName]: this._canvas,
             ...this.getScope()
         });

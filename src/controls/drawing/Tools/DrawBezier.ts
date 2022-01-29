@@ -4,6 +4,7 @@ import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrPolygon, GrPolygonBase} from "../../../Geo/GrPolygon";
 import {Point2D} from "../../../Geo/Point2D";
+import {AppConfig} from "../../../AppConfig";
 
 enum States {
     Wait = "DrawPolygon.Wait",
@@ -134,7 +135,7 @@ export class DrawBezier extends Tool {
 
     public get result(): any {
         if (this._poly && this._poly.points.length > 1) {
-            return `${this._opCode} ${this._poly.uniqueName}, $styles.default, [ ${this._poly.points.map(p => `(${p.x}, ${p.y})`).join(", ")} ], ${this._closed ? 1 : 0}`
+            return `${this._opCode} ${this._poly.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, [ ${this._poly.points.map(p => `(${p.x}, ${p.y})`).join(", ")} ], ${this._closed ? 1 : 0}`
         } else {
             return null;
         }

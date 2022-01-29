@@ -4,6 +4,7 @@ import {SnapInfo, Tool} from "./Tool";
 import {Point2D} from "../../../Geo/Point2D";
 import {LibraryEntry} from "../../../Library";
 import {GrObject} from "../../../Geo/GrObject";
+import {AppConfig} from "../../../AppConfig";
 
 enum States {
     Wait = "DrawLibraryInstance.Wait",
@@ -61,6 +62,6 @@ export class DrawLibraryInstance extends Tool {
 
     public get result(): any {
         const name = GrObject.getNewObjectName(this._libraryEntry.id);
-        return `MAKE ${name}, "${this._libraryEntry.id}", $styles, ${this._width}, (${this._point.x}, ${this._point.y})`;
+        return `MAKE ${name}, "${this._libraryEntry.id}", ${AppConfig.Runtime.styleRegisterName}, ${this._width}, (${this._point.x}, ${this._point.y})`;
     }
 }

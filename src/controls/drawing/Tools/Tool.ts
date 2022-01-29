@@ -17,8 +17,7 @@ function stepper(step) {
     return v => Math.floor(v / step) * step;
 }
 
-const MIN_DISTANCE_FOR_AXIS_SNAPPING: number = 20;
-const s0_1 = stepper(0.01);
+const s0_1 = stepper(AppConfig.Tools.ObjectSnappingStep);
 
 /**
  * Abstract class for tools that create or manipulate objects on the drawing
@@ -264,15 +263,15 @@ export abstract class Tool {
     }
 
     protected tryToPOISnap(eventData: InteractionEventData): SnapInfo {
-        if (eventData.shift && this._snappingFirstInfo) {
+        if (eventData[AppConfig.Keys.ObjectSnappingStepModifierName] && this._snappingFirstInfo) {
             // Try to axis-snap
             const dx = Math.abs(eventData.x - this._snappingFirstInfo.event.x);
             const dy = Math.abs(eventData.y - this._snappingFirstInfo.event.y);
 
             const snapInfo = this.dontSnap(eventData);
-            if (dx > dy && dx > MIN_DISTANCE_FOR_AXIS_SNAPPING) {
+            if (dx > dy && dx > AppConfig.Tools.AxisAlignmentThreshold) {
                 snapInfo.event.y = this._snappingFirstInfo.event.y;
-            } else if (dy > dx && dy > MIN_DISTANCE_FOR_AXIS_SNAPPING) {
+            } else if (dy > dx && dy > AppConfig.Tools.AxisAlignmentThreshold) {
                 snapInfo.event.x = this._snappingFirstInfo.event.x;
             }
             return snapInfo;

@@ -12,7 +12,7 @@
         "description": "Number of corners"
       }
     },
-    "code": "COMPOSITE o\nLINE Line1, $styles.default, (526, 373), (909, 373)\nPOLY Polygon2, $styles.default, [ Line1@end ], 1\nDO n\nROTATE Line1, 360 / n\nEXTPOLY Polygon2, [ Line1@end ]\nENDDO"
+    "code": "COMPOSITE o\nLINE Line1, ${AppConfig.Runtime.defaultStyleRegisterName}, (526, 373), (909, 373)\nPOLY Polygon2, ${AppConfig.Runtime.defaultStyleRegisterName}, [ Line1@end ], 1\nDO n\nROTATE Line1, 360 / n\nEXTPOLY Polygon2, [ Line1@end ]\nENDDO"
   },
   "Star": {
     "name": "Star",
@@ -32,6 +32,6 @@
         "description": "Determines the length of the spokes"
       }
     },
-    "code": "COMPOSITE o\nLINE Line1, $styles.default, (362, 364), (832, 364)\nAPP o.objects, Line1\nPOLY Polygon2, $styles.default, [ Line1@end ], 1\nAPP o.objects, Polygon2\nDO spokes\nROTATE Line1, 180  / spokes\nEXTPOLY Polygon2, [ Line1@(spokeRatio)]\nROTATE Line1, 180 / spokes\nEXTPOLY Polygon2, [ Line1@end ]\nENDDO\nFILL Polygon2, \"#fce654\", 0.1"
+    "code": "COMPOSITE o\nLINE Line1, ${AppConfig.Runtime.defaultStyleRegisterName},, (362, 364), (832, 364)\nAPP o.objects, Line1\nPOLY Polygon2, ${AppConfig.Runtime.defaultStyleRegisterName}, [ Line1@end ], 1\nAPP o.objects, Polygon2\nDO spokes\nROTATE Line1, 180  / spokes\nEXTPOLY Polygon2, [ Line1@(spokeRatio)]\nROTATE Line1, 180 / spokes\nEXTPOLY Polygon2, [ Line1@end ]\nENDDO\nFILL Polygon2, \"#fce654\", 0.1"
   }
 }

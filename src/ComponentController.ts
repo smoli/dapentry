@@ -250,12 +250,12 @@ export class ComponentController extends BaseComponentController {
 
     protected preloadDemoCode(): void {
         return;
-        const code = 'CIRCLE Circle1, $styles.default, Canvas@center, f2 * 50';
-        // const code = `MAKE sun1, "star", $styles, 400, Canvas@center`;
+        const code = 'CIRCLE Circle1, ${AppConfig.Runtime.defaultStyleRegisterName}, Canvas@center, f2 * 50';
+        // const code = `MAKE sun1, "star", ${AppConfig.Runtime.XXXXXXXXXXX}, 400, Canvas@center`;
         /*
-        const code = `RECT Rectangle1, $styles.default, (279, 525), 20, 82
+        const code = `RECT Rectangle1, ${AppConfig.Runtime.defaultStyleRegisterName}, (279, 525), 20, 82
         DO 2
-        RECT Rectangle2, $styles.default, (400, 525), 168, 82
+        RECT Rectangle2, ${AppConfig.Runtime.defaultStyleRegisterName}, (400, 525), 168, 82
         MOVE Rectangle2@bottom, Rectangle2@top
         ENDDO`
         */

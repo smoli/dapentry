@@ -5,6 +5,7 @@ import {RenderLayer} from "../Objects/ObjectRenderer";
 import {GrPolygon, GrPolygonBase} from "../../../Geo/GrPolygon";
 import {Point2D} from "../../../Geo/Point2D";
 import {GrObject, POI} from "../../../Geo/GrObject";
+import {AppConfig} from "../../../AppConfig";
 
 enum States {
     Wait = "DrawPolygon.Wait",
@@ -199,7 +200,7 @@ export class DrawPolygon extends Tool {
     public get result(): any {
         if (this._poly && this._poly.points.length > 0) {
             if (!this._extending) {
-                return `${this._opCode} ${this._poly.uniqueName}, $styles.default, [ ${this.createPointListCode().join(", ")} ], ${this._closed ? 1 : 0}`;
+                return `${this._opCode} ${this._poly.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, [ ${this.createPointListCode().join(", ")} ], ${this._closed ? 1 : 0}`;
             } else {
                 const points = this.createPointListCode().filter((p, i) => i >= this._originalPolyLength);
                 if (points.length) {

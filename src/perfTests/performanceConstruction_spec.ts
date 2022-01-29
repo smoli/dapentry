@@ -3,11 +3,12 @@ import {performance} from "perf_hooks";
 import {GrLine} from "../Geo/GrLine";
 import {GrPolygon} from "../Geo/GrPolygon";
 import {POI} from "../Geo/GrObject";
+import {AppConfig} from "../AppConfig";
 
 
 const code = `LOAD f2, 10000
-        LINE Line1, $styles.default, Canvas@center, Canvas@top
-POLY Polygon1, $styles.default, [ Line1@end ], 1
+        LINE Line1, ${AppConfig.Runtime.defaultStyleRegisterName}, Canvas@center, Canvas@top
+POLY Polygon1, ${AppConfig.Runtime.defaultStyleRegisterName}, [ Line1@end ], 1
 DO f2
 ROTATE Line1, 180 / f2, Line1@start
 EXTPOLY Polygon1, [ Line1@0.65 ]

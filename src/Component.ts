@@ -11,11 +11,12 @@ import {CodeManager} from "./runtime/CodeManager";
 import {AppModel} from "./model/AppModel";
 import {Library, LibraryEntryArgumentType} from "./Library";
 import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
+import {AppConfig} from "./AppConfig";
 
 
 const starCode = `COMPOSITE o
-LINE Line1, $styles.default, Canvas@bottom, Canvas@top
-POLY Polygon1, $styles.default, [ Line1@end ], 1
+LINE Line1, ${AppConfig.Runtime.defaultStyleRegisterName}, Canvas@bottom, Canvas@top
+POLY Polygon1, ${AppConfig.Runtime.defaultStyleRegisterName}, [ Line1@end ], 1
 DO spokes
 ROTATE Line1, 180/ spokes
 EXTPOLY Polygon1, [ Line1@(spokeRatio) ]
@@ -26,8 +27,8 @@ FILL Polygon1, "#fce654", 1
 APP o.objects, Polygon1`;
 
 const ngonCode = `COMPOSITE o
-LINE Line1, $styles.default, Canvas@bottom, Canvas@top
-POLY Polygon1, $styles.default, [ Line1@end ], 1
+LINE Line1, ${AppConfig.Runtime.defaultStyleRegisterName}, Canvas@bottom, Canvas@top
+POLY Polygon1, ${AppConfig.Runtime.defaultStyleRegisterName}, [ Line1@end ], 1
 DO 5
 ROTATE Line1, 360 / 5
 EXTPOLY Polygon1, [ Line1@end ]
