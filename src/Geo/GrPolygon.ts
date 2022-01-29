@@ -28,7 +28,7 @@ export class GrPolygonBase extends GrObject {
     protected constructor(type: ObjectType, name: string, points: Array<Point2D>, closed: boolean = false) {
         let {center, width, height} = computeCenterAndBB(points);
         super(type, name, center.x, center.y);
-        this._points = points;
+        this._points = points.map(p => p.copy);
         this._closed = closed;
         this._width = width;
         this._height = height;

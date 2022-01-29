@@ -13,7 +13,7 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 
 ## How does it work?
 
-It uses an interpreted language that resembles something like assembly to draw pictures. User interactions
+It uses an interpreted language that resembles something like assembly to draw pictures. User interaction
 creates the program in the background. [See here](doc/opcodes.md) for more details on the language and the interpreter.
 
 ## Bugs
@@ -27,6 +27,9 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 ## Next steps
 
 ## Todos
+
+### Architecture
+* [ ] move naming of objects to an external object
 
 ### Drawing
 * [ ] Snapping
