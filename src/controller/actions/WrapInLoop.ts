@@ -11,11 +11,11 @@ export class WrapInLoop extends BaseAction {
     }
 
     _execute() {
-        const sel = this.appModel.getSelectedCodeLines();
+        const sel = this.appState.getSelectedCodeLines();
         const from = Math.min(...sel.map(s => s.index));
         const to = Math.max(...sel.map(s => s.index));
-        this.appModel.insertStatement("DO 2", from);
-        this.appModel.insertStatement("ENDDO", to + 2);  // + 2 because indexes change when inserting "DO"
+        this.appState.insertStatement("DO 2", from);
+        this.appState.insertStatement("ENDDO", to + 2);  // + 2 because indexes change when inserting "DO"
     }
 
 }

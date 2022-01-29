@@ -23,7 +23,7 @@ export const AppConfig = {
 
     Tools: {
         AxisAlignmentThreshold: 20,
-        ObjectSnappingStep: 0.01
+        ObjectSnappingStep: 0.05
     },
 
     SVG: {

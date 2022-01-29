@@ -1,5 +1,6 @@
 import Component from "../../Component";
 import {AppModel} from "../../model/AppModel";
+import {AppState} from "../../model/AppState";
 
 
 export interface ActionResult {
@@ -18,8 +19,8 @@ export abstract class BaseAction {
         return this._component;
     }
 
-    get appModel(): AppModel {
-        return this.component.getAppModel();
+    get appState(): AppState {
+        return this.component.getAppState();
     }
 
 

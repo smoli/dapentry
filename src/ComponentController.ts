@@ -7,7 +7,7 @@ import {GfxInterpreter} from "./GfxInterpreter";
 import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
-import {AppModel, SelectionInfo} from "./model/AppModel";
+import {AppModel} from "./model/AppModel";
 import {SelectObjects} from "./controller/actions/SelectObjects";
 import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 import {DeleteSelection} from "./controller/actions/DeleteSelection";
@@ -15,6 +15,7 @@ import {WrapInLoop} from "./controller/actions/WrapInLoop";
 import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 import {LibraryEntry} from "./Library";
 import {AppConfig} from "./AppConfig";
+import {AppState, SelectionInfo} from "./model/AppState";
 
 
 
@@ -133,13 +134,13 @@ export class ComponentController extends BaseComponentController {
     public async nextStep() {
 
         // We prepend the code with code that loads the scope, so we can use expression in the data declarations
-        const offset = this.getAppModel().scopeCodeLength;
+        const offset = this.getAppState().scopeCodeLength;
 
         if (this._interpreter.stopped) {
             return;
         }
 
-        const segmentedCode = this.getAppModel().get("segmentedCode");
+        const segmentedCode = this.getAppState().getSegmentedCode();
         await this._interpreter.next()
         let max = 100;
         while ((max--) && !segmentedCode.find(c => c.index + offset === this._interpreter.pc)) {
@@ -150,7 +151,7 @@ export class ComponentController extends BaseComponentController {
             await this._interpreter.next();
         }
 
-        this.getAppModel().setSelectedCodeLines([this._interpreter.pc - offset]);
+        this.getAppState().setSelectedCodeLines([this._interpreter.pc - offset]);
 
         this.updateDrawing();
     }
@@ -166,13 +167,13 @@ export class ComponentController extends BaseComponentController {
         this._interpreter.clearObjects(this._canvas);
         this._performance.reset();
         this._performance.now("start");
-        this._interpreter.parse(this.getAppModel().fullCode);
+        this._interpreter.parse(this.getAppState().fullCode);
         this._performance.now("parsed");
 
-        const index = this.getAppModel().getLastSelectedCodeLineIndex();
+        const index = this.getAppState().getLastSelectedCodeLineIndex();
 
         if (index !== -1) {
-            this._interpreter.pauseAfter(index + this.getAppModel().scopeCodeLength);
+            this._interpreter.pauseAfter(index + this.getAppState().scopeCodeLength);
         } else {
             this._interpreter.clearPauseAfter();
         }
@@ -186,8 +187,8 @@ export class ComponentController extends BaseComponentController {
         return Promise.resolve();
     }
 
-    getAppModel(): AppModel {
-        return this._component.getAppModel();
+    getAppState(): AppState {
+        return this._component.getAppState();
     }
 
     async updateOperation(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
@@ -221,7 +222,7 @@ export class ComponentController extends BaseComponentController {
 
 
     getSelection(): Array<SelectionInfo> {
-        return this.getAppModel().getSelectedObjects();
+        return this.getAppState().getSelectedObjects();
     }
 
     async wrapSelectionInLoop() {

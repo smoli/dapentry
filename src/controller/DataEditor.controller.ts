@@ -15,7 +15,7 @@ export default class DataEditorController extends BaseController {
     protected makeFieldName(prefix: string) {
         let n = 1;
 
-        const d = this.getAppModel().get("data");
+        const d = this.getAppState().data
         while (d.find(d => d.name === prefix + n)) {
             n++;
         }
@@ -25,14 +25,14 @@ export default class DataEditorController extends BaseController {
     }
 
     onNewDataField(event) {
-        this.getAppModel().push({name: this.makeFieldName("f"), value: 1}).to("data");
+        this.getAppState().addDataField({name: this.makeFieldName("f"), value: 1});
     }
 
     onDeleteDataField(event) {
         const ctx = event.getSource().getBindingContext("appModel");
         const nameToDelete = ctx.getProperty("name");
 
-        this.getAppModel().remove(d => d.name === nameToDelete).from("data");
+        this.getAppState().removeFieldFromData(nameToDelete);
     }
 
     onFieldValueChanged() {

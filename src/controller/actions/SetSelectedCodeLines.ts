@@ -36,6 +36,6 @@ export class SetSelectedCodeLines extends BaseAction {
     }
 
     _execute() {
-        this.appModel.setSelectedCodeLines(this._indexes);
+        this.appState.setSelectedCodeLines(this._indexes);
     }
 }

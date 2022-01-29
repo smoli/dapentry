@@ -12,6 +12,7 @@ import {AppModel} from "./model/AppModel";
 import {Library, LibraryEntryArgumentType} from "./Library";
 import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 import {AppConfig} from "./AppConfig";
+import {AppState} from "./model/AppState";
 
 
 const starCode = `COMPOSITE o
@@ -48,7 +49,7 @@ export default class Component extends UIComponent {
     private contentDensityClass: string;
     private _appController: ComponentController;
     private _codeManager: CodeManager;
-    private _appModel: AppModel;
+    private _appState: AppState;
     private _library: Library;
 
     /**
@@ -66,9 +67,11 @@ export default class Component extends UIComponent {
             RECT: 1
         });
 
-        this._appModel = new AppModel(this._codeManager);
-        this.setModel(this._appModel.model, this._appModel.modelName);
-        this._library = new Library(this._appModel);
+        const _appModel = new AppModel(this._codeManager);
+        this.setModel(_appModel.model, _appModel.modelName);
+        this._library = new Library(_appModel);
+        this._appState = new AppState(_appModel);
+
 
         this._appController = new ComponentController(this, GrCanvas.create_1_1(1000));
 
@@ -122,8 +125,8 @@ export default class Component extends UIComponent {
         return this._codeManager;
     }
 
-    getAppModel(): AppModel {
-        return this._appModel;
+    getAppState(): AppState {
+        return this._appState;
     }
 
     getComponentController(): ComponentController {

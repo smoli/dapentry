@@ -12,6 +12,6 @@ export class SelectObjects extends BaseAction {
     }
 
     _execute() {
-        this.appModel.setSelectedObjects(this._objects);
+        this.appState.setSelectedObjects(this._objects);
     }
 }

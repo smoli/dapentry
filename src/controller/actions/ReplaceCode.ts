@@ -11,7 +11,7 @@ export class ReplaceCode extends BaseAction {
     }
 
     _execute() {
-        this.appModel.replaceCode(this._statements);
+        this.appState.replaceCode(this._statements);
         return null;
     }
 }

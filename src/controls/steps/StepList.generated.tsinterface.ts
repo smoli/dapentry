@@ -1,4 +1,4 @@
-import Step from "sts/drawable/controls/steps/Step";
+import Step from "./Step";
 import Event from "sap/ui/base/Event";
 import { $ControlSettings } from "sap/ui/core/Control";
 

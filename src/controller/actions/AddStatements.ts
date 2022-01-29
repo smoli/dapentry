@@ -10,15 +10,15 @@ export class AddStatements extends BaseAction {
     }
 
     _execute() {
-        let index = this.appModel.getLastSelectedCodeLineIndex();
+        let index = this.appState.getLastSelectedCodeLineIndex();
 
         if (index !== -1) {
-            this.appModel.insertStatements(this._statements, index + 1);
-            this.appModel.setSelectedCodeLines([index + this._statements.length])
+            this.appState.insertStatements(this._statements, index + 1);
+            this.appState.setSelectedCodeLines([index + this._statements.length])
         } else {
-            this.appModel.addStatements(this._statements);
-            index = Math.max(...this.appModel.getSegmentedCode().map(s => s.index));
-            this.appModel.setSelectedCodeLines([index])
+            this.appState.addStatements(this._statements);
+            index = Math.max(...this.appState.getSegmentedCode().map(s => s.index));
+            this.appState.setSelectedCodeLines([index])
         }
 
 

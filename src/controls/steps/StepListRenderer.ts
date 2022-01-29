@@ -1,5 +1,5 @@
 import {C} from "../ControlHelper";
-import {StepList} from "./StepList";
+import StepList from "./StepList";
 
 const renderer = {
 

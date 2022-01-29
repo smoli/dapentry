@@ -11,6 +11,6 @@ export class DeleteSelection extends BaseAction {
     }
 
     _execute() {
-        this.appModel.deleteSelection();
+        this.appState.deleteSelection();
     }
 }
