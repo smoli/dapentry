@@ -1,83 +1,14 @@
 import {describe, it} from "mocha";
 import {DrawRectangle} from "../../src/tools/DrawRectangle";
-import {MockRenderer} from "../mock/mockRenderer";
-import {InteractionEventData, InteractionEvents} from "../../src/controls/drawing/InteractionEvents";
+import {MockRenderer} from "../testHelpers/mock/mockRenderer";
+import {InteractionEvents} from "../../src/controls/drawing/InteractionEvents";
 import {expect} from "chai";
-import {Parser, TokenTypes, Token} from "../../src/runtime/interpreter/Parser";
+import {Parser} from "../../src/runtime/interpreter/Parser";
+import {makeAClick, makeAMove} from "../testHelpers/mouseEvents";
+import {T_NUMBER, T_OPCODE, T_POINT_NN} from "../testHelpers/tokens";
 
-
-interface modifiers {
-    alt?: boolean,
-    shift?: boolean,
-    ctrl?:boolean
-}
 
 describe('Drawing a rectangle', () => {
-
-    let lastX;
-    let lastY;
-
-
-    function makeAClick(x:number, y:number, button: number = 0, mods:modifiers = {} ): InteractionEventData {
-        lastX = x;
-        lastY = y;
-        return {
-            alt: !!mods.alt,
-            button,
-            buttons: true,
-            ctrl: !!mods.ctrl,
-            dx: 0,
-            dy: 0,
-            interactionEvent: undefined,
-            key: "",
-            keyCode: 0,
-            shift: !!mods.shift,
-            x,
-            y
-        }
-    }
-
-    function makeAMove(x: number, y: number, mods: modifiers = {}): InteractionEventData {
-        const dx = x - lastX;
-        const dy = y - lastY;
-        lastX = x;
-        lastY = y;
-        return {
-            alt: !!mods.alt,
-            button: 0,
-            buttons: false,
-            ctrl: !!mods.ctrl,
-            dx,
-            dy,
-            interactionEvent: undefined,
-            key: "",
-            keyCode: 0,
-            shift: !!mods.shift,
-            x,
-            y
-        }
-    }
-
-    function T_OPCODE(opcode):Token {
-        return { type: TokenTypes.OPCODE, value: opcode}
-    }
-
-    function T_NUMBER(value):Token {
-        return { type: TokenTypes.NUMBER, value }
-    }
-
-    function T_STRING(value):Token {
-        return { type: TokenTypes.STRING, value }
-    }
-
-    function T_REGISTER(value):Token {
-        return { type: TokenTypes.REGISTER, value }
-    }
-
-    function T_POINT_NN(x: number, y: number):Token {
-        return { type: TokenTypes.POINT, value: [T_NUMBER(x), T_NUMBER(y)] }
-    }
-
 
     it('works', () => {
         const drawRect = new DrawRectangle(new MockRenderer())
