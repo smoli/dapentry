@@ -19,3 +19,19 @@ export function T_REGISTER(value): Token {
 export function T_POINT_NN(x: number, y: number): Token {
     return {type: TokenTypes.POINT, value: [T_NUMBER(x), T_NUMBER(y)]}
 }
+
+export function T_OPERATOR(value:string):Token {
+    return {type: TokenTypes.OPERATOR, value}
+}
+
+export function T_LABEL(value:string):Token {
+    return {type: TokenTypes.LABEL, value}
+}
+
+export function T_ANNOTATION(name:string, ...args): Token {
+    return {type: TokenTypes.ANNOTATION, value: name, args}
+}
+
+export function T_EXPRESSION(value1:Token, operator: string, value2: Token): Token {
+    return {type: TokenTypes.EXPRESSION, value: [value1, T_OPERATOR(operator), value2]};
+}

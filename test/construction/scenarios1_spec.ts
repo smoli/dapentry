@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {runCode} from "../interpreter/toolRunCode";
+import {runCode} from "../testHelpers/toolRunCode";
 import {GrObjectList} from "../../src/Geo/GrObjectList";
 
 

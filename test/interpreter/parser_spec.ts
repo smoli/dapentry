@@ -1,6 +1,16 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {Parser, TokenTypes, Token} from "../../src/runtime/interpreter/Parser";
+import {
+    T_ANNOTATION,
+    T_EXPRESSION,
+    T_LABEL,
+    T_NUMBER,
+    T_OPCODE,
+    T_OPERATOR, T_POINT_NN,
+    T_REGISTER,
+    T_STRING
+} from "../testHelpers/tokens";
 
 
 describe('Parser', () => {
@@ -11,9 +21,9 @@ describe('Parser', () => {
         const tokens = Parser.parseLine(code);
 
         expect(tokens).to.deep.equal([
-            {type: TokenTypes.OPCODE, value: "FAKE"},
-            {type: TokenTypes.REGISTER, value: "r1"},
-            {type: TokenTypes.NUMBER, value: 123}
+            T_OPCODE("FAKE"),
+            T_REGISTER("r1"),
+            T_NUMBER(123)
         ]);
 
     });
@@ -25,12 +35,13 @@ describe('Parser', () => {
         const tokens = Parser.parseLine(code);
 
         expect(tokens).to.deep.equal([
-            {type: TokenTypes.OPCODE, value: "FAKE"},
-            {type: TokenTypes.REGISTER, value: "r1"},
-            {type: TokenTypes.STRING, value: "Hello World"},
-            {type: TokenTypes.REGISTER, value: "lkjh"},
-            {type: TokenTypes.NUMBER, value: 123},
-            {type: TokenTypes.STRING, value: "   ,KLJH123"}
+            T_OPCODE("FAKE"),
+            T_REGISTER("r1"),
+            T_STRING("Hello World"),
+            T_REGISTER("lkjh"),
+            T_NUMBER(123),
+            T_STRING("   ,KLJH123")
+
         ]);
     });
 
@@ -43,10 +54,10 @@ describe('Parser', () => {
         const tokens = Parser.parseLine(`SOME thing, "With a # string", 123 # Comments go here`);
 
         expect(tokens).to.deep.equal([
-            {type: TokenTypes.OPCODE, value: "SOME"},
-            {type: TokenTypes.REGISTER, value: "thing"},
-            {type: TokenTypes.STRING, value: "With a # string"},
-            {type: TokenTypes.NUMBER, value: 123}
+            T_OPCODE("SOME"),
+            T_REGISTER("thing"),
+            T_STRING("With a # string"),
+            T_NUMBER(123)
         ]);
 
         expect(Parser.parseLine("# Comment with no code before")).to.deep.equal([])
@@ -56,7 +67,7 @@ describe('Parser', () => {
         let tokens = Parser.parseLine('LABEL:');
 
         expect(tokens).to.deep.equal([
-            {type: TokenTypes.LABEL, value: "LABEL"}
+            T_LABEL("LABEL")
         ]);
 
         expect(() => {
@@ -70,8 +81,8 @@ describe('Parser', () => {
         tokens = Parser.parseLine('FAKE "SOME:THING"');
 
         expect(tokens).to.deep.equal([
-            {type: TokenTypes.OPCODE, value: "FAKE"},
-            {type: TokenTypes.STRING, value: "SOME:THING"}
+            T_OPCODE("FAKE"),
+            T_STRING("SOME:THING")
         ]);
 
     });
@@ -80,21 +91,16 @@ describe('Parser', () => {
         let tokens = Parser.parseLine('LOAD r1, ( 100, 200 )');
 
         expect(tokens).to.deep.equal([
-            {type: TokenTypes.OPCODE, value: "LOAD"},
-            {type: TokenTypes.REGISTER, value: "r1"},
-            {
-                type: TokenTypes.POINT, value: [
-                    {type: TokenTypes.NUMBER, value: 100},
-                    {type: TokenTypes.NUMBER, value: 200},
-                ]
-            }
+            T_OPCODE("LOAD"),
+            T_REGISTER("r1"),
+            T_POINT_NN(100, 200)
         ]);
 
         tokens = Parser.parseLine('LOAD r1, "A string with ( smack in ) the middle of it"');
         expect(tokens).to.deep.equal([
-            {type: TokenTypes.OPCODE, value: "LOAD"},
-            {type: TokenTypes.REGISTER, value: "r1"},
-            {type: TokenTypes.STRING, value: "A string with ( smack in ) the middle of it"},
+            T_OPCODE("LOAD"),
+            T_REGISTER("r1"),
+            T_STRING("A string with ( smack in ) the middle of it"),
         ]);
 
         expect(() => Parser.parseLine("( 100 )"))
@@ -114,11 +120,11 @@ describe('Parser', () => {
 
         expect(tokens).to.deep.equal(
             [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
-                {type: TokenTypes.NUMBER, value: 23},
-                {type: TokenTypes.ANNOTATION, value: "A1", args: []},
-                {type: TokenTypes.ANNOTATION, value: "A2", args: []}
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_NUMBER(23),
+                T_ANNOTATION("A1"),
+                T_ANNOTATION("A2")
             ]
         );
 
@@ -126,8 +132,8 @@ describe('Parser', () => {
 
         expect(tokens).to.deep.equal(
             [
-                {type: TokenTypes.ANNOTATION, value: "A1", args: []},
-                {type: TokenTypes.ANNOTATION, value: "A2", args: []}
+                T_ANNOTATION("A1"),
+                T_ANNOTATION("A2")
             ]
         );
     })
@@ -136,11 +142,11 @@ describe('Parser', () => {
 
         expect(tokens).to.deep.equal(
             [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
-                {type: TokenTypes.NUMBER, value: 23},
-                {type: TokenTypes.ANNOTATION, value: "A1", args: ["a", "b"]},
-                {type: TokenTypes.ANNOTATION, value: "A2", args: ["ced", "def"]}
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_NUMBER(23),
+                T_ANNOTATION("A1", "a", "b"),
+                T_ANNOTATION("A2", "ced", "def")
             ]
         );
 
@@ -148,8 +154,8 @@ describe('Parser', () => {
 
         expect(tokens).to.deep.equal(
             [
-                {type: TokenTypes.ANNOTATION, value: "A1", args: ["a", "b"]},
-                {type: TokenTypes.ANNOTATION, value: "A2", args: ["ced", "def"]}
+                T_ANNOTATION("A1", "a", "b"),
+                T_ANNOTATION("A2", "ced", "def")
             ]
         );
 
@@ -161,29 +167,29 @@ describe('Parser', () => {
         it("can construct the proper code line", () => {
 
             let tokens: Array<Token> = [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
-                {type: TokenTypes.REGISTER, value: "r2"}
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_REGISTER("r2")
             ]
 
             expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, r2");
 
             tokens = [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
-                {type: TokenTypes.REGISTER, value: "r2"},
-                {type: TokenTypes.ANNOTATION, value: "HIDE"}
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_REGISTER("r2"),
+                T_ANNOTATION("HIDE")
             ]
 
             expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, r2 @HIDE");
 
             tokens = [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
                 {
                     type: TokenTypes.POINT, value: [
-                        {type: TokenTypes.NUMBER, value: "1"},
-                        {type: TokenTypes.REGISTER, value: "r1"}
+                        T_NUMBER("1"),
+                        T_REGISTER("r1")
                     ]
                 },
             ]
@@ -191,13 +197,13 @@ describe('Parser', () => {
             expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( 1, r1 )");
 
             tokens = [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
                 {
                     type: TokenTypes.ARRAY, value: [
-                        {type: TokenTypes.NUMBER, value: "1"},
-                        {type: TokenTypes.REGISTER, value: "r1"},
-                        {type: TokenTypes.REGISTER, value: "r3"}
+                        T_NUMBER("1"),
+                        T_REGISTER("r1"),
+                        T_REGISTER("r3")
                     ]
                 },
             ]
@@ -206,44 +212,23 @@ describe('Parser', () => {
 
 
             tokens = [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
-                {
-                    type: TokenTypes.EXPRESSION, value: [
-                        {type: TokenTypes.NUMBER, value: 2},
-                        {type: TokenTypes.OPERATOR, value: "+"},
-                        {
-                            type: TokenTypes.EXPRESSION, value: [
-                                {type: TokenTypes.REGISTER, value: "r1"},
-                                {type: TokenTypes.OPERATOR, value: "*"},
-                                {type: TokenTypes.NUMBER, value: 2}
-                            ]
-                        }
-
-                    ]
-                }
-            ]
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_EXPRESSION(T_NUMBER(2), "+",
+                    T_EXPRESSION(T_REGISTER("r1"), "*", T_NUMBER(2))
+                )
+            ];
 
             expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( 2 + ( r1 * 2 ) )");
 
             tokens = [
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
-                {
-                    type: TokenTypes.EXPRESSION, value: [
-                        {
-                            type: TokenTypes.EXPRESSION, value: [
-                                {type: TokenTypes.NUMBER, value: 2},
-                                {type: TokenTypes.OPERATOR, value: "+"},
-                                {type: TokenTypes.REGISTER, value: "r1"}
-                            ]
-                        },
-                        {type: TokenTypes.OPERATOR, value: "*"},
-                        {type: TokenTypes.NUMBER, value: 2},
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_EXPRESSION(
+                    T_EXPRESSION(T_NUMBER(2), "+", T_REGISTER("r1")),
+                    "*", T_NUMBER(2))
 
-                    ]
-                }
-            ]
+            ];
 
             expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( ( 2 + r1 ) * 2 )");
         });
@@ -255,23 +240,12 @@ describe('Parser', () => {
             const tokens = Parser.parseLine(code);
 
             expect(tokens).to.deep.equal([
-                {type: TokenTypes.OPCODE, value: "LOAD"},
-                {type: TokenTypes.REGISTER, value: "r1"},
-                {
-                    type: TokenTypes.EXPRESSION, value: [
-                        {type: TokenTypes.REGISTER, value: "r1"},
-                        {type: TokenTypes.OPERATOR, value: "+"},
-                        {type: TokenTypes.EXPRESSION, value: [
-                                {type: TokenTypes.NUMBER, value: 2},
-                                {type: TokenTypes.OPERATOR, value: "*"},
-                                {type: TokenTypes.EXPRESSION, value: [
-                                        {type: TokenTypes.NUMBER, value: 34},
-                                        {type: TokenTypes.OPERATOR, value: "*"},
-                                        {type: TokenTypes.REGISTER, value: "r3"},
-                                    ]}
-                            ]}
-                    ]
-                }
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_EXPRESSION(T_REGISTER("r1"), "+",
+                    T_EXPRESSION(T_NUMBER(2), "*",
+                        T_EXPRESSION(T_NUMBER(34), "*", T_REGISTER("r3")))
+                )
             ])
         });
 
