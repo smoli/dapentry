@@ -51,7 +51,7 @@ export class ScaleTool extends Tool {
         if (!this._object) {
             return;
         }
-        const poi: POIMap = this._object.pointsOfInterest(POIPurpose.MANIPULATION);
+        const poi: POIMap = this._object.pointsOfInterest(POIPurpose.SCALING);
 
         Object.keys(poi)
             .forEach(poiId => {
@@ -68,8 +68,8 @@ export class ScaleTool extends Tool {
             this._scalingObject = object.createProxy();
             this._scalingPOI = poiId;
             this._pivotPOI = object.getOppositePoi(this._scalingPOI);
-            this._pivot = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._pivotPOI];
-            this._op = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI].copy.sub(this._scalingObject.center);
+            this._pivot = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._pivotPOI];
+            this._op = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy.sub(this._scalingObject.center);
             this._finalX = 1;
             this._finalY = 1;
         }
@@ -92,23 +92,23 @@ export class ScaleTool extends Tool {
     }
 
     protected _scale(dx, dy) {
-        let np = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI];
+        let oldPosition = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI];
+        let newPosition = oldPosition.copy;
+        newPosition.x += dx;
+        newPosition.y += dy;
 
-        const ol = this._scalingObject.mapPointToLocal(np);
+        const ol = this._scalingObject.mapPointToLocal(oldPosition);
+        const nl = this._scalingObject.mapPointToLocal(newPosition);
+        const pl = this._scalingObject.mapPointToLocal(this._pivot);
 
-        console.log(this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI], np, ol)
+        const oldDx = ol.x - pl.x;
+        const oldDy = ol.y - pl.y;
 
-        const mp = np.copy;
-        mp.x += dx;
-        mp.y += dy;
+        const newDx = nl.x - pl.x;
+        const newDy = nl.y - pl.y;
 
-        const nl = this._scalingObject.mapPointToLocal(mp);
-
-        const ndx = nl.x - ol.x;
-        const ndy = nl.y - ol.y;
-
-        const fx = eq(ol.x, 0) ? 1 : (ol.x + ndx) / ol.x;
-        const fy = eq(ol.y, 0) ? 1 : (ol.y + ndy) / ol.y;
+        const fx = eq(oldDx, 0) ? 1 : newDx / oldDx;
+        const fy = eq(oldDy, 0) ? 1: newDy / oldDy;
 
         this._scalingObject.scale(Math.abs(fx), Math.abs(fy), this._pivot);
 
@@ -127,7 +127,7 @@ export class ScaleTool extends Tool {
         let dx;
         let dy;
         if (this._object && this._scalingPOI !== null) {
-            const thePOI = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI].copy;
+            const thePOI = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy;
             dx = eventData.x - thePOI.x;
             dy = eventData.y - thePOI.y;
         } else {
@@ -146,9 +146,8 @@ export class ScaleTool extends Tool {
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._scale(dx, dy);
-                    let np = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._scalingPOI].copy;
                     this._renderer.render(this._scalingObject, true);
-                    const poi: POIMap = this._scalingObject.pointsOfInterest(POIPurpose.MANIPULATION);
+                    const poi: POIMap = this._scalingObject.pointsOfInterest(POIPurpose.SCALING);
                     Object.keys(poi)
                         .forEach(poiId => {
                             this._renderer.updateHandle(this._scalingObject, poiId, poi[poiId]);

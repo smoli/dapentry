@@ -1,12 +1,14 @@
 import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {Point2D} from "./Point2D";
+import {eqp} from "./GeoMath";
+import {publicDecrypt} from "crypto";
 
 export class GrRectangle extends GrObject {
 
     private _width: number;
     private _height: number;
 
-    protected constructor(name: string, x: number, y: number, w: number, h: number) {
+    constructor(name: string, x: number, y: number, w: number, h: number) {
         super(ObjectType.Rectangle, name, x, y);
         this._width = w;
         this._height = h;
@@ -56,17 +58,65 @@ export class GrRectangle extends GrObject {
         return this.makePoint(-this.width / 2, this.height / 2);
     }
 
+    /**
+     *
+     * @param fx        Has to be interpreted in local coordinate system
+     * @param fy        Has to be interpreted in local coordinate system
+     * @param pivot
+     */
     scale(fx: number, fy: number, pivot: Point2D = null) {
-        this._width *= fx;
-        this._height *= fy;
 
-        // Adjust center
-        this._center = this.center.sub(this._center).normalize();
+        if (eqp(pivot, this._center)) {
+            this._width *= Math.abs(fx);
+            this._height *= Math.abs(fy);
+            return;
+        }
 
-        const l = Math.sqrt(this._width ** 2 + this._height ** 2) / 2;
+        const pl = this.mapPointToLocal(pivot);
 
-        this._center = pivot.copy.add(this._center.scale(l));
+        // Compute translation for center in local coordinates
+        const dxl = pl.x - pl.x * fx;
+        const dyl = pl.y - pl.y * fy;
 
+        // Map to global coordinates
+        const dg = this.mapVectorToGlobal(new Point2D(dxl, dyl));
+
+        this._center.add(dg);
+        this._width *= Math.abs(fx);
+        this._height *= Math.abs(fy);
+
+
+
+
+
+        /*        console.group("Scale", fx, fy, "around", pivot)
+                console.log("X-Axis:", this._xAxis);
+                console.log("Y-Axis:", this._yAxis);
+
+                console.log("w:", this._width, "h:", this._height);
+
+                // Adjust center
+                const cl = this.mapPointToLocal(this._center);
+                const pl = this.mapPointToLocal(pivot);
+                console.log("Pivot: ",pivot, "->", pl)
+                console.log("Center: ",this._center, "->", cl)
+
+                let lx = pl.x - cl.x;
+                lx = lx * fx;
+                cl.x = pl.x - lx;
+
+                let ly = pl.y - cl.y;
+                ly = ly * fy;
+                cl.y = pl.y - ly;
+                this._width *= Math.abs(fx);
+                this._height *= Math.abs(fy);
+
+                console.log("Local coords: ", lx, ly)
+
+                console.log("Old center", this._center);
+                this._center = this.mapLocalToWorld(new Point2D(lx, ly))
+                console.log("New center", this._center);
+                console.groupEnd();*/
     }
 
     pointsOfInterest(purpose: POIPurpose): POIMap {

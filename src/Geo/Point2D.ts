@@ -32,8 +32,8 @@ export class Point2D {
         return this;
     }
 
-    dot(p: Point2D): Point2D {
-        return new Point2D(this.x * p.x, this.y * p.y);
+    dot(p: Point2D): number {
+        return this.x * p.x + this.y * p.y;
     }
 
     /**

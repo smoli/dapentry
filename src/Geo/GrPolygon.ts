@@ -107,6 +107,11 @@ export class GrPolygonBase extends GrObject {
     }
 
     pointsOfInterest(purpose:POIPurpose): POIMap {
+
+        if (purpose === POIPurpose.SCALING) {
+            return super.pointsOfInterest(purpose);
+        }
+
         const r = {
             [POI.center]: this.center.copy
         };

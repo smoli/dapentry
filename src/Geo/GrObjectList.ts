@@ -57,7 +57,9 @@ export class GrObjectList extends GrObject {
 
     pointsOfInterest(purpose: POIPurpose): POIMap {
 
-        if (purpose === POIPurpose.MANIPULATION) {
+        if (purpose === POIPurpose.SCALING) {
+            return super.pointsOfInterest(purpose);
+        } else if (purpose === POIPurpose.MANIPULATION) {
             if (this._objects.last) {
                 return this._objects.last.pointsOfInterest(POIPurpose.MANIPULATION);
             }

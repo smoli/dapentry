@@ -4,6 +4,7 @@ import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {GrCompositeObject} from "./GrCompositeObject";
 import {AppConfig} from "../AppConfig";
+import {Line2D} from "./Line2D";
 
 export enum ObjectType {
     Canvas,
@@ -45,6 +46,7 @@ export enum POI {
 
 export enum POIPurpose {
     MANIPULATION,
+    SCALING,
     SNAPPING
 }
 
@@ -438,23 +440,28 @@ export abstract class GrObject {
         }
     }
 
+    mapLocalToWorld(l: Point2D): Point2D {
+        return this.mapVectorToGlobal(l).add(this._center);
+    }
 
-    mapPointToLocal(g: Point2D): Point2D {
-        let lx;
-        let ly;
-        if (eq(this._yAxis.y, 0)) {
-            ly = g.y - this._center.y - (this._xAxis.y / this._xAxis.x) * (g.x - this._center.x);
-            ly /= this._yAxis.y - this._xAxis.y * this._yAxis.x / this._xAxis.x;
+    mapVectorToGlobal(v: Point2D): Point2D {
+        const gx = this._xAxis.x * v.x + this._yAxis.x * v.y;
+        const gy = this._xAxis.y * v.x + this._yAxis.y * v.y;
 
-            lx = (g.x - this._center.x - this._yAxis.x * ly) / this._xAxis.x;
-        } else {
-            lx = g.x - this.center.x - (this.yAxis.x / this.yAxis.y) * (g.y - this.center.y);
-            lx /= this.xAxis.x - this.yAxis.x * this.xAxis.y / this.yAxis.y;
+        return new Point2D(gx, gy)
+    }
 
-            ly = (g.y - this.center.y - this.xAxis.y * lx) / this.yAxis.y;
-        }
+    mapVectorToLocal(v: Point2D): Point2D {
+        // https://math.stackexchange.com/a/2306329
+        // Since the world vectors are 1,0 and 0,1 the matrix rotation can be simplified to this:
+        const lx = this._xAxis.x * v.x + this._xAxis.y * v.y;
+        const ly = this._yAxis.x * v.x + this._yAxis.y * v.y;
 
         return new Point2D(lx, ly);
+    }
+
+    mapPointToLocal(g: Point2D): Point2D {
+        return this.mapVectorToLocal(g.copy.sub(this._center))
     }
 
 
