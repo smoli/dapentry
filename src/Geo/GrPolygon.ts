@@ -122,6 +122,25 @@ export class GrPolygonBase extends GrObject {
 
         return r;
     }
+
+    scale(fx: number, fy: number, pivot: Point2D = null) {
+
+        const pl = this.mapPointToLocal(pivot);
+
+        this.points.forEach(p => {
+            const cl = this.mapPointToLocal(p);
+            // Compute translation for center in local coordinates
+            const dxl = (pl.x - cl.x) - (pl.x - cl.x) * fx;
+            const dyl = (pl.y - cl.y) - (pl.y - cl.y) * fy;
+
+            // Map to global coordinates
+            const dg = this.mapVectorToGlobal(new Point2D(dxl, dyl));
+
+            p.add(dg);
+        });
+
+        this.computeCenterAndBB();
+    }
 }
 
 

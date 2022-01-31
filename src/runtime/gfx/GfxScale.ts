@@ -27,7 +27,7 @@ export class GfxScale extends GfxOperation {
     }
 
     get pivot(): Point2D {
-        return this.target.pointsOfInterest(POIPurpose.MANIPULATION)[POI[this._pivot.finalized(this.closure)]]
+        return this.target.pointsOfInterest(POIPurpose.SCALING)[POI[this._pivot.finalized(this.closure)]]
     }
 
     async execute(): Promise<any> {
