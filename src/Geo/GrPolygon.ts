@@ -65,6 +65,23 @@ export class GrPolygonBase extends GrObject {
         return this._width;
     }
 
+    get topLeft(): Point2D {
+        return this.makePoint(-this.width / 2, -this.height / 2);
+    }
+
+    get topRight(): Point2D {
+        return this.makePoint(this.width / 2, -this.height / 2);
+    }
+
+    get bottomRight(): Point2D {
+        return this.makePoint(this.width / 2, this.height / 2);
+    }
+
+    get bottomLeft(): Point2D {
+        return this.makePoint(-this.width / 2, this.height / 2);
+    }
+
+
     get boundingBox(): BoundingBox {
         return {...super.boundingBox, w: this._width, h: this._height};
     }
@@ -109,7 +126,13 @@ export class GrPolygonBase extends GrObject {
     pointsOfInterest(purpose:POIPurpose): POIMap {
 
         if (purpose === POIPurpose.SCALING) {
-            return super.pointsOfInterest(purpose);
+            return {
+                ...super.pointsOfInterest(purpose),
+                [POI.topLeft]: this.topLeft.copy,
+                [POI.topRight]: this.topRight.copy,
+                [POI.bottomLeft]: this.bottomLeft.copy,
+                [POI.bottomRight]: this.bottomRight.copy
+            };
         }
 
         const r = {

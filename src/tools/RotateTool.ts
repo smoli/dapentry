@@ -77,6 +77,9 @@ export class RotateTool extends Tool {
             const poi = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[poiId];
             this._rotationPoi = Number(poiId);
             this._pivotPoi = this._object.getOppositePoi(this._rotationPoi);
+            if (!this._pivotPoi) {
+                this._pivotPoi = POI.center;
+            }
             this._pivotPoint = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._pivotPoi];
 
             this._rotationObject = this._object.createProxy();
