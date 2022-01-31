@@ -2,7 +2,9 @@ import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GrPolygon} from "../../src/Geo/GrPolygon";
 import {Point2D} from "../../src/Geo/Point2D";
-import {eqp} from "../../src/Geo/GeoMath";
+import {eq, eqp} from "../../src/Geo/GeoMath";
+import {POI, POIPurpose} from "../../src/Geo/GrObject";
+import exp = require("constants");
 
 
 describe('GrPolygon', () => {
@@ -48,7 +50,114 @@ describe('GrPolygon', () => {
 
         poly.rotateByDeg(90);
 
-        expect(eqp(poly.points[0], { x: 5, y: -5})).to.be.true;
-        expect(eqp(poly.points[1], { x: 5, y: 5})).to.be.true;
+        expect(eqp(poly.points[0], {x: 5, y: -5})).to.be.true;
+        expect(eqp(poly.points[1], {x: 5, y: 5})).to.be.true;
+    });
+
+    it("can be rotated and scaled (1)", () => {
+        const poly = new GrPolygon("re", [
+            new Point2D(-50, -50),
+            new Point2D(50, -50),
+            new Point2D(50, 50),
+            new Point2D(-50, 50)
+        ]);
+
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.bottom],
+            {x: 0, y: 50})
+        ).to.be.true;
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.top],
+            {x: 0, y: -50})
+        ).to.be.true;
+
+        poly.rotateByDeg(45);
+
+        console.log(poly.pointsOfInterest(POIPurpose.SCALING)[POI.bottom]);
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.bottom],
+            {x: -35.35533905, y: 35.35533905})
+        ).to.be.true;
+
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.top],
+            {x: 35.35533905, y: -35.35533905})
+        ).to.be.true;
+
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.center],
+            {x: 0, y: 0})
+        ).to.be.true;
+
+
+        poly.scale(1, 0.5, poly.pointsOfInterest(POIPurpose.SCALING)[POI.bottom])
+
+        console.log(poly.pointsOfInterest(POIPurpose.SCALING)[POI.bottom]);
+
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.bottom],
+            {x: -35.35533905, y: 35.35533905})
+        ).to.be.true;
+
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.top],
+            {x: 0, y: 0})
+        ).to.be.true;
+
+        expect(eqp(
+            poly.pointsOfInterest(POIPurpose.SCALING)[POI.center],
+            {x: -35.35533905 / 2, y: 35.35533905 / 2})
+        ).to.be.true;
+
+        expect(eq(poly.width, 100)).to.be.true
+        expect(eq(poly.height, 50)).to.be.true;
+
+
+    })
+
+    it("can be rotated and scaled (2)", () => {
+        const poly = new GrPolygon("re", [
+            new Point2D(-50, -50),
+            new Point2D(50, -50),
+            new Point2D(50, 50),
+            new Point2D(-50, 50)
+        ]);
+        const P = poi => poly.pointsOfInterest(POIPurpose.SCALING)[poi]
+
+        poly.rotateByDeg(57.123423);
+
+        const bottom = P(POI.bottom);
+
+        poly.scale(1, 0.5, P(POI.bottom))
+
+        // Must not be the same instance
+        expect(bottom).not.to.be.equal(P(POI.bottom))
+
+        expect(eqp(
+            P(POI.bottom),
+            bottom)
+        ).to.be.true;
+
+
+        const dtb = P(POI.top).copy.sub(bottom).length;
+
+        expect(eq(dtb, poly.height)).to.be.true;
+
+        const dtlt = P(POI.top).copy
+            .sub(P(POI.topLeft)).length
+        const dtrt = P(POI.top).copy
+            .sub(P(POI.topRight)).length
+
+        expect(eq(dtrt, dtlt)).to.be.true;
+
+        // Check that center is at the right place
+        const ctl = P(POI.center).copy.sub(poly.yAxis.copy.scale(poly.height / 2)).sub(poly.xAxis.copy.scale(poly.width / 2));
+
+        expect(eqp(ctl, P(POI.topLeft))).to.be.true;
+
+        expect(eq(poly.width, 100)).to.be.true
+        expect(eq(poly.height, 50)).to.be.true;
+
+
     })
 });

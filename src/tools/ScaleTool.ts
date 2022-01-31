@@ -126,6 +126,9 @@ export class ScaleTool extends Tool {
 
         let dx;
         let dy;
+
+
+
         if (this._object && this._scalingPOI !== null) {
             const thePOI = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy;
             dx = eventData.x - thePOI.x;

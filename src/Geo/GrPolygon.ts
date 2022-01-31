@@ -3,22 +3,6 @@ import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
 
 
-function computeCenterAndBB(points: Array<Point2D>) {
-    let center = new Point2D(0, 0);
-
-    let maxX = Math.max.apply(null, points.map(p => p.x));
-    let minX = Math.min.apply(null, points.map(p => p.x));
-    let maxY = Math.max.apply(null, points.map(p => p.y));
-    let minY = Math.min.apply(null, points.map(p => p.y));
-
-    center = new Point2D((minX + maxX) / 2, (minY + maxY) / 2);
-
-    let width = maxX - minX;
-    let height = maxY - minY;
-
-    return {center, width, height};
-}
-
 export class GrPolygonBase extends GrObject {
     protected _points: Array<Point2D>;
     protected _closed: boolean;
@@ -26,27 +10,55 @@ export class GrPolygonBase extends GrObject {
     protected _height: number;
 
     protected constructor(type: ObjectType, name: string, points: Array<Point2D>, closed: boolean = false) {
-        let {center, width, height} = computeCenterAndBB(points);
-        super(type, name, center.x, center.y);
-        this._points = points.map(p => p.copy);
+        super(type, name, 0, 0);
+        if (points) {
+            this._points = points.map(p => p.copy);
+        } else {
+            this._points = [];
+        }
+        this.computeCenterAndBB();
         this._closed = closed;
-        this._width = width;
-        this._height = height;
     }
 
     protected computeCenterAndBB() {
-        let {center, width, height} = computeCenterAndBB(this._points);
-        this._center = center;
-        this._width = width;
-        this._height = height;
+        if (this._points.length === 0) {
+            this._width = this._height = 0;
+            this._center = new Point2D(0, 0);
+            return;
+        }
+
+        const xs = [];
+        const ys = [];
+        for (const p of this._points) {
+            xs.push(this._xAxis.x * (p.x - this._center.x) + this._xAxis.y * (p.y - this._center.y));
+            ys.push(this._yAxis.x * (p.x - this._center.x) + this._yAxis.y * (p.y - this._center.y));
+        }
+
+        let lMinX = Math.min.apply(null, xs);
+        let lMaxX = Math.max.apply(null, xs);
+        let lMinY = Math.min.apply(null, ys);
+        let lMaxY = Math.max.apply(null, ys);
+
+        const cl = new Point2D((lMinX + lMaxX) / 2 - xs[0], (lMinY + lMaxY) / 2 - ys[0])
+        const d = this.mapVectorToGlobal(cl);
+        this._center = this._points[0].copy;
+        this._center.x += d.x;
+        this._center.y += d.y;
+
+        this._width = lMaxX - lMinX;
+        this._height = lMaxY - lMinY;
     }
 
     createProxy(): GrObject {
-        return this.copy();
+        const copy = this.copy();
+        copy._xAxis = this._xAxis.copy;
+        copy._yAxis = this._yAxis.copy;
+        copy.computeCenterAndBB();
+        return copy;
     }
 
     protected copy(): GrPolygonBase {
-        return null;
+        throw new Error("Not implemented");
     }
 
     get closed() {
@@ -146,15 +158,33 @@ export class GrPolygonBase extends GrObject {
         return r;
     }
 
-    scale(fx: number, fy: number, pivot: Point2D = null) {
+    getOppositePoi(poi: POI): POI {
+        switch (poi) {
+            case POI.topLeft:
+                return POI.bottomRight;
 
+            case POI.topRight:
+                return POI.bottomLeft;
+
+            case POI.bottomLeft:
+                return POI.topRight;
+
+            case POI.bottomRight:
+                return POI.topLeft;
+
+            default:
+                return super.getOppositePoi(poi);
+        }
+    }
+
+    scale(fx: number, fy: number, pivot: Point2D = null) {
         const pl = this.mapPointToLocal(pivot);
 
         this.points.forEach(p => {
             const cl = this.mapPointToLocal(p);
-            // Compute translation for center in local coordinates
-            const dxl = (pl.x - cl.x) - (pl.x - cl.x) * fx;
-            const dyl = (pl.y - cl.y) - (pl.y - cl.y) * fy;
+            // Compute translation for point in local coordinates
+            const dxl = (pl.x - cl.x) * (1 - fx);
+            const dyl = (pl.y - cl.y) * (1 - fy);
 
             // Map to global coordinates
             const dg = this.mapVectorToGlobal(new Point2D(dxl, dyl));

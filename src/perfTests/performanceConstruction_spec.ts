@@ -5,8 +5,9 @@ import {GrPolygon} from "../Geo/GrPolygon";
 import {POI} from "../Geo/GrObject";
 import {AppConfig} from "../AppConfig";
 
+const iterations = 1000;
 
-const code = `LOAD f2, 10000
+const code = `LOAD f2, ${iterations}
         LINE Line1, ${AppConfig.Runtime.defaultStyleRegisterName}, Canvas@center, Canvas@top
 POLY Polygon1, ${AppConfig.Runtime.defaultStyleRegisterName}, [ Line1@end ], 1
 DO f2
@@ -30,7 +31,7 @@ const i = runCode(code).then(() => {
     start = performance.now();
     const Line1 = GrLine.create("line1", 500, 500, 500, 0);
     const Poly1 = GrPolygon.create("poly1", [Line1.end], true);
-    const f2 = 10000;
+    const f2 = iterations;
     for (let i = 0; i < f2; i++) {
         Line1.rotatePOI(POI.start, 180 / f2);
         Poly1.addPoint(Line1.at(0.5));
