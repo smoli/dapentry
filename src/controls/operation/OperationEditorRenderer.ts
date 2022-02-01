@@ -17,9 +17,6 @@ function handleInputDrop(input: GrowingInput, dragSession: DragSession) {
 }
 const renderer = {
 
-
-
-
     makeInput(value, control, index, subIndex) {
         const dnd = new DropInfo({
             drop: function (event) {

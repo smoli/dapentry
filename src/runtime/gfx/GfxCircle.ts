@@ -49,9 +49,9 @@ export class GfxCircle extends GfxObject {
                 r = p2.copy.sub(this.center).length;
             }
 
-            c = GrCircle.create(this.targetName, this.center.x, this.center.y, r);
+            c = GrCircle.create(this.targetName, this.center.x, this.center.y, 1 * r);
         } else {
-            c = GrCircle.create(this.targetName, this.center.x, this.center.y, this.radius);
+            c = GrCircle.create(this.targetName, this.center.x, this.center.y, 1 * this.radius);
         }
 
         c.style = this.style;
