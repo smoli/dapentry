@@ -2,9 +2,9 @@ import {C} from "../ControlHelper";
 import OperationEditor from "./OperationEditor";
 import Control from "sap/ui/core/Control";
 import Text from "sap/m/Text"
-import Input from "sap/m/Input";
 import {TokenTypes} from "../../runtime/interpreter/TokenTypes";
 import {Parser, Token} from "../../runtime/interpreter/Parser";
+import GrowingInput from "../general/GrowingInput";
 
 
 const renderer = {
@@ -17,25 +17,25 @@ const renderer = {
 
             case TokenTypes.POINT:
                 controls.push(new Text({ text: "("}))
-                controls.push(new Input({ value: s.token.value[0].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 0)}))
+                controls.push(new GrowingInput({ value: s.token.value[0].value, change: control.inputChangeHandler.bind(control, s.index, 0)}))
                 controls.push(new Text({ text: ","}))
-                controls.push(new Input({ value: s.token.value[1].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 1)}))
+                controls.push(new GrowingInput({ value: s.token.value[1].value, change: control.inputChangeHandler.bind(control, s.index, 1)}))
                 controls.push(new Text({ text: ")"}))
                 break;
 
             case TokenTypes.EXPRESSION:
                 const exp = Parser.constructCodeLine([s.token]);
-                controls.push(new Input({ value: exp, width: "5em", change: control.inputChangeHandler.bind(control, s.index, -1)}))
+                controls.push(new GrowingInput({ value: exp, change: control.inputChangeHandler.bind(control, s.index, -1)}))
                 break;
 
             case TokenTypes.REGISTERAT:
-                controls.push(new Input({ value: s.token.value[0].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 0)}))
+                controls.push(new GrowingInput({ value: s.token.value[0].value, change: control.inputChangeHandler.bind(control, s.index, 0)}))
                 controls.push(new Text({ text: "s"}))
-                controls.push(new Input({ value: s.token.value[1].value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, 1)}))
+                controls.push(new GrowingInput({ value: s.token.value[1].value, change: control.inputChangeHandler.bind(control, s.index, 1)}))
                 break;
 
             default:
-                controls.push(new Input({ value: s.token.value, width: "5em", change: control.inputChangeHandler.bind(control, s.index, -1)}))
+                controls.push(new GrowingInput({ value: s.token.value, change: control.inputChangeHandler.bind(control, s.index, -1)}))
 
         }
 
