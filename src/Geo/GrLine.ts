@@ -1,5 +1,5 @@
-import {GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
-import {deg2rad} from "./GeoMath";
+import {GrObject, ObjectType, POI, POIMap, POIPurpose, ScaleMode, ScaleModes} from "./GrObject";
+import {deg2rad, eq} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {Line2D} from "./Line2D";
 
@@ -98,7 +98,7 @@ export class GrLine extends GrObject {
 
     }
 
-    pointsOfInterest(purpose:POIPurpose): POIMap {
+    pointsOfInterest(purpose: POIPurpose): POIMap {
         return {
             [POI.start]: this.start.copy,
             [POI.end]: this.end.copy,
@@ -134,6 +134,33 @@ export class GrLine extends GrObject {
         }
     }
 
+
+    get supportedScaleModes():ScaleModes {
+        return [ScaleMode.UNIFORM];
+    }
+
+
+    scale(fx: number, fy: number, pivot: Point2D = null) {
+        const sc = p => {
+            const pl = this.mapPointToLocal(pivot);
+            const cl = this.mapPointToLocal(p);
+            // Compute translation for point in local coordinates
+            const dxl = (pl.x - cl.x) * (1 - fx);
+            const dyl = (pl.y - cl.y) * (1 - fy);
+
+            if (!eq(dxl, 0) || !eq(dyl, 0)) {
+                // Map to global coordinates
+                const dg = this.mapVectorToGlobal(new Point2D(dxl, dyl));
+                p.add(dg);
+            }
+        }
+
+        sc(this._start);
+        sc(this._end);
+
+        this.updateCenter();
+    }
+
     getPointAtPercentage(pct: number): Point2D {
         return this.start.copy.add(this.end.copy.sub(this.start).scale(pct));
     }
@@ -152,7 +179,7 @@ export class GrLine extends GrObject {
         return p;
     }
 
-    getPercentageForPoint(p:Point2D): number {
+    getPercentageForPoint(p: Point2D): number {
         const u = this._end.copy.sub(this._start);
         let n;
         if (u.x !== 0) {

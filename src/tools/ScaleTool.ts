@@ -1,10 +1,9 @@
 import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {ObjectRenderer} from "../controls/drawing/Objects/ObjectRenderer";
-import {GrObject, POI, POIMap, POIPurpose} from "../Geo/GrObject";
+import {GrObject, POI, POIMap, POIPurpose, ScaleMode} from "../Geo/GrObject";
 import {state} from "../runtime/tools/StateMachine";
 import {Point2D} from "../Geo/Point2D";
-import {Line2D} from "../Geo/Line2D";
 import {eq} from "../Geo/GeoMath";
 
 
@@ -21,6 +20,7 @@ enum Events {
 
 export class ScaleTool extends Tool {
 
+    protected _scaleMode: ScaleMode = ScaleMode.NONUNIFORM;
     protected _selection: Array<GrObject> = [];
     protected _scalingObject: GrObject = null;
     protected _scalingPOI: POI = null;
@@ -66,6 +66,9 @@ export class ScaleTool extends Tool {
         if (eventData.interactionEvent === InteractionEvents.MouseDown && poiId !== POI.center) {
             this._state.next(Events.HandleDown);
             this._scalingObject = object.createProxy();
+
+            this._scaleMode = this._scalingObject.supportedScaleModes[0];
+
             this._scalingPOI = poiId;
             this._pivotPOI = object.getOppositePoi(this._scalingPOI);
             this._pivot = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._pivotPOI];
@@ -107,8 +110,12 @@ export class ScaleTool extends Tool {
         const newDx = nl.x - pl.x;
         const newDy = nl.y - pl.y;
 
-        const fx = eq(oldDx, 0) ? 1 : newDx / oldDx;
-        const fy = eq(oldDy, 0) ? 1: newDy / oldDy;
+        let fx = eq(oldDx, 0) ? 1 : newDx / oldDx;
+        let fy = eq(oldDy, 0) ? 1: newDy / oldDy;
+
+        if (this._scaleMode === ScaleMode.UNIFORM) {
+            fx = fy = Math.min(fx, fy);
+        }
 
         this._scalingObject.scale(Math.abs(fx), Math.abs(fy), this._pivot);
 
@@ -163,6 +170,10 @@ export class ScaleTool extends Tool {
     }
 
     public get result(): any {
-        return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, ${Math.abs(this._finalY)}, "${POI[this._pivotPOI]}"`
+        if (this._scaleMode == ScaleMode.UNIFORM) {
+            return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, "${POI[this._pivotPOI]}"`
+        } else {
+            return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, ${Math.abs(this._finalY)}, "${POI[this._pivotPOI]}"`
+        }
     }
 }

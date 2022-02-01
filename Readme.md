@@ -49,11 +49,11 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
   * [x] create circle
   * [x] create rectangle
   * [x] create polygon
+* [x] Define aspect ratio for a drawing
+  * [ ] Maybe determine bounding box for drawing automatically when storing
 * [ ] make polygons open by default?
 * [ ] autoclose polygons?
 * [ ] enable fill rendering for open polygons
-* [x] Define aspect ratio for a drawing
-  * [ ] Maybe determine bounding box for drawing automatically when storing
 
 ### Data editor
 * [ ] Create tables
@@ -72,6 +72,7 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 ### Language/Interpreter
 * [ ] Language Version annotation
 * [ ] extend parser to recognize 43.34% as  the number 0.4334
+* [ ] extend parder to recognise 1e12 as the number it is
 * [ ] Maybe configure what kind of Parameter-Class to use for a given token type. This removes dependency of Point2D from core runtime
 
 ### Library
@@ -89,6 +90,12 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
   * [ ] Dynamic component to embed on a website
     * [ ] Generate JS-Code for the program
 
+
+### UI
+* [ ] Show preview of the currently generated statement
+* [ ] Update texts for all statements
+* [ ] Show hints on what the active tool supports, like "hold shift to axis align, ..."
+* [ ] User friendly error messages. 
 
 
 ## Done

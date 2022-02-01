@@ -1,10 +1,8 @@
 import {Style} from "../controls/drawing/Objects/StyleManager";
-import {deg2rad, eq} from "./GeoMath";
+import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
-import {GrCompositeObject} from "./GrCompositeObject";
 import {AppConfig} from "../AppConfig";
-import {Line2D} from "./Line2D";
 
 export enum ObjectType {
     Canvas,
@@ -49,6 +47,13 @@ export enum POIPurpose {
     SCALING,
     SNAPPING
 }
+
+export enum ScaleMode {
+    UNIFORM,
+    NONUNIFORM
+}
+
+export type ScaleModes = Array<ScaleMode>;
 
 export type POIMap = { [key in POI]?: Point2D };
 
@@ -293,6 +298,10 @@ export abstract class GrObject {
     }
 
     public scale(fx: number, fy: number, pivot: Point2D = null) {
+    }
+
+    get supportedScaleModes():ScaleModes {
+        return [ScaleMode.NONUNIFORM, ScaleMode.UNIFORM];
     }
 
 

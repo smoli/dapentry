@@ -1,6 +1,7 @@
 import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
+import {NOT_IMPLEMENTED} from "../Assertions";
 
 
 export class GrPolygonBase extends GrObject {
@@ -58,7 +59,8 @@ export class GrPolygonBase extends GrObject {
     }
 
     protected copy(): GrPolygonBase {
-        throw new Error("Not implemented");
+        NOT_IMPLEMENTED();
+        return null;
     }
 
     get closed() {
