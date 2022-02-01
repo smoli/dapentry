@@ -445,11 +445,22 @@ export abstract class GrObject {
         return null;
     }
 
-    public at(where: WHERE_VALUE): Point2D {
+    public at(where: WHERE_VALUE): (Point2D | number | string ) {
         if (typeof where === "number") {
             return this.getPointAtPercentage(where);
         } else if (typeof where === "string") {
-            return this.pointsOfInterest(POIPurpose.MANIPULATION)[POI[where]];
+            const poi = this.pointsOfInterest(POIPurpose.MANIPULATION)[POI[where]];
+
+            if (poi) {
+                return poi;
+            }
+
+            const publ = this.publishedProperties.find(p => p.name === where);
+            if (publ) {
+                return publ.value;
+            }
+
+
         } else {
             throw new Error(`Unknown location ${where} on ${ObjectType[this.type]}`);
         }

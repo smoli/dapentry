@@ -45,6 +45,9 @@ function getCanvasFontSize(el = document.body) {
  */
 export default class GrowingInput extends Input {
 
+    static readonly metadata = {
+        dnd: true
+    }
 
     __adjustWidthForValue() {
         const dr = this.getDomRef();
@@ -55,7 +58,6 @@ export default class GrowingInput extends Input {
             // @ts-ignore
             dr.style.width = (getTextWidth(value, getCanvasFontSize(inp)) + 25) +  "px";
         }
-
     }
 
     onAfterRendering(oEvent: jQuery.Event) {
@@ -66,6 +68,12 @@ export default class GrowingInput extends Input {
     setValue(sValue: string): this {
         const r = super.setValue(sValue);
         this.__adjustWidthForValue();
+        return this;
+    }
+
+    setValueAndFireChange(value): this {
+        this.setValue(value);
+        this.fireChange({ value });
         return this;
     }
 

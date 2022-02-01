@@ -9,6 +9,9 @@ import Button from "sap/m/Button";
 import ColorPicker from "sap/ui/unified/ColorPicker";
 import {ButtonType, PlacementType} from "sap/m/library";
 import ToolbarSpacer from "sap/m/ToolbarSpacer";
+import {AppConfig} from "../AppConfig";
+import {DragSession} from "sap/ui/core/dnd/DragAndDrop";
+import {GrObject} from "../Geo/GrObject";
 
 /**
  * @namespace sts.drawable.controller
@@ -117,5 +120,20 @@ export default class StyleController extends Controller {
             });
             this.getComponentController().addOperations(code);
         }
+    }
+
+    onPropertyDrag(event) {
+        const src = event.getSource();
+        const ctx = src.getBindingContext(AppConfig.UICore.appModelName);
+
+        const objPath = ctx.getPath().split("/").filter((a,i) => i < 4).join("/");
+        const obj =  ctx.getModel().getProperty(objPath);
+
+        const session = event.getParameter("dragSession") as DragSession;
+
+        session.setData("objectId", obj.uniqueName);
+        session.setData("propertyName", ctx.getProperty("name"));
+        session.setData("propertyValue", ctx.getProperty("value"));
+
     }
 }

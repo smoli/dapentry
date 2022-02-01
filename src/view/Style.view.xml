@@ -2,9 +2,10 @@
         controllerName="sts.drawable.controller.Style"
         displayBlock="true"
         xmlns="sap.m"
-        xmlns:unified="sap.ui.unified"
+        xmlns:dnd="sap.ui.core.dnd"
         xmlns:mvc="sap.ui.core.mvc"
         xmlns:sts="sts.drawable.controls.color"
+        xmlns:sts2="sts.drawable.controls.general"
 >
     <VBox items="{appModel>/selectedObjects}">
         <items>
@@ -37,7 +38,15 @@
                 <Title text="Properties"/>
                 <VBox items="{appModel>object/publishedProperties}">
                     <items>
-                        <Text text="{appModel>name} = {appModel>value}"/>
+                        <HBox>
+                            <Text text="{appModel>name} = ">
+                            </Text>
+                            <sts2:GrowingInput value="{appModel>value}" enabled="false">
+                                <sts2:dragDropConfig>
+                                    <dnd:DragInfo dragStart="onPropertyDrag"/>
+                                </sts2:dragDropConfig>
+                            </sts2:GrowingInput>
+                        </HBox>
                     </items>
                 </VBox>
 

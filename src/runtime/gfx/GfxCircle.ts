@@ -33,7 +33,7 @@ export class GfxCircle extends GfxObject {
         return this._radius.finalized(this.closure);
     }
 
-    get p2(): Point2D {
+    get p2(): (Point2D | number) {
         return this._p2 && this._p2.finalized(this.closure);
     }
 
@@ -41,7 +41,14 @@ export class GfxCircle extends GfxObject {
     async execute(interpreter: Interpreter): Promise<any> {
         let c;
         if (this._p2) {
-            const r = this.p2.copy.sub(this.center).length;
+            const p2 = this.p2;
+            let r;
+            if (typeof p2 === "number") {
+                r = p2;
+            } else {
+                r = p2.copy.sub(this.center).length;
+            }
+
             c = GrCircle.create(this.targetName, this.center.x, this.center.y, r);
         } else {
             c = GrCircle.create(this.targetName, this.center.x, this.center.y, this.radius);
