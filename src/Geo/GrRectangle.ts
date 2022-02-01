@@ -1,4 +1,4 @@
-import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
+import {BoundingBox, GrObject, ObjectProperty, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {Point2D} from "./Point2D";
 import {eqp} from "./GeoMath";
 import {publicDecrypt} from "crypto";
@@ -114,5 +114,27 @@ export class GrRectangle extends GrObject {
             default:
                 return super.getOppositePoi(poi);
         }
+    }
+
+    get publishedProperties(): Array<ObjectProperty> {
+        return [
+            {
+                name: "Width",
+                value: this._width
+            },
+            {
+                name: "Height",
+                value: this._height
+            },
+            {
+                name: "Area",
+                value: this._width * this._height
+            },
+            {
+                name: "Circumference",
+                value: 2 * (this._width + this._height)
+            },
+            ...super.publishedProperties
+        ]
     }
 }

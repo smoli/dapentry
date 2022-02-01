@@ -6,31 +6,40 @@
         xmlns:mvc="sap.ui.core.mvc"
         xmlns:sts="sts.drawable.controls.color"
 >
-    <Title text="Style" />
     <VBox items="{appModel>/selectedObjects}">
         <items>
             <VBox>
-                <sts:ColorButton text="{appModel>style/fillColor}" press="onFillColor" color="{appModel>style/fillColor}"/>
-<!--
-                                    <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}"
-                                                         change="onColorChange"/>
--->
-                <sts:ColorButton text="{appModel>style/strokeColor}" press="onStrokeColor" color="{appModel>style/strokeColor}"/>
+                <Title text="Style"/>
+                <sts:ColorButton text="{appModel>style/fillColor}" press="onFillColor"
+                                 color="{appModel>style/fillColor}"/>
+                <!--
+                                                    <unified:ColorPicker id="cp" mode="HSL" colorString="{appModel>style/fillColor}"
+                                                                         change="onColorChange"/>
+                -->
+                <sts:ColorButton text="{appModel>style/strokeColor}" press="onStrokeColor"
+                                 color="{appModel>style/strokeColor}"/>
 
-<!--
-                                    <unified:ColorPicker id="cp2" mode="HSL" colorString="{appModel>style/strokeColor}"
-                                                         change="onStrokeColorChange"/>
--->
+                <!--
+                                                    <unified:ColorPicker id="cp2" mode="HSL" colorString="{appModel>style/strokeColor}"
+                                                                         change="onStrokeColorChange"/>
+                -->
 
-                    <Text text="{i18n>strokeWidth}"/>
-                    <Slider value="{appModel>style/strokeWidth}" width="100%"
-                            min="{= ${appModel>type} === 'Line' ? 1 : 0 }"
-                            max="100"
-                            showAdvancedTooltip="true"
-                            showHandleTooltip="false"
-                            inputsAsTooltips="true"
-                            change="onStrokeWidthChange"
-                            class="sapUiMediumMarginBottom"/>
+                <Text text="{i18n>strokeWidth}"/>
+                <Slider value="{appModel>style/strokeWidth}" width="100%"
+                        min="{= ${appModel>type} === 'Line' ? 1 : 0 }"
+                        max="100"
+                        showAdvancedTooltip="true"
+                        showHandleTooltip="false"
+                        inputsAsTooltips="true"
+                        change="onStrokeWidthChange"
+                        class="sapUiMediumMarginBottom"/>
+
+                <Title text="Properties"/>
+                <VBox items="{appModel>object/publishedProperties}">
+                    <items>
+                        <Text text="{appModel>name} = {appModel>value}"/>
+                    </items>
+                </VBox>
 
             </VBox>
         </items>

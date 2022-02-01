@@ -1,5 +1,5 @@
 import {Style} from "../controls/drawing/Objects/StyleManager";
-import {deg2rad} from "./GeoMath";
+import {deg2rad, rad2deg} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {AppConfig} from "../AppConfig";
@@ -56,6 +56,12 @@ export enum ScaleMode {
 export type ScaleModes = Array<ScaleMode>;
 
 export type POIMap = { [key in POI]?: Point2D };
+
+export interface ObjectProperty {
+    name: string,
+    value: (number | string),
+    description?: string
+}
 
 let objCounter = 1;
 
@@ -473,6 +479,14 @@ export abstract class GrObject {
         return this.mapVectorToLocal(g.copy.sub(this._center))
     }
 
+    get publishedProperties(): Array<ObjectProperty> {
+        return [
+            {
+                name: "Rotation",
+                value: rad2deg(this._xAxis.angleTo(new Point2D(1, 0)))
+            }
+        ];
+    }
 
 }
 

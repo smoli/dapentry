@@ -1,4 +1,4 @@
-import {BoundingBox, GrObject, ObjectType} from "./GrObject";
+import {BoundingBox, GrObject, ObjectProperty, ObjectType} from "./GrObject";
 import {TWO_PI} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {Line2D} from "./Line2D";
@@ -84,6 +84,24 @@ export class GrCircle extends GrObject {
         } else {
             return 1 - a / TWO_PI;
         }
+    }
+
+    get publishedProperties(): Array<ObjectProperty> {
+        return [
+            {
+                name: "Radius",
+                value: this._radius
+            },
+            {
+                name: "Area",
+                value: this._radius ** 2 * Math.PI
+            },
+            {
+                name: "Circumference",
+                value: this._radius * 2 * Math.PI
+            },
+            ...super.publishedProperties
+        ]
     }
 
 }

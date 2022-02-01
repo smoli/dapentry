@@ -1,4 +1,4 @@
-import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
+import {BoundingBox, GrObject, ObjectProperty, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {NOT_IMPLEMENTED} from "../Assertions";
@@ -210,6 +210,32 @@ export class GrPolygon extends GrPolygonBase {
 
     protected copy(): GrPolygonBase {
         return GrPolygon.create(this._uniqueName, this._points.map(p => p.copy), this._closed);
+    }
+
+    get publishedProperties(): Array<ObjectProperty> {
+
+        let length = 0;
+
+        if (this._points.length > 1) {
+            let lp = this._points[0];
+            for (let i = 1; i < this._points.length; i++) {
+                length += this._points[i].copy.sub(lp).length
+                lp = this._points[i];
+            }
+
+            if (this._closed) {
+                length += this._points[0].copy.sub(lp).length
+            }
+        }
+
+        return [
+            {
+                name: "Circumference",
+                value: length
+            },
+            ...super.publishedProperties
+        ]
+
     }
 }
 

@@ -1,5 +1,5 @@
-import {GrObject, ObjectType, POI, POIMap, POIPurpose, ScaleMode, ScaleModes} from "./GrObject";
-import {deg2rad, eq} from "./GeoMath";
+import {GrObject, ObjectProperty, ObjectType, POI, POIMap, POIPurpose, ScaleMode, ScaleModes} from "./GrObject";
+import {deg2rad, eq, rad2deg} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {Line2D} from "./Line2D";
 
@@ -203,6 +203,24 @@ export class GrLine extends GrObject {
         }
 
         return n;
+    }
+
+    get publishedProperties(): Array<ObjectProperty> {
+        const vec = this._end.copy.sub(this._start);
+        return [
+            {
+                name: "Length",
+                value: vec.length
+            },
+            {
+                name: "Angle to X-Axis",
+                value: rad2deg(vec.angleTo(new Point2D(1, 0)))
+            },
+            {
+                name: "Angle to Y-Axis",
+                value: rad2deg(vec.angleTo(new Point2D(0, 1)))
+            }
+        ];
     }
 
 }
