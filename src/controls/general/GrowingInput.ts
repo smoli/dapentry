@@ -83,6 +83,14 @@ export default class GrowingInput extends Input {
         this.__adjustWidthForValue();
     }
 
+    getUIArea() {
+        // @ts-ignore
+        const r = super.getUIArea();
+        console.log(r);
+
+        return r;
+    }
+
     renderer: "sap.m.InputRenderer"
 
 }

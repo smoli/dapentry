@@ -39,8 +39,11 @@
                 <VBox items="{appModel>object/publishedProperties}">
                     <items>
                         <HBox>
-                            <Text text="{appModel>name} = ">
-                            </Text>
+                            <sts2:DraggableText text="{appModel>name} = ">
+                                <sts2:dragDropConfig>
+                                    <dnd:DragInfo dragStart="onPropertyDrag"/>
+                                </sts2:dragDropConfig>
+                            </sts2:DraggableText>
                             <sts2:GrowingInput value="{appModel>value}" enabled="false">
                                 <sts2:dragDropConfig>
                                     <dnd:DragInfo dragStart="onPropertyDrag"/>
