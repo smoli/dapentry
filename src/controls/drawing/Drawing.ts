@@ -271,6 +271,11 @@ export default class Drawing extends Control {
     }
 
     private _interActionMouseEnter() {
+        if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
+            return;
+        }
+
+
         (this._svg.node() as HTMLElement).focus();
         this._pumpToTool(InteractionEvents.MouseEnter)
     }
