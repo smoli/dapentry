@@ -29,7 +29,7 @@ export const AppConfig = {
 
     SVG: {
         canvasBezelSize: 15,
-        transformationHandleRadius: 10,
+        transformationHandleSize: 10
 
     },
     Runtime: {

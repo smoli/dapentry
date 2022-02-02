@@ -187,7 +187,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 const c = svgGroup.append("circle")
                     .attr("cx", poi.x)
                     .attr("cy", poi.y)
-                    .attr("r", AppConfig.SVG.transformationHandleRadius)
+                    .attr("r", AppConfig.SVG.transformationHandleSize)
                     .classed(ToolClasses.poi, true);
 
                 if (poiCallback) {
@@ -669,7 +669,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         if (g) {
             g.select(`#${object.uniqueName}-handle-${id}`)
                 .attr("cx", p.x)
-                .attr("cy", p.y)
+                .attr("cy", p.y);
         }
     }
 
@@ -677,12 +677,14 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
             this._objectInfo[object.uniqueName].handles.push(p);
-            const handle = g.append("circle")
-                .attr("cx", p.x)
+            const handle = g.append("circle");
+
+            handle.attr("cx", p.x)
                 .attr("cy", p.y)
-                .attr("r", AppConfig.SVG.transformationHandleRadius)
+                .attr("r", AppConfig.SVG.transformationHandleSize);
+
+            handle.data<Point2D>([p])
                 .attr("id", `${object.uniqueName}-handle-${id}`)
-                .data<Point2D>([p])
                 .classed(ToolClasses.handle, true);
 
             if (onMouseEvent) {
