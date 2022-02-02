@@ -159,9 +159,9 @@ export class RotateTool extends Tool {
 
     public get result(): any {
         if (this._pivotPoint) {
-            return `ROTATE ${this._object.name}, ${this._finalAngle}, ${this._object.name}@${POI[this._pivotPoi]}`
+            return `ROTATE ${this._object.name}, ${this.makeCodeForNumber(this._finalAngle)}, ${this._object.name}@${POI[this._pivotPoi]}`
         } else {
-            return `ROTATE ${this._object.name}, ${this._finalAngle}`
+            return `ROTATE ${this._object.name}, ${this.makeCodeForNumber(this._finalAngle)}`
         }
 
     }

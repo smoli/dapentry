@@ -150,7 +150,7 @@ export class MoveTool extends Tool {
 
                 return `MOVE ${name1}@${POI[this._movingPOI]}, ${name2}@${POI[this._lastSnapInfo.poiId]}`
             } else {
-                return `MOVE ${name1}@${POI[this._movingPOI]}, (${dx}, ${dy})`
+                return `MOVE ${name1}@${POI[this._movingPOI]}, (${this.makeCodeForNumber(dx)}, ${this.makeCodeForNumber(dy)})`
             }
 
         } else {

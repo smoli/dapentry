@@ -311,15 +311,20 @@ export abstract class Tool {
         }
     }
 
+    protected makeCodeForNumber(num: number): string {
+        return num.toFixed(AppConfig.Tools.MaxDecimals);
+    }
+
+
     protected makePointCodeFromSnapInfo(snapInfo: SnapInfo) {
         if (snapInfo.object) {
             if (snapInfo.poiId === undefined) {
                 const pct = snapInfo.object.projectPointAsPercentage(snapInfo.point);
-                return `${snapInfo.object.name}@${pct.toFixed(2)}`
+                return `${snapInfo.object.name}@${this.makeCodeForNumber(pct)}`
             } else {
                 return `${snapInfo.object.name}@${POI[snapInfo.poiId]}`
             }
         }
-        return `(${snapInfo.event.x}, ${snapInfo.event.y})`
+        return `(${this.makeCodeForNumber(snapInfo.event.x)}, ${this.makeCodeForNumber(snapInfo.event.y)})`
     }
 }

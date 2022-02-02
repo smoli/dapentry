@@ -171,9 +171,9 @@ export class ScaleTool extends Tool {
 
     public get result(): any {
         if (this._scaleMode == ScaleMode.UNIFORM) {
-            return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, "${POI[this._pivotPOI]}"`
+            return `SCALE ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, "${POI[this._pivotPOI]}"`
         } else {
-            return `SCALE ${this._object.name}, ${Math.abs(this._finalX)}, ${Math.abs(this._finalY)}, "${POI[this._pivotPOI]}"`
+            return `SCALE ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, ${this.makeCodeForNumber(Math.abs(this._finalY))}, "${POI[this._pivotPOI]}"`
         }
     }
 }

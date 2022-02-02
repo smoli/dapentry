@@ -88,7 +88,7 @@ export class DrawCircle extends Tool {
 
     public get result(): any {
         if (!this._secondSnap.object) {
-            return `CIRCLE ${this._circle.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${this.makePointCodeFromSnapInfo(this._centerSnap)}, ${this._circle.radius}`
+            return `CIRCLE ${this._circle.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${this.makePointCodeFromSnapInfo(this._centerSnap)}, ${this.makeCodeForNumber(this._circle.radius)}`
         } else {
             return `CIRCLE ${this._circle.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${this.makePointCodeFromSnapInfo(this._centerSnap)}, ${this.makePointCodeFromSnapInfo(this._secondSnap)}`
         }
