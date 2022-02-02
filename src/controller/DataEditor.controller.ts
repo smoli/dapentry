@@ -2,10 +2,13 @@ import BaseController from "./BaseController";
 import HBox from "sap/m/HBox";
 import Button from "sap/m/Button";
 import {ButtonType, FlexAlignItems, FlexJustifyContent, FlexRendertype, FlexWrap, InputType} from "sap/m/library";
-import Text from "sap/m/Text";
 import Input from "sap/m/Input";
 import FlexItemData from "sap/m/FlexItemData";
 import JSONModel from "sap/ui/model/json/JSONModel";
+import DraggableText from "../controls/general/DraggableText";
+import DragInfo from "sap/ui/core/dnd/DragInfo";
+import {AppConfig} from "../AppConfig";
+import {DragSession} from "sap/ui/core/dnd/DragAndDrop";
 
 /**
  * @namespace sts.drawable.controller
@@ -68,9 +71,27 @@ export default class DataEditorController extends BaseController {
         }
     }
 
+    handleFieldDrag(textField, dragEvent) {
+        const ctx = textField.getBindingContext(AppConfig.UICore.appModelName);
+        const session = dragEvent.getParameter("dragSession") as DragSession;
+
+        session.setData("type", "field");
+        session.setData("name", ctx.getProperty("name"))
+    }
+
+    makeDragConfig() {
+        const that = this;
+        return new DragInfo({
+            dragStart: function (event) {
+                const text = this.getParent();
+                that.handleFieldDrag(text, event);
+            }
+        })
+    }
+
     makeFieldUI(id, context) {
         const b1 = new Button({type: ButtonType.Transparent, text: "-", press: this.onDeleteDataField.bind(this)});
-        const t = new Text({text: "{appModel>name} ="});
+        const t = new DraggableText({text: "{appModel>name} =", wrapping: false, dragDropConfig: this.makeDragConfig()});
         const i = new Input({
             value: "{appModel>value}",
             change: this.onFieldValueChanged.bind(this),
@@ -96,7 +117,7 @@ export default class DataEditorController extends BaseController {
 
     makeListUI(id, context) {
         const b1 = new Button({type: ButtonType.Transparent, text: "-", press: this.onDeleteDataField.bind(this)});
-        const t = new Text({text: "{appModel>name} ="});
+        const t = new DraggableText({text: "{appModel>name} =", wrapping: false, dragDropConfig: this.makeDragConfig()});
 
         const inputTemplate = new Input({
             value: `{appModel>}`,

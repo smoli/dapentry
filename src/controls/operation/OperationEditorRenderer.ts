@@ -10,10 +10,16 @@ import {DragSession} from "sap/ui/core/dnd/DragAndDrop";
 
 
 function handleInputDrop(input: GrowingInput, dragSession: DragSession) {
-    const obj = dragSession.getData("objectId");
-    const propertyName = dragSession.getData("propertyName");
+    const type = dragSession.getData("type");
+    let name;
 
-    input.setValueAndFireChange(`${obj}@${propertyName}`);
+    if (type === "field") {
+        name = dragSession.getData("name");
+    } else {
+        name = dragSession.getData("objectId") + "@" + dragSession.getData("propertyName");
+    }
+
+    input.setValueAndFireChange(`${name}`);
 }
 const renderer = {
 
