@@ -269,7 +269,12 @@ export default class Drawing extends Control {
             }
         }
 
-        this._toolManager.pump(interactionEvent, ed);
+        if (interactionEvent === InteractionEvents.Cancel) {
+            this._toolManager.abortCurrentTool();
+        } else {
+            this._toolManager.pump(interactionEvent, ed);
+        }
+
     }
 
     private _interActionMouseDown() {
