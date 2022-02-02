@@ -36,7 +36,7 @@ export class GfxQuadratic extends GfxObject {
 export class GfxBezier extends GfxQuadratic {
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const c = GrBezier.create(this.name, this.points, this.closed)
+        const c = GrBezier.create(this.targetName, this.points, this.closed)
         c.style = this.style;
         this.target = c;
     }

@@ -88,11 +88,22 @@ export class DrawRectangle extends Tool {
     }
 
     public get result(): any {
-        if (!this._secondSnap.object && !this._firstSnap.object) {
-            return `RECT ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, (${this.makeCodeForNumber(this._rect.x)}, ${this.makeCodeForNumber(this._rect.y)}), ${this.makeCodeForNumber(this._rect.width)}, ${this.makeCodeForNumber(this._rect.height)}`;
+
+        let one;
+        let two;
+
+        if (this._firstSnap.object) {
+            one = this.makePointCodeFromSnapInfo(this._firstSnap);
         } else {
-            return `RECT ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${this.makePointCodeFromSnapInfo(this._firstSnap)}, ${this.makePointCodeFromSnapInfo(this._secondSnap)}`;
+            one = `(${this.makeCodeForNumber(this._rect.x)}, ${this.makeCodeForNumber(this._rect.y)})`;
         }
+        if (this._secondSnap.object) {
+            two = this.makePointCodeFromSnapInfo(this._secondSnap);
+        } else {
+            two = `${this.makeCodeForNumber(this._rect.width)}, ${this.makeCodeForNumber(this._rect.height)}`;
+        }
+
+        return `RECT ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${one}, ${two}`;
     }
 
 }

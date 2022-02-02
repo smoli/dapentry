@@ -3,60 +3,75 @@ import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
 import {GrCircle} from "../../Geo/GrCircle";
-import {GrObjectList} from "../../Geo/GrObjectList";
 import {Point2D} from "../../Geo/Point2D";
 import {AtParameter} from "../interpreter/types/AtParameter";
+import {UNREACHABLE} from "../../Assertions";
+import {AppConfig} from "../../AppConfig";
 
 export class GfxCircle extends GfxObject {
     private readonly _center: Point2Parameter;
     private readonly _radius: Parameter;
+    private readonly _p1: Parameter;
     private readonly _p2: Parameter;
 
-    constructor(opcode: string, target: Parameter, style: Parameter, center: Point2Parameter, a: Parameter) {
+    constructor(opcode: string, target: Parameter, style: Parameter, a: Parameter | Point2Parameter, b: Parameter) {
         super(opcode, target, style);
-        this._center = center;
 
-        if (a instanceof Point2Parameter || a instanceof AtParameter) {
-            this._p2 = a;
-        } else {
-            this._radius = a;
+
+        switch (opcode) {
+            case AppConfig.Runtime.Opcodes.Circle.Legacy:
+            case AppConfig.Runtime.Opcodes.Circle.CenterRadius:
+                this._center = a as Point2Parameter;
+
+                if (b instanceof Point2Parameter || a instanceof AtParameter) {
+                    this._p2 = b;
+                } else {
+                    this._radius = b;
+                }
+                break;
+
+            case AppConfig.Runtime.Opcodes.Circle.CenterPoint:
+                this._center = a as Point2Parameter;
+                this._p2 = b as Point2Parameter;
+                break;
+
+            case AppConfig.Runtime.Opcodes.Circle.PointPoint:
+                this._p1 = a as Point2Parameter;
+                this._p2 = b as Point2Parameter;
+                break;
+
+            default:
+                UNREACHABLE();
+
         }
-
     }
-
-    get center(): Point2D {
-        return this._center.finalized(this.closure);
-    }
-
-
-    get radius(): number {
-        return this._radius.finalized(this.closure);
-    }
-
-    get p2(): (Point2D | number) {
-        return this._p2 && this._p2.finalized(this.closure);
-    }
-
 
     async execute(interpreter: Interpreter): Promise<any> {
-        let c;
-        if (this._p2) {
-            const p2 = this.p2;
-            let r;
-            if (typeof p2 === "number") {
-                r = p2;
-            } else {
-                r = p2.copy.sub(this.center).length;
-            }
+        let c: Point2D;
+        let r: number;
+        if (this._center && this._radius) {
+            c = this._center.finalized(this.closure);
+            r = this._radius.finalized(this.closure);
 
-            c = GrCircle.create(this.targetName, this.center.x, this.center.y, 1 * r);
+        } else if (this._center && this._p2) {
+            c = this._center.finalized(this.closure);
+            let d = this._p2.finalized(this.closure) as Point2D;
+            r = d.copy.sub(c).length;
+
+        } else if (!this._radius && this._p1 && this._p2) {
+            let d = this._p2.finalized(this.closure) as Point2D;
+            let p1 = this._p1.finalized(this.closure) as Point2D;
+
+            d = d.copy.sub(p1).scale(0.5);
+            c = p1.copy.add(d);
+            r = d.length;
         } else {
-            c = GrCircle.create(this.targetName, this.center.x, this.center.y, 1 * this.radius);
+            UNREACHABLE();
         }
 
-        c.style = this.style;
-        this.target = c;
+        const ci = new GrCircle(this.targetName, c.x, c.y, r);
+
+        ci.style = this.style;
+        this.target = ci;
     }
-
-
 }

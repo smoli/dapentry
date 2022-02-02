@@ -13,11 +13,6 @@ export class GfxObject extends GfxOperation {
         this._style = style;
     }
 
-    get name(): any {
-        return null;
-        // return this._name.finalized(this.closure)
-    }
-
     get style(): Style {
         const s = this._style.finalized(this.closure) as Style;
         return {... s};

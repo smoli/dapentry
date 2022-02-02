@@ -54,8 +54,19 @@ export class GfxInterpreter extends Interpreter {
 
         this._library = library;
 
-        this.addOperation("CIRCLE", makeGfxOperation(GfxCircle, this.objectCallBack.bind(this)));
+        Object.values(AppConfig.Runtime.Opcodes.Circle)
+            .forEach(opcode => {
+                this.addOperation(opcode, makeGfxOperation(GfxCircle, this.objectCallBack.bind(this)));
+            })
+
         this.addOperation("RECT", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+        this.addOperation("RECTPP", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+        this.addOperation("RECTTLWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+        this.addOperation("RECTTRWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+        this.addOperation("RECTBLWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+        this.addOperation("RECTBRWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+        this.addOperation("RECTCWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+
         this.addOperation("LINE", makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
         this.addOperation("POLY", makeGfxOperation(GfxPolygon, this.objectCallBack.bind(this)));
         this.addOperation("EXTPOLY", makeGfxOperation(GfxExtendPolygon, this.objectCallBack.bind(this)));

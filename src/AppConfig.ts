@@ -35,7 +35,16 @@ export const AppConfig = {
     Runtime: {
         styleRegisterName: "$styles",
         defaultStyleRegisterName: "$styles.default",
-        canvasObjectName: "Canvas"
+        canvasObjectName: "Canvas",
+
+        Opcodes: {
+            Circle: {
+                "Legacy": "Circle",
+                "CenterRadius": "CIRCLECR",
+                "CenterPoint": "CIRCLECP",
+                "PointPoint": "CIRCLEPP"
+            }
+        }
     },
 
     UICore: {
