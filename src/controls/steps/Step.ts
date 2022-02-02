@@ -78,5 +78,4 @@ export default class Step extends Control {
         return this.getResourceText(getTextIdForTokens(tokens), ...tokenTexts);
     }
 
-
 }

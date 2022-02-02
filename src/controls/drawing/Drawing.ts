@@ -15,12 +15,9 @@ import {RotateTool} from "../../tools/RotateTool";
 import {ToolManager} from "./ToolManager";
 import {DrawPolygon} from "../../tools/DrawPolygon";
 import {DrawQuadratic} from "../../tools/DrawQuadratic";
-import {GrObjectList} from "../../Geo/GrObjectList";
 import {ScaleTool} from "../../tools/ScaleTool";
 import {Point2D} from "../../Geo/Point2D";
-import {Tool} from "../../tools/Tool";
 import {SelectTool} from "../../tools/SelectTool";
-import {GrCompositeObject} from "../../Geo/GrCompositeObject";
 import {GrCanvas} from "../../Geo/GrCanvas";
 import {DrawLibraryInstance} from "../../tools/DrawLibraryInstance";
 import {LibraryEntry} from "../../Library";
@@ -169,8 +166,10 @@ export default class Drawing extends Control {
         this._svg.on("mouseenter", this._interActionMouseEnter.bind(this))
         this._svg.on("mousemove", this._interActionMouseMove.bind(this))
         this._svg.on("click", this._interActionClick.bind(this))
-        this._svg.on("keyup", this._interActionKeyDown.bind(this))
+//        this._svg.on("keyup", this._interActionKeyDown.bind(this))
         this._svg.on("contextmenu", this._interActionClick.bind(this))
+
+        document.onkeyup = this._interActionKeyDown.bind(this);
     }
 
     setObjects(objects: Array<GrObject>): Drawing {
@@ -192,7 +191,7 @@ export default class Drawing extends Control {
         });
     }
 
-    protected _constrainToBezel(ed:InteractionEventData) {
+    protected _constrainToBezel(ed: InteractionEventData) {
         if (ed.x < 0) {
             ed.dx -= 0 - ed.x;
             ed.x = 0;
@@ -214,25 +213,44 @@ export default class Drawing extends Control {
 
     private _pumpToTool(interactionEvent: InteractionEvents) {
         const d3Ev = d3.event;
-        const d3MEv = d3.mouse(this._svg.node());
-        const ed: InteractionEventData = {
-            interactionEvent,
-            x: d3MEv[0],
-            y: d3MEv[1],
-            dx: d3Ev.movementX,
-            dy: d3Ev.movementY,
-            alt: d3Ev.altKey, button: d3Ev.button, buttons: d3Ev.buttons, ctrl: d3Ev.ctrlKey, shift: d3Ev.shiftKey,
-            key: d3Ev.key, keyCode: d3Ev.keyCode,
-            selection: null
-        };
+        let ed:InteractionEventData;
+        if (d3Ev) {
 
-        this._constrainToBezel(ed);
+            const d3MEv = d3.mouse(this._svg.node());
+            ed = {
+                interactionEvent,
+                x: d3MEv[0],
+                y: d3MEv[1],
+                dx: d3Ev.movementX,
+                dy: d3Ev.movementY,
+                alt: d3Ev.altKey, button: d3Ev.button, buttons: d3Ev.buttons, ctrl: d3Ev.ctrlKey, shift: d3Ev.shiftKey,
+                key: d3Ev.key, keyCode: d3Ev.keyCode,
+                selection: null
+            };
 
-        if (!isNaN(ed.x)) {
-            this._lastMouse = new Point2D(ed.x, ed.y)
-        } else if (this._lastMouse) {
-            ed.x = this._lastMouse.x;
-            ed.y = this._lastMouse.y;
+            this._constrainToBezel(ed);
+
+            if (!isNaN(ed.x)) {
+                this._lastMouse = new Point2D(ed.x, ed.y)
+            } else if (this._lastMouse) {
+                ed.x = this._lastMouse.x;
+                ed.y = this._lastMouse.y;
+            }
+        } else {
+            ed = {
+                alt: false,
+                button: 0,
+                buttons: false,
+                ctrl: false,
+                dx: 0,
+                dy: 0,
+                interactionEvent: undefined,
+                key: "",
+                keyCode: 0,
+                shift: false,
+                x: 0,
+                y: 0
+            }
         }
 
         if (interactionEvent === InteractionEvents.OtherObject) {
@@ -275,8 +293,7 @@ export default class Drawing extends Control {
             return;
         }
 
-
-        (this._svg.node() as HTMLElement).focus();
+        // (this._svg.node() as HTMLElement).focus();
         this._pumpToTool(InteractionEvents.MouseEnter)
     }
 
@@ -293,38 +310,40 @@ export default class Drawing extends Control {
         this._toolManager.switch(ToolNames.Instance, entry);
     }
 
-    private _interActionKeyDown() {
-        console.log(d3.event.code);
-
-        if (d3.event.code === "Tab") {
-            d3.event.preventDefault();
+    private _interActionKeyDown(event) {
+        if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
+            return;
         }
 
-        if (d3.event.code === AppConfig.Keys.NextStepCode) {
+        if (event.code === "Tab") {
+            event.preventDefault();
+        }
+
+        if (event.code === AppConfig.Keys.NextStepCode) {
             this.fireNextStep();
-        } else if (d3.event.code === AppConfig.Keys.DeleteCode) {
+        } else if (event.code === AppConfig.Keys.DeleteCode) {
             this.fireObjectDeleted();
-        } else if (d3.event.code === AppConfig.Keys.ObjectSnapCode) {
-            d3.event.preventDefault();
+        } else if (event.code === AppConfig.Keys.ObjectSnapCode) {
+            event.preventDefault();
             this._pumpToTool(InteractionEvents.OtherObject);
-        } else if (d3.event.keyCode === AppConfig.Keys.AbortToolKeyCode) {
+        } else if (event.keyCode === AppConfig.Keys.AbortToolKeyCode) {
             this._pumpToTool(InteractionEvents.Cancel);
             this._toolManager.abortCurrentTool();
-        } else if (d3.event.key === AppConfig.Keys.DrawCircleKey) {
+        } else if (event.key === AppConfig.Keys.DrawCircleKey) {
             this._toolManager.switch(ToolNames.Circle);
-        } else if (d3.event.key === AppConfig.Keys.DrawRectKey) {
+        } else if (event.key === AppConfig.Keys.DrawRectKey) {
             this._toolManager.switch(ToolNames.Rectangle);
-        } else if (d3.event.key === AppConfig.Keys.DrawLineKey) {
+        } else if (event.key === AppConfig.Keys.DrawLineKey) {
             this._toolManager.switch(ToolNames.Line);
-        } else if (d3.event.key === AppConfig.Keys.DrawPolygonKey) {
+        } else if (event.key === AppConfig.Keys.DrawPolygonKey) {
             this._toolManager.switch(ToolNames.Polygon);
-        } else if (d3.event.key === AppConfig.Keys.DrawQuadricKey) {
+        } else if (event.key === AppConfig.Keys.DrawQuadricKey) {
             this._toolManager.switch(ToolNames.Quadric);
-        } else if (d3.event.key === AppConfig.Keys.MoveKey) {
+        } else if (event.key === AppConfig.Keys.MoveKey) {
             this._toolManager.switch(ToolNames.Move);
-        } else if (d3.event.key === AppConfig.Keys.RotateKey) {
+        } else if (event.key === AppConfig.Keys.RotateKey) {
             this._toolManager.switch(ToolNames.Rotate);
-        } else if (d3.event.key === AppConfig.Keys.ScaleKey) {
+        } else if (event.key === AppConfig.Keys.ScaleKey) {
             this._toolManager.switch(ToolNames.Scale);
         } else {
             this._pumpToTool(InteractionEvents.Key)
