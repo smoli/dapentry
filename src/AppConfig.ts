@@ -39,10 +39,28 @@ export const AppConfig = {
 
         Opcodes: {
             Circle: {
-                "Legacy": "Circle",
-                "CenterRadius": "CIRCLECR",
-                "CenterPoint": "CIRCLECP",
-                "PointPoint": "CIRCLEPP"
+                Legacy: "CIRCLE",
+                CenterRadius: "CIRCLECR",
+                CenterPoint: "CIRCLECP",
+                PointPoint: "CIRCLEPP"
+            },
+            Rect: {
+                Legacy: "RECT",
+                PointPoint: "RECTPP",
+                CenterWH: "RECTC",
+                TopLeftWH: "RECTTL",
+                TopRightWH: "RECTTR",
+                BottomLeftWH: "RECTBL",
+                BottomRightWH: "RECTBR"
+            },
+            Line: {
+                Legacy: "LINE",
+                PointPoint: "LINEPP",
+                PointVectorLength: "LINEPVL"
+            },
+            Poly: {
+                Create: "POLY",
+                Extend: "EXTPOLY"
             }
         }
     },

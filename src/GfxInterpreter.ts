@@ -59,22 +59,26 @@ export class GfxInterpreter extends Interpreter {
                 this.addOperation(opcode, makeGfxOperation(GfxCircle, this.objectCallBack.bind(this)));
             })
 
-        this.addOperation("RECT", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
-        this.addOperation("RECTPP", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
-        this.addOperation("RECTTLWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
-        this.addOperation("RECTTRWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
-        this.addOperation("RECTBLWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
-        this.addOperation("RECTBRWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
-        this.addOperation("RECTCWH", makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+        Object.values(AppConfig.Runtime.Opcodes.Rect)
+            .forEach(opcode => {
+                this.addOperation(opcode, makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+            })
 
-        this.addOperation("LINE", makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
-        this.addOperation("POLY", makeGfxOperation(GfxPolygon, this.objectCallBack.bind(this)));
-        this.addOperation("EXTPOLY", makeGfxOperation(GfxExtendPolygon, this.objectCallBack.bind(this)));
+        Object.values(AppConfig.Runtime.Opcodes.Line)
+            .forEach(opcode => {
+                this.addOperation(opcode, makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
+            })
+
+        this.addOperation(AppConfig.Runtime.Opcodes.Poly.Create, makeGfxOperation(GfxPolygon, this.objectCallBack.bind(this)));
+        this.addOperation(AppConfig.Runtime.Opcodes.Poly.Extend, makeGfxOperation(GfxExtendPolygon, this.objectCallBack.bind(this)));
+
         this.addOperation("QUAD", makeGfxOperation(GfxQuadratic, this.objectCallBack.bind(this)));
         this.addOperation("BEZIER", makeGfxOperation(GfxBezier, this.objectCallBack.bind(this)));
+
         this.addOperation("MOVE", makeGfxOperation(GfxMove, this.objectCallBack.bind(this)));
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.objectCallBack.bind(this)));
         this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
+
         this.addOperation("FILL", makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
         this.addOperation("STROKECOLOR", makeGfxOperation(GfxStrokeColor, this.objectCallBack.bind(this)));
         this.addOperation("STROKE", makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));

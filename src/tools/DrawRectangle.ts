@@ -4,6 +4,8 @@ import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../controls/drawing/Objects/ObjectRenderer";
 import {GrRectangle} from "../Geo/GrRectangle";
 import {AppConfig} from "../AppConfig";
+import {Point2D} from "../Geo/Point2D";
+import {UNREACHABLE} from "../Assertions";
 
 enum States {
     Wait = "DrawRect.Wait",
@@ -89,21 +91,35 @@ export class DrawRectangle extends Tool {
 
     public get result(): any {
 
+        let opcode: string;
+
         let one;
         let two;
+        let p1: Point2D;
+        let p2: Point2D;
 
-        if (this._firstSnap.object) {
-            one = this.makePointCodeFromSnapInfo(this._firstSnap);
+        // These are not necessarily the actual point used because of snapping.
+        // We use this find out where the first point lies, i.e. if it is top left, bottom right, etc...
+        p1 = new Point2D(this._firstSnap.event.x, this._firstSnap.event.y)
+        p2 = new Point2D(this._secondSnap.event.x, this._secondSnap.event.y)
+
+        if (p1.x < p2.x) {
+            if (p1.y < p2.y) opcode = AppConfig.Runtime.Opcodes.Rect.TopLeftWH
+            else opcode = AppConfig.Runtime.Opcodes.Rect.BottomLeftWH
         } else {
-            one = `(${this.makeCodeForNumber(this._rect.x)}, ${this.makeCodeForNumber(this._rect.y)})`;
+            if (p1.y < p2.y) opcode = AppConfig.Runtime.Opcodes.Rect.TopRightWH
+            else opcode = AppConfig.Runtime.Opcodes.Rect.BottomRightWH
         }
+
+        one = this.makePointCodeFromSnapInfo(this._firstSnap);
         if (this._secondSnap.object) {
+            opcode = AppConfig.Runtime.Opcodes.Rect.PointPoint
             two = this.makePointCodeFromSnapInfo(this._secondSnap);
         } else {
             two = `${this.makeCodeForNumber(this._rect.width)}, ${this.makeCodeForNumber(this._rect.height)}`;
         }
 
-        return `RECT ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${one}, ${two}`;
+        return `${opcode} ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${one}, ${two}`;
     }
 
 }

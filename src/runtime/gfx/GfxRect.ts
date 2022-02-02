@@ -5,6 +5,7 @@ import {GfxObject} from "./GfxObject";
 import {GrRectangle} from "../../Geo/GrRectangle";
 import {getParameterConfig} from "./GfxOperation";
 import {POI} from "../../Geo/GrObject";
+import {UNREACHABLE} from "../../Assertions";
 
 export class GfxRect extends GfxObject {
 
@@ -59,7 +60,35 @@ export class GfxRect extends GfxObject {
             const y = Math.min(p1.y, p2.y) + h / 2;
             r = GrRectangle.create(this.targetName, x, y, w, h);
         } else {
-            r = GrRectangle.create(this.targetName, this.p1.x + this.width / 2, this.p1.y - this.height / 2, this.width, this.height);
+
+            let fx = 0;
+            let fy = 0;
+            switch (this.opcode) {
+                case "RECT":
+                case "RECTC":
+                    fx = fy = 0;
+                    break;
+
+                case "RECTTL":
+                    fx = fy = 1;
+                    break;
+
+                case "RECTTR":
+                    fx = -1;
+                    fy = 1;
+                    break;
+                case "RECTBL":
+                    fx = 1;
+                    fy = -1;
+                    break;
+                case "RECTBR":
+                    fx = fy = -1;
+                    break;
+
+                default:
+                    UNREACHABLE();
+            }
+            r = GrRectangle.create(this.targetName, this.p1.x + fx * this.width / 2, this.p1.y + fy * this.height / 2, this.width, this.height);
         }
 
 
