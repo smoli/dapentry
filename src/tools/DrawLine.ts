@@ -77,7 +77,7 @@ export class DrawLine extends Tool {
         let a = snapInfos && snapInfos[0];
         let b = snapInfos && snapInfos[1];
 
-        return this.makeStatement(
+        return this.makeCreateStatement(
             AppConfig.Runtime.Opcodes.Line.PointPoint,
             (this._line && this._line.uniqueName) || "line",
             a || this._waitSnapInfo,

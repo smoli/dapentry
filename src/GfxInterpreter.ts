@@ -69,13 +69,17 @@ export class GfxInterpreter extends Interpreter {
                 this.addOperation(opcode, makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
             })
 
+        Object.values(AppConfig.Runtime.Opcodes.Move)
+            .forEach(opcode => {
+                this.addOperation(opcode, makeGfxOperation(GfxMove, this.objectCallBack.bind(this)));
+            })
+
         this.addOperation(AppConfig.Runtime.Opcodes.Poly.Create, makeGfxOperation(GfxPolygon, this.objectCallBack.bind(this)));
         this.addOperation(AppConfig.Runtime.Opcodes.Poly.Extend, makeGfxOperation(GfxExtendPolygon, this.objectCallBack.bind(this)));
 
         this.addOperation("QUAD", makeGfxOperation(GfxQuadratic, this.objectCallBack.bind(this)));
         this.addOperation("BEZIER", makeGfxOperation(GfxBezier, this.objectCallBack.bind(this)));
 
-        this.addOperation("MOVE", makeGfxOperation(GfxMove, this.objectCallBack.bind(this)));
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.objectCallBack.bind(this)));
         this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
 

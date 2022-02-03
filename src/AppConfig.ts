@@ -61,6 +61,11 @@ export const AppConfig = {
             Poly: {
                 Create: "POLY",
                 Extend: "EXTPOLY"
+            },
+            Move: {
+                Legacy: "MOVE",
+                ByVector: "MOVEBY",
+                ToPoint: "MOVETO"
             }
         }
     },

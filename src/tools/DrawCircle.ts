@@ -100,7 +100,7 @@ export class DrawCircle extends Tool {
             opcode = AppConfig.Runtime.Opcodes.Circle.CenterPoint;
         }
 
-        return this.makeStatement(opcode,
+        return this.makeCreateStatement(opcode,
             "newCircle",
             this._centerSnap || this._previewCenter,
             this._secondSnap || (this._circle && this._circle.radius) || 0);
@@ -113,7 +113,7 @@ export class DrawCircle extends Tool {
             opcode = AppConfig.Runtime.Opcodes.Circle.CenterPoint;
         }
 
-        return this.makeStatement(opcode,
+        return this.makeCreateStatement(opcode,
             this._circle.uniqueName,
             this._centerSnap,
             this._secondSnap || (this._circle && this._circle.radius) || 0);

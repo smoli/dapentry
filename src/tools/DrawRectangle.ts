@@ -124,7 +124,7 @@ export class DrawRectangle extends Tool {
             else opcode = AppConfig.Runtime.Opcodes.Rect.BottomRightWH
         }
 
-        return this.makeStatement(
+        return this.makeCreateStatement(
             opcode,
             (this._rect && this._rect.uniqueName) || "newRect",
             this._firstSnap || this._waitSnap,

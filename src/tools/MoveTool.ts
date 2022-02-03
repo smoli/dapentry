@@ -4,6 +4,7 @@ import {ObjectRenderer} from "../controls/drawing/Objects/ObjectRenderer";
 import {GrObject, POI, POIMap, POIPurpose} from "../Geo/GrObject";
 import {state} from "../runtime/tools/StateMachine";
 import {Point2D} from "../Geo/Point2D";
+import {AppConfig} from "../AppConfig";
 
 
 enum States {
@@ -137,24 +138,23 @@ export class MoveTool extends Tool {
         return false;
     }
 
-    public get result(): any {
+    public getResult(): any {
+        if (!this._movingObject && !this._movingPOI) {
+            return;
+        }
+
         const poi = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._movingPOI];
         const dx = poi.x - this._ox;
         const dy = poi.y - this._oy;
 
         if (dx !== 0 || dy !== 0) {
-            let name1 = this._object.name;
+            let move = AppConfig.Runtime.Opcodes.Move;
 
-            if (this._lastSnapInfo && this._lastSnapInfo.object) {
-                let name2 = this._lastSnapInfo.object.name;
-
-                return `MOVE ${name1}@${POI[this._movingPOI]}, ${name2}@${POI[this._lastSnapInfo.poiId]}`
-            } else {
-                return `MOVE ${name1}@${POI[this._movingPOI]}, (${this.makeCodeForNumber(dx)}, ${this.makeCodeForNumber(dy)})`
-            }
-
-        } else {
-            return null;
+            return this.makeStatement(
+                (this._lastSnapInfo && this._lastSnapInfo.object) ? move.ToPoint : move.ByVector,
+                this._object.name + "@" + POI[this._movingPOI],
+                (this._lastSnapInfo && this._lastSnapInfo.object) ? this._lastSnapInfo : new Point2D(dx, dy)
+        )
         }
     }
 }

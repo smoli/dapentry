@@ -324,6 +324,10 @@ export abstract class Tool {
         return num.toFixed(AppConfig.Tools.MaxDecimals);
     }
 
+    protected makeCodeForPoint(p: Point2D): string {
+        return `(${this.makeCodeForNumber(p.x)}, ${this.makeCodeForNumber(p.y)})`;
+    }
+
 
     protected makePointCodeFromSnapInfo(snapInfo: SnapInfo) {
         if (snapInfo.object) {
@@ -338,14 +342,19 @@ export abstract class Tool {
     }
 
 
-    protected makeStatement(opcode, targetName, ...args) {
+    protected makeCreateStatement(opcode, targetName, ...args) {
+        return this.makeStatement(opcode, targetName, AppConfig.Runtime.defaultStyleRegisterName, ...args);
+    }
+
+    protected makeStatement(opcode, ...args) {
 
         const lArgs = args.filter(a => a !== undefined && a !== null).map(a => {
             if (typeof a === "string") return a;
             if (typeof a === "number") return this.makeCodeForNumber(a);
+            if (a instanceof Point2D) return this.makeCodeForPoint(a);
             if (typeof a === "object") return this.makePointCodeFromSnapInfo(a);
         })
 
-        return `${opcode} ${targetName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${lArgs.join(",")}`
+        return `${opcode} ${lArgs.join(",")}`
     }
 }
