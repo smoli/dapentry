@@ -65,6 +65,8 @@ export const AppConfig = {
             Move: {
                 Legacy: "MOVE",
                 ByVector: "MOVEBY",
+                AlongX: "MOVEX",
+                AlongY: "MOVEY",
                 ToPoint: "MOVETO"
             }
         }

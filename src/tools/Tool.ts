@@ -168,6 +168,13 @@ export abstract class Tool {
             this._usedSnapInfos.push(snapInfo);
         }
     }
+
+    protected setFirstSnappingInfo(info: SnapInfo, overwrite: boolean = false) {
+        if (!this._snappingFirstInfo || overwrite) {
+            this._snappingFirstInfo = info;
+        }
+    }
+
     protected clearLastSnapPoint() {
         if (this._usedSnapInfos) {
             this._usedSnapInfos.pop();

@@ -412,6 +412,11 @@ export abstract class GrObject {
         console.log("Moving", this.uniqueName);
         this._center.add(byVector);
     }
+/*
+    public movePOITo(poi: POI, point: Point2D): void {
+        this._center.x = point.x;
+        this._center.y = point.y;
+    }*/
 
 
     /**

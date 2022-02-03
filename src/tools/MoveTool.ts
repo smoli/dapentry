@@ -69,6 +69,16 @@ export class MoveTool extends Tool {
             this._ox = poi.x;
             this._oy = poi.y;
 
+
+            this.setFirstSnappingInfo({
+                event: {
+                    ...eventData,
+                    x: this._ox,            // We want the position of the point. If we used the event positions axis
+                    y: this._oy             // alignment would be slightly offset depending on where the user clicked
+                },
+                object: undefined, poiId: "", point: undefined
+            });
+
             this.enablePOISnapping([this._object]);
         }
     }
@@ -107,6 +117,7 @@ export class MoveTool extends Tool {
         } else {
             return;
         }
+
 
         switch (this._state.state.id as States) {
             case States.Wait:
@@ -150,11 +161,30 @@ export class MoveTool extends Tool {
         if (dx !== 0 || dy !== 0) {
             let move = AppConfig.Runtime.Opcodes.Move;
 
+            let opcode;
+            let by;
+
+            if (this._lastSnapInfo && this._lastSnapInfo.object) {
+                opcode = move.ToPoint;
+                by = this._lastSnapInfo;
+            } else {
+                if (dx === 0) {
+                    opcode = move.AlongY;
+                    by = dy;
+                } else if (dy === 0) {
+                    opcode = move.AlongX;
+                    by = dx;
+                } else {
+                    opcode = move.ByVector
+                    by = new Point2D(dx, dy)
+                }
+            }
+
             return this.makeStatement(
-                (this._lastSnapInfo && this._lastSnapInfo.object) ? move.ToPoint : move.ByVector,
+                opcode,
                 this._object.name + "@" + POI[this._movingPOI],
-                (this._lastSnapInfo && this._lastSnapInfo.object) ? this._lastSnapInfo : new Point2D(dx, dy)
-        )
+                by
+            )
         }
     }
 }
