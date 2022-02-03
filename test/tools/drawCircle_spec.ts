@@ -68,4 +68,26 @@ describe('Drawing a circle', () => {
         expect(tokens[4]).to.deep.equal(T_REGISTERAT(AppConfig.Runtime.canvasObjectName, POI[POI.right]));
     });
 
+    it('works drawing from point to point', () => {
+        const canvas = GrCanvas.create_1_1(1000);
+        const renderer = new MockRenderer();
+        const drawCircle = new DrawCircle(renderer);
+
+        renderer.hitPoi(canvas, POI.center);
+        drawCircle.update(InteractionEvents.Click, makeAClick(100, 100));
+        renderer.unHitLastPoi();
+        drawCircle.update(InteractionEvents.MouseMove, makeAMove(100, 50));
+
+        renderer.hitPoi(canvas, POI.bottom);
+        drawCircle.update(InteractionEvents.Click, makeAClick(500, 200, 0, { alt: true }));
+
+        expect(drawCircle.isDone).to.be.true;
+        const tokens = Parser.parseLine(drawCircle.result);
+        expect(tokens[0]).to.deep.equal(T_OPCODE(AppConfig.Runtime.Opcodes.Circle.PointPoint))
+        expect(tokens[3]).to.deep.equal(T_REGISTERAT(AppConfig.Runtime.canvasObjectName, POI[POI.center]));
+        expect(tokens[4]).to.deep.equal(T_REGISTERAT(AppConfig.Runtime.canvasObjectName, POI[POI.bottom]));
+    });
+
+
+
 });
