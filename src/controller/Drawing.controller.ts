@@ -1,7 +1,6 @@
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Drawing from "../controls/drawing/Drawing";
 import BaseController from "./BaseController";
-import {AppModelKeys} from "../model/AppModel";
 
 /**
  * @namespace sts.drawable.controller
@@ -57,6 +56,11 @@ export default class DrawingController extends BaseController {
 
     async onToolAborted(event) {
         await this.getComponentController().clearOperationPreview();
+    }
+
+    onToolSwitch(event) {
+        const toolName = event.getParameter("switchEvent");
+        this.getComponentController().setToolHint(toolName);
     }
 
     onCodeLineChanged(event) {

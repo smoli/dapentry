@@ -1,6 +1,8 @@
 import Component from "../../Component";
 import {AppModel} from "../../model/AppModel";
 import {AppState} from "../../model/AppState";
+import ResourceBundle from "sap/base/i18n/ResourceBundle";
+import ResourceModel from "sap/ui/model/resource/ResourceModel";
 
 
 export interface ActionResult {
@@ -23,6 +25,9 @@ export abstract class BaseAction {
         return this.component.getAppState();
     }
 
+    getResourceText(textId:string, ...parameters:Array<any>):string {
+        return this.component.getResourceText(textId, ...parameters);
+    }
 
     async execute(data: any): Promise<ActionResult> {
         const isAsync = this._execute.constructor.name === "AsyncFunction";

@@ -6,7 +6,6 @@ import {state} from "../runtime/tools/StateMachine";
 import {Point2D} from "../Geo/Point2D";
 import {eq} from "../Geo/GeoMath";
 
-
 enum States {
     Wait = "MoveTool.Wait",
     Done = "MoveTool.Done",

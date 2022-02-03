@@ -10,6 +10,7 @@ declare module "./Drawing" {
         objects?: any;
         previewOperation?: (event: Event) => void;
         newOperation?: (event: Event) => void;
+        toolSwitch?: (event: Event) => void;
         toolDone?: (event: Event) => void;
         toolAborted?: (event: Event) => void;
         selectionChange?: (event: Event) => void;
@@ -22,13 +23,19 @@ declare module "./Drawing" {
         getObjects(): any;
         setObjects(objects: any): this;
 
-        // event: previewOperation
+        // event: toolDone
+        attachToolSwitch(fn: (event: Event) => void, listener?: object): this;
+        attachToolSwitch<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
+        detachToolSwitch(fn: (event: Event) => void, listener?: object): this;
+        fireToolSwitch(parameters?: object): this;
+
+        // event: toolDone
         attachToolDone(fn: (event: Event) => void, listener?: object): this;
         attachToolDone<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
         detachToolDone(fn: (event: Event) => void, listener?: object): this;
         fireToolDone(parameters?: object): this;
 
-        // event: previewOperation
+        // event: toolAborted
         attachToolAborted(fn: (event: Event) => void, listener?: object): this;
         attachToolAborted<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
         detachToolAborted(fn: (event: Event) => void, listener?: object): this;

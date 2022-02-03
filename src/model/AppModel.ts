@@ -22,7 +22,8 @@ export enum AppModelKeys {
     structureEditor = "structureEditor",
     dataEditorSize = "dataEditorSize",
     library = "library",
-    rightPanel = "rightPanel"
+    rightPanel = "rightPanel",
+    toolHint = "toolHint"
 }
 
 export class AppModel extends JSONModelAccess {
@@ -45,7 +46,8 @@ export class AppModel extends JSONModelAccess {
             [AppModelKeys.codeEditorSize]: "20%",
             [AppModelKeys.dataEditorSize]: "20%",
             [AppModelKeys.library]: [],
-            [AppModelKeys.rightPanel]: "none"
+            [AppModelKeys.rightPanel]: "none",
+            [AppModelKeys.toolHint]: null
         });
 
         super(model);
@@ -283,5 +285,13 @@ export class AppModel extends JSONModelAccess {
 
     public getLibraryEntry(id: string): LibraryEntry {
         return this.get(AppModelKeys.library, e => e.id === id);
+    }
+
+    public setToolHint(hint:string) {
+        this.set(AppModelKeys.toolHint).to(hint);
+    }
+
+    public clearToolHint() {
+        this.set(AppModelKeys.toolHint).to(null);
     }
 }

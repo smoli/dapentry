@@ -13,9 +13,11 @@
                              newOperation="onNewOperation"
                              toolAborted="onToolAborted"
                              toolDone="onToolDone"
+                             toolSwitch="onToolSwitch"
                              nextStep="onNextStep"
                              objectDeleted="onObjectDeleted"
                              selectionChange="onSelectionChange"
             />
+            <Text text="{appModel>/toolHint}"/>
         </VBox>
 </mvc:View>

@@ -3,6 +3,8 @@ import {ObjectRenderer} from "./Objects/ObjectRenderer";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {GrObject} from "../../Geo/GrObject";
 
+export type SwitchEvent = (number | string);
+export type SwitchCallback = (event:SwitchEvent, tool:Tool) => void;
 
 /**
  * Manages a set of tools and their lifecycle.
@@ -10,16 +12,16 @@ import {GrObject} from "../../Geo/GrObject";
 export class ToolManager {
     private readonly _tools: { [key: (string | symbol | number)]: typeof Tool }
     private readonly _objectRenderer: ObjectRenderer;
-    private readonly _specificToolClassesAfterDone: { [key: string]: typeof Tool };
+    private readonly _specificToolClassesAfterDone: { [key: string]: SwitchEvent };
 
     private _currentTool: Tool;
-    private _toolClassAfterAbort: typeof Tool;
-    private _toolClassAfterDone: typeof Tool;
+    private _toolEventAfterAbort: SwitchEvent;
+    private _toolClassAfterDone: SwitchEvent;
     private _doneCallback: (any) => void;
     private _previewCallback: (any) => void;
     private _abortCallback: () => void;
     private _selection: Array<GrObject>;
-    private _switchCallBack: () => void;
+    private _switchCallBack:SwitchCallback;
 
 
     constructor(objectRenderer: ObjectRenderer) {
@@ -42,7 +44,7 @@ export class ToolManager {
         this._abortCallback = doneCallback;
     }
 
-    set switchCallBack(switchCallBack: () => void) {
+    set switchCallBack(switchCallBack: SwitchCallback) {
         this._switchCallBack = switchCallBack;
     }
 
@@ -52,16 +54,16 @@ export class ToolManager {
         this._tools[event] = ToolClass;
     }
 
-    public setToolAfterAbort(ToolClass: typeof Tool) {
-        this._toolClassAfterAbort = ToolClass;
+    public setToolEventAfterAbort(event:SwitchEvent) {
+        this._toolEventAfterAbort = event;
     }
 
-    public setToolAfterDone(ToolClass: typeof Tool, forCurrentToolClass?: typeof Tool) {
+    public setToolAfterDone(event:SwitchEvent, forCurrentToolClass?: typeof Tool) {
         if (forCurrentToolClass) {
             const name = Object.keys(this._tools).find(k => this._tools[k] === forCurrentToolClass);
-            this._specificToolClassesAfterDone[name] = ToolClass;
+            this._specificToolClassesAfterDone[name] = event;
         } else {
-            this._toolClassAfterDone = ToolClass;
+            this._toolClassAfterDone = event;
         }
     }
 
@@ -69,18 +71,22 @@ export class ToolManager {
         return Object.values(this._tools).find(c => toolInstance instanceof c);
     }
 
-    protected getClassForAfterDone(toolInstance: Tool): typeof Tool {
-        let ToolClass;
+    protected getEventForAfterDone(toolInstance: Tool): SwitchEvent {
+        let event;
         const name = Object.keys(this._tools).find(k => toolInstance instanceof this._tools[k]);
         if (name) {
-            ToolClass = this._specificToolClassesAfterDone[name];
+            event = this._specificToolClassesAfterDone[name];
         }
 
-        if (!ToolClass) {
-            ToolClass = this._toolClassAfterDone;
+        if (!event) {
+            event = this._toolClassAfterDone;
         }
+        return event;
+    }
 
-        return ToolClass;
+    protected getClassForAfterDone(toolInstance: Tool): typeof Tool {
+
+        return this._tools[this.getEventForAfterDone(toolInstance)];
     }
 
     public get currentTool(): Tool {
@@ -108,8 +114,11 @@ export class ToolManager {
         if (this._currentTool) {
             this._abortCurrentTool();
 
-            if (this._toolClassAfterAbort) {
-                this._currentTool = this._makeToolInstance(this._toolClassAfterAbort);
+            if (this._toolEventAfterAbort) {
+                this._currentTool = this._makeToolInstance(this._tools[this._toolEventAfterAbort]);
+                if (this._switchCallBack) {
+                    this._switchCallBack(this._toolEventAfterAbort, this._currentTool);
+                }
             } else {
                 this._currentTool.reset();
             }
@@ -121,7 +130,7 @@ export class ToolManager {
      * @param event
      * @param params
      */
-    public switch(event: (string | number | symbol), ...params: Array<any>) {
+    public switch(event: (string | number), ...params: Array<any>) {
         const ToolClass = this._tools[event] || null;
 
         if (ToolClass) {
@@ -132,7 +141,7 @@ export class ToolManager {
             this._currentTool = this._makeToolInstance(ToolClass, params);
             this._pumpSelection(false);
             if (this._switchCallBack) {
-                this._switchCallBack();
+                this._switchCallBack(event, this._currentTool);
             }
         }
     }
@@ -161,12 +170,13 @@ export class ToolManager {
 
                 this._currentTool.finish();
 
+                const nextEvent = this.getEventForAfterDone(this._currentTool);
                 const ToolClass = this.getClassForAfterDone(this._currentTool);
                 if (ToolClass) {
                     this._currentTool.tearDown();
                     this._currentTool = this._makeToolInstance(ToolClass);
                     if (this._switchCallBack) {
-                        this._switchCallBack();
+                        this._switchCallBack(nextEvent, this._currentTool);
                     }
                 } else {
                     this._currentTool.reset();

@@ -12,7 +12,7 @@ import {Selection} from "d3";
 import {MoveTool} from "../../tools/MoveTool";
 import {DrawLine} from "../../tools/DrawLine";
 import {RotateTool} from "../../tools/RotateTool";
-import {ToolManager} from "./ToolManager";
+import {SwitchEvent, ToolManager} from "./ToolManager";
 import {DrawPolygon} from "../../tools/DrawPolygon";
 import {DrawQuadratic} from "../../tools/DrawQuadratic";
 import {ScaleTool} from "../../tools/ScaleTool";
@@ -22,21 +22,7 @@ import {GrCanvas} from "../../Geo/GrCanvas";
 import {DrawLibraryInstance} from "../../tools/DrawLibraryInstance";
 import {LibraryEntry} from "../../Library";
 import {AppConfig} from "../../AppConfig";
-
-
-enum ToolNames {
-    Select,
-    Circle,
-    Rectangle,
-    Line,
-    Polygon,
-    Quadric,
-    Instance,
-    Move,
-    Rotate,
-    Scale,
-    None
-}
+import {ToolNames} from "../../tools/ToolNames";
 
 
 /**
@@ -69,6 +55,10 @@ export default class Drawing extends Control {
 
             toolAborted: {},
             toolDone: {},
+
+            toolSwitch: {
+                toolEvent: "number"
+            },
 
             selectionChange: {
                 selection: "any"
@@ -133,8 +123,11 @@ export default class Drawing extends Control {
         this.fireToolAborted();
     }
 
-    protected _onToolSwitch() {
+    protected _onToolSwitch(event:SwitchEvent) {
         this._otherObjectIndex = -1;
+        this.fireToolSwitch({
+            switchEvent: event
+        })
     }
 
     protected _setupTools() {
@@ -155,10 +148,10 @@ export default class Drawing extends Control {
         this._toolManager.addTool(SelectTool, ToolNames.Select);
         this._toolManager.addTool(DrawLibraryInstance, ToolNames.Instance);
 
-        this._toolManager.setToolAfterDone(SelectTool);
-        this._toolManager.setToolAfterAbort(SelectTool);
+        this._toolManager.setToolAfterDone(ToolNames.Select);
+        this._toolManager.setToolEventAfterAbort(ToolNames.Select);
 
-        this._toolManager.switch(ToolNames.Move);
+        this._toolManager.switch(ToolNames.Select);
     }
 
     public onAfterRendering(oEvent: jQuery.Event) {

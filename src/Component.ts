@@ -15,6 +15,8 @@ import {AppConfig} from "./AppConfig";
 import {AppState} from "./model/AppState";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import {MockStatePersistence} from "./model/MockStatePersistence";
+import ResourceBundle from "sap/base/i18n/ResourceBundle";
+import ResourceModel from "sap/ui/model/resource/ResourceModel";
 
 /**
  * App component
@@ -66,6 +68,11 @@ export default class Component extends UIComponent {
 
     getComponentController(): ComponentController {
         return this._appController;
+    }
+
+    getResourceText(textId:string, ...parameters:Array<any>):string {
+        const bundle:ResourceBundle = (this.getModel("i18n") as ResourceModel).getResourceBundle() as ResourceBundle;
+        return bundle.getText(textId, parameters);
     }
 
     /**

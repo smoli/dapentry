@@ -55,7 +55,7 @@ export abstract class Tool {
     private _otherObject: GrObject;
     private _usedSnapInfos: Array<SnapInfo>;
     private _poiSnapping: boolean;
-    private _objectSnapInforHandle: InfoHandle;
+    private _objectSnapInfoHandle: InfoHandle;
 
     protected constructor(renderer: ObjectRenderer, ...params: Array<any>) {
         this._renderer = renderer;
@@ -218,7 +218,7 @@ export abstract class Tool {
                 this._snappingPOI =
                     this._snappingFirstInfo = null;
         this._poiSnapping = null;
-        this._objectSnapInforHandle = null;
+        this._objectSnapInfoHandle = null;
     }
 
     protected get usedSnapInfos():Array<SnapInfo> {
@@ -256,7 +256,7 @@ export abstract class Tool {
         if (!this._poiSnapping && !force) {
             return;
         }
-        this._objectSnapInforHandle = null;
+        this._objectSnapInfoHandle = null;
         this._poiSnapping = false;
         this.clearSnapInfo();
         if (this._renderer) {
@@ -276,10 +276,10 @@ export abstract class Tool {
             p = object.getPointAtPercentage(pct);
         }
 
-        if (!this._objectSnapInforHandle) {
-            this._objectSnapInforHandle = this._renderer.renderInfoText(p, (100 * pct).toFixed(1) + "%");
+        if (!this._objectSnapInfoHandle) {
+            this._objectSnapInfoHandle = this._renderer.renderInfoText(p, (100 * pct).toFixed(1) + "%");
         } else  {
-            this._renderer.updateInfoText(this._objectSnapInforHandle, (100 * pct).toFixed(1) + "%", p)
+            this._renderer.updateInfoText(this._objectSnapInfoHandle, (100 * pct).toFixed(1) + "%", p)
         }
 
         return {

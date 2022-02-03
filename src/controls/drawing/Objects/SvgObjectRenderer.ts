@@ -192,10 +192,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
                 if (poiCallback) {
                     c.on("mouseenter", () => {
-                        poiCallback(object, poiIds[i], true)
+                        poiCallback(object, Number(poiIds[i]), true)
                     })
                     c.on("mouseleave", () => {
-                        poiCallback(object, poiIds[i], false)
+                        poiCallback(object, Number(poiIds[i]), false)
                     })
                 }
             })

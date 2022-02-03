@@ -141,4 +141,12 @@ export  class AppState {
         return this._appModel.getLibraryEntry(id);
     }
 
+    public setToolHint(hint:string) {
+        return this._appModel.setToolHint(hint);
+    }
+
+    public clearToolHint() {
+        return this._appModel.clearToolHint();
+    }
+
 }

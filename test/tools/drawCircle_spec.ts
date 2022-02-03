@@ -1,5 +1,4 @@
 import {describe, it} from "mocha";
-import {DrawRectangle} from "../../src/tools/DrawRectangle";
 import {MockRenderer} from "../testHelpers/mock/mockRenderer";
 import {InteractionEvents} from "../../src/controls/drawing/InteractionEvents";
 import {expect} from "chai";

@@ -139,6 +139,7 @@ describe('The ToolManager', () => {
             expect(t.currentTool).to.be.instanceof(ToolB);
         });
 
+
         it('does no switch when given an unknown event', () => {
 
             clearMessages();
@@ -185,7 +186,8 @@ describe('The ToolManager', () => {
 
             t.addTool(ToolA, "A");
             t.addTool(ToolB, "B");
-            t.setToolAfterAbort(ToolC);
+            t.addTool(ToolC, "C");
+            t.setToolEventAfterAbort("C");
             expect(t.currentTool).to.be.null;
 
             t.switch("A");
@@ -250,7 +252,8 @@ describe('The ToolManager', () => {
 
             t.addTool(ToolA, "A");
             t.addTool(ToolB, "B");
-            t.setToolAfterDone(ToolC);
+            t.addTool(ToolC, "C");
+            t.setToolAfterDone("C");
 
             t.switch("A");
             const firstTool = t.currentTool;
@@ -277,7 +280,8 @@ describe('The ToolManager', () => {
 
             t.addTool(ToolA, "A");
             t.addTool(ToolB, "B");
-            t.setToolAfterDone(ToolC, ToolB);
+            t.addTool(ToolC, "C");
+            t.setToolAfterDone("C", ToolB);
 
             t.switch("A");
             t.pump(InteractionEvents.Click, null);

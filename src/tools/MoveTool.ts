@@ -76,7 +76,7 @@ export class MoveTool extends Tool {
                     x: this._ox,            // We want the position of the point. If we used the event positions axis
                     y: this._oy             // alignment would be slightly offset depending on where the user clicked
                 },
-                object: undefined, poiId: "", point: undefined
+                object: undefined, poiId: -1, point: undefined
             });
 
             this.enablePOISnapping([this._object]);

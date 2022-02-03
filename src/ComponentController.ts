@@ -7,7 +7,6 @@ import {GfxInterpreter} from "./GfxInterpreter";
 import {AddStatements} from "./controller/actions/AddStatements";
 import {UpdateStatement} from "./controller/actions/UpdateStatement";
 import {ReplaceCode} from "./controller/actions/ReplaceCode";
-import {AppModel} from "./model/AppModel";
 import {SelectObjects} from "./controller/actions/SelectObjects";
 import {SetSelectedCodeLines} from "./controller/actions/SetSelectedCodeLines";
 import {DeleteSelection} from "./controller/actions/DeleteSelection";
@@ -16,6 +15,7 @@ import {AspectRatio, GrCanvas} from "./Geo/GrCanvas";
 import {LibraryEntry} from "./Library";
 import {AppConfig} from "./AppConfig";
 import {AppState, SelectionInfo} from "./model/AppState";
+import {SetToolHint} from "./controller/actions/SetToolHint";
 
 
 
@@ -251,6 +251,10 @@ export class ComponentController extends BaseComponentController {
 
     async setSelection(selection: Array<GrObject>) {
         await this.execute(new SelectObjects(this._component, selection))
+    }
+
+    async setToolHint(toolName) {
+        await this.execute(new SetToolHint(this._component, toolName));
     }
 
     insertLibraryEntry(entry: LibraryEntry) {
