@@ -47,7 +47,7 @@
       ],
       "targets": {
         "fixed": {
-          "viewName": "fixed",
+          "viewName": "Fixed",
           "viewId": "fixed",
           "controlAggregation": "beginColumnPages"
         },
