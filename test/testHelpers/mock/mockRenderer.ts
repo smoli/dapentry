@@ -5,7 +5,7 @@ import {
     POICallback,
     RenderLayer
 } from "../../../src/controls/drawing/Objects/ObjectRenderer";
-import {GrObject} from "../../../src/Geo/GrObject";
+import {GrObject, POI} from "../../../src/Geo/GrObject";
 import {GrBezier, GrPolygon, GrQuadratic} from "../../../src/Geo/GrPolygon";
 import {GrCircle} from "../../../src/Geo/GrCircle";
 import {Point2D} from "../../../src/Geo/Point2D";
@@ -13,10 +13,29 @@ import {GrLine} from "../../../src/Geo/GrLine";
 import {GrRectangle} from "../../../src/Geo/GrRectangle";
 
 export class MockRenderer extends ObjectRenderer {
+    private _poiCallback: POICallback;
+    private _snapObject: GrObject;
+    private _snapPoi: POI;
 
     constructor() {
         super();
     }
+
+    hitPoi(object: GrObject, poiId: POI) {
+        if (this._poiCallback) {
+            this._snapObject = object;
+            this._snapPoi = poiId;
+            this._poiCallback(object, poiId, true)
+        }
+    }
+
+    unHitLastPoi() {
+        if (this._poiCallback && this._snapObject) {
+            this._poiCallback(this._snapObject, this._snapPoi, false);
+            this._snapObject = null;
+        }
+    }
+
 
     clear(layer: RenderLayer): void {
     }
@@ -25,6 +44,7 @@ export class MockRenderer extends ObjectRenderer {
     }
 
     enablePOI(enabled: boolean, poiCallback?: POICallback, except?: Array<GrObject>): void {
+        this._poiCallback = poiCallback;
     }
 
     remove(object: GrObject): void {

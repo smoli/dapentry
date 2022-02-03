@@ -85,6 +85,7 @@ export class DrawCircle extends Tool {
                 } else {
                     this._fromTo = false;
                 }
+                this._secondSnap = snapInfo;
                 this._circle.radius = Math.sqrt((eventData.x - this._circle.x) ** 2 + (eventData.y - this._circle.y) ** 2);
                 this._renderer.remove(this._circle);
         }
@@ -109,14 +110,14 @@ export class DrawCircle extends Tool {
     getResult(): any {
         let opcode = AppConfig.Runtime.Opcodes.Circle.CenterRadius;
 
-        if (this._secondSnap) {
+        if (this._secondSnap && this._secondSnap.object) {
             opcode = AppConfig.Runtime.Opcodes.Circle.CenterPoint;
         }
 
         return this.makeCreateStatement(opcode,
             this._circle.uniqueName,
             this._centerSnap,
-            this._secondSnap || (this._circle && this._circle.radius) || 0);
+            (this._secondSnap && this._secondSnap.object) ? this._secondSnap : (this._circle && this._circle.radius) || 0);
 
         // TODO: CIRCLEPP. Need some kind of modifier for that
     }

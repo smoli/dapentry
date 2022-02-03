@@ -8,7 +8,7 @@ import {AppConfig} from "../AppConfig";
 
 export interface SnapInfo {
     object: GrObject,
-    poiId: string,
+    poiId: number,
     point: Point2D,
     event: InteractionEventData
 }
@@ -50,7 +50,7 @@ export abstract class Tool {
 
     private _snappingFirstInfo: SnapInfo;
     private _snappingObject: GrObject;
-    private _snappingPOI: string;
+    private _snappingPOI: number;
     private _snapPoint: Point2D;
     private _otherObject: GrObject;
     private _usedSnapInfos: Array<SnapInfo>;
@@ -235,7 +235,7 @@ export abstract class Tool {
 
         let handle;
 
-        this._renderer.enablePOI(true, (object: GrObject, poiId: string, hit: boolean) => {
+        this._renderer.enablePOI(true, (object: GrObject, poiId: number, hit: boolean) => {
             if (hit) {
                 this._snappingObject = object;
                 this._snappingPOI = poiId;

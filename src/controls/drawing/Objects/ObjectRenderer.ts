@@ -34,7 +34,7 @@ import {Point2D} from "../../../Geo/Point2D";
  */
 export type ObjectClickCallback = (object: GrObject) => void;
 
-export type POICallback = (object:GrObject, poiId:string, hit:boolean) => void;
+export type POICallback = (object:GrObject, poiId:number, hit:boolean) => void;
 
 export type InfoHandle = string;
 
