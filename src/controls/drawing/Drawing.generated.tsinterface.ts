@@ -8,7 +8,10 @@ declare module "./Drawing" {
      */
     interface $DrawingSettings extends $ControlSettings {
         objects?: any;
+        previewOperation?: (event: Event) => void;
         newOperation?: (event: Event) => void;
+        toolDone?: (event: Event) => void;
+        toolAborted?: (event: Event) => void;
         selectionChange?: (event: Event) => void;
         objectDeleted?: (event: Event) => void;
     }
@@ -18,6 +21,25 @@ declare module "./Drawing" {
         // property: objects
         getObjects(): any;
         setObjects(objects: any): this;
+
+        // event: previewOperation
+        attachToolDone(fn: (event: Event) => void, listener?: object): this;
+        attachToolDone<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
+        detachToolDone(fn: (event: Event) => void, listener?: object): this;
+        fireToolDone(parameters?: object): this;
+
+        // event: previewOperation
+        attachToolAborted(fn: (event: Event) => void, listener?: object): this;
+        attachToolAborted<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
+        detachToolAborted(fn: (event: Event) => void, listener?: object): this;
+        fireToolAborted(parameters?: object): this;
+
+
+        // event: previewOperation
+        attachPreviewOperation(fn: (event: Event) => void, listener?: object): this;
+        attachPreviewOperation<CustomDataType extends object>(data: CustomDataType, fn: (event: Event, data: CustomDataType) => void, listener?: object): this;
+        detachPreviewOperation(fn: (event: Event) => void, listener?: object): this;
+        firePreviewOperation(parameters?: object): this;
 
         // event: newOperation
         attachNewOperation(fn: (event: Event) => void, listener?: object): this;

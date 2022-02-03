@@ -208,6 +208,22 @@ export class AppModel extends JSONModelAccess {
         }
     }
 
+    setOperationPreview(code:string) {
+        const s = {
+            index: -1,
+            code: code,
+            tokens: Parser.parseLine(code),
+            level: 0,
+            selected: false
+        }
+
+        this.set(AppModelKeys.editableCodeLine).to(s);
+    }
+
+    clearOperationPreview() {
+        this.set(AppModelKeys.editableCodeLine).to(null);
+    }
+
     get editableCodeLine():SegmentedCodeLine {
         return this.get(AppModelKeys.editableCodeLine);
     }

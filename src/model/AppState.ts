@@ -4,6 +4,7 @@ import {GrObject} from "../Geo/GrObject";
 import {Style} from "../controls/drawing/Objects/StyleManager";
 import {AbsStatePersistence} from "./AbsStatePersistence";
 import {LibraryEntry} from "../Library";
+import {Parser} from "../runtime/interpreter/Parser";
 
 export interface SelectionInfo {
     name: string,
@@ -93,6 +94,14 @@ export  class AppState {
 
     setSelectedCodeLines(indexes: Array<number>) {
         return this._appModel.setSelectedCodeLines(indexes);
+    }
+
+    setOperationPreview(code:string) {
+        return this._appModel.setOperationPreview(code);
+    }
+
+    clearOperationPreview() {
+        return this._appModel.clearOperationPreview();
     }
 
     get editableCodeLine():SegmentedCodeLine {

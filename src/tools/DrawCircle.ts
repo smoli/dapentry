@@ -19,6 +19,7 @@ export class DrawCircle extends Tool {
     private _centerSnap: SnapInfo;
     private _secondSnap: SnapInfo;
     private _fromTo: boolean;
+    private _previewCenter: SnapInfo;
 
     constructor(renderer) {
         super(renderer);
@@ -47,6 +48,11 @@ export class DrawCircle extends Tool {
         this._state.next(interactionEvent);
 
         switch (this._state.state.id) {
+
+            case States.Wait:
+                this._previewCenter = snapInfo;
+                break;
+
             case States.CenterPoint:
                 this._circle = GrCircle.create(null, eventData.x, eventData.y, 0);
                 this._centerSnap = snapInfo;
@@ -86,13 +92,32 @@ export class DrawCircle extends Tool {
         return this.isDone;
     }
 
-    public get result(): any {
-        if (!this._secondSnap.object) {
-            return `${AppConfig.Runtime.Opcodes.Circle.CenterRadius} ${this._circle.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${this.makePointCodeFromSnapInfo(this._centerSnap)}, ${this.makeCodeForNumber(this._circle.radius)}`
-        } else {
-            return `${AppConfig.Runtime.Opcodes.Circle.CenterPoint} ${this._circle.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${this.makePointCodeFromSnapInfo(this._centerSnap)}, ${this.makePointCodeFromSnapInfo(this._secondSnap)}`
-        }
-        // TODO: CIRCLEPP. Need some kind of modifier for that
 
+    protected getResultPreview(usedSnapInfos: Array<SnapInfo>): string | Array<string> {
+        let opcode = AppConfig.Runtime.Opcodes.Circle.CenterRadius;
+
+        if (this._secondSnap) {
+            opcode = AppConfig.Runtime.Opcodes.Circle.CenterPoint;
+        }
+
+        return this.makeStatement(opcode,
+            "newCircle",
+            this._centerSnap || this._previewCenter,
+            this._secondSnap || (this._circle && this._circle.radius) || 0);
+    }
+
+    getResult(): any {
+        let opcode = AppConfig.Runtime.Opcodes.Circle.CenterRadius;
+
+        if (this._secondSnap) {
+            opcode = AppConfig.Runtime.Opcodes.Circle.CenterPoint;
+        }
+
+        return this.makeStatement(opcode,
+            this._circle.uniqueName,
+            this._centerSnap,
+            this._secondSnap || (this._circle && this._circle.radius) || 0);
+
+        // TODO: CIRCLEPP. Need some kind of modifier for that
     }
 }

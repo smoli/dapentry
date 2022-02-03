@@ -7,6 +7,7 @@ import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import {JSONModelAccess} from "../JSONModelAccess";
 import {AppModel} from "../model/AppModel";
 import {AppState} from "../model/AppState";
+import {AppConfig} from "../AppConfig";
 
 /**
  * @namespace sts.drawable.controller
@@ -22,7 +23,7 @@ export default class BaseController extends Controller {
     }
 
     getAppModelName():string {
-        return this.getComponentController().getAppState().appModelName;
+        return AppConfig.UICore.appModelName
     }
 
 

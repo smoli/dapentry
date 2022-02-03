@@ -63,6 +63,13 @@ export default class Drawing extends Control {
                 code: "any"
             },
 
+            previewOperation: {
+                code: "any"
+            },
+
+            toolAborted: {},
+            toolDone: {},
+
             selectionChange: {
                 selection: "any"
             },
@@ -111,13 +118,19 @@ export default class Drawing extends Control {
         this._height = bb.h;
     }
 
+    protected _onToolPreview(resultPreview) {
+        this.firePreviewOperation({ code: resultPreview });
+    }
+
     protected _onToolDone(result) {
         this.fireNewOperation({code: result});
         this._objectRenderer.clear(RenderLayer.Interaction);
+        this.fireToolDone();
     }
 
     protected _onToolAbort() {
         this._objectRenderer.clear(RenderLayer.Interaction);
+        this.fireToolAborted();
     }
 
     protected _onToolSwitch() {
@@ -129,6 +142,7 @@ export default class Drawing extends Control {
         this._toolManager.doneCallBack = this._onToolDone.bind(this);
         this._toolManager.abortCallBack = this._onToolAbort.bind(this);
         this._toolManager.switchCallBack = this._onToolSwitch.bind(this);
+        this._toolManager.previewCallBack = this._onToolPreview.bind(this);
 
         this._toolManager.addTool(DrawCircle, ToolNames.Circle);
         this._toolManager.addTool(DrawLine, ToolNames.Line);
@@ -142,6 +156,7 @@ export default class Drawing extends Control {
         this._toolManager.addTool(DrawLibraryInstance, ToolNames.Instance);
 
         this._toolManager.setToolAfterDone(SelectTool);
+        this._toolManager.setToolAfterAbort(SelectTool);
 
         this._toolManager.switch(ToolNames.Move);
     }

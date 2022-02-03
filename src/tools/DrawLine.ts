@@ -17,6 +17,7 @@ export class DrawLine extends Tool {
     private _line: GrLine
     private _firstSnapInfo: SnapInfo;
     private _secondSnapInfo: SnapInfo;
+    private _waitSnapInfo: SnapInfo;
 
     constructor(renderer) {
         super(renderer);
@@ -43,15 +44,21 @@ export class DrawLine extends Tool {
         this._state.next(interactionEvent);
 
         switch (this._state.state.id) {
+            case States.Wait:
+                this._waitSnapInfo = snapInfo;
+                break;
+
             case States.P1:
                 this._line = GrLine.create(null, eventData.x, eventData.y, eventData.x, eventData.y);
                 this._renderer.renderLine(RenderLayer.Interaction, this._line, false);
+                this._firstSnapInfo = snapInfo;
                 this.snapInfoUsed(snapInfo);
                 break;
 
             case States.Drag:
                 this._line.x2 = eventData.x;
                 this._line.y2 = eventData.y
+                this._secondSnapInfo = snapInfo;
                 this._renderer.renderLine(RenderLayer.Interaction, this._line, false);
                 break;
 
@@ -67,9 +74,15 @@ export class DrawLine extends Tool {
     }
 
     getResult(snapInfos:Array<SnapInfo>): any {
-        let one = this.makePointCodeFromSnapInfo(snapInfos[0]);
-        let two = this.makePointCodeFromSnapInfo(snapInfos[1]);
-        return [`LINE ${this._line.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${one}, ${two}`]
+        let a = snapInfos && snapInfos[0];
+        let b = snapInfos && snapInfos[1];
+
+        return this.makeStatement(
+            AppConfig.Runtime.Opcodes.Line.PointPoint,
+            (this._line && this._line.uniqueName) || "line",
+            a || this._waitSnapInfo,
+            b || this._secondSnapInfo || a
+        )
 
     }
 }

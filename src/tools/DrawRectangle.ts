@@ -21,6 +21,7 @@ export class DrawRectangle extends Tool {
     private _y1:number;
     private _firstSnap: SnapInfo;
     private _secondSnap: SnapInfo;
+    private _waitSnap: SnapInfo;
 
     constructor(renderer) {
         super(renderer);
@@ -37,7 +38,7 @@ export class DrawRectangle extends Tool {
 
     public reset() {
         super.reset();
-        this._rect = null;
+        this._rect = this._firstSnap = this._secondSnap = null;
     }
 
     protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
@@ -53,6 +54,11 @@ export class DrawRectangle extends Tool {
         this._state.next(interactionEvent);
 
         switch (this._state.state.id) {
+            case States.Wait:
+                this._waitSnap = snapInfo;
+                break;
+
+
             case States.FirstPoint:
                 this._x1 = eventData.x
                 this._y1 = eventData.y
@@ -89,19 +95,26 @@ export class DrawRectangle extends Tool {
         return {x1, y1, w, h}
     }
 
-    public get result(): any {
+    public getResult(usedSnapInfos:Array<SnapInfo>): any {
 
         let opcode: string;
 
-        let one;
-        let two;
         let p1: Point2D;
         let p2: Point2D;
 
         // These are not necessarily the actual point used because of snapping.
         // We use this find out where the first point lies, i.e. if it is top left, bottom right, etc...
-        p1 = new Point2D(this._firstSnap.event.x, this._firstSnap.event.y)
-        p2 = new Point2D(this._secondSnap.event.x, this._secondSnap.event.y)
+        if (this._firstSnap) {
+            p1 = new Point2D(this._firstSnap.event.x, this._firstSnap.event.y)
+        } else {
+            p1 = new Point2D(this._waitSnap.event.x, this._waitSnap.event.y)
+        }
+
+        if (this._secondSnap) {
+            p2 = new Point2D(this._secondSnap.event.x, this._secondSnap.event.y)
+        } else {
+            p2 = p1;
+        }
 
         if (p1.x < p2.x) {
             if (p1.y < p2.y) opcode = AppConfig.Runtime.Opcodes.Rect.TopLeftWH
@@ -111,15 +124,13 @@ export class DrawRectangle extends Tool {
             else opcode = AppConfig.Runtime.Opcodes.Rect.BottomRightWH
         }
 
-        one = this.makePointCodeFromSnapInfo(this._firstSnap);
-        if (this._secondSnap.object) {
-            opcode = AppConfig.Runtime.Opcodes.Rect.PointPoint
-            two = this.makePointCodeFromSnapInfo(this._secondSnap);
-        } else {
-            two = `${this.makeCodeForNumber(this._rect.width)}, ${this.makeCodeForNumber(this._rect.height)}`;
-        }
-
-        return `${opcode} ${this._rect.uniqueName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${one}, ${two}`;
+        return this.makeStatement(
+            opcode,
+            (this._rect && this._rect.uniqueName) || "newRect",
+            this._firstSnap || this._waitSnap,
+            (this._secondSnap && this._secondSnap.object) ? this._secondSnap : (this._rect && this._rect.width) || 0,
+            (this._secondSnap && this._secondSnap.object) ? undefined : (this._rect && this._rect.height) || 0
+        );
     }
 
 }

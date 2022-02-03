@@ -195,6 +195,15 @@ export abstract class Tool {
         return null;
     }
 
+    protected getResultPreview(usedSnapInfos: Array<SnapInfo>): (string | Array<string>) {
+        return this.getResult(usedSnapInfos);
+    }
+
+
+    public get resultPreview(): (string | Array<string>) {
+        return this.getResultPreview(this._usedSnapInfos);
+    }
+
 
     protected clearSnapInfo() {
         this._snapPoint =
@@ -326,5 +335,17 @@ export abstract class Tool {
             }
         }
         return `(${this.makeCodeForNumber(snapInfo.event.x)}, ${this.makeCodeForNumber(snapInfo.event.y)})`
+    }
+
+
+    protected makeStatement(opcode, targetName, ...args) {
+
+        const lArgs = args.filter(a => a !== undefined && a !== null).map(a => {
+            if (typeof a === "string") return a;
+            if (typeof a === "number") return this.makeCodeForNumber(a);
+            if (typeof a === "object") return this.makePointCodeFromSnapInfo(a);
+        })
+
+        return `${opcode} ${targetName}, ${AppConfig.Runtime.defaultStyleRegisterName}, ${lArgs.join(",")}`
     }
 }

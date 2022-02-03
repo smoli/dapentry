@@ -212,6 +212,14 @@ export class ComponentController extends BaseComponentController {
         }
     }
 
+    async previewOperation(code: string) {
+        this.getAppState().setOperationPreview(code);
+    }
+
+    async clearOperationPreview() {
+        this.getAppState().clearOperationPreview();
+    }
+
     async replaceCode(code: Array<string>) {
         await this.execute(new ReplaceCode(this._component, code))
         if (this._drawing) {

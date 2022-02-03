@@ -16,6 +16,7 @@ export class ToolManager {
     private _toolClassAfterAbort: typeof Tool;
     private _toolClassAfterDone: typeof Tool;
     private _doneCallback: (any) => void;
+    private _previewCallback: (any) => void;
     private _abortCallback: () => void;
     private _selection: Array<GrObject>;
     private _switchCallBack: () => void;
@@ -29,6 +30,10 @@ export class ToolManager {
         this._selection = [];
     }
 
+    set previewCallBack(doneCallback: (any) => void) {
+        this._previewCallback = doneCallback;
+    }
+
     set doneCallBack(doneCallback: (any) => void) {
         this._doneCallback = doneCallback;
     }
@@ -40,6 +45,8 @@ export class ToolManager {
     set switchCallBack(switchCallBack: () => void) {
         this._switchCallBack = switchCallBack;
     }
+
+
 
     public addTool(ToolClass: typeof Tool, event: (string | number | symbol)) {
         this._tools[event] = ToolClass;
@@ -164,6 +171,8 @@ export class ToolManager {
                 } else {
                     this._currentTool.reset();
                 }
+            } else if (this._previewCallback) {
+                this._previewCallback(this._currentTool.resultPreview);
             }
         }
     }

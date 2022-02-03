@@ -45,6 +45,20 @@ export default class DrawingController extends BaseController {
         }
     }
 
+    async onPreviewOperation(event) {
+        if (event.getParameter("code")) {
+            await this.getComponentController().previewOperation(event.getParameter("code"));
+        }
+    }
+
+    async onToolDone(event) {
+        await this.getComponentController().clearOperationPreview();
+    }
+
+    async onToolAborted(event) {
+        await this.getComponentController().clearOperationPreview();
+    }
+
     onCodeLineChanged(event) {
         this.getComponentController().updateOperation(
             this.getAppState().editableCodeLine.index,
