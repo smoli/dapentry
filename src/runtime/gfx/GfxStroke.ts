@@ -1,6 +1,6 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {GrObject} from "../../Geo/GrObject";
+import {GrObject} from "../../geometry/GrObject";
 import {GfxOperation} from "./GfxOperation";
 
 export class GfxStroke extends GfxOperation {

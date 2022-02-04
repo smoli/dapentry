@@ -1,7 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GrCircle} from "../../src/Geo/GrCircle";
-import {eq, eqp} from "../../src/Geo/GeoMath";
+import {GrCircle} from "../../src/geometry/GrCircle";
+import {eq, eqp} from "../../src/geometry/GeoMath";
 
 
 

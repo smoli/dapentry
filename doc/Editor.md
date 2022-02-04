@@ -48,12 +48,12 @@ ENDDO
 ## What happens when the user draws a circle
 
 * Select the circle tool using `c`
-* Using the [ToolManager](/src/controls/drawing/ToolManager.ts) the [Drawing.ts](/src/controls/drawing/Drawing.ts) switches to the [DrawCircleTool](/src/tools/DrawCircle.ts)
+* Using the [ToolManager](/ui5stuff/controls/drawing/ToolManager.ts) the [Drawing.ts](/ui5stuff/controls/drawing/Drawing.ts) switches to the [DrawCircleTool](/src/tools/DrawCircle.ts)
 * The Tool waits for the user to draw the circle
 * When done, the ToolManager gets the result
   * This result will be an instruction to draw the circle like `CIRCLE Circle1, $styles.default, (100, 100), 100`
 * The new instruction is added to the current program
-* The whole drawing is cleared and the [ComponentController](/src/ComponentController.ts) reruns the program
+* The whole drawing is cleared and the [ComponentController](/ui5stuff/ComponentController.ts) reruns the program
 * A special [interpreter](/src/GfxInterpreter.ts) intercepts all created objects
 * Once the program is done running the ComponentController passes the list of intercepted objects to the renderer
-  * The renderer, [SvgObjectRenderer](/src/controls/drawing/Objects/SvgObjectRenderer.ts) redraws the whole thing
+  * The renderer, [SvgObjectRenderer](/src/drawing/SvgObjectRenderer.ts) redraws the whole thing

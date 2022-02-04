@@ -1,7 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {runCode} from "../testHelpers/toolRunCode";
-import {GrObjectList} from "../../src/Geo/GrObjectList";
+import {GrObjectList} from "../../src/geometry/GrObjectList";
 
 
 describe('Scenarios 1', () => {

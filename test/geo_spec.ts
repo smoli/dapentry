@@ -1,8 +1,8 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {deg2rad, eq} from "../src/Geo/GeoMath"
-import {Line2D} from "../src/Geo/Line2D";
-import {Point2D} from "../src/Geo/Point2D";
+import {deg2rad, eq} from "../src/geometry/GeoMath"
+import {Line2D} from "../src/geometry/Line2D";
+import {Point2D} from "../src/geometry/Point2D";
 
 
 function eqp(p1, p2) {

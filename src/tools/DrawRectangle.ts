@@ -1,10 +1,10 @@
 import {state} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {RenderLayer} from "../controls/drawing/Objects/ObjectRenderer";
-import {GrRectangle} from "../Geo/GrRectangle";
+import {RenderLayer} from "../drawing/ObjectRenderer";
+import {GrRectangle} from "../geometry/GrRectangle";
 import {AppConfig} from "../AppConfig";
-import {Point2D} from "../Geo/Point2D";
+import {Point2D} from "../geometry/Point2D";
 import {UNREACHABLE} from "../Assertions";
 
 enum States {

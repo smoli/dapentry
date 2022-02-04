@@ -1,10 +1,10 @@
 import {state} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {RenderLayer} from "../controls/drawing/Objects/ObjectRenderer";
-import {GrPolygon, GrPolygonBase} from "../Geo/GrPolygon";
-import {Point2D} from "../Geo/Point2D";
-import {GrObject, POI} from "../Geo/GrObject";
+import {RenderLayer} from "../drawing/ObjectRenderer";
+import {GrPolygon, GrPolygonBase} from "../geometry/GrPolygon";
+import {Point2D} from "../geometry/Point2D";
+import {GrObject, POI} from "../geometry/GrObject";
 import {AppConfig} from "../AppConfig";
 
 enum States {

@@ -1,10 +1,10 @@
-import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {ObjectRenderer} from "../controls/drawing/Objects/ObjectRenderer";
-import {GrObject, POI, POIMap, POIPurpose, ScaleMode} from "../Geo/GrObject";
+import {ObjectRenderer} from "../drawing/ObjectRenderer";
+import {GrObject, POI, POIMap, POIPurpose, ScaleMode} from "../geometry/GrObject";
 import {state} from "../runtime/tools/StateMachine";
-import {Point2D} from "../Geo/Point2D";
-import {eq} from "../Geo/GeoMath";
+import {Point2D} from "../geometry/Point2D";
+import {eq} from "../geometry/GeoMath";
 
 enum States {
     Wait = "MoveTool.Wait",

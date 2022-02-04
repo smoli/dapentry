@@ -1,8 +1,8 @@
 import {Parameter} from "../interpreter/Parameter";
 import {getParameterConfig, GfxOperation} from "./GfxOperation";
-import {GrObjectList} from "../../Geo/GrObjectList";
-import {POI, POIPurpose} from "../../Geo/GrObject";
-import {Point2D} from "../../Geo/Point2D";
+import {GrObjectList} from "../../geometry/GrObjectList";
+import {POI, POIPurpose} from "../../geometry/GrObject";
+import {Point2D} from "../../geometry/Point2D";
 import {UNREACHABLE} from "../../Assertions";
 
 export class GfxScale extends GfxOperation {

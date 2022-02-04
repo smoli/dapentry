@@ -1,8 +1,8 @@
 import {state} from "../runtime/tools/StateMachine";
-import {InteractionEvents} from "../controls/drawing/InteractionEvents";
+import {InteractionEvents} from "../drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {RenderLayer} from "../controls/drawing/Objects/ObjectRenderer";
-import {GrLine} from "../Geo/GrLine";
+import {RenderLayer} from "../drawing/ObjectRenderer";
+import {GrLine} from "../geometry/GrLine";
 import {AppConfig} from "../AppConfig";
 
 enum States {

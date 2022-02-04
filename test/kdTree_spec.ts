@@ -1,7 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {Point2D} from "../src/Geo/Point2D";
-import {KDTree} from "../src/Geo/KDTree";
+import {Point2D} from "../src/geometry/Point2D";
+import {KDTree} from "../src/geometry/KDTree";
 
 
 

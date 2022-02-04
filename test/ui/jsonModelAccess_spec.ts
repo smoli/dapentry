@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {JSONModelAccess} from "../../src/JSONModelAccess";
+import {JSONModelAccess} from "../../ui5stuff/JSONModelAccess";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import {MockJSONModel} from "../testHelpers/mock/mockJSONmodel";
 

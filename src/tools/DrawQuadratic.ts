@@ -1,4 +1,4 @@
-import {GrQuadratic} from "../Geo/GrPolygon";
+import {GrQuadratic} from "../geometry/GrPolygon";
 import {DrawPolygon} from "./DrawPolygon";
 
 export class DrawQuadratic extends DrawPolygon {

@@ -1,6 +1,6 @@
 import {GfxInterpreter} from "../../src/GfxInterpreter";
-import {StyleManager} from "../../src/controls/drawing/Objects/StyleManager";
-import {GrCanvas} from "../../src/Geo/GrCanvas";
+import {StyleManager} from "../../src/drawing/StyleManager";
+import {GrCanvas} from "../../src/geometry/GrCanvas";
 
 export async function runCode(code:string):Promise<GfxInterpreter> {
     const styles = new StyleManager();

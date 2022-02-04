@@ -1,11 +1,11 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
-import {GrObject, POI} from "../../Geo/GrObject";
+import {GrObject, POI} from "../../geometry/GrObject";
 import {getParameterConfig, GfxOperation} from "./GfxOperation";
-import {GrObjectList} from "../../Geo/GrObjectList";
+import {GrObjectList} from "../../geometry/GrObjectList";
 import {AtParameter} from "../interpreter/types/AtParameter";
-import {Point2D} from "../../Geo/Point2D";
+import {Point2D} from "../../geometry/Point2D";
 import {AppConfig} from "../../AppConfig";
 import {UNREACHABLE} from "../../Assertions";
 

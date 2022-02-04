@@ -1,8 +1,8 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GrRectangle} from "../../src/Geo/GrRectangle";
-import {POI, POIPurpose} from "../../src/Geo/GrObject";
-import {eqp} from "../../src/Geo/GeoMath";
+import {GrRectangle} from "../../src/geometry/GrRectangle";
+import {POI, POIPurpose} from "../../src/geometry/GrObject";
+import {eqp} from "../../src/geometry/GeoMath";
 
 
 describe('Rectangle', () => {

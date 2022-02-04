@@ -3,7 +3,6 @@
     "**/*.d.ts"
   ],
   "plugins": [
-    "babel-plugin-transform-async-to-promises",
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-proposal-class-properties"
   ],
@@ -16,13 +15,8 @@
           {
             "modulesMap": {}
           }
-        ],
-        [
-          "@babel/typescript",
-          {
-            "module": "commonjs"
-          }
         ]
+
       ]
     },
     "perf": {

@@ -1,9 +1,9 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GrObject} from "../../src/Geo/GrObject";
-import {GrRectangle} from "../../src/Geo/GrRectangle";
-import {Point2D} from "../../src/Geo/Point2D";
-import {eqp} from "../../src/Geo/GeoMath";
+import {GrObject} from "../../src/geometry/GrObject";
+import {GrRectangle} from "../../src/geometry/GrRectangle";
+import {Point2D} from "../../src/geometry/Point2D";
+import {eqp} from "../../src/geometry/GeoMath";
 
 
 describe('GrObject', () => {

@@ -1,9 +1,9 @@
 import {state, StateMachine} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
-import {InfoHandle, ObjectRenderer} from "../controls/drawing/Objects/ObjectRenderer";
-import {GrObject, POI, POIPurpose} from "../Geo/GrObject";
-import {Point2D} from "../Geo/Point2D";
-import {GrObjectList} from "../Geo/GrObjectList";
+import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
+import {InfoHandle, ObjectRenderer} from "../drawing/ObjectRenderer";
+import {GrObject, POI, POIPurpose} from "../geometry/GrObject";
+import {Point2D} from "../geometry/Point2D";
+import {GrObjectList} from "../geometry/GrObjectList";
 import {AppConfig} from "../AppConfig";
 
 export interface SnapInfo {

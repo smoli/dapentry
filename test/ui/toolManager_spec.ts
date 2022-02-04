@@ -1,10 +1,10 @@
 import {describe} from "mocha";
 import {expect} from "chai"
-import {ToolManager} from "../../src/controls/drawing/ToolManager";
+import {ToolManager} from "../../ui5stuff/controls/drawing/ToolManager";
 import {SnapInfo, Tool} from "../../src/tools/Tool";
-import {InteractionEventData, InteractionEvents} from "../../src/controls/drawing/InteractionEvents";
-import {GrCircle} from "../../src/Geo/GrCircle";
-import {GrObject} from "../../src/Geo/GrObject";
+import {InteractionEventData, InteractionEvents} from "../../src/drawing/InteractionEvents";
+import {GrCircle} from "../../src/geometry/GrCircle";
+import {GrObject} from "../../src/geometry/GrObject";
 
 
 class TestTool extends Tool {

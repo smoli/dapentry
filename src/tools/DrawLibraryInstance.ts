@@ -1,9 +1,9 @@
 import {state} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../controls/drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {Point2D} from "../Geo/Point2D";
+import {Point2D} from "../geometry/Point2D";
 import {LibraryEntry} from "../Library";
-import {GrObject} from "../Geo/GrObject";
+import {GrObject} from "../geometry/GrObject";
 import {AppConfig} from "../AppConfig";
 
 enum States {

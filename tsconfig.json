@@ -4,14 +4,6 @@
     "module": "commonjs",
     "sourceMap": true
   },
-  "include": [
-    "src/**/*.generated.tsinterface.ts",
-    "src/controls/drawing/Drawing.ts",
-    "src/controls/operation/OperationEditor.ts",
-    "src/controls/steps/Step.ts",
-    "src/controls/steps/StepList.ts",
-    "src/controls/color/ColorButton.ts"
-  ],
   "exclude": [
     "node_modules"
   ]

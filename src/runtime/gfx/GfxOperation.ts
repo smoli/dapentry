@@ -1,10 +1,10 @@
 import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {GrObject, POI, POIPurpose} from "../../Geo/GrObject";
-import {GrObjectList} from "../../Geo/GrObjectList";
+import {GrObject, POI, POIPurpose} from "../../geometry/GrObject";
+import {GrObjectList} from "../../geometry/GrObjectList";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {ArrayParameter} from "../interpreter/types/ArrayParameter";
-import {Point2D} from "../../Geo/Point2D";
+import {Point2D} from "../../geometry/Point2D";
 import {AtParameter} from "../interpreter/types/AtParameter";
 
 

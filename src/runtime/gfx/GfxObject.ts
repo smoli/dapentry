@@ -1,8 +1,8 @@
 import {Parameter} from "../interpreter/Parameter";
-import {Style} from "../../controls/drawing/Objects/StyleManager";
+import {Style} from "../../drawing/StyleManager";
 import {GfxOperation} from "./GfxOperation";
-import {GrObjectList} from "../../Geo/GrObjectList";
-import {GrCompositeObject} from "../../Geo/GrCompositeObject";
+import {GrObjectList} from "../../geometry/GrObjectList";
+import {GrCompositeObject} from "../../geometry/GrCompositeObject";
 
 export class GfxObject extends GfxOperation {
 

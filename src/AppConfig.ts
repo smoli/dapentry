@@ -28,6 +28,7 @@ export const AppConfig = {
     },
 
     SVG: {
+        rendererId: "drawable-drawing",
         canvasBezelSize: 15,
         transformationHandleSize: 10
 

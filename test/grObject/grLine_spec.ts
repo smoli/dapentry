@@ -1,8 +1,8 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GrLine} from "../../src/Geo/GrLine";
-import {eq} from "../../src/Geo/GeoMath";
-import {POI} from "../../src/Geo/GrObject";
+import {GrLine} from "../../src/geometry/GrLine";
+import {eq} from "../../src/geometry/GeoMath";
+import {POI} from "../../src/geometry/GrObject";
 
 function eqp(p1, p2) {
     return eq(p1.x, p2.x) && eq(p1.y, p2.y);

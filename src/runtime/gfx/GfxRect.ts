@@ -2,9 +2,9 @@ import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GfxObject} from "./GfxObject";
-import {GrRectangle} from "../../Geo/GrRectangle";
+import {GrRectangle} from "../../geometry/GrRectangle";
 import {getParameterConfig} from "./GfxOperation";
-import {POI} from "../../Geo/GrObject";
+import {POI} from "../../geometry/GrObject";
 import {UNREACHABLE} from "../../Assertions";
 
 export class GfxRect extends GfxObject {

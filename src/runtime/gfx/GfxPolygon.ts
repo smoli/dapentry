@@ -2,8 +2,8 @@ import {Parameter} from "../interpreter/Parameter";
 import {Interpreter} from "../interpreter/Interpreter";
 import {GfxObject} from "./GfxObject";
 import {ArrayParameter} from "../interpreter/types/ArrayParameter";
-import {GrPolygon} from "../../Geo/GrPolygon";
-import {Point2D} from "../../Geo/Point2D";
+import {GrPolygon} from "../../geometry/GrPolygon";
+import {Point2D} from "../../geometry/Point2D";
 
 export class GfxPolygon extends GfxObject {
     private readonly _points: ArrayParameter;

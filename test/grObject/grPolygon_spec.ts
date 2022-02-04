@@ -1,9 +1,9 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GrPolygon} from "../../src/Geo/GrPolygon";
-import {Point2D} from "../../src/Geo/Point2D";
-import {eq, eqp} from "../../src/Geo/GeoMath";
-import {POI, POIPurpose} from "../../src/Geo/GrObject";
+import {GrPolygon} from "../../src/geometry/GrPolygon";
+import {Point2D} from "../../src/geometry/Point2D";
+import {eq, eqp} from "../../src/geometry/GeoMath";
+import {POI, POIPurpose} from "../../src/geometry/GrObject";
 import exp = require("constants");
 
 

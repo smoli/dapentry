@@ -1,14 +1,14 @@
 import {describe, it} from "mocha";
 import {MockRenderer} from "../testHelpers/mock/mockRenderer";
-import {InteractionEvents} from "../../src/controls/drawing/InteractionEvents";
+import {InteractionEvents} from "../../src/drawing/InteractionEvents";
 import {expect} from "chai";
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import {makeAClick, makeAMove} from "../testHelpers/mouseEvents";
 import {T_NUMBER, T_OPCODE, T_POINT_NN, T_REGISTERAT} from "../testHelpers/tokens";
 import {AppConfig} from "../../src/AppConfig";
 import {DrawCircle} from "../../src/tools/DrawCircle";
-import {GrCanvas} from "../../src/Geo/GrCanvas";
-import {POI} from "../../src/Geo/GrObject";
+import {GrCanvas} from "../../src/geometry/GrCanvas";
+import {POI} from "../../src/geometry/GrObject";
 
 
 describe('Drawing a circle', () => {

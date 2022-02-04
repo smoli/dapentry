@@ -4,13 +4,13 @@ import {
     ObjectRenderer,
     POICallback,
     RenderLayer
-} from "../../../src/controls/drawing/Objects/ObjectRenderer";
-import {GrObject, POI} from "../../../src/Geo/GrObject";
-import {GrBezier, GrPolygon, GrQuadratic} from "../../../src/Geo/GrPolygon";
-import {GrCircle} from "../../../src/Geo/GrCircle";
-import {Point2D} from "../../../src/Geo/Point2D";
-import {GrLine} from "../../../src/Geo/GrLine";
-import {GrRectangle} from "../../../src/Geo/GrRectangle";
+} from "../../../src/drawing/ObjectRenderer";
+import {GrObject, POI} from "../../../src/geometry/GrObject";
+import {GrBezier, GrPolygon, GrQuadratic} from "../../../src/geometry/GrPolygon";
+import {GrCircle} from "../../../src/geometry/GrCircle";
+import {Point2D} from "../../../src/geometry/Point2D";
+import {GrLine} from "../../../src/geometry/GrLine";
+import {GrRectangle} from "../../../src/geometry/GrRectangle";
 
 export class MockRenderer extends ObjectRenderer {
     private _poiCallback: POICallback;

@@ -10,14 +10,14 @@ import {GfxMove} from "./runtime/gfx/GfxMove";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
 import {GfxFill, GfxStrokeColor} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
-import {GrObject, POI} from "./Geo/GrObject";
+import {GrObject, POI} from "./geometry/GrObject";
 import {GfxComposite, GfxObjectList} from "./runtime/gfx/GfxObject";
 import {GfxScale} from "./runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "./runtime/gfx/GfxExtendPolygon";
 import {Parameter} from "./runtime/interpreter/Parameter";
-import {GrCompositeObject} from "./Geo/GrCompositeObject";
+import {GrCompositeObject} from "./geometry/GrCompositeObject";
 import {Library, LibraryEntry} from "./Library";
-import {GrCanvas} from "./Geo/GrCanvas";
+import {GrCanvas} from "./geometry/GrCanvas";
 import {Point2Parameter} from "./runtime/interpreter/types/Point2Parameter";
 import {AppConfig} from "./AppConfig";
 
@@ -46,7 +46,7 @@ export class GfxInterpreter extends Interpreter {
 
     private _lastObjectTouched: GrObject;
     private _objects: { [key: string]: GrObject };
-    private _library: Library;
+    private readonly _library: Library;
 
 
     constructor(library: Library = null) {

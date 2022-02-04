@@ -1,6 +1,6 @@
-import {AppModel, AppModelKeys} from "./model/AppModel";
-import {AspectRatio} from "./Geo/GrCanvas";
-import {AppState} from "./model/AppState";
+import {AppModel, AppModelKeys} from "../ui5stuff/model/AppModel";
+import {AspectRatio} from "./geometry/GrCanvas";
+import {AppState} from "../ui5stuff/model/AppState";
 import {inflate} from "zlib";
 
 export enum LibraryEntryArgumentType {
