@@ -12,7 +12,7 @@ import {Selection} from "d3";
 import {MoveTool} from "../../../src/tools/MoveTool";
 import {DrawLine} from "../../../src/tools/DrawLine";
 import {RotateTool} from "../../../src/tools/RotateTool";
-import {SwitchEvent, ToolManager} from "./ToolManager";
+import {SwitchEvent, ToolManager} from "../../../src/drawing/ToolManager";
 import {DrawPolygon} from "../../../src/tools/DrawPolygon";
 import {DrawQuadratic} from "../../../src/tools/DrawQuadratic";
 import {ScaleTool} from "../../../src/tools/ScaleTool";

@@ -128,6 +128,7 @@ export abstract class Tool {
             return false;
         }
 
+
         if (interactionEvent === InteractionEvents.OtherObject) {
             this._otherObject = eventData.object;
             if (!this._otherObject) {

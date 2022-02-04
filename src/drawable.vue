@@ -1,5 +1,5 @@
 <template>
-  <div @keydown="onKeyDown">
+  <div>
     <h1>{{ message }}</h1>
     <DataEditor></DataEditor>
     <StepList></StepList>
@@ -24,9 +24,6 @@ export default {
   },
 
   methods: {
-    onKeyDown(event) {
-      this.controller.handleKeyEvent(event);
-    }
   }
 }
 </script>

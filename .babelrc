@@ -1,34 +1,10 @@
 {
+  "sourceMaps": true,
   "ignore": [
     "**/*.d.ts"
   ],
   "plugins": [
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-proposal-class-properties"
-  ],
-
-  "env": {
-    "dev": {
-      "presets": [
-        [
-          "transform-ui5",
-          {
-            "modulesMap": {}
-          }
-        ]
-
-      ]
-    },
-    "perf": {
-      "presets": [
-        [
-          "@babel/preset-typescript",
-          {
-            "module": "commonjs"
-          }
-        ],
-        "@babel/preset-env"
-      ]
-    }
-  }
+  ]
 }

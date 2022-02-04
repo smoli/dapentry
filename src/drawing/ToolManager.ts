@@ -1,7 +1,7 @@
-import {Tool} from "../../../src/tools/Tool";
-import {ObjectRenderer} from "../../../src/drawing/ObjectRenderer";
-import {InteractionEventData, InteractionEvents} from "../../../src/drawing/InteractionEvents";
-import {GrObject} from "../../../src/geometry/GrObject";
+import {Tool} from "../tools/Tool";
+import {ObjectRenderer} from "./ObjectRenderer";
+import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
+import {GrObject} from "../geometry/GrObject";
 
 export type SwitchEvent = (number | string);
 export type SwitchCallback = (event:SwitchEvent, tool:Tool) => void;
@@ -160,6 +160,7 @@ export class ToolManager {
             if (eventData) {
                 eventData.selection = [...this._selection];
             }
+
             this._currentTool.update(interactionEvent, eventData);
 
             if (this._currentTool.isDone) {
@@ -198,12 +199,11 @@ export class ToolManager {
                     dx: 0,
                     dy: 0,
                     button: 0,
-                    buttons: false,
+                    buttons: -1,
                     ctrl: false,
                     shift: false,
-                    alt: false,
-                    key: "",
-                    keyCode: 0
+                    alt: false, key: "", keyCode: 0
+
                 });
         }
     }

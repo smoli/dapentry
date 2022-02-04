@@ -25,6 +25,8 @@ export interface InteractionEventData {
     ctrl: boolean,
     shift: boolean,
     alt: boolean,
+    key: string,
+    keyCode: number,
     selection?: Array<GrObject>,
     object?: GrObject
 }

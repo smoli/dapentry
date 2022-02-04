@@ -168,6 +168,8 @@ export abstract class ObjectRenderer {
     public abstract removeInfo(handle:InfoHandle);
 
     public abstract clearInfo();
+
+    public abstract pointerCoordsFromEvent(event:MouseEvent);
 }
 
 

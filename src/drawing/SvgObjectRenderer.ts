@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import {Selection} from 'd3';
 import {GrObject, ObjectType, POIPurpose} from "../geometry/GrObject";
 import {
     HandleMouseCallBack,
@@ -8,7 +9,6 @@ import {
     POICallback,
     RenderLayer
 } from "./ObjectRenderer";
-import {Selection} from "d3";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {GrCircle} from "../geometry/GrCircle";
 import {GrRectangle} from "../geometry/GrRectangle";
@@ -61,14 +61,19 @@ export class SvgObjectRenderer extends ObjectRenderer {
     protected _infoLayer: Selection<any, any, any, any>;
     private _poiRenderingEnabled: boolean;
     private _objectInfo: { [key: string]: ObjectInfo };
+    private _svg: Selection<any, any, any, any>;
 
-    constructor(containerId: string, onObjectClick: ObjectClickCallback = null) {
+    constructor(onObjectClick: ObjectClickCallback = null) {
         super(onObjectClick);
-        this._setupLayers(d3.select("#" + containerId));
         this._objectInfo = {}
     }
 
+    init(containerId:string) {
+        this._setupLayers(d3.select("#" + containerId));
+    }
+
     protected _setupLayers(container: d3.Selection<any, any, any, any>): void {
+        this._svg = container;
         this._backgroundLayer = container.append("g");
         this._objectLayer = container.append("g");
         this._interactionLayer = container.append("g");
@@ -709,7 +714,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 y: d3MEv[1],
                 dx: event.movementX,
                 dy: event.movementY,
-                alt: event.altKey, button: event.button, buttons: event.buttons, ctrl: event.ctrlKey, shift: event.shiftKey
+                alt: event.altKey, button: event.button, buttons: event.buttons, ctrl: event.ctrlKey, shift: event.shiftKey,
+                key: "", keyCode: 0
+
             };
 
             return ed;
@@ -781,5 +788,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
             .attr("height", object.height)
             .classed("stsDrawableCanvasDisplay", true);
 
+    }
+
+    pointerCoordsFromEvent(event:MouseEvent) {
+        return d3.pointer(event, this._svg.node());
     }
 }

@@ -92,6 +92,7 @@ export class DrawRectangle extends Tool {
         const y1 = Math.min(this._y1, y2);
         const w = Math.max(this._x1, x2) - x1;
         const h = Math.max(this._y1, y2) - y1;
+
         return {x1, y1, w, h}
     }
 

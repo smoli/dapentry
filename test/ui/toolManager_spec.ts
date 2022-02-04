@@ -1,6 +1,6 @@
 import {describe} from "mocha";
 import {expect} from "chai"
-import {ToolManager} from "../../ui5stuff/controls/drawing/ToolManager";
+import {ToolManager} from "../../src/drawing/ToolManager";
 import {SnapInfo, Tool} from "../../src/tools/Tool";
 import {InteractionEventData, InteractionEvents} from "../../src/drawing/InteractionEvents";
 import {GrCircle} from "../../src/geometry/GrCircle";

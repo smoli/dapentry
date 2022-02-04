@@ -48,7 +48,7 @@ ENDDO
 ## What happens when the user draws a circle
 
 * Select the circle tool using `c`
-* Using the [ToolManager](/ui5stuff/controls/drawing/ToolManager.ts) the [Drawing.ts](/ui5stuff/controls/drawing/Drawing.ts) switches to the [DrawCircleTool](/src/tools/DrawCircle.ts)
+* Using the [ToolManager](/src/drawing/ToolManager.ts) the [Drawing.ts](/ui5stuff/controls/drawing/Drawing.ts) switches to the [DrawCircleTool](/src/tools/DrawCircle.ts)
 * The Tool waits for the user to draw the circle
 * When done, the ToolManager gets the result
   * This result will be an instruction to draw the circle like `CIRCLE Circle1, $styles.default, (100, 100), 100`

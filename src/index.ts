@@ -8,11 +8,16 @@ import {GfxInterpreter} from "./GfxInterpreter";
 
 const app = createApp(Drawable);
 app.use(appState);
+
+const renderer = new SvgObjectRenderer(null);
+const interpreter = new GfxInterpreter()
+const appController = new AppController(appState, interpreter);
+
+app.provide("renderer", renderer);
+app.provide("controller", appController);
+
 app.mount("#drawable-app");
 
-const renderer = new SvgObjectRenderer(AppConfig.SVG.rendererId, null);
-const interpreter = new GfxInterpreter()
+renderer.init(AppConfig.SVG.rendererId);
 
-const appController = new AppController(appState, renderer, interpreter);
-
-app.provide("controller", appController);
+window.onkeydown = event => appController.handleKeyEvent(event);
