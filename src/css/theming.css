@@ -1,0 +1,47 @@
+
+.sapMInput div, .sapMInput input  {
+    background-color: rgba(211, 211, 211, 0.1);
+    color: #2f2f2f;
+    border: none;
+    border-bottom: 1px solid rgb(0, 0, 0, 0.2);
+    font-family: Nunito !important;
+}
+
+.sapMText {
+    padding: 0.4rem;
+    margin-right: 0.2rem;
+    font-family: Nunito !important;
+}
+
+.sapMBtn, .sapMBtn .sapMBtnInner, .sapMSegB .sapMSegBBtn .sapMSegBBtnInner {
+    border: none !important;
+    color: #32363a !important;
+    font-family: Nunito !important;
+}
+
+.sapUiLoSplitterBarDecorationBefore {
+    background-image: linear-gradient(to left, #32363a, rgba(8, 84, 160, 0)) !important;
+}
+
+.sapUiLoSplitterBarDecorationAfter {
+}
+
+.sapUiLoSplitterBarDecorationAfter {
+    background-image: linear-gradient(to right, #32363a, rgba(8, 84, 160, 0)) !important;
+}
+
+.sapMToggleBtnPressed,
+.sapMToggleBtnPressed:not(.sapMBtnDisabled),
+.sapMSegBBtn.sapMSegBBtnSel .sapMSegBBtnInner,
+span.sapMBtnInner.sapMBtnEmphasized {
+    background-color: #525252 !important;
+    color: white !important;
+}
+
+.sapUiLoSplitterBar {
+    background-color: inherit !important;
+}
+.sapUiLoSplitterBarGripIcon {
+    background: none !important;
+}
+

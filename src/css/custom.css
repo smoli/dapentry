@@ -1,0 +1,91 @@
+#svgDefinitions {
+    position: absolute;
+    left: -1000vw;
+}
+
+noPointerEvents {
+    pointer-events: none;
+}
+
+circle.pointOfInterest {
+    fill: #4da6ff;
+    fill-opacity: 0.2;
+    stroke: #4da6ff;
+    stroke-width: 1;
+}
+
+.stsDrawingWrapper {
+    padding: 15px;
+    display: block;
+}
+
+svg {
+    /*box-shadow: 5px 5px 15px 0 rgba(20, 20, 20, 0.2);*/
+    /*border: 1px dotted #d5d5d5;*/
+    background: none;
+    outline: none;
+    max-height: 80vh;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+svg circle, svg rect, svg path {
+    stroke-width: 2;
+    stroke: coral;
+    fill: coral;
+    fill-opacity: 0.2;
+}
+
+line {
+    stroke-width: 2;
+    stroke: coral;
+}
+
+svg g .boundingBox {
+    stroke-width: 3;
+    stroke: lightseagreen;
+    fill: none !important;
+}
+
+svg .stsDrawableCanvasDisplay {
+    fill-opacity: 1;
+    fill: #fbfbfb !important;
+    stroke-width: 0;
+    stroke: none;
+    filter: url(#dropShadow);
+}
+
+.transformationHandle {
+    fill-opacity: 1;
+    stroke-width: 1;
+    stroke: #3f3f3f;
+    fill: url(#handleGradient);
+    /*fill: black;*/
+}
+
+
+.stsDrawableStep {
+    margin: 0.2em;
+    border: 1px solid #858585;
+    border-radius: 3px;
+    padding: 0.2em 0.4em;
+    background-color: inherit;
+    font-size: 0.875rem;
+}
+
+.stsDrawableStepSelected {
+    background-color: coral;
+    color: white;
+}
+
+.stsDrawableOperationEditor {
+    min-height: 3rem;
+}
+
+.stsDrawableColorButtonColorField {
+    margin: 0.2rem;
+    border: 1px inset #858585;
+    display: inline-block;
+    min-height: 1rem;
+    min-width: 3rem;
+}
