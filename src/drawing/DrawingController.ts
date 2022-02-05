@@ -27,6 +27,7 @@ export class DrawingController {
     private _lastMouse: Point2D;
     private _objects: Array<GrObject>;
     private _otherObjectIndex: number = -1;
+    private _referenceObject: GrObject;
 
     constructor(appController: AppController, renderer: ObjectRenderer) {
         this._renderer = renderer;
@@ -42,7 +43,6 @@ export class DrawingController {
     }
 
     updateSelection(oldSelection: Array<GrObject>, newSelection: Array<GrObject>) {
-        console.log(oldSelection);
         oldSelection.forEach(obj => {
             this._toolManager.deselectObject(obj);
             this._renderer.removeBoundingRepresentation(obj);
@@ -51,6 +51,10 @@ export class DrawingController {
             this._toolManager.selectObject(obj)
             this._renderer.renderBoundingRepresentation(obj);
         });
+    }
+
+    set referenceObject(object: GrObject) {
+        this._referenceObject = object;
     }
 
     protected _onToolPreview(resultPreview) {
@@ -177,21 +181,7 @@ export class DrawingController {
             ed = this._makeEmptyInteractionEvent();
         }
 
-        if (interactionEvent === InteractionEvents.OtherObject) {
-            this._otherObjectIndex++;
-            ed.object = this._objects[this._otherObjectIndex];
-            while (ed.object && !ed.object.isSelectable) {
-                this._otherObjectIndex++;
-                ed.object = this._objects[this._otherObjectIndex];
-                if (this._otherObjectIndex >= this._objects.length) {
-                    ed.object = null;
-                    break;
-                }
-            }
-            if (!ed.object) {
-                this._otherObjectIndex = -1;
-            }
-        }
+        ed.object = this._referenceObject;
 
         if (interactionEvent === InteractionEvents.Cancel) {
             this._toolManager.abortCurrentTool();
@@ -239,7 +229,6 @@ export class DrawingController {
     }
 
     public switchTool(newTool: ToolNames) {
-        console.log(newTool);
         if (newTool === null) {
             this._pumpToTool(InteractionEvents.Cancel, null);
             this._toolManager.abortCurrentTool();

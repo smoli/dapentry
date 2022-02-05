@@ -129,11 +129,9 @@ export abstract class Tool {
         }
 
 
-        if (interactionEvent === InteractionEvents.OtherObject) {
-            this._otherObject = eventData.object;
-            if (!this._otherObject) {
-                this.enablePOISnapping();
-            }
+        this._otherObject = eventData.object;
+        if (!this._otherObject) {
+            this.enablePOISnapping();
         }
 
         let snapInfo;
@@ -240,7 +238,6 @@ export abstract class Tool {
             if (hit) {
                 this._snappingObject = object;
                 this._snappingPOI = poiId;
-                console.log("snap", this._snappingObject, this._snappingPOI)
                 this._snapPoint = this._snappingObject.pointsOfInterest(POIPurpose.SNAPPING)[this._snappingPOI]
                 handle = this._renderer.renderInfoText(this._snapPoint, POI[poiId]);
             } else {

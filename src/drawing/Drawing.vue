@@ -11,6 +11,7 @@
        style="border: 1px solid lightgreen"
   >
   </svg>
+  <span>Reference: {{ referenceObject }}</span>
   <ul>
     <li v-for="o of selection">{{ o.uniqueName }}</li>
   </ul>
@@ -58,6 +59,10 @@ export default {
     },
     selection() {
       return this.$store.state.drawing.selection;
+    },
+
+    referenceObject() {
+      return this.$store.state.tool.referenceObject;
     }
 
   },
@@ -76,6 +81,10 @@ export default {
 
     selection(newSelection, oldSelection) {
       drawingController.updateSelection(oldSelection, newSelection);
+    },
+
+    referenceObject(newObject) {
+      drawingController.referenceObject = newObject;
     }
   },
 

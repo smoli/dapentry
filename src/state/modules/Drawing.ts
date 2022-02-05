@@ -42,6 +42,11 @@ export const drawingState = {
     getters: {
         isObjectSelected: state => object => {
             return state.selection.indexOf(object) !== -1;
+        },
+
+        objects(state) {
+            return state.objects;
         }
+
     }
 }

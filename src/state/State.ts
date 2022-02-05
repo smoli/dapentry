@@ -6,7 +6,8 @@ import {GrObject} from "../geometry/GrObject";
 
 const actions = {
     tool: {
-        switch: "tool/switch"
+        switch: "tool/switch",
+        setReferenceObject: "tool/setReferenceObject"
     },
 
     code: {
@@ -28,7 +29,11 @@ const getters = {
         fullCode: "code/fullCode"
     },
     drawing: {
+        objects: "drawing/objects",
         isObjectSelected: "drawing/isObjectSelected"
+    },
+    tool: {
+        referenceObject: "tool/referenceObject"
     }
 }
 
@@ -49,7 +54,16 @@ export class State {
 
     protected get(type:string, ...params):any {
         console.log("Getting", type)
-        return this._store.getters[type](...params);
+
+        if (params.length) {
+            return this._store.getters[type](...params);
+        } else {
+            return this._store.getters[type];
+        }
+    }
+
+    get objects():Array<GrObject> {
+        return this.get(getters.drawing.objects);
     }
 
     get fullCode():Array<string> {
@@ -58,6 +72,14 @@ export class State {
 
     switchTool(newTool:ToolNames) {
         this.commit(actions.tool.switch, newTool);
+    }
+
+    setReferenceObjectForTool(object: GrObject = null) {
+        this.commit(actions.tool.setReferenceObject, object);
+    }
+
+    get referenceObjectForTool():GrObject {
+        return this.get(getters.tool.referenceObject);
     }
 
     addCode(code:Array<string>) {
