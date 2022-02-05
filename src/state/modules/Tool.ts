@@ -1,4 +1,3 @@
-import {GrObject} from "../../geometry/GrObject";
 import {ToolNames} from "../../tools/ToolNames";
 
 export interface ToolState {

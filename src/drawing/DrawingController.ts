@@ -71,6 +71,7 @@ export class DrawingController {
         // TODO: Tell the rest of the ui that the tool was switched
         //       Without coming back to here because we're receiving that switch
         this._otherObjectIndex = -1;
+        this._appController.switchTool(event as ToolNames)
     }
 
     protected _setupTools() {
@@ -238,6 +239,7 @@ export class DrawingController {
     }
 
     public switchTool(newTool: ToolNames) {
+        console.log(newTool);
         if (newTool === null) {
             this._pumpToTool(InteractionEvents.Cancel, null);
             this._toolManager.abortCurrentTool();

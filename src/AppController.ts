@@ -124,6 +124,10 @@ export class AppController {
     }
 
 
+    public switchTool(newTool: ToolNames) {
+        this._state.switchTool(newTool);
+    }
+
     public handleKeyEvent(event: KeyboardEvent) {
             if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
                 return;

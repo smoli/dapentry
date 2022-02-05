@@ -63,7 +63,10 @@ export default {
   },
 
   watch: {
-    currentTool(newTool) {
+    currentTool(newTool, oldTool) {
+      if (newTool === oldTool) {
+        console.log("WARNING: Same-tool-switch ", newTool)
+      }
       drawingController.switchTool(newTool);
     },
 
