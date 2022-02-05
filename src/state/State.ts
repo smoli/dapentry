@@ -1,7 +1,6 @@
 import {CommitOptions, Store} from "vuex";
 import {AppStore} from "./AppStore";
 import {ToolNames} from "../tools/ToolNames";
-import {codeState} from "./modules/Code";
 import {GrObject} from "../geometry/GrObject";
 
 
@@ -16,7 +15,20 @@ const actions = {
     },
 
     drawing: {
-        setObjects: "drawing/setObjects"
+        setObjects: "drawing/setObjects",
+        selectObject: "drawing/selectObject",
+        deselectObject: "drawing/deselectObject",
+        deselectAll: "drawing/deselectAll",
+        isObjectSelected: "drawing/isObjectSelected"
+    }
+}
+
+const getters = {
+    code: {
+        fullCode: "code/fullCode"
+    },
+    drawing: {
+        isObjectSelected: "drawing/isObjectSelected"
     }
 }
 
@@ -35,6 +47,11 @@ export class State {
         this._store.commit(type, payload, options);
     }
 
+    protected get(type:string, ...params):any {
+        console.log("Getting", type)
+        return this._store.getters[type](...params);
+    }
+
     get fullCode():Array<string> {
         return this._store.getters["code/fullCode"]
     }
@@ -50,5 +67,21 @@ export class State {
     setObjectsOnDrawing(objects: Array<GrObject>) {
         this.commit(actions.drawing.setObjects, objects);
     }
+
+    selectObject(object: GrObject) {
+        this.commit(actions.drawing.selectObject, object);
+    }
     
+    deselectObject(object: GrObject) {
+        this.commit(actions.drawing.deselectObject, object);
+    }
+
+    deselectAll() {
+        this.commit(actions.drawing.deselectAll);
+    }
+
+    isObjectSelected(object: GrObject) {
+        return this.get(getters.drawing.isObjectSelected, object);
+    }
+
 }

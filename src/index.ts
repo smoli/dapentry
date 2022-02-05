@@ -10,9 +10,9 @@ import {State} from "./state/State";
 const app = createApp(Drawable);
 app.use(appStore);
 
-const renderer = new SvgObjectRenderer(null);
 const interpreter = new GfxInterpreter()
 const appController = new AppController(new State(appStore), interpreter);
+const renderer = new SvgObjectRenderer(appController.handleObjectSelection.bind(appController));
 
 app.provide("renderer", renderer);
 app.provide("controller", appController);

@@ -264,7 +264,7 @@ export default class Drawing extends Control {
         if (interactionEvent === InteractionEvents.OtherObject) {
             this._otherObjectIndex++;
             ed.object = this._objects[this._otherObjectIndex];
-            while (ed.object && !ed.object.selectable) {
+            while (ed.object && !ed.object.isSelectable) {
                 this._otherObjectIndex++;
                 ed.object = this._objects[this._otherObjectIndex];
                 if (this._otherObjectIndex >= this._objects.length) {
@@ -364,7 +364,7 @@ export default class Drawing extends Control {
     }
 
     public selectObject(object: GrObject) {
-        if (!object.selectable) {
+        if (!object.isSelectable) {
             return;
         }
         if (this._toolManager.isSelected(object)) {
@@ -376,7 +376,7 @@ export default class Drawing extends Control {
 
     private _onObjectClick(object: GrObject) {
 
-        if (!object.selectable) {
+        if (!object.isSelectable) {
             return;
         }
 

@@ -180,7 +180,7 @@ export abstract class GrObject {
      */
     protected abstract copy(): GrObject;
 
-    get selectable():boolean {
+    get isSelectable():boolean {
         return true;
     }
 

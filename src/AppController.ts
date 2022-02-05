@@ -6,6 +6,7 @@ import {AddStatement} from "./actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {GrCanvas} from "./geometry/GrCanvas";
 import {StyleManager} from "./drawing/StyleManager";
+import {GrObject} from "@/geometry/GrObject";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -107,6 +108,19 @@ export class AppController {
         await this.execute(new AddStatement(code));
         await this.runCode();
         this.updateDrawing();
+    }
+
+    public handleObjectSelection(object: GrObject) {
+        if (!object.isSelectable) {
+            return;
+        }
+
+        if (this.state.isObjectSelected(object)) {
+            this.state.deselectObject(object);
+        } else {
+            this.state.deselectAll();
+            this.state.selectObject(object);
+        }
     }
 
 

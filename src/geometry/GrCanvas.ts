@@ -67,7 +67,7 @@ export class GrCanvas extends GrObject {
         return new GrCanvas(0, 0, width, 9 * width / 16);
     }
 
-    get selectable(): boolean {
+    get isSelectable(): boolean {
         return false;
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <span>{{ currentToolName }}</span>
+  <div>{{ currentToolName }}</div>
   <svg v-bind:id="id" v-bind:viewBox="viewBox"
        @mousemove="onMouseMove"
        @mousedown.left="onMouseDownLeft"
@@ -11,6 +11,9 @@
        style="border: 1px solid lightgreen"
   >
   </svg>
+  <ul>
+    <li v-for="o of selection">{{ o.uniqueName }}</li>
+  </ul>
 </template>
 
 <script>
@@ -52,6 +55,9 @@ export default {
     },
     objects() {
       return this.$store.state.drawing.objects;
+    },
+    selection() {
+      return this.$store.state.drawing.selection;
     }
 
   },
@@ -63,6 +69,10 @@ export default {
 
     objects(newObjectList) {
       drawingController.render(newObjectList);
+    },
+
+    selection(newSelection, oldSelection) {
+      drawingController.updateSelection(oldSelection, newSelection);
     }
   },
 
