@@ -1,10 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "module": "commonjs",
-    "sourceMap": true
+    "target": "esnext",
+    "module": "esnext",
+    // this enables stricter inference for data properties on `this`
+    "strict": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "ui5stuff"
+
   ]
 }

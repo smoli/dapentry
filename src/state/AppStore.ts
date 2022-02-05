@@ -1,13 +1,15 @@
 import {createStore, Store} from "vuex";
 import {DrawingState, drawingState} from "./modules/Drawing";
 import {toolState, ToolState} from "./modules/Tool";
+import {codeState, CodeState} from "./modules/Code";
 
-export interface AppState {
+export interface AppStore {
     drawing: DrawingState,
-    tool: ToolState
+    tool: ToolState,
+    code: CodeState
 }
 
-export const appState: Store<AppState> = createStore<AppState>({
+export const appStore: Store<AppStore> = createStore<AppStore>({
     modules: {
         drawing: {
             namespaced: true,
@@ -16,6 +18,10 @@ export const appState: Store<AppState> = createStore<AppState>({
         tool: {
             namespaced: true,
             ...toolState
+        },
+        code: {
+            namespaced: true,
+            ...codeState
         }
     }
 });

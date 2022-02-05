@@ -11,5 +11,11 @@ export const drawingState = {
             objects: [],
             selection: []
         }
+    },
+
+    mutations: {
+        setObjects(state:DrawingState, objects: Array<GrObject>) {
+            state.objects = objects;
+        }
     }
 }

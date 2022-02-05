@@ -25,7 +25,7 @@ export default {
   inject: ["controller", "renderer"],
 
   mounted() {
-    drawingController = new DrawingController(this.$store, this.controller, this.renderer);
+    drawingController = new DrawingController(this.controller, this.renderer);
   },
 
   data() {
@@ -49,12 +49,20 @@ export default {
     },
     viewBox() {
       return `${this.viewBoxParameters.x} ${this.viewBoxParameters.y} ${this.viewBoxParameters.width} ${this.viewBoxParameters.height}`;
+    },
+    objects() {
+      return this.$store.state.drawing.objects;
     }
+
   },
 
   watch: {
     currentTool(newTool) {
       drawingController.switchTool(newTool);
+    },
+
+    objects(newObjectList) {
+      drawingController.render(newObjectList);
     }
   },
 

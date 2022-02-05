@@ -1,6 +1,6 @@
 import {ObjectRenderer, RenderLayer} from "./ObjectRenderer";
 import {Store} from "vuex";
-import {AppState} from "../state/AppState";
+import {AppStore} from "../state/AppStore";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
 import {LibraryEntry} from "../Library";
 import {ToolNames} from "../tools/ToolNames";
@@ -22,7 +22,6 @@ import {GrObject} from "../geometry/GrObject";
 
 export class DrawingController {
     private _renderer: ObjectRenderer;
-    private _state: Store<AppState>;
     private _toolManager: ToolManager;
     private _appController: AppController;
     private _width = 1000;
@@ -31,41 +30,38 @@ export class DrawingController {
     private _objects: Array<GrObject>;
     private _otherObjectIndex: number = -1;
 
-    constructor(state: Store<AppState>, appControler: AppController, renderer: ObjectRenderer) {
-        this._state = state;
+    constructor(appControler: AppController, renderer: ObjectRenderer) {
         this._renderer = renderer;
         this._appController = appControler;
         this._setupTools();
     }
 
-    _render() {
+    render(objects: Array<GrObject>) {
         this._renderer.clear(RenderLayer.Objects);
-        this._state.state.drawing.objects.forEach(object => {
+        objects.forEach(object => {
             this._renderer.render(object, false);
         })
     }
 
 
     protected _onToolPreview(resultPreview) {
-        // this.firePreviewOperation({ code: resultPreview });
+        // TODO: Pass Preview to the UI
     }
 
-    protected _onToolDone(result) {
-        // this.fireNewOperation({code: result});
+    protected async _onToolDone(result) {
+        await this._appController.addStatement(result);
         this._renderer.clear(RenderLayer.Interaction);
-        // this.fireToolDone();
     }
 
     protected _onToolAbort() {
         this._renderer.clear(RenderLayer.Interaction);
-        // this.fireToolAborted();
+        // TODO: Tell the app controller that tool was aborted
     }
 
     protected _onToolSwitch(event: SwitchEvent) {
-        // this._otherObjectIndex = -1;
-        // this.fireToolSwitch({
-        //     switchEvent: event
-        // })
+        // TODO: Tell the rest of the ui that the tool was switched
+        //       Without coming back to here because we're receiving that switch
+        this._otherObjectIndex = -1;
     }
 
     protected _setupTools() {
