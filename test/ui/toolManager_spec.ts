@@ -385,7 +385,7 @@ describe('The ToolManager', () => {
                 dx: 0,
                 dy: 0,
                 button: 0,
-                buttons: false,
+                buttons: 0,
                 ctrl: false,
                 shift: false,
                 alt: false,

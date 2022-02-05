@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "commonjs",
     // this enables stricter inference for data properties on `this`
-    "strict": true,
     "jsx": "preserve",
     "moduleResolution": "node",
     "sourceMap": true,

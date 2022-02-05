@@ -105,16 +105,9 @@ export class AppController {
 
     async addStatements(code: Array<string>) {
         await this.execute(new AddStatement(code));
-
-/*
-        if (this._drawing) {
-            await this.runCode();
-            this.updateDrawing();
-        }
-*/
+        await this.runCode();
+        this.updateDrawing();
     }
-
-
 
 
     public handleKeyEvent(event: KeyboardEvent) {

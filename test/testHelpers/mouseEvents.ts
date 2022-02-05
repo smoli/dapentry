@@ -17,7 +17,7 @@ export function makeAClick(x:number, y:number, button: number = 0, mods:modifier
     return {
         alt: !!mods.alt,
         button,
-        buttons: true,
+        buttons: 0,
         ctrl: !!mods.ctrl,
         dx: 0,
         dy: 0,
@@ -38,7 +38,7 @@ export function makeAMove(x: number, y: number, mods: modifiers = {}): Interacti
     return {
         alt: !!mods.alt,
         button: 0,
-        buttons: false,
+        buttons: 0,
         ctrl: !!mods.ctrl,
         dx,
         dy,

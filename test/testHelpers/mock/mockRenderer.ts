@@ -21,6 +21,10 @@ export class MockRenderer extends ObjectRenderer {
         super();
     }
 
+    pointerCoordsFromEvent(event: MouseEvent) {
+        return null;
+    }
+
     hitPoi(object: GrObject, poiId: POI) {
         if (this._poiCallback) {
             this._snapObject = object;
