@@ -224,6 +224,10 @@ export class DrawingController {
         this._pumpToTool(InteractionEvents.AlternateClick, event)
     }
 
+    public passKeyPressToTool(event: KeyboardEvent) {
+        this._pumpToTool(InteractionEvents.Key, event);
+    }
+
     public startToolInsertLibraryEntry(entry: LibraryEntry) {
         this._toolManager.switch(ToolNames.Instance, entry);
     }

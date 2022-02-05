@@ -2,12 +2,14 @@ import {CommitOptions, Store} from "vuex";
 import {AppStore} from "./AppStore";
 import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
+import {InteractionEventData} from "@/drawing/InteractionEvents";
 
 
 const actions = {
     tool: {
         switch: "tool/switch",
-        setReferenceObject: "tool/setReferenceObject"
+        setReferenceObject: "tool/setReferenceObject",
+        setKeyPress: "tool/setKeyPress"
     },
 
     code: {
@@ -76,6 +78,10 @@ export class State {
 
     setReferenceObjectForTool(object: GrObject = null) {
         this.commit(actions.tool.setReferenceObject, object);
+    }
+
+    passKeyPressToTool(event: KeyboardEvent) {
+        this.commit(actions.tool.setKeyPress, event);
     }
 
     get referenceObjectForTool():GrObject {

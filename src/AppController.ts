@@ -7,7 +7,7 @@ import {GfxInterpreter} from "./GfxInterpreter";
 import {GrCanvas} from "./geometry/GrCanvas";
 import {StyleManager} from "./drawing/StyleManager";
 import {GrObject} from "@/geometry/GrObject";
-import {InteractionEvents} from "@/drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "@/drawing/InteractionEvents";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -154,6 +154,10 @@ export class AppController {
         this.state.setReferenceObjectForTool(null);
     }
 
+    protected passKeyPressToTool(event: KeyboardEvent) {
+        this._state.passKeyPressToTool(event);
+    }
+
     public handleKeyEvent(event: KeyboardEvent) {
         if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
             return;
@@ -191,8 +195,7 @@ export class AppController {
         } else if (event.key === AppConfig.Keys.ScaleKey) {
             this._state.switchTool(ToolNames.Scale);
         } else {
-            // Todo: How to pass key strokes to tools
-            // this._pumpToTool(InteractionEvents.Key, event)
+            this.passKeyPressToTool(event);
         }
     }
 }

@@ -63,6 +63,10 @@ export default {
 
     referenceObject() {
       return this.$store.state.tool.referenceObject;
+    },
+
+    keyPress() {
+      return this.$store.state.tool.keyPress;
     }
 
   },
@@ -85,6 +89,10 @@ export default {
 
     referenceObject(newObject) {
       drawingController.referenceObject = newObject;
+    },
+
+    keyPress(event) {
+      drawingController.passKeyPressToTool(event)
     }
   },
 

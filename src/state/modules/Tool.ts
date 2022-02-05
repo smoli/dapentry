@@ -1,16 +1,20 @@
 import {ToolNames} from "../../tools/ToolNames";
 import {GrObject} from "@/geometry/GrObject";
+import {InteractionEventData} from "@/drawing/InteractionEvents";
 
 export interface ToolState {
     current: ToolNames,
-    referenceObject: GrObject
+    referenceObject: GrObject,
+    keyPress: KeyboardEvent
 }
 
 export const toolState = {
     state():ToolState {
         return {
             current: null,
-            referenceObject: null
+            referenceObject: null,
+            keyPress: null
+
         }
     },
 
@@ -21,6 +25,10 @@ export const toolState = {
 
         setReferenceObject(state:ToolState, object: GrObject) {
             state.referenceObject = object;
+        },
+
+        setKeyPress(state:ToolState, event: KeyboardEvent) {
+            state.keyPress = event;
         }
     },
     getters: {
