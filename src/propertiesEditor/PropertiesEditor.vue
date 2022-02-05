@@ -1,5 +1,8 @@
 <template>
-<h2>PropertiesEditor</h2>
+  <section id="drawable-properties-container">
+
+    <h2>PropertiesEditor</h2>
+  </section>
 </template>
 
 <script>

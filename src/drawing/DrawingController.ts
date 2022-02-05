@@ -1,6 +1,6 @@
 import {ObjectRenderer, RenderLayer} from "./ObjectRenderer";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
-import {LibraryEntry} from "../Library";
+import {LibraryEntry} from "@/Library";
 import {ToolNames} from "../tools/ToolNames";
 import {SwitchEvent, ToolManager} from "./ToolManager";
 import {DrawCircle} from "../tools/DrawCircle";
@@ -17,7 +17,6 @@ import {AppController} from "../AppController";
 import {Point2D} from "../geometry/Point2D";
 import {GrObject} from "../geometry/GrObject";
 
-
 export class DrawingController {
     private _renderer: ObjectRenderer;
     private _toolManager: ToolManager;
@@ -25,9 +24,9 @@ export class DrawingController {
     private _width = 1000;
     private _height = 1000;
     private _lastMouse: Point2D;
-    private _objects: Array<GrObject>;
     private _otherObjectIndex: number = -1;
     private _referenceObject: GrObject;
+    private _bezelSize: number;
 
     constructor(appController: AppController, renderer: ObjectRenderer) {
         this._renderer = renderer;
@@ -55,6 +54,12 @@ export class DrawingController {
 
     set referenceObject(object: GrObject) {
         this._referenceObject = object;
+    }
+
+    setView(width: number, height: number, bezelSize: number) {
+        this._width = width;
+        this._height = height;
+        this._bezelSize = bezelSize;
     }
 
     protected _onToolPreview(resultPreview) {
@@ -201,19 +206,6 @@ export class DrawingController {
     public onMouseMove(event: MouseEvent) {
         this._pumpToTool(InteractionEvents.MouseMove, event)
     }
-
-    /*    public onMouseLeave() {
-            this._pumpToTool(InteractionEvents.MouseLeave, event)
-        }
-
-        public onMouseEnter() {
-            if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
-                return;
-            }
-
-            // (this._svg.node() as HTMLElement).focus();
-            this._pumpToTool(InteractionEvents.MouseEnter, event)
-        }*/
 
     public onClick(event: MouseEvent) {
         this._pumpToTool(InteractionEvents.Click, event)

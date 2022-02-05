@@ -1,5 +1,7 @@
 <template>
-<h2>Steplist</h2>
+  <section id="drawable-steplist-container">
+    <h2>Steplist</h2>
+  </section>
 </template>
 
 <script>

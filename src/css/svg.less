@@ -1,3 +1,5 @@
+@import "colors";
+
 #svgDefinitions {
     position: absolute;
     left: -1000vw;
@@ -7,20 +9,10 @@
     pointer-events: none;
 }
 
-svg {
-/*    box-shadow: 5px 5px 15px 0 rgba(20, 20, 20, 0.2);
-    border: 1px dotted #d5d5d5;*/
-    background: none;
-    outline: none;
-    max-height: 80vh;
-    margin-top: -10px;
-    margin-left: -10px;
-}
-
 svg circle, svg rect, svg path {
     stroke-width: 2;
-    stroke: coral;
-    fill: coral;
+    stroke: @drawableMainColor;
+    fill: @drawableMainColor;
     fill-opacity: 0.2;
 }
 

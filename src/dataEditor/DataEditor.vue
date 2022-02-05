@@ -1,5 +1,7 @@
 <template>
-  <h2>DataEditor</h2>
+  <section id="drawable-data-editor">
+    <h2>DataEditor</h2>
+  </section>
 </template>
 
 <script>

@@ -1,0 +1,95 @@
+@footerHeight: 2em;
+
+#drawable-app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+#drawable-app-main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+#drawable-app-main > * {
+  //border: 1px solid red;
+  flex-grow: 1;
+}
+
+#drawable-main-column {
+  //border: 3px solid green;
+  flex-grow: 3;
+  background: @uiColor1;
+  min-height: 100vh;
+  padding-bottom: @footerHeight;
+  box-shadow: inset 0px 0px 15px 2px rgba(0, 0, 0, 0.1);
+
+  #drawable-drawing-container {
+      height: available;
+
+
+    #drawable-drawing-wrapper {
+      height: available;
+      margin: 1em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        display: block;
+        margin: 0;
+        background: white;
+        max-height: 80vh;
+      }
+    }
+
+  }
+}
+
+#drawable-app-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: @accentColor;
+  display: block;
+  padding: 1em 2em;
+  height: @footerHeight;
+  z-index: 2000;
+}
+
+#drawable-app-header {
+  background: @accentColor;
+  display: block;
+  padding: 1em 2em;
+  z-index: 2000;
+  position: relative;
+}
+
+
+#drawable-left-column {
+  background: @uiColor2;
+  z-index: 1000;
+}
+
+#drawable-right-column {
+  background: @uiColor2;
+  z-index: 1000;
+
+}
+
+
+/*
+
+svg {
+  !*    box-shadow: 5px 5px 15px 0 rgba(20, 20, 20, 0.2);
+      border: 1px dotted #d5d5d5;*!
+  background: none;
+  outline: none;
+  !*    margin-top: -10px;
+      margin-left: -10px;*!
+}*/

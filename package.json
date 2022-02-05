@@ -19,6 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.0",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@parcel/transformer-less": "^2.0.0-rc.0",
     "@parcel/transformer-vue": "^2.0.0-rc.0",
     "@types/chai": "^4.3.0",
     "@types/d3": "^7.1.0",
