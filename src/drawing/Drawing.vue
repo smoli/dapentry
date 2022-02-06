@@ -2,13 +2,7 @@
   <section id="drawable-drawing-container">
     <div id="drawable-drawing-wrapper">
 
-      <svg v-bind:id="id" v-bind:viewBox="viewBox"
-           @mousemove="onMouseMove"
-           @mousedown.left="onMouseDownLeft"
-           @mouseup.left="onMouseUpLeft"
-           @click.right="onMouseClickRight"
-           @click.left="onMouseClickLeft"
-      >
+      <svg v-bind:id="id" v-bind:viewBox="viewBox">
       </svg>
     </div>
     <ul>
@@ -17,21 +11,17 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import {AppConfig} from "../AppConfig";
 import {DrawingController} from "./DrawingController";
+import {SvgObjectRenderer} from "./SvgObjectRenderer";
 import {ToolNames} from "../tools/ToolNames";
 
-let drawingController = null;
+let drawingController:DrawingController = null;
 
 export default {
   name: "Drawing",
-  inject: ["controller", "renderer"],
-
-  mounted() {
-    drawingController = new DrawingController(this.controller, this.renderer);
-    drawingController.setView(this.viewBoxParameters.width, this.viewBoxParameters.height, this.viewBoxParameters.bezelSize)
-  },
+  inject: ["controller"],
 
   data() {
     return {
@@ -41,6 +31,13 @@ export default {
       }
     }
   },
+
+  mounted() {
+    const renderer = new SvgObjectRenderer(this.controller.handleObjectSelection.bind(this.controller));
+    renderer.init(AppConfig.SVG.rendererId)
+    drawingController = new DrawingController(this.controller, renderer);
+  },
+
   computed: {
     currentTool() {
       return this.$store.state.tool.current;
@@ -50,7 +47,7 @@ export default {
     },
     viewBox() {
       const dims = this.$store.state.drawing.dimensions
-      const bezel  = this.viewBoxParameters.bezelSize;
+      const bezel = this.viewBoxParameters.bezelSize;
       return `${dims.x - bezel} ${dims.y - bezel} ${dims.width + 2 * bezel} ${dims.height + 2 * bezel}`;
     },
     objects() {
@@ -95,26 +92,6 @@ export default {
     }
   },
 
-  methods: {
-    onMouseMove(event) {
-      drawingController.onMouseMove(event);
-    },
-
-    onMouseDownLeft(event) {
-      drawingController.onMouseDown(event);
-    },
-
-    onMouseUpLeft(event) {
-      drawingController.onMouseUp(event);
-    },
-
-    onMouseClickRight(event) {
-      drawingController.onRightClick(event);
-    },
-
-    onMouseClickLeft(event) {
-      drawingController.onClick(event);
-    }
-  }
+  methods: {}
 }
 </script>

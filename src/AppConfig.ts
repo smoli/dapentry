@@ -69,7 +69,11 @@ export const AppConfig = {
                 AlongX: "MOVEX",
                 AlongY: "MOVEY",
                 ToPoint: "MOVETO"
-            }
+            },
+            Fill: "FILL",
+            FillOpacity: "OPACITY",
+            Stroke: "STROKECOLOR",
+            StrokeOpacity: "STROKEOPACITY"
         }
     },
 

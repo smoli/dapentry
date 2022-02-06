@@ -36,6 +36,9 @@ export type ObjectClickCallback = (object: GrObject) => void;
 
 export type POICallback = (object:GrObject, poiId:number, hit:boolean) => void;
 
+export type MouseHandler = (MouseEvent) => void;
+
+
 export type InfoHandle = string;
 
 /**
@@ -63,6 +66,12 @@ export abstract class ObjectRenderer {
     protected constructor(onObjectClick: ObjectClickCallback = null) {
         this._objectClickCallback = onObjectClick;
     }
+
+    public abstract setupMouseHandlers(onMouseMove: MouseHandler,
+                       onClick: MouseHandler,
+                       onAlternateClick: MouseHandler,
+                       onMouseDown: MouseHandler,
+                       onMouseUp: MouseHandler);
 
     protected _fireSelect(object: GrObject): void {
         if (this._objectClickCallback) {

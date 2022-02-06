@@ -3,7 +3,7 @@ import {Selection} from 'd3';
 import {GrObject, ObjectType, POIPurpose} from "../geometry/GrObject";
 import {
     HandleMouseCallBack,
-    InfoHandle,
+    InfoHandle, MouseHandler,
     ObjectClickCallback,
     ObjectRenderer,
     POICallback,
@@ -68,8 +68,25 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._objectInfo = {}
     }
 
-    init(containerId:string) {
+    init(containerId: string) {
         this._setupLayers(d3.select("#" + containerId));
+    }
+
+    setupMouseHandlers(
+        onMouseMove: MouseHandler,
+        onClick: MouseHandler,
+        onAlternateClick: MouseHandler,
+        onMouseDown: MouseHandler,
+        onMouseUp: MouseHandler
+    ) {
+
+        this._svg.on("mousemove", onMouseMove);
+        this._svg.on("click", onClick)
+        this._svg.on("contextmenu", onAlternateClick)
+        this._svg.on("mousedown", onMouseDown)
+        this._svg.on("mouseup", onMouseUp)
+        // this._svg.on("mouseleave", this._interActionMouseLeave.bind(this))
+        // this._svg.on("mouseenter", this._interActionMouseEnter.bind(this))
     }
 
     protected _setupLayers(container: d3.Selection<any, any, any, any>): void {
@@ -706,7 +723,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     private _attachHandleMouseEvents(object: GrObject, svgObject: Selection<any, any, any, any>, handler: HandleMouseCallBack, data: any = null): void {
 
-        function makeEvent(interactionEvent, event:MouseEvent) {
+        function makeEvent(interactionEvent, event: MouseEvent) {
             const d3MEv = d3.pointer(event, svgObject.node());
             const ed: InteractionEventData = {
                 interactionEvent,
@@ -714,8 +731,13 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 y: d3MEv[1],
                 dx: event.movementX,
                 dy: event.movementY,
-                alt: event.altKey, button: event.button, buttons: event.buttons, ctrl: event.ctrlKey, shift: event.shiftKey,
-                key: "", keyCode: 0
+                alt: event.altKey,
+                button: event.button,
+                buttons: event.buttons,
+                ctrl: event.ctrlKey,
+                shift: event.shiftKey,
+                key: "",
+                keyCode: 0
 
             };
 
@@ -735,7 +757,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
     protected makeInfoHandle(): InfoHandle {
-        return "__svg_rndr_info_" + (infoHandle++);
+        return "__svg_rndr_info_" + ( infoHandle++ );
     }
 
     public renderInfoText(position: Point2D, text: string): InfoHandle {
@@ -790,7 +812,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
     }
 
-    pointerCoordsFromEvent(event:MouseEvent) {
+    pointerCoordsFromEvent(event: MouseEvent) {
         return d3.pointer(event, this._svg.node());
     }
 }

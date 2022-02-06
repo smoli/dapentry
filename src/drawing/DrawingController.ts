@@ -1,6 +1,6 @@
 import {ObjectRenderer, RenderLayer} from "./ObjectRenderer";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
-import {LibraryEntry} from "@/Library";
+import {LibraryEntry} from "../Library";
 import {ToolNames} from "../tools/ToolNames";
 import {SwitchEvent, ToolManager} from "./ToolManager";
 import {DrawCircle} from "../tools/DrawCircle";
@@ -31,6 +31,7 @@ export class DrawingController {
     constructor(appController: AppController, renderer: ObjectRenderer) {
         this._renderer = renderer;
         this._appController = appController;
+        this.setupMouse();
         this._setupTools();
     }
 
@@ -195,23 +196,34 @@ export class DrawingController {
         }
     }
 
-    public onMouseDown(event: MouseEvent) {
+    protected setupMouse() {
+        this._renderer.setupMouseHandlers(
+            this.onMouseMove.bind(this),
+            this.onClick.bind(this),
+            this.onRightClick.bind(this),
+            this.onMouseDown.bind(this),
+            this.onMouseUp.bind(this)
+        );
+    }
+
+    protected onMouseDown(event: MouseEvent) {
         this._pumpToTool(InteractionEvents.MouseDown, event)
     }
 
-    public onMouseUp(event: MouseEvent) {
+    protected onMouseUp(event: MouseEvent) {
         this._pumpToTool(InteractionEvents.MouseUp, event)
     }
 
-    public onMouseMove(event: MouseEvent) {
+    protected onMouseMove(event: MouseEvent) {
         this._pumpToTool(InteractionEvents.MouseMove, event)
     }
 
-    public onClick(event: MouseEvent) {
+    protected onClick(event: MouseEvent) {
+        console.log("Click")
         this._pumpToTool(InteractionEvents.Click, event)
     }
 
-    public onRightClick(event: MouseEvent) {
+    protected onRightClick(event: MouseEvent) {
         event.preventDefault();
         this._pumpToTool(InteractionEvents.AlternateClick, event)
     }
