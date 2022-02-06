@@ -18,39 +18,35 @@
 
 
 #drawable-left-column {
-  flex-grow: 1;
+  flex-basis: 0;
+  flex-grow: 2;
 }
 
 #drawable-right-column {
-  border: 1px solid red;
-  flex-grow: 1;
+  flex-basis: 0;
+  flex-grow: 2;
 }
 
 #drawable-main-column {
   //border: 3px solid green;
-  flex-grow: 3;
+  flex-grow: 5;
   background: @uiColor1;
   min-height: 100vh;
   padding-bottom: @footerHeight;
-  box-shadow: inset 0px 0px 15px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 15px 2px rgba(0, 0, 0, 0.1);
   padding-top: 1em;
 
   #drawable-drawing-container {
 
-    #drawable-drawing-wrapper {
-      margin: 1em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    margin: 1em;
+    //border: 1px solid orange;
+    display: flex;
+    justify-content: center;
+    bottom: 40em;
 
-      svg {
-        background: @uiColor1;
-        display: block;
-        margin: 0;
-        max-height: 80vh;
-      }
+    svg {
+      max-height: 70vh;
     }
-
   }
 }
 
