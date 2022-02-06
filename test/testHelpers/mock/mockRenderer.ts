@@ -1,6 +1,6 @@
 import {
     HandleMouseCallBack,
-    InfoHandle,
+    InfoHandle, MouseHandler,
     ObjectRenderer,
     POICallback,
     RenderLayer
@@ -19,6 +19,10 @@ export class MockRenderer extends ObjectRenderer {
 
     constructor() {
         super();
+    }
+
+    setupMouseHandlers(onMouseMove: MouseHandler, onClick: MouseHandler, onAlternateClick: MouseHandler, onMouseDown: MouseHandler, onMouseUp: MouseHandler) {
+
     }
 
     pointerCoordsFromEvent(event: MouseEvent) {

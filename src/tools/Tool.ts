@@ -48,6 +48,7 @@ export abstract class Tool {
      */
     protected _waitStateId: string;
 
+    protected _target: GrObject;
     private _snappingFirstInfo: SnapInfo;
     private _snappingObject: GrObject;
     private _snappingPOI: number;
@@ -128,10 +129,13 @@ export abstract class Tool {
             return false;
         }
 
-
-        this._otherObject = eventData.object;
-        if (!this._otherObject) {
-            this.enablePOISnapping();
+        if (interactionEvent === InteractionEvents.ReferenceObject) {
+            this._otherObject = eventData.object;
+            if (!this._otherObject) {
+                this.enablePOISnapping();
+            } else {
+                this.disablePOISnapping();
+            }
         }
 
         let snapInfo;
@@ -191,22 +195,22 @@ export abstract class Tool {
     /**
      * If the tool creates something, return it here.
      */
-    public get result(): (string | Array<string>) {
+    public get result(): ( string | Array<string> ) {
         const r = this.getResult(this._usedSnapInfos);
         this._usedSnapInfos = null;
         return r;
     }
 
-    protected getResult(usedSnapInfos: Array<SnapInfo>): (string | Array<string>) {
+    protected getResult(usedSnapInfos: Array<SnapInfo>): ( string | Array<string> ) {
         return null;
     }
 
-    protected getResultPreview(usedSnapInfos: Array<SnapInfo>): (string | Array<string>) {
+    protected getResultPreview(usedSnapInfos: Array<SnapInfo>): ( string | Array<string> ) {
         return this.getResult(usedSnapInfos);
     }
 
 
-    public get resultPreview(): (string | Array<string>) {
+    public get resultPreview(): ( string | Array<string> ) {
         return this.getResultPreview(this._usedSnapInfos);
     }
 
@@ -220,11 +224,15 @@ export abstract class Tool {
         this._objectSnapInfoHandle = null;
     }
 
-    protected get usedSnapInfos():Array<SnapInfo> {
+    protected get usedSnapInfos(): Array<SnapInfo> {
         return this._usedSnapInfos;
     }
 
     protected enablePOISnapping(objectsToExclude: Array<GrObject> = []) {
+
+        if (this._poiSnapping) {
+            return;
+        }
 
         if (!this._renderer) {
             return;
@@ -233,6 +241,12 @@ export abstract class Tool {
         this._renderer.clearInfo();
 
         let handle;
+
+        const lObjToExclude = objectsToExclude.filter(o => ( o instanceof GrObjectList && o.objects.length < 2 ) || !( o instanceof GrObjectList ));
+
+        if (this._target) {
+            lObjToExclude.push(this._target);
+        }
 
         this._renderer.enablePOI(true, (object: GrObject, poiId: number, hit: boolean) => {
             if (hit) {
@@ -247,7 +261,7 @@ export abstract class Tool {
             // Even if the tool want to exclude an object we will include it, if it is a List with more
             // than one entry, because then manipulation and snapping is actually done on two different
             // objects of that list.
-        }, objectsToExclude.filter(o => (o instanceof GrObjectList && o.objects.length < 2) || !(o instanceof GrObjectList)));
+        }, lObjToExclude);
     }
 
     protected disablePOISnapping(force: boolean = false) {
@@ -275,9 +289,9 @@ export abstract class Tool {
         }
 
         if (!this._objectSnapInfoHandle) {
-            this._objectSnapInfoHandle = this._renderer.renderInfoText(p, (100 * pct).toFixed(1) + "%");
-        } else  {
-            this._renderer.updateInfoText(this._objectSnapInfoHandle, (100 * pct).toFixed(1) + "%", p)
+            this._objectSnapInfoHandle = this._renderer.renderInfoText(p, ( 100 * pct ).toFixed(1) + "%");
+        } else {
+            this._renderer.updateInfoText(this._objectSnapInfoHandle, ( 100 * pct ).toFixed(1) + "%", p)
         }
 
         return {

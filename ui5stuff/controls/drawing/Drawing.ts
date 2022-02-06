@@ -261,7 +261,7 @@ export default class Drawing extends Control {
             }
         }
 
-        if (interactionEvent === InteractionEvents.OtherObject) {
+        if (interactionEvent === InteractionEvents.ReferenceObject) {
             this._otherObjectIndex++;
             ed.object = this._objects[this._otherObjectIndex];
             while (ed.object && !ed.object.isSelectable) {
@@ -338,7 +338,7 @@ export default class Drawing extends Control {
             this.fireObjectDeleted();
         } else if (event.code === AppConfig.Keys.ObjectSnapCode) {
             event.preventDefault();
-            this._pumpToTool(InteractionEvents.OtherObject);
+            this._pumpToTool(InteractionEvents.ReferenceObject);
         } else if (event.keyCode === AppConfig.Keys.AbortToolKeyCode) {
             this._pumpToTool(InteractionEvents.Cancel);
             this._toolManager.abortCurrentTool();

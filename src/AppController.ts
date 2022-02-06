@@ -72,6 +72,7 @@ export class AppController {
         this._interpreter.clearObjects(this._canvas);
         this._performance.reset();
         this._performance.now("start");
+        console.log(this.state.fullCode);
         this._interpreter.parse(this.state.fullCode);
         this._performance.now("parsed");
 

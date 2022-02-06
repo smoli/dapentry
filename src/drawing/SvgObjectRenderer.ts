@@ -94,8 +94,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._backgroundLayer = container.append("g");
         this._objectLayer = container.append("g");
         this._interactionLayer = container.append("g");
-        this._snappingLayer = container.append("g");
         this._infoLayer = container.append("g").style("pointer-events", "none");
+        this._snappingLayer = container.append("g");
     }
 
 
@@ -193,8 +193,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     protected renderPOI(object: GrObject, poiCallback: POICallback) {
-        this._objectLayer.selectAll("*").classed("noPointerEvents", false);
-
         let svgGroup = this._snappingLayer.select("#" + object.id + "-info");
         if (!svgGroup.empty()) {
             svgGroup.selectAll("*").remove();
@@ -211,8 +209,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
                     .attr("r", AppConfig.SVG.transformationHandleSize)
                     .classed(ToolClasses.poi, true);
 
+
                 if (poiCallback) {
                     c.on("mouseenter", () => {
+                        console.log("enter poi")
                         poiCallback(object, Number(poiIds[i]), true)
                     })
                     c.on("mouseleave", () => {
@@ -745,12 +745,15 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
 
         svgObject.on("mousedown", (event) => {
+            console.log("Handle down")
             handler(object, makeEvent(InteractionEvents.MouseDown, event), data)
         });
         svgObject.on("mouseup", (event) => {
+            console.log("Handle click")
             handler(object, makeEvent(InteractionEvents.MouseUp, event), data)
         })
         svgObject.on("click", (event) => {
+            console.log("Handle click")
             handler(object, makeEvent(InteractionEvents.Click, event), data)
         });
     }
