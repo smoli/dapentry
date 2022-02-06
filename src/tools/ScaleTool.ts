@@ -21,7 +21,6 @@ export class ScaleTool extends Tool {
 
     protected _scaleMode: ScaleMode = ScaleMode.NONUNIFORM;
     protected _selection: Array<GrObject> = [];
-    protected _scalingObject: GrObject = null;
     protected _scalingPOI: POI = null;
     protected _finalX: number;
     protected _finalY: number;
@@ -64,14 +63,14 @@ export class ScaleTool extends Tool {
 
         if (eventData.interactionEvent === InteractionEvents.MouseDown && poiId !== POI.center) {
             this._state.next(Events.HandleDown);
-            this._scalingObject = object.createProxy();
+            this._target = object.createProxy();
 
-            this._scaleMode = this._scalingObject.supportedScaleModes[0];
+            this._scaleMode = this._target.supportedScaleModes[0];
 
             this._scalingPOI = poiId;
             this._pivotPOI = object.getOppositePoi(this._scalingPOI);
-            this._pivot = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._pivotPOI];
-            this._op = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy.sub(this._scalingObject.center);
+            this._pivot = this._target.pointsOfInterest(POIPurpose.SCALING)[this._pivotPOI];
+            this._op = this._target.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy.sub(this._target.center);
             this._finalX = 1;
             this._finalY = 1;
         }
@@ -94,14 +93,14 @@ export class ScaleTool extends Tool {
     }
 
     protected _scale(dx, dy) {
-        let oldPosition = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI];
+        let oldPosition = this._target.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI];
         let newPosition = oldPosition.copy;
         newPosition.x += dx;
         newPosition.y += dy;
 
-        const ol = this._scalingObject.mapPointToLocal(oldPosition);
-        const nl = this._scalingObject.mapPointToLocal(newPosition);
-        const pl = this._scalingObject.mapPointToLocal(this._pivot);
+        const ol = this._target.mapPointToLocal(oldPosition);
+        const nl = this._target.mapPointToLocal(newPosition);
+        const pl = this._target.mapPointToLocal(this._pivot);
 
         const oldDx = ol.x - pl.x;
         const oldDy = ol.y - pl.y;
@@ -116,7 +115,7 @@ export class ScaleTool extends Tool {
             fx = fy = Math.min(fx, fy);
         }
 
-        this._scalingObject.scale(Math.abs(fx), Math.abs(fy), this._pivot);
+        this._target.scale(Math.abs(fx), Math.abs(fy), this._pivot);
 
         this._finalX *= Math.abs(fx);
         this._finalY *= Math.abs(fy);
@@ -136,7 +135,7 @@ export class ScaleTool extends Tool {
 
 
         if (this._object && this._scalingPOI !== null) {
-            const thePOI = this._scalingObject.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy;
+            const thePOI = this._target.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy;
             dx = eventData.x - thePOI.x;
             dy = eventData.y - thePOI.y;
         } else {
@@ -145,7 +144,7 @@ export class ScaleTool extends Tool {
 
         switch (this._state.state.id as States) {
             case States.Wait:
-                this._scalingPOI = this._scalingObject = null;
+                this._scalingPOI = this._target = null;
                 break;
 
             case States.Done:
@@ -155,11 +154,11 @@ export class ScaleTool extends Tool {
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
                     this._scale(dx, dy);
-                    this._renderer.render(this._scalingObject, true);
-                    const poi: POIMap = this._scalingObject.pointsOfInterest(POIPurpose.SCALING);
+                    this._renderer.render(this._target, true);
+                    const poi: POIMap = this._target.pointsOfInterest(POIPurpose.SCALING);
                     Object.keys(poi)
                         .forEach(poiId => {
-                            this._renderer.updateHandle(this._scalingObject, poiId, poi[poiId]);
+                            this._renderer.updateHandle(this._target, poiId, poi[poiId]);
                         })
 
                 }

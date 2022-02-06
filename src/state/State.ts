@@ -33,7 +33,8 @@ const getters = {
     },
     drawing: {
         objects: "drawing/objects",
-        isObjectSelected: "drawing/isObjectSelected"
+        isObjectSelected: "drawing/isObjectSelected",
+        selection: "drawing/selection"
     },
     tool: {
         referenceObject: "tool/referenceObject"
@@ -116,6 +117,10 @@ export class State {
 
     isObjectSelected(object: GrObject) {
         return this.get(getters.drawing.isObjectSelected, object);
+    }
+
+    get selection():Array<GrObject> {
+        return this.get(getters.drawing.selection);
     }
 
 }

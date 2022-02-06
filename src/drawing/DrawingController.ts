@@ -55,6 +55,8 @@ export class DrawingController {
 
     set referenceObject(object: GrObject) {
         this._referenceObject = object;
+
+        this._pumpToTool(InteractionEvents.ReferenceObject, null);
     }
 
     setView(width: number, height: number, bezelSize: number) {

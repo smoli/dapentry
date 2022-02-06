@@ -2,8 +2,7 @@
   <section id="drawable-drawing-container">
     <div id="drawable-drawing-wrapper">
 
-      <svg v-bind:id="id" v-bind:viewBox="viewBox">
-      </svg>
+      <svg v-bind:id="id" v-bind:viewBox="viewBox"></svg>
     </div>
     <ul>
       <li v-for="o of selection">{{ o.uniqueName }}</li>
