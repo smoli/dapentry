@@ -20,5 +20,6 @@ app.provide("controller", appController);
 app.mount("#drawable-app");
 
 renderer.init(AppConfig.SVG.rendererId);
+appController.init();
 
 window.onkeydown = event => appController.handleKeyEvent(event);

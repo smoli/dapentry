@@ -2,18 +2,15 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
-    // this enables stricter inference for data properties on `this`
     "jsx": "preserve",
     "moduleResolution": "node",
     "sourceMap": true,
     "noImplicitAny": false,
     "strictNullChecks": false,
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
   },
+  "include": [
+    "./src/*"
+  ],
   "exclude": [
     "node_modules",
     "ui5stuff"

@@ -9,6 +9,16 @@
     pointer-events: none;
 }
 
+svg .stsDrawableCanvasDisplay {
+    fill-opacity: 1;
+    fill: #fbfbfb !important;
+    stroke: @uiColor2;
+    stroke-width: 1;
+    stroke-dasharray: 4;
+
+}
+
+
 svg circle, svg rect, svg path {
     stroke-width: 2;
     stroke: @drawableMainColor;
@@ -27,13 +37,7 @@ svg g .boundingBox {
     fill: none !important;
 }
 
-svg .stsDrawableCanvasDisplay {
-    fill-opacity: 1;
-    fill: #fbfbfb !important;
-    stroke-width: 0;
-    stroke: none;
-    filter: url(#dropShadow);
-}
+
 
 circle.pointOfInterest {
     fill: #4da6ff;

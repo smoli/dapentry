@@ -2,10 +2,10 @@ import {CommitOptions, Store} from "vuex";
 import {AppStore} from "./AppStore";
 import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
-import {InteractionEventData} from "@/drawing/InteractionEvents";
+import {h} from "vue";
 
 
-const actions = {
+const mutations = {
     tool: {
         switch: "tool/switch",
         setReferenceObject: "tool/setReferenceObject",
@@ -18,6 +18,7 @@ const actions = {
     },
 
     drawing: {
+        dimensions: "drawing/setDimensions",
         setObjects: "drawing/setObjects",
         selectObject: "drawing/selectObject",
         deselectObject: "drawing/deselectObject",
@@ -73,15 +74,15 @@ export class State {
     }
 
     switchTool(newTool:ToolNames) {
-        this.commit(actions.tool.switch, newTool);
+        this.commit(mutations.tool.switch, newTool);
     }
 
     setReferenceObjectForTool(object: GrObject = null) {
-        this.commit(actions.tool.setReferenceObject, object);
+        this.commit(mutations.tool.setReferenceObject, object);
     }
 
     passKeyPressToTool(event: KeyboardEvent) {
-        this.commit(actions.tool.setKeyPress, event);
+        this.commit(mutations.tool.setKeyPress, event);
     }
 
     get referenceObjectForTool():GrObject {
@@ -89,23 +90,28 @@ export class State {
     }
 
     addCode(code:Array<string>) {
-        this.commit(actions.code.add, code);
+        this.commit(mutations.code.add, code);
+    }
+
+
+    setDrawingDimensions(width: number, height: number) {
+        this.commit(mutations.drawing.dimensions, { width, height });
     }
 
     setObjectsOnDrawing(objects: Array<GrObject>) {
-        this.commit(actions.drawing.setObjects, objects);
+        this.commit(mutations.drawing.setObjects, objects);
     }
 
     selectObject(object: GrObject) {
-        this.commit(actions.drawing.selectObject, object);
+        this.commit(mutations.drawing.selectObject, object);
     }
     
     deselectObject(object: GrObject) {
-        this.commit(actions.drawing.deselectObject, object);
+        this.commit(mutations.drawing.deselectObject, object);
     }
 
     deselectAll() {
-        this.commit(actions.drawing.deselectAll);
+        this.commit(mutations.drawing.deselectAll);
     }
 
     isObjectSelected(object: GrObject) {

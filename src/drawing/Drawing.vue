@@ -37,11 +37,7 @@ export default {
     return {
       id: AppConfig.SVG.rendererId,
       viewBoxParameters: {
-        bezelSize: AppConfig.SVG.canvasBezelSize,
-        x: 0,
-        y: 0,
-        width: 1600,
-        height: 1000
+        bezelSize: AppConfig.SVG.canvasBezelSize
       }
     }
   },
@@ -53,7 +49,9 @@ export default {
       return ToolNames[this.$store.state.tool.current];
     },
     viewBox() {
-      return `${this.viewBoxParameters.x - this.viewBoxParameters.bezelSize} ${this.viewBoxParameters.y - this.viewBoxParameters.bezelSize} ${this.viewBoxParameters.width + 2 * this.viewBoxParameters.bezelSize} ${this.viewBoxParameters.height + 2 * this.viewBoxParameters.bezelSize}`;
+      const dims = this.$store.state.drawing.dimensions
+      const bezel  = this.viewBoxParameters.bezelSize;
+      return `${dims.x - bezel} ${dims.y - bezel} ${dims.width + 2 * bezel} ${dims.height + 2 * bezel}`;
     },
     objects() {
       return this.$store.state.drawing.objects;

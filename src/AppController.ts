@@ -48,7 +48,7 @@ class PerformanceMeasure {
 export class AppController {
     private readonly _state: State;
     private _interpreter: GfxInterpreter;
-    private _canvas: GrCanvas = GrCanvas.create_1_1(400);
+    private _canvas: GrCanvas = GrCanvas.create_1_1(1000);
     private _performance: PerformanceMeasure = new PerformanceMeasure();
     private _styleManager: StyleManager = new StyleManager();
 
@@ -56,6 +56,12 @@ export class AppController {
                 interpreter: GfxInterpreter) {
         this._state = state;
         this._interpreter = interpreter;
+
+        this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
+    }
+
+    init() {
+        this._state.setObjectsOnDrawing([this._canvas]);
     }
 
     get state(): State {
