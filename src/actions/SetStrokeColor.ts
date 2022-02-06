@@ -2,7 +2,7 @@ import {BaseAction} from "./BaseAction";
 import {GrObject} from "../geometry/GrObject";
 import {AppConfig} from "../AppConfig";
 
-export class SetFillColor extends BaseAction {
+export class SetStrokeColor extends BaseAction {
     private readonly _objectNames: Array<string>;
     private readonly _color: string;
 
@@ -13,7 +13,7 @@ export class SetFillColor extends BaseAction {
     }
 
     protected _execute(data: any): any {
-        const opCode = AppConfig.Runtime.Opcodes.FillColor;
+        const opCode = AppConfig.Runtime.Opcodes.StrokeColor;
         const code = this._objectNames.map(n => `${opCode} ${n}, "${this._color}"`)
         this.state.addCode(code);
     }

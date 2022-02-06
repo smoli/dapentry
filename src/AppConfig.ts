@@ -70,10 +70,10 @@ export const AppConfig = {
                 AlongY: "MOVEY",
                 ToPoint: "MOVETO"
             },
-            Fill: "FILL",
+            FillColor: "FILL",
             FillOpacity: "OPACITY",
-            Stroke: "STROKECOLOR",
-            StrokeOpacity: "STROKEOPACITY"
+            StrokeColor: "STROKE",
+            StrokeWidth: "STROKEWIDTH"
         }
     },
 

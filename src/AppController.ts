@@ -6,8 +6,11 @@ import {AddStatement} from "./actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {GrCanvas} from "./geometry/GrCanvas";
 import {StyleManager} from "./drawing/StyleManager";
-import {GrObject} from "@/geometry/GrObject";
-import {InteractionEventData, InteractionEvents} from "@/drawing/InteractionEvents";
+import {GrObject} from "./geometry/GrObject";
+import {SetFillColor} from "./actions/SetFillColor";
+import {SetFillOpacity} from "./actions/SetFillOpacity";
+import {SetStrokeColor} from "./actions/SetStrokeColor";
+import {SetStrokeWidth} from "./actions/SetStrokeWidth";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -116,6 +119,30 @@ export class AppController {
         await this.execute(new AddStatement(code));
         await this.runCode();
         this.updateDrawing();
+    }
+
+    public async setFillColorForSelection(value: string) {
+        await this.execute(new SetFillColor(this.state.selection, value));
+        await this.runCode();
+        this.updateDrawing()
+    }
+
+    public async setFillOpacityForSelection(value: number) {
+        await this.execute(new SetFillOpacity(this.state.selection, value));
+        await this.runCode();
+        this.updateDrawing()
+    }
+
+    public async setStrokeColorForSelection(value: string) {
+        await this.execute(new SetStrokeColor(this.state.selection, value));
+        await this.runCode();
+        this.updateDrawing()
+    }
+
+    public async setStrokeWidthForSelection(value: number) {
+        await this.execute(new SetStrokeWidth(this.state.selection, value));
+        await this.runCode();
+        this.updateDrawing()
     }
 
     public handleObjectSelection(object: GrObject) {

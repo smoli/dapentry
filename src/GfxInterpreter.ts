@@ -8,7 +8,7 @@ import {GfxPolygon} from "./runtime/gfx/GfxPolygon";
 import {GfxBezier, GfxQuadratic} from "./runtime/gfx/GfxQuadratic";
 import {GfxMove} from "./runtime/gfx/GfxMove";
 import {GfxRotate} from "./runtime/gfx/GfxRotate";
-import {GfxFill, GfxStrokeColor} from "./runtime/gfx/GfxFill";
+import {GfxFill} from "./runtime/gfx/GfxFill";
 import {GfxStroke} from "./runtime/gfx/GfxStroke";
 import {GrObject, POI} from "./geometry/GrObject";
 import {GfxComposite, GfxObjectList} from "./runtime/gfx/GfxObject";
@@ -20,6 +20,8 @@ import {Library, LibraryEntry} from "./Library";
 import {GrCanvas} from "./geometry/GrCanvas";
 import {Point2Parameter} from "./runtime/interpreter/types/Point2Parameter";
 import {AppConfig} from "./AppConfig";
+import {GfxStrokeColor} from "./runtime/gfx/GfxStrokeColor";
+import {GfxFillOpacity} from "./runtime/gfx/GfxFillOpacity";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -83,9 +85,10 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.objectCallBack.bind(this)));
         this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
 
-        this.addOperation("FILL", makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
-        this.addOperation("STROKECOLOR", makeGfxOperation(GfxStrokeColor, this.objectCallBack.bind(this)));
-        this.addOperation("STROKE", makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));
+        this.addOperation(AppConfig.Runtime.Opcodes.FillColor, makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
+        this.addOperation(AppConfig.Runtime.Opcodes.FillOpacity, makeGfxOperation(GfxFillOpacity, this.objectCallBack.bind(this)));
+        this.addOperation(AppConfig.Runtime.Opcodes.StrokeColor, makeGfxOperation(GfxStrokeColor, this.objectCallBack.bind(this)));
+        this.addOperation(AppConfig.Runtime.Opcodes.StrokeWidth, makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));
 
         if (this._library) {
             // This operation makes only sense if the interpreter has a library.

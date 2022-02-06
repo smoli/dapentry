@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "parcel ./src/index.html",
+    "start": "parcel ./src/index.html --no-hmr --no-cache",
     "test": "mocha -r ts-node/register --recursive test/**/*.ts",
     "coverage": "nyc npm run test",
     "build:docs": "npx typedoc --entryPointStrategy expand ./src --out ./doc/reference"

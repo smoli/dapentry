@@ -16,8 +16,13 @@
   flex-wrap: nowrap;
 }
 
-#drawable-app-main > * {
-  //border: 1px solid red;
+
+#drawable-left-column {
+  flex-grow: 1;
+}
+
+#drawable-right-column {
+  border: 1px solid red;
   flex-grow: 1;
 }
 
@@ -54,7 +59,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: @accentColor;
+  background: @highlightColor;
   display: block;
   padding: 1em 2em;
   height: @footerHeight;
