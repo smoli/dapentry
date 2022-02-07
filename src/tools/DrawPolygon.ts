@@ -98,6 +98,7 @@ export class DrawPolygon extends Tool {
 
             if (!this._poly) {
                 this._poly = this._objectClass.create(null, [newp], false);
+                this._poly.isSelectable = false;
             } else {
                 this._poly.setPoint(this._poly.points.length - 1, newp);
             }

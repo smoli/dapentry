@@ -112,6 +112,7 @@ export abstract class GrObject {
     protected _instanceCount = GrObject._instanceCounter++;
 
     private readonly _type: ObjectType;
+    private _selectable: Boolean = true;
 
 
     protected static nameExists(name): boolean {
@@ -180,8 +181,12 @@ export abstract class GrObject {
      */
     protected abstract copy(): GrObject;
 
+    public set isSelectable(value:boolean) {
+        this._selectable = value;
+    }
+
     public get isSelectable():boolean {
-        return true;
+        return this._selectable;
     }
 
 
