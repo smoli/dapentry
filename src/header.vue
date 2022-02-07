@@ -1,5 +1,6 @@
 <template>
   <section id="drawable-app-header">
+    <h1>Drawable</h1>
     <ul>
       <li v-for="r of ratios"><button @click="setAspectRatio(r.ar)">{{ r.label }}</button></li>
 <!--      <li><button>Custom</button></li>-->

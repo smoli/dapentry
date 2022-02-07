@@ -69,6 +69,8 @@ export class AppController {
 
     public async setAspectRatio(ar: AspectRatio) {
         this._canvas = GrCanvas.create(ar, 1000);
+        this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
+
         await this.runCode();
         this.updateDrawing();
     }
