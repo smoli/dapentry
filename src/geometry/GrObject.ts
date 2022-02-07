@@ -99,7 +99,6 @@ export interface BoundingBox {
  */
 export abstract class GrObject {
     private static _instanceCounter: number = 0;
-    private static _pool: { [key: string]: GrObject } = {}
     private static _objectNames: string[] = [AppConfig.Runtime.canvasObjectName];
 
     protected _uniqueName: string;
@@ -112,7 +111,7 @@ export abstract class GrObject {
     protected _instanceCount = GrObject._instanceCounter++;
 
     private readonly _type: ObjectType;
-    private _selectable: Boolean = true;
+    private _selectable: boolean = true;
 
 
     protected static nameExists(name): boolean {
