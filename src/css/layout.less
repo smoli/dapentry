@@ -65,6 +65,7 @@
 
 #drawable-app-header {
   background: @accentColor;
+  border-bottom: 1px solid darken(@accentColor, 2%);
   display: block;
   padding: 1em 2em;
   z-index: 2000;
@@ -76,10 +77,12 @@
 #drawable-left-column {
   background: @uiColor2;
   z-index: 1000;
+  border-right: 1px solid darken(@uiColor2, 2%);
 }
 
 #drawable-right-column {
   background: @uiColor2;
+  border-left: 1px solid darken(@uiColor2, 2%);
   z-index: 1000;
 
 }
