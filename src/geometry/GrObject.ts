@@ -180,7 +180,7 @@ export abstract class GrObject {
      */
     protected abstract copy(): GrObject;
 
-    get isSelectable():boolean {
+    public get isSelectable():boolean {
         return true;
     }
 
@@ -193,11 +193,11 @@ export abstract class GrObject {
         return this._parent;
     }
 
-    get instanceCount(): number {
+    public get instanceCount(): number {
         return this._instanceCount;
     }
 
-    get type(): ObjectType {
+    public get type(): ObjectType {
         return this._type;
     }
 
@@ -205,12 +205,12 @@ export abstract class GrObject {
         this._uniqueName = GrObject.getNewObjectName(ObjectType[this._type]);
     }
 
-    get id(): string {
+    public get id(): string {
         return this._uniqueName;
     }
 
 
-    set uniqueName(value: string) {
+    public set uniqueName(value: string) {
         GrObject.removeName(this._uniqueName);
         this._uniqueName = value;
         if (!GrObject.nameExists(value)) {
@@ -218,11 +218,11 @@ export abstract class GrObject {
         }
     }
 
-    get uniqueName(): string {
+    public get uniqueName(): string {
         return this._uniqueName;
     }
 
-    get name(): string {
+    public get name(): string {
         if (this._parent) {
             return this._parent.uniqueName;
         }
@@ -231,51 +231,51 @@ export abstract class GrObject {
     }
 
 
-    get style(): Style {
+    public get style(): Style {
         return this._style;
     }
 
-    set style(value: Style) {
+    public set style(value: Style) {
         this._style = value;
     }
 
-    set fillColor(value: string) {
+    public set fillColor(value: string) {
         this._style.fillColor = value;
     }
 
-    set fillOpacity(value: number) {
+    public set fillOpacity(value: number) {
         this._style.fillOpacity = value;
     }
 
-    set strokeWidth(value: number) {
+    public set strokeWidth(value: number) {
         this._style.strokeWidth = value;
     }
 
-    set strokeColor(value: string) {
+    public set strokeColor(value: string) {
         this._style.strokeColor = value;
     }
 
-    get y(): number {
+    public get y(): number {
         return this._center.y;
     }
 
-    set y(value: number) {
+    public set y(value: number) {
         this._center.y = value;
     }
 
-    get x(): number {
+    public get x(): number {
         return this._center.x;
     }
 
-    set x(value: number) {
+    public set x(value: number) {
         this._center.x = value;
     }
 
-    get yAxis(): Point2D {
+    public get yAxis(): Point2D {
         return this._yAxis;
     }
 
-    get xAxis(): Point2D {
+    public get xAxis(): Point2D {
         return this._xAxis;
     }
 
@@ -306,7 +306,7 @@ export abstract class GrObject {
     public scale(fx: number, fy: number, pivot: Point2D = null) {
     }
 
-    get supportedScaleModes():ScaleModes {
+    public get supportedScaleModes():ScaleModes {
         return [ScaleMode.NONUNIFORM, ScaleMode.UNIFORM];
     }
 
@@ -317,7 +317,7 @@ export abstract class GrObject {
      *
      * @return Bounding box
      */
-    get boundingBox(): BoundingBox {
+    public get boundingBox(): BoundingBox {
         return {x: this.x, y: this.y, w: 0, h: 0};
     }
 
@@ -326,7 +326,7 @@ export abstract class GrObject {
      * Point at the center of the object relative to the
      * object's origin.
      */
-    get center(): Point2D {
+    public get center(): Point2D {
         return this._center;
     }
 
@@ -334,7 +334,7 @@ export abstract class GrObject {
      * Point at the bottom center of the object.
      * Relative to the object's origin.
      */
-    get bottom(): Point2D {
+    public get bottom(): Point2D {
         return this._yAxis.copy.scale(this.boundingBox.h / 2).add(this._center);
     }
 
@@ -342,7 +342,7 @@ export abstract class GrObject {
      * Point at the left center of the object relative
      * to the object's origin.
      */
-    get left(): Point2D {
+    public get left(): Point2D {
         return this._xAxis.copy.scale(-this.boundingBox.w / 2).add(this._center);
     }
 
@@ -350,7 +350,7 @@ export abstract class GrObject {
      * Point at the top center of the object relative to
      * the object's origin.
      */
-    get top(): Point2D {
+    public get top(): Point2D {
         return this._yAxis.copy.scale(-this.boundingBox.h / 2).add(this._center);
 
     }
@@ -359,7 +359,7 @@ export abstract class GrObject {
      * Point at the right center of the object relative
      * to the object's origin.
      */
-    get right(): Point2D {
+    public get right(): Point2D {
         return this._xAxis.copy.scale(this.boundingBox.w / 2).add(this._center);
     }
 
@@ -367,7 +367,7 @@ export abstract class GrObject {
      * Get "points of interest" for the object. These can be
      * used for snapping and other things.
      */
-    pointsOfInterest(purpose: POIPurpose): POIMap {
+    public pointsOfInterest(purpose: POIPurpose): POIMap {
         return {
             [POI.center]: this.center.copy,
             [POI.top]: this.top.copy,
@@ -377,7 +377,7 @@ export abstract class GrObject {
         }
     }
 
-    getOppositePoi(poi: POI): POI {
+    public getOppositePoi(poi: POI): POI {
         switch (poi) {
             case POI.center:
                 return null;
@@ -471,18 +471,18 @@ export abstract class GrObject {
         }
     }
 
-    mapLocalToWorld(l: Point2D): Point2D {
+    public mapLocalToWorld(l: Point2D): Point2D {
         return this.mapVectorToGlobal(l).add(this._center);
     }
 
-    mapVectorToGlobal(v: Point2D): Point2D {
+    public mapVectorToGlobal(v: Point2D): Point2D {
         const gx = this._xAxis.x * v.x + this._yAxis.x * v.y;
         const gy = this._xAxis.y * v.x + this._yAxis.y * v.y;
 
         return new Point2D(gx, gy)
     }
 
-    mapVectorToLocal(v: Point2D): Point2D {
+    public mapVectorToLocal(v: Point2D): Point2D {
         // https://math.stackexchange.com/a/2306329
         // Since the world vectors are 1,0 and 0,1 the matrix rotation can be simplified to this:
         const lx = this._xAxis.x * v.x + this._xAxis.y * v.y;
@@ -491,11 +491,11 @@ export abstract class GrObject {
         return new Point2D(lx, ly);
     }
 
-    mapPointToLocal(g: Point2D): Point2D {
+    public mapPointToLocal(g: Point2D): Point2D {
         return this.mapVectorToLocal(g.copy.sub(this._center))
     }
 
-    get publishedProperties(): Array<ObjectProperty> {
+    public get publishedProperties(): Array<ObjectProperty> {
         return [
             {
                 name: "Rotation",

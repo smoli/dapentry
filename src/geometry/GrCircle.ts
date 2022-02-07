@@ -21,18 +21,17 @@ export class GrCircle extends GrObject {
         return GrCircle.create(this._uniqueName, this.center.x, this.center.y, this.radius);
     }
 
-    get radius(): number {
+    public get radius(): number {
         return this._radius;
     }
 
-    set radius(value: number) {
+    public set radius(value: number) {
         this._radius = value;
     }
 
-    get boundingBox(): BoundingBox {
+    public get boundingBox(): BoundingBox {
         return {...super.boundingBox, w: this._radius * 2, h: this._radius * 2};
     }
-
 
     /**
      * Interpolation is clockwise and starts at the top.

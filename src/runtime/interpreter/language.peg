@@ -39,7 +39,7 @@
       }
 
 
-  FuncDecl "Function declatation"
+  FuncDecl "Function declaration"
   	= label:Label _ arg1:ArgumentOrTuple args:(S ArgumentOrTuple)* {
     	label.type = TokenTypes.FUNCDECL;
     	return [label, arg1, ...args.map(a => a[1])]

@@ -4,7 +4,6 @@ import {expect} from "chai"
 const sinon = require("sinon")
 
 import {Interpreter} from "../../src/runtime/interpreter/Interpreter";
-import Int from "sap/ui/model/odata/type/Int";
 
 describe('Interpreter', () => {
 

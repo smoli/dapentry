@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "module": "commonjs",
     "jsx": "preserve",
     "moduleResolution": "node",
     "removeComments": true,
     "sourceMap": true,
+    "strict": false,
     "noImplicitAny": false,
-    "strictNullChecks": false,
+    "strictNullChecks": false
   },
   "include": [
     "./src/**/*\\.(ts|vue)"
