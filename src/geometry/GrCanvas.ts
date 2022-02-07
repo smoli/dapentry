@@ -9,8 +9,8 @@ export enum AspectRatio {
     ar1_1,
     ar3_2,
     ar4_3,
-    ar16_9,
-    ar16_10
+    ar16_10,
+    ar16_9
 }
 
 export class GrCanvas extends GrObject {

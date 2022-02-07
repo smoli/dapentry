@@ -1,5 +1,5 @@
 <template>
-  <section id="drawable-app-header">Header</section>
+  <drawable-header></drawable-header>
   <section id="drawable-app-main">
     <div id="drawable-left-column">
       <DataEditor></DataEditor>
@@ -23,10 +23,11 @@ import Drawing from "./drawing/Drawing";
 import DataEditor from "./dataEditor/DataEditor";
 import StepList from "./stepList/StepList";
 import PropertiesEditor from "./propertiesEditor/PropertiesEditor";
+import DrawableHeader from "./header";
 
 export default {
   name: "Drawable",
-  components: {PropertiesEditor, StepList, DataEditor, Drawing},
+  components: {DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing},
   inject: ["controller"],
   data() {
     return {message: "Welcome to drawable... the thing that does that thing with stuff and so ..."}

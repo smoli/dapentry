@@ -4,7 +4,7 @@ import {State} from "./state/State";
 import {BaseAction} from "./actions/BaseAction";
 import {AddStatement} from "./actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
-import {GrCanvas} from "./geometry/GrCanvas";
+import {AspectRatio, GrCanvas} from "./geometry/GrCanvas";
 import {StyleManager} from "./drawing/StyleManager";
 import {GrObject} from "./geometry/GrObject";
 import {SetFillColor} from "./actions/SetFillColor";
@@ -65,6 +65,12 @@ export class AppController {
 
     init() {
         this._state.setObjectsOnDrawing([this._canvas]);
+    }
+
+    public async setAspectRatio(ar: AspectRatio) {
+        this._canvas = GrCanvas.create(ar, 1000);
+        await this.runCode();
+        this.updateDrawing();
     }
 
     get state(): State {
