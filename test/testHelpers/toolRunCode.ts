@@ -1,4 +1,4 @@
-import {GfxInterpreter} from "../../src/GfxInterpreter";
+import {GfxInterpreter} from "../../src/core/GfxInterpreter";
 import {StyleManager} from "../../src/drawing/StyleManager";
 import {GrCanvas} from "../../src/geometry/GrCanvas";
 

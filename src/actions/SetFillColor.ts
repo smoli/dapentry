@@ -1,6 +1,6 @@
 import {BaseAction} from "./BaseAction";
 import {GrObject} from "../geometry/GrObject";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 export class SetFillColor extends BaseAction {
     private readonly _objectNames: Array<string>;

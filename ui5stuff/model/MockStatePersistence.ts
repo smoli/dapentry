@@ -1,8 +1,8 @@
 import {AbsStatePersistence} from "./AbsStatePersistence";
 import {DataFieldInfo} from "./AppState";
-import {LibraryEntry, LibraryEntryArgumentType} from "../../src/Library";
+import {LibraryEntry, LibraryEntryArgumentType} from "../../src/core/Library";
 import {AspectRatio} from "../../src/geometry/GrCanvas";
-import {AppConfig} from "../../src/AppConfig";
+import {AppConfig} from "../../src/core/AppConfig";
 
 
 

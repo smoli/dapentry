@@ -6,7 +6,7 @@ import {expect} from "chai";
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import {makeAClick, makeAMove} from "../testHelpers/mouseEvents";
 import {T_NUMBER, T_OPCODE, T_POINT_NN} from "../testHelpers/tokens";
-import {AppConfig} from "../../src/AppConfig";
+import {AppConfig} from "../../src/core/AppConfig";
 
 
 describe('Drawing a rectangle', () => {

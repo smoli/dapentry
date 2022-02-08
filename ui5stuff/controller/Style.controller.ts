@@ -9,7 +9,7 @@ import Button from "sap/m/Button";
 import ColorPicker from "sap/ui/unified/ColorPicker";
 import {ButtonType, PlacementType} from "sap/m/library";
 import ToolbarSpacer from "sap/m/ToolbarSpacer";
-import {AppConfig} from "../../src/AppConfig";
+import {AppConfig} from "../../src/core/AppConfig";
 import {DragSession} from "sap/ui/core/dnd/DragAndDrop";
 import {GrObject} from "../../src/geometry/GrObject";
 

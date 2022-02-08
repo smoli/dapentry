@@ -18,7 +18,7 @@ import {Point2D} from "../geometry/Point2D";
 import {GrCompositeObject} from "../geometry/GrCompositeObject";
 import {GrObjectList} from "../geometry/GrObjectList";
 import {GrCanvas} from "../geometry/GrCanvas";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 enum ToolClasses {
     object = "grObject",

@@ -1,4 +1,4 @@
-import {LibraryEntry} from "../../src/Library";
+import {LibraryEntry} from "../../src/core/Library";
 import {DataFieldInfo} from "./AppState";
 
 export abstract class AbsStatePersistence {

@@ -54,6 +54,6 @@ ENDDO
   * This result will be an instruction to draw the circle like `CIRCLE Circle1, $styles.default, (100, 100), 100`
 * The new instruction is added to the current program
 * The whole drawing is cleared and the [ComponentController](/ui5stuff/ComponentController.ts) reruns the program
-* A special [interpreter](/src/GfxInterpreter.ts) intercepts all created objects
+* A special [interpreter](/src/core/GfxInterpreter.ts) intercepts all created objects
 * Once the program is done running the ComponentController passes the list of intercepted objects to the renderer
   * The renderer, [SvgObjectRenderer](/src/drawing/SvgObjectRenderer.ts) redraws the whole thing

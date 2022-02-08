@@ -4,7 +4,7 @@ import {InfoHandle, ObjectRenderer} from "../drawing/ObjectRenderer";
 import {GrObject, POI, POIPurpose} from "../geometry/GrObject";
 import {Point2D} from "../geometry/Point2D";
 import {GrObjectList} from "../geometry/GrObjectList";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 export interface SnapInfo {
     object: GrObject,

@@ -1,7 +1,7 @@
 import {BoundingBox, GrObject, ObjectProperty, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {deg2rad} from "./GeoMath";
 import {Point2D} from "./Point2D";
-import {NOT_IMPLEMENTED} from "../Assertions";
+import {NOT_IMPLEMENTED} from "../core/Assertions";
 
 
 export class GrPolygonBase extends GrObject {

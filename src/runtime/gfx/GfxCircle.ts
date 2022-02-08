@@ -5,8 +5,8 @@ import {GfxObject} from "./GfxObject";
 import {GrCircle} from "../../geometry/GrCircle";
 import {Point2D} from "../../geometry/Point2D";
 import {AtParameter} from "../interpreter/types/AtParameter";
-import {UNREACHABLE} from "../../Assertions";
-import {AppConfig} from "../../AppConfig";
+import {UNREACHABLE} from "../../core/Assertions";
+import {AppConfig} from "../../core/AppConfig";
 
 export class GfxCircle extends GfxObject {
     private readonly _center: Point2Parameter;

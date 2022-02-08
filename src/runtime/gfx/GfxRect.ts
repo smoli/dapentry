@@ -5,7 +5,7 @@ import {GfxObject} from "./GfxObject";
 import {GrRectangle} from "../../geometry/GrRectangle";
 import {getParameterConfig} from "./GfxOperation";
 import {POI} from "../../geometry/GrObject";
-import {UNREACHABLE} from "../../Assertions";
+import {UNREACHABLE} from "../../core/Assertions";
 
 export class GfxRect extends GfxObject {
 

@@ -1,6 +1,6 @@
 import {ObjectRenderer, RenderLayer} from "./ObjectRenderer";
 import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
-import {LibraryEntry} from "../Library";
+import {LibraryEntry} from "../core/Library";
 import {ToolNames} from "../tools/ToolNames";
 import {SwitchEvent, ToolManager} from "./ToolManager";
 import {DrawCircle} from "../tools/DrawCircle";
@@ -13,7 +13,7 @@ import {DrawPolygon} from "../tools/DrawPolygon";
 import {DrawQuadratic} from "../tools/DrawQuadratic";
 import {SelectTool} from "../tools/SelectTool";
 import {DrawLibraryInstance} from "../tools/DrawLibraryInstance";
-import {AppController} from "../AppController";
+import {AppController} from "../core/AppController";
 import {Point2D} from "../geometry/Point2D";
 import {GrObject} from "../geometry/GrObject";
 

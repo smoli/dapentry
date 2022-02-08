@@ -7,7 +7,7 @@ import ResourceBundle from "sap/base/i18n/ResourceBundle";
 import {JSONModelAccess} from "../JSONModelAccess";
 import {AppModel} from "../model/AppModel";
 import {AppState} from "../model/AppState";
-import {AppConfig} from "../../src/AppConfig";
+import {AppConfig} from "../../src/core/AppConfig";
 
 /**
  * @namespace sts.drawable.controller

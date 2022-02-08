@@ -1,11 +1,11 @@
 import {createApp} from "vue";
 import {createI18n} from "vue-i18n";
-import Drawable from "./drawable.vue"
-import {appStore} from "./state/AppStore";
-import {AppController} from "./AppController";
-import {GfxInterpreter} from "./GfxInterpreter";
-import {State} from "./state/State";
-import {i18nMessages} from "./i18n/i18nMessages";
+import Drawable from "../drawable.vue"
+import {appStore} from "../state/AppStore";
+import {AppController} from "../core/AppController";
+import {GfxInterpreter} from "../core/GfxInterpreter";
+import {State} from "../state/State";
+import {i18nMessages} from "../i18n/i18nMessages";
 
 
 const navigatorLanguage = navigator.language ? navigator.language.split("-")[0] : "en"

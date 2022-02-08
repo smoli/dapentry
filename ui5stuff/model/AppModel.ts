@@ -3,9 +3,9 @@ import {CodeManager} from "../../src/runtime/CodeManager";
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import {GrObject, ObjectType} from "../../src/geometry/GrObject";
-import {SegmentedCodeLine} from "../../src/SegmentedCodeLine";
+import {SegmentedCodeLine} from "../../src/core/SegmentedCodeLine";
 import {DataFieldInfo, SelectionInfo} from "./AppState";
-import {LibraryEntry} from "../../src/Library";
+import {LibraryEntry} from "../../src/core/Library";
 
 
 export enum AppModelKeys {

@@ -4,7 +4,7 @@ import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../drawing/ObjectRenderer";
 import {GrCircle} from "../geometry/GrCircle";
 import {Point2D} from "../geometry/Point2D";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 enum States {
     Wait = "DrawCircle.Wait",

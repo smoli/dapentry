@@ -3,7 +3,7 @@ import {performance} from "perf_hooks";
 import {GrLine} from "../src/geometry/GrLine";
 import {GrPolygon} from "../src/geometry/GrPolygon";
 import {POI} from "../src/geometry/GrObject";
-import {AppConfig} from "../src/AppConfig";
+import {AppConfig} from "../src/core/AppConfig";
 import {Point2D} from "../src/geometry/Point2D";
 
 const iterations = 1000;

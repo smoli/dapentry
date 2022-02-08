@@ -3,7 +3,7 @@ import {getParameterConfig, GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../geometry/GrObjectList";
 import {POI, POIPurpose} from "../../geometry/GrObject";
 import {Point2D} from "../../geometry/Point2D";
-import {UNREACHABLE} from "../../Assertions";
+import {UNREACHABLE} from "../../core/Assertions";
 
 export class GfxScale extends GfxOperation {
     private _factorX: Parameter;

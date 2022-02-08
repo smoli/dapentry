@@ -6,8 +6,8 @@ import {getParameterConfig, GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../geometry/GrObjectList";
 import {AtParameter} from "../interpreter/types/AtParameter";
 import {Point2D} from "../../geometry/Point2D";
-import {AppConfig} from "../../AppConfig";
-import {UNREACHABLE} from "../../Assertions";
+import {AppConfig} from "../../core/AppConfig";
+import {UNREACHABLE} from "../../core/Assertions";
 
 export class GfxMove extends GfxOperation {
     private _vector: Point2Parameter;

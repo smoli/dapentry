@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 import {DrawingController} from "./DrawingController";
 import {SvgObjectRenderer} from "./SvgObjectRenderer";
 import {ToolNames} from "../tools/ToolNames";

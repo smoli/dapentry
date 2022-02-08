@@ -1,5 +1,5 @@
 import {Operation} from "../Operation";
-import {dbg} from "../../../dbg";
+import {dbg} from "../../../core/dbg";
 import {Parameter} from "../Parameter";
 
 export class Log extends Operation {

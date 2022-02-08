@@ -1,7 +1,7 @@
-import {GfxInterpreter} from "../src/GfxInterpreter";
+import {GfxInterpreter} from "../src/core/GfxInterpreter";
 import {StyleManager} from "../src/drawing/StyleManager";
 import {GrCanvas} from "../src/geometry/GrCanvas";
-import {AppConfig} from "../src/AppConfig";
+import {AppConfig} from "../src/core/AppConfig";
 
 export async function runCode(code:string):Promise<GfxInterpreter> {
     const styles = new StyleManager();

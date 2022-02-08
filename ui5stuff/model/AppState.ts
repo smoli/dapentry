@@ -1,9 +1,9 @@
 import {AppModel, AppModelKeys} from "./AppModel";
-import {SegmentedCodeLine} from "../../src/SegmentedCodeLine";
+import {SegmentedCodeLine} from "../../src/core/SegmentedCodeLine";
 import {GrObject} from "../../src/geometry/GrObject";
 import {Style} from "../../src/drawing/StyleManager";
 import {AbsStatePersistence} from "./AbsStatePersistence";
-import {LibraryEntry} from "../../src/Library";
+import {LibraryEntry} from "../../src/core/Library";
 import {Parser} from "../../src/runtime/interpreter/Parser";
 
 export interface SelectionInfo {

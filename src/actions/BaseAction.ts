@@ -1,6 +1,6 @@
-import {AppController} from "../AppController";
+import {AppController} from "../core/AppController";
 import {State} from "../state/State";
-import {NOT_IMPLEMENTED, UNREACHABLE} from "../Assertions";
+import {NOT_IMPLEMENTED, UNREACHABLE} from "../core/Assertions";
 export interface ActionResult {
     data: any
 }

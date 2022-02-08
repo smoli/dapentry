@@ -1,6 +1,6 @@
 import BaseController from "./BaseController";
-import {LibraryEntry} from "../../src/Library";
-import {AppConfig} from "../../src/AppConfig";
+import {LibraryEntry} from "../../src/core/Library";
+import {AppConfig} from "../../src/core/AppConfig";
 
 /**
  * @namespace sts.drawable.controller

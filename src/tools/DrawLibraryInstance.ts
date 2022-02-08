@@ -2,9 +2,9 @@ import {state} from "../runtime/tools/StateMachine";
 import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {Point2D} from "../geometry/Point2D";
-import {LibraryEntry} from "../Library";
+import {LibraryEntry} from "../core/Library";
 import {GrObject} from "../geometry/GrObject";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 enum States {
     Wait = "DrawLibraryInstance.Wait",

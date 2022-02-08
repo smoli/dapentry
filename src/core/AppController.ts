@@ -1,16 +1,16 @@
 import {AppConfig} from "./AppConfig";
-import {ToolNames} from "./tools/ToolNames";
-import {State} from "./state/State";
-import {BaseAction} from "./actions/BaseAction";
-import {AddStatement} from "./actions/AddStatement";
+import {ToolNames} from "../tools/ToolNames";
+import {State} from "../state/State";
+import {BaseAction} from "../actions/BaseAction";
+import {AddStatement} from "../actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
-import {AspectRatio, GrCanvas} from "./geometry/GrCanvas";
-import {StyleManager} from "./drawing/StyleManager";
-import {GrObject} from "./geometry/GrObject";
-import {SetFillColor} from "./actions/SetFillColor";
-import {SetFillOpacity} from "./actions/SetFillOpacity";
-import {SetStrokeColor} from "./actions/SetStrokeColor";
-import {SetStrokeWidth} from "./actions/SetStrokeWidth";
+import {AspectRatio, GrCanvas} from "../geometry/GrCanvas";
+import {StyleManager} from "../drawing/StyleManager";
+import {GrObject} from "../geometry/GrObject";
+import {SetFillColor} from "../actions/SetFillColor";
+import {SetFillOpacity} from "../actions/SetFillOpacity";
+import {SetStrokeColor} from "../actions/SetStrokeColor";
+import {SetStrokeWidth} from "../actions/SetStrokeWidth";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -47,20 +47,40 @@ class PerformanceMeasure {
     }
 }
 
+export interface ApplicationOptions {
+    aspectRatio?: AspectRatio,
+    drawingWidth?: number
+}
+
+const applicationDefaults: ApplicationOptions = {
+    aspectRatio: AspectRatio.ar1_1,
+    drawingWidth: 1000
+}
+
 
 export class AppController {
     private readonly _state: State;
     private _interpreter: GfxInterpreter;
-    private _canvas: GrCanvas = GrCanvas.create_1_1(1000);
+    private _canvas: GrCanvas;
     private _performance: PerformanceMeasure = new PerformanceMeasure();
     private _styleManager: StyleManager = new StyleManager();
 
     constructor(state: State,
-                interpreter: GfxInterpreter) {
+                interpreter: GfxInterpreter,
+                options: ApplicationOptions = {}) {
         this._state = state;
         this._interpreter = interpreter;
 
+        this.processOptions({
+            ...applicationDefaults,
+            ...options
+        })
+
         this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
+    }
+
+    protected processOptions(options:ApplicationOptions) {
+        this._canvas = GrCanvas.create(options.aspectRatio, options.drawingWidth);
     }
 
     init() {

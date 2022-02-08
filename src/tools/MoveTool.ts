@@ -4,7 +4,7 @@ import {ObjectRenderer} from "../drawing/ObjectRenderer";
 import {GrObject, POI, POIMap, POIPurpose} from "../geometry/GrObject";
 import {state} from "../runtime/tools/StateMachine";
 import {Point2D} from "../geometry/Point2D";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 
 enum States {

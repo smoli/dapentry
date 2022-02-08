@@ -7,7 +7,7 @@ import FlexItemData from "sap/m/FlexItemData";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import DraggableText from "../controls/general/DraggableText";
 import DragInfo from "sap/ui/core/dnd/DragInfo";
-import {AppConfig} from "../../src/AppConfig";
+import {AppConfig} from "../../src/core/AppConfig";
 import {DragSession} from "sap/ui/core/dnd/DragAndDrop";
 
 /**

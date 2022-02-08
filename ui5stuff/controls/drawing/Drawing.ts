@@ -20,8 +20,8 @@ import {Point2D} from "../../../src/geometry/Point2D";
 import {SelectTool} from "../../../src/tools/SelectTool";
 import {GrCanvas} from "../../../src/geometry/GrCanvas";
 import {DrawLibraryInstance} from "../../../src/tools/DrawLibraryInstance";
-import {LibraryEntry} from "../../../src/Library";
-import {AppConfig} from "../../../src/AppConfig";
+import {LibraryEntry} from "../../../src/core/Library";
+import {AppConfig} from "../../../src/core/AppConfig";
 import {ToolNames} from "../../../src/tools/ToolNames";
 
 

@@ -3,7 +3,7 @@ import {Point2D} from "./Point2D";
 import {Line2D} from "./Line2D";
 import {Circle2D} from "./Circle2D";
 import {TWO_PI} from "./GeoMath";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 export enum AspectRatio {
     ar1_1,

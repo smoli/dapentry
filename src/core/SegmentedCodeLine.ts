@@ -1,4 +1,4 @@
-import {Token} from "./runtime/interpreter/Parser";
+import {Token} from "../runtime/interpreter/Parser";
 
 export interface SegmentedCodeLine {
     index: number,

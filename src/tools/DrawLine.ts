@@ -3,7 +3,7 @@ import {InteractionEvents} from "../drawing/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {RenderLayer} from "../drawing/ObjectRenderer";
 import {GrLine} from "../geometry/GrLine";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 enum States {
     Wait = "DrawLine.Wait",

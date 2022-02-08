@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {GfxInterpreter} from "../../src/GfxInterpreter";
+import {GfxInterpreter} from "../../src/core/GfxInterpreter";
 import {StyleManager} from "../../src/drawing/StyleManager";
 
 

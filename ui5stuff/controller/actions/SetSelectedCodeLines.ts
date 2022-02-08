@@ -2,7 +2,7 @@ import Component from "../../Component";
 import {Parser} from "../../../src/runtime/interpreter/Parser";
 import {BaseAction} from "./BaseAction";
 import {GrObject} from "../../../src/geometry/GrObject";
-import {SegmentedCodeLine} from "../../../src/SegmentedCodeLine";
+import {SegmentedCodeLine} from "../../../src/core/SegmentedCodeLine";
 
 
 /*

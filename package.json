@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "parcel ./src/index.html --no-hmr --no-cache",
-    "start-intro": "parcel ./src/introduction.html --no-hmr --no-cache",
+    "start-intro": "parcel ./src/introduction.html --no-hmr --no-cache --port 2345",
     "test": "mocha -r ts-node/register --recursive test/**/*.ts",
     "coverage": "nyc npm run test",
     "build:docs": "npx typedoc --entryPointStrategy expand ./src --out ./doc/reference"

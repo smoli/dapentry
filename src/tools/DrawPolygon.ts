@@ -5,7 +5,7 @@ import {RenderLayer} from "../drawing/ObjectRenderer";
 import {GrPolygon, GrPolygonBase} from "../geometry/GrPolygon";
 import {Point2D} from "../geometry/Point2D";
 import {GrObject, POI} from "../geometry/GrObject";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 enum States {
     Wait = "DrawPolygon.Wait",

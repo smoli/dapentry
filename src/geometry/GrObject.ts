@@ -2,7 +2,7 @@ import {Style} from "../drawing/StyleManager";
 import {deg2rad, rad2deg} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
-import {AppConfig} from "../AppConfig";
+import {AppConfig} from "../core/AppConfig";
 
 export enum ObjectType {
     Canvas,
