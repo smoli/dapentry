@@ -11,6 +11,6 @@ export const ui = {
         fillColor: "Füllfarbe",
         fillOpacity: "Deckkraft",
         stroke: "Linienfarbe",
-        strokeWidth: "Lininenbreite",
+        strokeWidth: "Linienbreite",
     }
 }
