@@ -1,10 +1,7 @@
 <template>
   <section class="drawable-drawing-container">
 
-      <svg v-bind:id="id" v-bind:viewBox="viewBox"
-
-           preserveAspectRatio="xMidYMid slice"
-      ></svg>
+    <svg v-bind:id="id" v-bind:viewBox="viewBox"></svg>
   </section>
 </template>
 
@@ -14,25 +11,71 @@ import {DrawingController} from "./DrawingController";
 import {SvgObjectRenderer} from "./SvgObjectRenderer";
 import {ToolNames} from "../tools/ToolNames";
 
-let drawingController:DrawingController = null;
+
+let drawingID = 1;
+
+function updateSizing(svg, vbWidth, vbHeight) {
+  const container = svg.parentElement;
+  svg.setAttribute("height", "0")
+  svg.setAttribute("width", "0")
+
+  const h = container.clientHeight;
+  const w = container.clientWidth;
+  const containerAr = w / h;
+  const vbAr = vbWidth / vbHeight; // Allways >= 1
+
+  console.log(vbAr, containerAr)
+  if (vbAr < containerAr) {
+    // Limited by height
+    svg.removeAttribute("width")
+    svg.setAttribute("height", h + "px")
+  } else {
+    // Limited by width
+    svg.removeAttribute("height")
+    svg.setAttribute("width", w + "px")
+  }
+
+
+  console.log(w, h)
+}
+
 
 export default {
   name: "Drawing",
   inject: ["controller"],
 
   data() {
+
+    const rendererId = "r" + drawingID++;
+
     return {
-      id: AppConfig.SVG.rendererId,
+      id: rendererId,
       viewBoxParameters: {
         bezelSize: AppConfig.SVG.canvasBezelSize
-      }
+      },
+      drawingController: null
     }
   },
 
   mounted() {
     const renderer = new SvgObjectRenderer(this.controller.handleObjectSelection.bind(this.controller));
-    renderer.init(AppConfig.SVG.rendererId)
-    drawingController = new DrawingController(this.controller, renderer);
+    renderer.init(this.id)
+    this.drawingController = new DrawingController(this.controller, renderer);
+
+
+    const dims = this.$store.state.drawing.dimensions
+    const svg = document.getElementById(this.id);
+    const parent = svg.parentElement;
+
+    updateSizing(svg, dims.width, dims.height);
+
+    const obs = new ResizeObserver(() => {
+      const dims = this.$store.state.drawing.dimensions
+      updateSizing(svg, dims.width, dims.height);
+    });
+
+    obs.observe(parent);
+
   },
 
   computed: {
@@ -60,32 +103,40 @@ export default {
 
     keyPress() {
       return this.$store.state.tool.keyPress;
+    },
+
+    dimensions() {
+      return this.$store.state.drawing.dimensions;
     }
 
   },
 
   watch: {
+    dimensions(dims) {
+      updateSizing(document.getElementById(this.id), dims.width, dims.height);
+    },
+
     currentTool(newTool, oldTool) {
       if (newTool === oldTool) {
         console.log("WARNING: Same-tool-switch ", newTool)
       }
-      drawingController.switchTool(newTool);
+      this.drawingController.switchTool(newTool);
     },
 
     objects(newObjectList) {
-      drawingController.render(newObjectList);
+      this.drawingController.render(newObjectList);
     },
 
     selection(newSelection, oldSelection) {
-      drawingController.updateSelection(oldSelection, newSelection);
+      this.drawingController.updateSelection(oldSelection, newSelection);
     },
 
     referenceObject(newObject) {
-      drawingController.referenceObject = newObject;
+      this.drawingController.referenceObject = newObject;
     },
 
     keyPress(event) {
-      drawingController.passKeyPressToTool(event)
+      this.drawingController.passKeyPressToTool(event)
     }
   },
 

@@ -1,10 +1,6 @@
 @footerHeight: 3em;
 @headerHeight: 3em;
 
-#drawable-app {
-  height: 100vh;
-  width: 100vw;
-}
 
 .drawable-app-container {
   overflow: hidden;
@@ -35,6 +31,25 @@
     }
     .drawable-main-column {
       flex-grow: 5;
+      display: flex;
+      flex-direction: column;
+
+      .drawable-statement-preview {
+        height: 1em;
+        padding: 1em;
+      }
+
+      .drawable-drawing-container {
+        flex-grow: 1;
+        background: #4da6ff;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .drawable-tool-hint {
+        height: 1em;
+        padding: 1em;
+      }
     }
 
     .drawable-right-column {
