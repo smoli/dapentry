@@ -6,7 +6,7 @@
       <StepList></StepList>
     </div>
     <div id="drawable-main-column">
-      <samp class="drawable-statement-preview">Create Circle1 center at ( 100, 100 ) radius 50</samp>
+      <statement-editor></statement-editor>
       <Drawing></Drawing>
       <samp class="drawable-tool-hint">Create Circle1 center at ( 100, 100 ) radius 50</samp>
     </div>
@@ -24,10 +24,11 @@ import DataEditor from "./dataEditor/DataEditor";
 import StepList from "./stepList/StepList";
 import PropertiesEditor from "./propertiesEditor/PropertiesEditor";
 import DrawableHeader from "./header";
+import StatementEditor from "./StatementEditor/StatementEditor";
 
 export default {
   name: "Drawable",
-  components: {DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing},
+  components: {StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing},
   inject: ["controller"],
   data() {
     return {message: "Welcome to drawable... the thing that does that thing with stuff and so ..."}

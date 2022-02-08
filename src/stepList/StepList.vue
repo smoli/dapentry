@@ -1,12 +1,20 @@
 <template>
   <section id="drawable-steplist-container">
-    <h2>Steplist</h2>
+    <h2>{{ $t("ui.stepEditor") }}</h2>
+    <div v-for="line of annotatedCode">{{ line.code }}</div>
   </section>
 </template>
 
 <script>
 export default {
-  name: "StepList"
+  name: "StepList",
+
+  computed: {
+    annotatedCode() {
+      return this.$store.getters['code/annotated'];
+    }
+  }
+
 }
 </script>
 

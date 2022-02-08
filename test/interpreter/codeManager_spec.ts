@@ -49,6 +49,33 @@ describe('Code manager', () => {
         ]);
     });
 
+    it('can add multiple lines of code', () => {
+        const m = new CodeManager();
+        const code = `
+            LOAD r1, 23
+            ADD r1, 23
+            LOAD r2, r1           
+        `;
+
+        m.addCodeString(code);
+
+        m.addStatements([
+            "ADD r3, r1, r2",
+            "INC r3",
+            "INC r3"
+        ]);
+
+        expect(m.code.length).to.equal(6);
+        expect(m.code).to.deep.equal([
+            "LOAD r1, 23",
+            "ADD r1, 23",
+            "LOAD r2, r1",
+            "ADD r3, r1, r2",
+            "INC r3",
+            "INC r3"
+        ]);
+    })
+
     it('can insert a code line', () => {
         const m = new CodeManager();
         const code = `
@@ -70,6 +97,37 @@ describe('Code manager', () => {
             "LOAD r2, r1",
         ]);
     });
+
+    it("can insert multiple code lines", () => {
+        const m = new CodeManager();
+        const code = `
+            LOAD r1, 23
+            ADD r1, 23
+            LOAD r2, r1           
+        `;
+
+        m.addCodeString(code);
+
+        expect(m.code.length).to.equal(3);
+
+        m.insertStatements([
+            "INC r1",
+            "INC r1",
+            "INC r1"
+            ]
+            , 1);
+
+        expect(m.code.length).to.equal(6);
+        expect(m.code).to.deep.equal([
+            "LOAD r1, 23",
+            "INC r1",
+            "INC r1",
+            "INC r1",
+            "ADD r1, 23",
+            "LOAD r2, r1",
+        ]);
+
+    })
 
     it('can insert a code line after', () => {
         const m = new CodeManager();

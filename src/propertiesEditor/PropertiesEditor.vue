@@ -6,27 +6,27 @@
         <div>
           <input type="color" v-model="fillColor"
                  @change="onFillColorChange">
-          <label>Fill {{ fillColor }}</label>
+          <label>{{ $t("ui.styleEditor.fillColor") }} {{ fillColor }}</label>
         </div>
 
         <div>
           <input type="range" v-model="fillOpacity"
                  min="0" max="1" step="0.01"
                  @change="onOpacityChange">
-          <label>Opacity {{ fillOpacity }}</label>
+          <label>{{ $t("ui.styleEditor.fillOpacity") }} {{ fillOpacity }}</label>
         </div>
 
         <div>
           <input v-model="strokeColor" type="color"
                  @change="onStrokeColorChange">
-          <label>Stroke {{ strokeColor }}</label>
+          <label>{{ $t("ui.styleEditor.stroke") }} {{ strokeColor }}</label>
         </div>
 
         <div>
           <input v-model="strokeWidth" type="range"
                  min="0" max="100"
                  @change="onStrokeWidthChange">
-          <label>Stroke Width {{ strokeWidth }}</label>
+          <label>{{ $t("ui.styleEditor.strokeWidth") }} {{ strokeWidth }}</label>
         </div>
       </div>
     </div>

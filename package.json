@@ -1,6 +1,6 @@
 {
   "name": "gfxbcts",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "scripts": {
     "start": "parcel ./src/index.html --no-hmr --no-cache",
@@ -14,6 +14,7 @@
   "dependencies": {
     "d3": "^7.3.0",
     "vue": "^3.2.29",
+    "vue-i18n": "^9.2.0-beta.30",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

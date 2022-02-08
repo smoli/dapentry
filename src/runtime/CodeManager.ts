@@ -6,6 +6,12 @@ import {Stack} from "./tools/Stack";
 export type TokenList = Array<Token>;
 
 
+export interface AnnotatedCodeLine {
+    originalLine: number,
+    code: string,
+    level: number
+}
+
 /**
  * Defines the opcodes that initialize a register.
  * The key is the opcode. The number is the argument position,
@@ -29,7 +35,7 @@ export class CodeManager {
 
 
     constructor(creationOpcodes: CreationInfo =
-                    {"LOAD": 1},
+                    { "LOAD": 1 },
                 jumpOpCodes: Array<string> = [
                     "JMP", "JNZ", "JNE", "JNZ", "JEQ", "JNE", "JLT", "JLE", "JGT", "JGE", "JINE"]
     ) {
@@ -70,6 +76,12 @@ export class CodeManager {
         this.memorizeRegistersAndLabels(statement);
     }
 
+    addStatements(statements: Array<string>) {
+        this._code.push(...statements);
+        statements.forEach(s => this.memorizeRegistersAndLabels(s));
+    }
+
+
     /**
      * Insert a statement at the given position.
      *
@@ -79,6 +91,17 @@ export class CodeManager {
     insertStatement(statement: string, index: number) {
         this._code.splice(index, 0, statement);
         this.memorizeRegistersAndLabels(statement);
+    }
+
+    /**
+     * Insert multiple statement at the given position.
+     *
+     * @param statements
+     * @param index             Index at which the statement will be inserted
+     */
+    insertStatements(statements: Array<string>, index: number) {
+        this._code.splice(index, 0, ...statements);
+        statements.forEach(s => this.memorizeRegistersAndLabels(s));
     }
 
     /**
@@ -185,7 +208,7 @@ export class CodeManager {
      * TODO: This is a hacky implementation that breaks if you don't
      *       apply annotations the way they are expected
      */
-    get annotatedCode(): Array<{ originalLine: number, code: string, level: number }> {
+    get annotatedCode(): Array<AnnotatedCodeLine> {
 
         const ret = [];
         const blockStack = new Stack<{ code: string, replaces: Array<Token> }>();
@@ -207,7 +230,7 @@ export class CodeManager {
 
             const body = findAnnotation(tokens, "BODY");
             if (body) {
-                blockStack.push({code: "BODY", replaces: findAllAnnotations(tokens, "REPLACE")});
+                blockStack.push({ code: "BODY", replaces: findAllAnnotations(tokens, "REPLACE") });
                 continue;
             }
 
@@ -222,7 +245,7 @@ export class CodeManager {
 
             const doOpCode = findOpCode(tokens, "DO");
             if (doOpCode) {
-                blockStack.push({ code: "DO", replaces: findAllAnnotations(tokens, "REPLACE")})
+                blockStack.push({ code: "DO", replaces: findAllAnnotations(tokens, "REPLACE") })
             }
 
             const endDo = findOpCode(tokens, "ENDDO");
@@ -237,9 +260,9 @@ export class CodeManager {
 
             const each = findAnnotation(tokens, "EACH");
             if (each) {
-                ret.push({originalLine, code: "@EACH " + each.args.join(" "), level});
+                ret.push({ originalLine, code: "@EACH " + each.args.join(" "), level });
                 level++;
-                blockStack.push({code: "EACH", replaces: findAllAnnotations(tokens, "REPLACE")});
+                blockStack.push({ code: "EACH", replaces: findAllAnnotations(tokens, "REPLACE") });
                 continue;
             }
 
@@ -274,7 +297,7 @@ export class CodeManager {
             }
 
 
-            ret.push({originalLine, code: newLine, level});
+            ret.push({ originalLine, code: newLine, level });
 
             if (doOpCode) {
                 level++;
