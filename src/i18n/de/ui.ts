@@ -5,6 +5,7 @@ export const ui = {
     dataEditor: "Daten",
     stepEditor: "Schritte",
     propertiesEditor: "Eigenschaften",
+    aspectRatio: "Seitenverhältnis",
     styleEditor: {
         title: "Style",
         fillColor: "Füllfarbe",

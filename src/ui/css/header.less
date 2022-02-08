@@ -16,6 +16,14 @@
     }
   }
 
+  label {
+    font-weight: bold;
+  }
+
+  label:after {
+    content: ":";
+  }
+
   ul {
     display: inline-block;
     margin: 0;
@@ -42,7 +50,7 @@
     }
   }
 
-  .locale-switcher {
+  .locale-switcher, .aspect-ratio-switcher {
     display: inline-block;
     background: @accentColor;
     margin-left: 1em;
@@ -55,11 +63,7 @@
     option, select {
       font-family: @fontFamilies;
       margin-left: 0.2em;
-      background: @accentColor;
-    }
-
-    option[selected] {
-
+      background: @uiColor1;
     }
 
     option:hover {

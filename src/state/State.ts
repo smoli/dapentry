@@ -2,7 +2,7 @@ import {CommitOptions, Store} from "vuex";
 import {AppStore} from "./AppStore";
 import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
-import {h} from "vue";
+import {AspectRatio} from "../geometry/GrCanvas";
 
 
 const mutations = {
@@ -23,7 +23,8 @@ const mutations = {
         selectObject: "drawing/selectObject",
         deselectObject: "drawing/deselectObject",
         deselectAll: "drawing/deselectAll",
-        isObjectSelected: "drawing/isObjectSelected"
+        isObjectSelected: "drawing/isObjectSelected",
+        setAspectRatio: "drawing/setAspectRatio"
     }
 }
 
@@ -94,6 +95,10 @@ export class State {
         this.commit(mutations.code.add, code);
     }
 
+
+    setAspectRatio(ar: AspectRatio) {
+        this.commit(mutations.drawing.setAspectRatio, ar);
+    }
 
     setDrawingDimensions(width: number, height: number) {
         this.commit(mutations.drawing.dimensions, { width, height });

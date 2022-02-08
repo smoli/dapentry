@@ -1,14 +1,8 @@
 <template>
   <section class="drawable-app-header">
     <h1>{{ $t("ui.appName") }}<span>0.1&alpha;</span></h1>
-    <ul>
-      <li v-for="r of ratios">
-        <button @click="setAspectRatio(r.ar)">{{ r.label }}</button>
-      </li>
-      <!--      <li><button>Custom</button></li>-->
-    </ul>
-    <locale-switcher />
-
+    <aspect-ratio-switcher />
+    <locale-switcher/>
   </section>
 </template>
 
@@ -16,11 +10,12 @@
 
 
 import {AspectRatio} from "../geometry/GrCanvas";
-import LocaleSwitcher from "../i18n/localeSwitcher.vue";
+import LocaleSwitcher from "./localeSwitcher.vue";
+import AspectRatioSwitcher from "./aspectRatioSwitcher.vue";
 
 export default {
   name: "drawable-header",
-  components: { LocaleSwitcher },
+  components: { AspectRatioSwitcher, LocaleSwitcher },
   inject: ["controller"],
 
   data() {
