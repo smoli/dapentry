@@ -9,20 +9,24 @@ export interface AppStore {
     code: CodeState
 }
 
-export const appStore: Store<AppStore> = createStore<AppStore>({
-    modules: {
-        drawing: {
-            namespaced: true,
-            ...drawingState
-        },
-        tool: {
-            namespaced: true,
-            ...toolState
-        },
-        code: {
-            namespaced: true,
-            ...codeState
+
+export function createAppStore() {
+    return createStore<AppStore>({
+        modules: {
+            drawing: {
+                namespaced: true,
+                ...drawingState
+            },
+            tool: {
+                namespaced: true,
+                ...toolState
+            },
+            code: {
+                namespaced: true,
+                ...codeState
+            }
         }
-    }
-});
+    });
+}
+
 

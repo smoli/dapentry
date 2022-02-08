@@ -62,7 +62,6 @@ export default {
     renderer.init(this.id)
     this.drawingController = new DrawingController(this.controller, renderer);
 
-
     const dims = this.$store.state.drawing.dimensions
     const svg = document.getElementById(this.id);
     const parent = svg.parentElement;

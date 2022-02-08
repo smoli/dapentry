@@ -1,7 +1,7 @@
 import {createApp} from "vue";
 import {createI18n} from "vue-i18n";
 import Drawable from "../drawable.vue"
-import {appStore} from "../state/AppStore";
+import {createAppStore} from "../state/AppStore";
 import {AppController} from "../core/AppController";
 import {GfxInterpreter} from "../core/GfxInterpreter";
 import {State} from "../state/State";
@@ -18,6 +18,7 @@ const i18n = createI18n({
 
 
 const app = createApp(Drawable, { hideHeader: false, hideFooter: false});
+const appStore = createAppStore();
 app.use(appStore);
 app.use(i18n);
 
