@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import {Selection} from 'd3';
-import {GrObject, ObjectType, POIPurpose} from "../geometry/GrObject";
+import {GrObject, ObjectType, POIPurpose} from "../../geometry/GrObject";
 import {
     HandleMouseCallBack,
     InfoHandle, MouseHandler,
@@ -8,17 +8,17 @@ import {
     ObjectRenderer,
     POICallback,
     RenderLayer
-} from "./ObjectRenderer";
-import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
-import {GrCircle} from "../geometry/GrCircle";
-import {GrRectangle} from "../geometry/GrRectangle";
-import {GrLine} from "../geometry/GrLine";
-import {GrBezier, GrPolygon, GrPolygonBase, GrQuadratic} from "../geometry/GrPolygon";
-import {Point2D} from "../geometry/Point2D";
-import {GrCompositeObject} from "../geometry/GrCompositeObject";
-import {GrObjectList} from "../geometry/GrObjectList";
-import {GrCanvas} from "../geometry/GrCanvas";
-import {AppConfig} from "../core/AppConfig";
+} from "../../core/ObjectRenderer";
+import {InteractionEventData, InteractionEvents} from "../../core/InteractionEvents";
+import {GrCircle} from "../../geometry/GrCircle";
+import {GrRectangle} from "../../geometry/GrRectangle";
+import {GrLine} from "../../geometry/GrLine";
+import {GrBezier, GrPolygon, GrPolygonBase, GrQuadratic} from "../../geometry/GrPolygon";
+import {Point2D} from "../../geometry/Point2D";
+import {GrCompositeObject} from "../../geometry/GrCompositeObject";
+import {GrObjectList} from "../../geometry/GrObjectList";
+import {GrCanvas} from "../../geometry/GrCanvas";
+import {AppConfig} from "../../core/AppConfig";
 
 enum ToolClasses {
     object = "grObject",

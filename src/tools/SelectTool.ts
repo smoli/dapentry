@@ -1,5 +1,5 @@
-import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
-import {ObjectRenderer} from "../drawing/ObjectRenderer";
+import {InteractionEventData, InteractionEvents} from "../core/InteractionEvents";
+import {ObjectRenderer} from "../core/ObjectRenderer";
 import {GrObject} from "../geometry/GrObject";
 import {state} from "../runtime/tools/StateMachine";
 import {SnapInfo, Tool} from "./Tool";

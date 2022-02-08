@@ -1,6 +1,6 @@
 import {state, StateMachine} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
-import {InfoHandle, ObjectRenderer} from "../drawing/ObjectRenderer";
+import {InteractionEventData, InteractionEvents} from "../core/InteractionEvents";
+import {InfoHandle, ObjectRenderer} from "../core/ObjectRenderer";
 import {GrObject, POI, POIPurpose} from "../geometry/GrObject";
 import {Point2D} from "../geometry/Point2D";
 import {GrObjectList} from "../geometry/GrObjectList";

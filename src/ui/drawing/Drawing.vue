@@ -6,10 +6,10 @@
 </template>
 
 <script lang="ts">
-import {AppConfig} from "../core/AppConfig";
+import {AppConfig} from "../../core/AppConfig";
 import {DrawingController} from "./DrawingController";
 import {SvgObjectRenderer} from "./SvgObjectRenderer";
-import {ToolNames} from "../tools/ToolNames";
+import {ToolNames} from "../../tools/ToolNames";
 
 
 let drawingID = 1;

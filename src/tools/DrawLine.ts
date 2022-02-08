@@ -1,7 +1,7 @@
 import {state} from "../runtime/tools/StateMachine";
-import {InteractionEvents} from "../drawing/InteractionEvents";
+import {InteractionEvents} from "../core/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {RenderLayer} from "../drawing/ObjectRenderer";
+import {RenderLayer} from "../core/ObjectRenderer";
 import {GrLine} from "../geometry/GrLine";
 import {AppConfig} from "../core/AppConfig";
 

@@ -5,7 +5,7 @@ import {BaseAction} from "../actions/BaseAction";
 import {AddStatement} from "../actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {AspectRatio, GrCanvas} from "../geometry/GrCanvas";
-import {StyleManager} from "../drawing/StyleManager";
+import {StyleManager} from "./StyleManager";
 import {GrObject} from "../geometry/GrObject";
 import {SetFillColor} from "../actions/SetFillColor";
 import {SetFillOpacity} from "../actions/SetFillOpacity";

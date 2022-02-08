@@ -1,6 +1,6 @@
-import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../core/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {ObjectRenderer} from "../drawing/ObjectRenderer";
+import {ObjectRenderer} from "../core/ObjectRenderer";
 import {GrObject, POI, POIMap, POIPurpose} from "../geometry/GrObject";
 import {state} from "../runtime/tools/StateMachine";
 import {Point2D} from "../geometry/Point2D";

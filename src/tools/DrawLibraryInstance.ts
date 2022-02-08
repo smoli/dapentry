@@ -1,5 +1,5 @@
 import {state} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../core/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
 import {Point2D} from "../geometry/Point2D";
 import {LibraryEntry} from "../core/Library";

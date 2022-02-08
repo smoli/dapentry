@@ -15,8 +15,8 @@
 <script lang="ts">
 
 
-import {AspectRatio} from "./geometry/GrCanvas";
-import LocaleSwitcher from "./i18n/localeSwitcher.vue";
+import {AspectRatio} from "../geometry/GrCanvas";
+import LocaleSwitcher from "../i18n/localeSwitcher.vue";
 
 export default {
   name: "drawable-header",

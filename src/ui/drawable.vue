@@ -22,8 +22,8 @@
 import Drawing from "./drawing/Drawing";
 import DataEditor from "./dataEditor/DataEditor";
 import StepList from "./stepList/StepList";
-import PropertiesEditor from "./propertiesEditor/PropertiesEditor";
-import DrawableHeader from "./header";
+import PropertiesEditor from "../propertiesEditor/PropertiesEditor.vue";
+import DrawableHeader from "./header.vue";
 import StatementEditor from "./StatementEditor/StatementEditor";
 
 
@@ -33,7 +33,6 @@ export default {
   inject: ["controller"],
   props: [
     "hideHeader",
-    "hideFooter",
     "hideLeftColumn",
     "hideDataEditor",
     "hideStepList",

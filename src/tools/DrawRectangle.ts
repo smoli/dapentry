@@ -1,7 +1,7 @@
 import {state} from "../runtime/tools/StateMachine";
-import {InteractionEvents} from "../drawing/InteractionEvents";
+import {InteractionEvents} from "../core/InteractionEvents";
 import {SnapInfo, Tool} from "./Tool";
-import {RenderLayer} from "../drawing/ObjectRenderer";
+import {RenderLayer} from "../core/ObjectRenderer";
 import {GrRectangle} from "../geometry/GrRectangle";
 import {AppConfig} from "../core/AppConfig";
 import {Point2D} from "../geometry/Point2D";
