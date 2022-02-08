@@ -8,16 +8,16 @@ import {State} from "./state/State";
 import {i18nMessages} from "./i18n/i18nMessages";
 
 
-const navigatorLanugage = navigator.language ? navigator.language.split("-")[0] : "en"
+const navigatorLanguage = navigator.language ? navigator.language.split("-")[0] : "en"
 
 const i18n = createI18n({
-    locale: navigatorLanugage,
+    locale: navigatorLanguage,
     fallbackLocale: "en",
     messages: i18nMessages
 });
 
 
-const app = createApp(Drawable);
+const app = createApp(Drawable, { hideHeader: false, hideFooter: false});
 app.use(appStore);
 app.use(i18n);
 

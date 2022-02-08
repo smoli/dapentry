@@ -1,5 +1,5 @@
 <template>
-  <section id="drawable-steplist-container">
+  <section class="drawable-steplist-container">
     <h2>{{ $t("ui.stepEditor") }}</h2>
     <div v-for="line of annotatedCode">{{ line.code }}</div>
   </section>

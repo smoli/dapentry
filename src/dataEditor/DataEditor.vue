@@ -1,5 +1,5 @@
 <template>
-  <section id="drawable-data-editor">
+  <section class="drawable-data-editor">
     <h2>{{ $t("ui.dataEditor") }}</h2>
   </section>
 </template>

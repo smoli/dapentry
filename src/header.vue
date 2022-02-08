@@ -1,5 +1,5 @@
 <template>
-  <section id="drawable-app-header">
+  <section class="drawable-app-header">
     <h1>{{ $t("ui.appName") }}<span>0.1&alpha;</span></h1>
     <ul>
       <li v-for="r of ratios">

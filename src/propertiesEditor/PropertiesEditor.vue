@@ -1,7 +1,7 @@
 <template>
-  <section id="drawable-properties-container">
+  <section class="drawable-properties-container">
     <div v-if="selectionCount === 1">
-      <div id="drawable-properties-style">
+      <div class="drawable-properties-style">
         <h2>Style</h2>
         <div>
           <input type="color" v-model="fillColor"

@@ -1,15 +1,57 @@
-@footerHeight: 2em;
-@headerHeight: 2em;
+@footerHeight: 3em;
+@headerHeight: 3em;
 
 #drawable-app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 }
 
+.drawable-app-container {
+  overflow: hidden;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+
+  .drawable-app-header {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-direction: row;
+    height: @headerHeight;
+  }
+
+  .drawable-app-main {
+    flex-grow: 1000;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+
+
+    .drawable-left-column {
+      flex-basis: 0;
+      flex-grow: 2;
+    }
+    .drawable-main-column {
+      flex-grow: 5;
+    }
+
+    .drawable-right-column {
+      flex-basis: 0;
+      flex-grow: 2;
+    }
+
+  }
+
+  .drawable-app-footer {
+    display: block;
+    height: @footerHeight;
+  }
+}
+
+
+/*
 #drawable-app-main {
   display: flex;
   flex-direction: row;
@@ -86,6 +128,7 @@
   z-index: 1000;
 
 }
+*/
 
 
 /*

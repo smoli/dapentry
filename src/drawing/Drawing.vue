@@ -1,5 +1,5 @@
 <template>
-  <section id="drawable-drawing-container">
+  <section class="drawable-drawing-container">
 
       <svg v-bind:id="id" v-bind:viewBox="viewBox"
 
