@@ -69,12 +69,14 @@ export default {
 
     updateSizing(svg, dims.width, dims.height);
 
-    const obs = new ResizeObserver(() => {
-      const dims = this.$store.state.drawing.dimensions
-      updateSizing(svg, dims.width, dims.height);
-    });
+    if (ResizeObserver) {
+      const obs = new ResizeObserver(() => {
+        const dims = this.$store.state.drawing.dimensions
+        updateSizing(svg, dims.width, dims.height);
+      });
 
-    obs.observe(parent);
+      obs.observe(parent);
+    }
 
   },
 
