@@ -8,8 +8,10 @@ import {State} from "./state/State";
 import {i18nMessages} from "./i18n/i18nMessages";
 
 
+const navigatorLanugage = navigator.language ? navigator.language.split("-")[0] : "en"
+
 const i18n = createI18n({
-    locale: navigator.language,
+    locale: navigatorLanugage,
     fallbackLocale: "en",
     messages: i18nMessages
 });

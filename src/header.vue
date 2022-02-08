@@ -7,6 +7,7 @@
       </li>
       <!--      <li><button>Custom</button></li>-->
     </ul>
+    <locale-switcher />
 
   </section>
 </template>
@@ -15,9 +16,11 @@
 
 
 import {AspectRatio} from "./geometry/GrCanvas";
+import LocaleSwitcher from "./i18n/localeSwitcher.vue";
 
 export default {
   name: "drawable-header",
+  components: { LocaleSwitcher },
   inject: ["controller"],
 
   data() {
