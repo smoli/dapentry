@@ -81,7 +81,7 @@ export class AppController {
         this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
     }
 
-    protected processOptions(options:ApplicationOptions) {
+    protected processOptions(options: ApplicationOptions) {
         this._canvas = GrCanvas.create(options.aspectRatio, options.drawingWidth);
     }
 
@@ -102,11 +102,11 @@ export class AppController {
         return this._state;
     }
 
-    public async save():Promise<any> {
+    public async save(): Promise<any> {
         await this._persistence.saveAll();
     }
 
-    public async load(persistence:Persistence):Promise<any> {
+    public async load(persistence: Persistence): Promise<any> {
         this._persistence = persistence;
         await persistence.load(this.state);
         await this.runCode();
@@ -121,16 +121,14 @@ export class AppController {
         this._interpreter.parse(this.state.fullCode);
         this._performance.now("parsed");
 
-        /*
-                TODO: Fix this
-                const index = this.getAppState().getLastSelectedCodeLineIndex();
-
-                if (index !== -1) {
-                    this._interpreter.pauseAfter(index + this.getAppState().scopeCodeLength);
-                } else {
-                    this._interpreter.clearPauseAfter();
-                }
-        */
+        const codeSelection = this._state.store.state.code.selectedLines;
+        if (codeSelection.length) {
+            const index = Math.max(...codeSelection);
+            // TODO: Add length of scope code when we introduce the scope!
+            this._interpreter.pauseAfter(index);
+        } else {
+            this._interpreter.clearPauseAfter();
+        }
 
         await this._interpreter.run({
             [AppConfig.Runtime.styleRegisterName]: this._styleManager.styles,
@@ -151,7 +149,7 @@ export class AppController {
         await action.execute(null);
     }
 
-    async setLocale(locale:string) {
+    async setLocale(locale: string) {
         this.state.setLocale(locale);
         await this.save();
     }
@@ -239,7 +237,7 @@ export class AppController {
 
         while (i < objects.length) {
             const next = objects[i];
-            if (!this.state.isObjectSelected(next) && !(next instanceof GrCanvas)) {
+            if (!this.state.isObjectSelected(next) && !( next instanceof GrCanvas )) {
                 this.state.setReferenceObjectForTool(next);
                 return;
             }
