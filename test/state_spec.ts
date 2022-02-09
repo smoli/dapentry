@@ -8,6 +8,12 @@ import {Persistence} from "../src/state/Persistence";
 
 
 class MockPersistence extends Persistence {
+
+    async load(state: State): Promise<void> {
+        const code = await this.loadCode();
+        state.setCode(code);
+    }
+
     async loadCode(): Promise<Array<string>> {
         return ["LOAD r1, 10", "ADD r1, 20"]
     }
@@ -28,7 +34,10 @@ describe('State', () => {
     it("will load data from a persistence object if provided", async () => {
         const store = createAppStore();
         const state = new State(store);
-        await state.load(new MockPersistence());
+
+        const pers = new MockPersistence()
+
+        await pers.load(state);
 
         expect(store.state.code.code).to.deep.equal([
             "LOAD r1, 10", "ADD r1, 20"

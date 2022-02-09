@@ -3,7 +3,7 @@ import {AppStore} from "./AppStore";
 import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
 import {AspectRatio} from "../geometry/GrCanvas";
-import {Persistence} from "./Persistence";
+import {I18n} from "vue-i18n";
 
 
 const mutations = {
@@ -46,21 +46,24 @@ const getters = {
 
 export class State {
     private readonly _store: Store<AppStore>;
+    private _i18n: I18n;
 
-    constructor(store:Store<AppStore>) {
+    constructor(store:Store<AppStore>, i18n: I18n) {
         this._store = store;
-    }
-
-    public async load(persistence:Persistence) {
-        if (!persistence) {
-            return;
-        }
-        const code = await persistence.loadCode();
-        this.commit(mutations.code.set, code);
+        this._i18n = i18n;
     }
 
     get store():Store<AppStore> {
         return this._store;
+    }
+
+    setLocale(locale: string) {
+        this._i18n.global.locale = locale;
+    }
+
+    get locale():string {
+        const locale = this._i18n.global.locale;
+        return locale as string;
     }
 
     protected commit(type: string, payload?: any, options?: CommitOptions) {
@@ -79,6 +82,10 @@ export class State {
 
     get objects():Array<GrObject> {
         return this.get(getters.drawing.objects);
+    }
+
+    public setCode(code: Array<string>) {
+        this.commit(mutations.code.set, code);
     }
 
     get fullCode():Array<string> {

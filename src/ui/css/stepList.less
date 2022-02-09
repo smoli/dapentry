@@ -7,12 +7,12 @@
   overflow: auto;
 
   .drawable-steplist-step {
-    background: @uiColor1;
+    background-color: @uiColor1;
     border: 1px solid darken(@uiColor1, 10%);
     margin: 0.5em 0;
     padding: 1em;
-    box-shadow: 1px 1px 5px 0 @uiColor3;
     border-radius: 0.2em;
+    transition: background-color 0.2s;
   }
 
   .drawable-steplist-step.selected {
@@ -20,9 +20,8 @@
   }
 
   .drawable-steplist-step:hover {
-    background: @uiColor1;
+    background: lighten(@uiColor1, 30%);
     border: 1px solid @accentColor;
-    box-shadow: 3px 3px 5px 0 @uiColor3;
   }
 
 }

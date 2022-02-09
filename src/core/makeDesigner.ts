@@ -48,7 +48,7 @@ export function makeDesigner(containerId: string,
     app.use(i18n);
 
     const interpreter = new GfxInterpreter()
-    const appController = new AppController(new State(appStore), interpreter, appOptions);
+    const appController = new AppController(new State(appStore, i18n), interpreter, appOptions);
 
     app.provide("controller", appController);
     app.mount("#" + containerId);

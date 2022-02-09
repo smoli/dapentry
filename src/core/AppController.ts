@@ -65,6 +65,7 @@ export class AppController {
     private _canvas: GrCanvas;
     private _performance: PerformanceMeasure = new PerformanceMeasure();
     private _styleManager: StyleManager = new StyleManager();
+    private _persistence: Persistence;
 
     constructor(state: State,
                 interpreter: GfxInterpreter,
@@ -101,8 +102,13 @@ export class AppController {
         return this._state;
     }
 
+    public async save():Promise<any> {
+        await this._persistence.saveAll();
+    }
+
     public async load(persistence:Persistence):Promise<any> {
-        await this._state.load(persistence);
+        this._persistence = persistence;
+        await persistence.load(this.state);
         await this.runCode();
         this.updateDrawing();
     }
@@ -145,16 +151,23 @@ export class AppController {
         await action.execute(null);
     }
 
+    async setLocale(locale:string) {
+        this.state.setLocale(locale);
+        await this.save();
+    }
+
     async addStatement(code: string) {
         await this.execute(new AddStatement([code]));
         await this.runCode();
         this.updateDrawing();
+        await this._persistence.saveCode();
     }
 
     async addStatements(code: Array<string>) {
         await this.execute(new AddStatement(code));
         await this.runCode();
         this.updateDrawing();
+        await this._persistence.saveCode();
     }
 
     public async setFillColorForSelection(value: string) {
