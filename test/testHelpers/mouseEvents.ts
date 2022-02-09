@@ -1,4 +1,4 @@
-import {InteractionEventData} from "../../src/drawing/InteractionEvents";
+import {InteractionEventData} from "../../src/core/InteractionEvents";
 
 
 export interface modifiers {

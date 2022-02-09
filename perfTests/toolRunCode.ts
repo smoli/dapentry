@@ -1,5 +1,5 @@
 import {GfxInterpreter} from "../src/core/GfxInterpreter";
-import {StyleManager} from "../src/drawing/StyleManager";
+import {StyleManager} from "../src/core/StyleManager";
 import {GrCanvas} from "../src/geometry/GrCanvas";
 import {AppConfig} from "../src/core/AppConfig";
 

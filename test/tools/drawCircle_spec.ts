@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {MockRenderer} from "../testHelpers/mock/mockRenderer";
-import {InteractionEvents} from "../../src/drawing/InteractionEvents";
+import {InteractionEvents} from "../../src/core/InteractionEvents";
 import {expect} from "chai";
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import {makeAClick, makeAMove} from "../testHelpers/mouseEvents";

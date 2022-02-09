@@ -4,7 +4,7 @@ import {
     ObjectRenderer,
     POICallback,
     RenderLayer
-} from "../../../src/drawing/ObjectRenderer";
+} from "../../../src/core/ObjectRenderer";
 import {GrObject, POI} from "../../../src/geometry/GrObject";
 import {GrBezier, GrPolygon, GrQuadratic} from "../../../src/geometry/GrPolygon";
 import {GrCircle} from "../../../src/geometry/GrCircle";

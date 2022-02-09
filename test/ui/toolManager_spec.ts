@@ -1,8 +1,8 @@
 import {describe} from "mocha";
 import {expect} from "chai"
-import {ToolManager} from "../../src/drawing/ToolManager";
+import {ToolManager} from "../../src/core/ToolManager";
 import {SnapInfo, Tool} from "../../src/tools/Tool";
-import {InteractionEventData, InteractionEvents} from "../../src/drawing/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../../src/core/InteractionEvents";
 import {GrCircle} from "../../src/geometry/GrCircle";
 import {GrObject} from "../../src/geometry/GrObject";
 

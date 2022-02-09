@@ -1,5 +1,5 @@
 import {Parameter} from "../interpreter/Parameter";
-import {Style} from "../../drawing/StyleManager";
+import {Style} from "../../core/StyleManager";
 import {GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../geometry/GrObjectList";
 import {GrCompositeObject} from "../../geometry/GrCompositeObject";
