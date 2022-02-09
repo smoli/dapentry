@@ -3,7 +3,8 @@ import {AnnotatedCodeLine, CodeManager} from "../../runtime/CodeManager";
 
 export interface CodeState {
     codeManager: CodeManager,
-    code: Array<string>
+    code: Array<string>,
+    selectedLines: Array<number>
 }
 
 
@@ -12,7 +13,8 @@ export const codeState = {
     state():CodeState {
         return {
             codeManager: new CodeManager(),
-            code: []
+            code: [],
+            selectedLines: []
         }
     },
 
@@ -23,6 +25,10 @@ export const codeState = {
 
         annotated(state): Array<AnnotatedCodeLine> {
             return state.codeManager.annotatedCode;
+        },
+
+        annotatedSelection(state:CodeState): Array<AnnotatedCodeLine> {
+            return state.codeManager.annotatedCode.filter(a => state.selectedLines.indexOf(a.originalLine) !== -1);
         }
     },
 
@@ -51,6 +57,18 @@ export const codeState = {
                 state.code.splice(insertAt, 0, ...code);
                 state.codeManager.insertStatements(code, insertAt)
             }
+        },
+
+        clearSelection(state: CodeState) {
+            state.selectedLines = [];
+        },
+
+        setSelection(state: CodeState, selection: Array<number>) {
+            state.selectedLines = [...selection];
+        },
+
+        addToSelection(state: CodeState, selection: Array<number>) {
+            state.selectedLines = [...state.selectedLines, ...selection];
         }
     }
 }

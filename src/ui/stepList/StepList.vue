@@ -1,12 +1,20 @@
 <template>
   <section class="drawable-steplist-container">
     <h2>{{ $t("ui.stepEditor") }}</h2>
-    <div class="drawable-steplist-step" v-for="line of annotatedCode">{{ line.text }}</div>
+
+    <div v-for="(line, index) of annotatedCode" v-bind:data-step="index"
+         class="drawable-steplist-step" :class="{ selected: line.selected }"
+         @click="onStepClicked">{{ line.text }}
+    </div>
+
   </section>
 </template>
 
 <script lang="ts">
 import {Parser, Token, TokenTypes} from "../../runtime/interpreter/Parser";
+import {AppController} from "../../core/AppController";
+import {AnnotatedCodeLine} from "../../runtime/CodeManager";
+import {UNREACHABLE} from "../../core/Assertions";
 
 
 function getTextIdForTokens(tokens: Array<Token>): string {
@@ -35,7 +43,7 @@ function getTextIdForTokens(tokens: Array<Token>): string {
 }
 
 
-function constructText(tokens, $t):string {
+function constructText(tokens, $t): string {
   const firstToken = tokens[0];
 
   if (!firstToken) {
@@ -46,7 +54,7 @@ function constructText(tokens, $t):string {
   const tokenTexts = tokens.map((t: Token) => {
     switch (t.type) {
       case TokenTypes.NUMBER:
-        return (t.value as number).toFixed(2);
+        return ( t.value as number ).toFixed(2);
 
       case TokenTypes.POINT:
         return `(${t.value[0].value}, ${t.value[1].value})`;
@@ -76,20 +84,42 @@ function constructText(tokens, $t):string {
 }
 
 
-
-
 export default {
   name: "StepList",
+  inject: ["controller"],
 
   computed: {
-    annotatedCode() {
+    annotatedCode(): Array<AnnotatedCodeLine> {
+
+      const selection = this.$store.state.code.selectedLines;
+
       return this.$store.getters['code/annotated'].map(anno => {
         const tokens = Parser.parseLine(anno.code);
         return {
           ...anno,
-          text: constructText(tokens, this.$t)
+          text: constructText(tokens, this.$t),
+          selected: selection.indexOf(anno.originalLine) !== -1
         }
       });
+    }
+  },
+
+  methods: {
+    onStepClicked(event) {
+      const stepDiv = event.target;
+      const index = Number(stepDiv.getAttribute("data-step"));
+      const step = this.annotatedCode[index];
+
+      if (!step) {
+        UNREACHABLE();
+      }
+
+      if (step.selected) {
+        ( this.controller as AppController ).clearStatementSelection();
+      } else {
+        ( this.controller as AppController ).selectStatement(this.annotatedCode[index].originalLine)
+      }
+
     }
   }
 

@@ -170,6 +170,18 @@ export class AppController {
         await this._persistence.saveCode();
     }
 
+    async clearStatementSelection() {
+        this._state.clearCodeSelection();
+        await this.runCode();
+        this.updateDrawing();
+    }
+
+    async selectStatement(index: number) {
+        this._state.setCodeSelection([index]);
+        await this.runCode();
+        this.updateDrawing();
+    }
+
     public async setFillColorForSelection(value: string) {
         await this.execute(new SetFillColor(this.state.selection, value));
         await this.runCode();

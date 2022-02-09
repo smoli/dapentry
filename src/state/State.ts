@@ -16,7 +16,10 @@ const mutations = {
     code: {
         set: "code/setCode",
         add: "code/add",
-        insert: "code/insert"
+        insert: "code/insert",
+        clearSelection: "code/clearSelection",
+        setSelection: "code/setSelection",
+        addToSelection: "code/addToSelection"
     },
 
     drawing: {
@@ -32,13 +35,16 @@ const mutations = {
 
 const getters = {
     code: {
-        fullCode: "code/fullCode"
+        fullCode: "code/fullCode",
+        annotatedSelection: "code/annotatedSelection"
     },
+
     drawing: {
         objects: "drawing/objects",
         isObjectSelected: "drawing/isObjectSelected",
         selection: "drawing/selection"
     },
+
     tool: {
         referenceObject: "tool/referenceObject"
     }
@@ -143,6 +149,22 @@ export class State {
 
     get selection():Array<GrObject> {
         return this.get(getters.drawing.selection);
+    }
+
+    clearCodeSelection() {
+        this.commit(mutations.code.clearSelection);
+    }
+
+    setCodeSelection(selection: Array<number>) {
+        this.commit(mutations.code.setSelection, selection);
+    }
+
+    addToCodeSelection(selection: Array<number>) {
+        this.commit(mutations.code.addToSelection, selection);
+    }
+
+    get codeSelection(): Array<number> {
+        return this._store.state.code.selectedLines;
     }
 
 }
