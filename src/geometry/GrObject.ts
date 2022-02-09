@@ -1,4 +1,4 @@
-import {Style} from "../drawing/StyleManager";
+import {Style} from "../core/StyleManager";
 import {deg2rad, rad2deg} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";

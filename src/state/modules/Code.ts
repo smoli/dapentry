@@ -27,6 +27,12 @@ export const codeState = {
     },
 
     mutations: {
+        setCode(state: CodeState, code: Array<string> = []) {
+                state.code = code;
+                state.codeManager.clear();
+                state.codeManager.addStatements(code);
+        },
+
         add(state: CodeState, code: Array<string>, insertAt: number = -1) {
             if (insertAt === -1) {
                 state.code.push(...code);

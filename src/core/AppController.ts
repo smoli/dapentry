@@ -11,6 +11,7 @@ import {SetFillColor} from "../actions/SetFillColor";
 import {SetFillOpacity} from "../actions/SetFillOpacity";
 import {SetStrokeColor} from "../actions/SetStrokeColor";
 import {SetStrokeWidth} from "../actions/SetStrokeWidth";
+import {Persistence} from "../state/Persistence";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -98,6 +99,12 @@ export class AppController {
 
     get state(): State {
         return this._state;
+    }
+
+    public async load(persistence:Persistence):Promise<any> {
+        await this._state.load(persistence);
+        await this.runCode();
+        this.updateDrawing();
     }
 
     protected async runCode(): Promise<any> {

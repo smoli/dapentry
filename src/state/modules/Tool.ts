@@ -1,6 +1,5 @@
 import {ToolNames} from "../../tools/ToolNames";
 import {GrObject} from "../../geometry/GrObject";
-import {InteractionEventData} from "../../drawing/InteractionEvents";
 
 export interface ToolState {
     current: ToolNames,

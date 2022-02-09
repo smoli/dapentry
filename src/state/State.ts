@@ -3,6 +3,7 @@ import {AppStore} from "./AppStore";
 import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
 import {AspectRatio} from "../geometry/GrCanvas";
+import {Persistence} from "./Persistence";
 
 
 const mutations = {
@@ -13,6 +14,7 @@ const mutations = {
     },
 
     code: {
+        set: "code/setCode",
         add: "code/add",
         insert: "code/insert"
     },
@@ -47,6 +49,14 @@ export class State {
 
     constructor(store:Store<AppStore>) {
         this._store = store;
+    }
+
+    public async load(persistence:Persistence) {
+        if (!persistence) {
+            return;
+        }
+        const code = await persistence.loadCode();
+        this.commit(mutations.code.set, code);
     }
 
     get store():Store<AppStore> {
