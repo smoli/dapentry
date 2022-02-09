@@ -7,6 +7,7 @@
   overflow: auto;
 
   .drawable-steplist-step {
+    position: relative;
     background-color: @uiColor1;
     border: 1px solid darken(@uiColor1, 10%);
     margin: 0.5em 0;
@@ -17,6 +18,12 @@
 
   .drawable-steplist-step.selected, .drawable-steplist-step.selected:hover {
     background: @accentColor !important;
+  }
+
+  .drawable-steplist-step-pause {
+    position: absolute;
+    top: 0.2em;
+    right: 0.2em;
   }
 
   .drawable-steplist-step:hover {

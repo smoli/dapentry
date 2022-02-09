@@ -12,5 +12,8 @@ export const ui = {
         fillOpacity: "Deckkraft",
         stroke: "Linienfarbe",
         strokeWidth: "Linienbreite",
+    },
+    stepList: {
+        pauseExplanation: "Bild wird bis hier gezeichnet"
     }
 }

@@ -12,5 +12,8 @@ export const ui = {
         fillOpacity: "Opacity",
         stroke: "Stroke",
         strokeWidth: "Stroke Width",
+    },
+    stepList: {
+        pauseExplanation: "Image drawn up to here"
     }
 }
