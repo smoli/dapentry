@@ -19,6 +19,32 @@ import {AnnotatedCodeLine} from "../../runtime/CodeManager";
 import {UNREACHABLE} from "../../core/Assertions";
 
 
+function rangeSelect(allSteps, clicked): Array<AnnotatedCodeLine> {
+  let inSelection = false;
+  let afterSelection = false;
+
+  const selection = [];
+
+  for (const step of allSteps) {
+    if (afterSelection && step.selected) {
+      step.selected = false;
+    } else if (inSelection && !step.selected) {
+      step.selected = true;
+      selection.push(step);
+    } else if (step.selected) {
+      selection.push(step);
+      inSelection = true;
+    }
+
+    if (step === clicked) {
+      afterSelection = true;
+      inSelection = false;
+    }
+  }
+  return selection;
+}
+
+
 function getTextIdForTokens(tokens: Array<Token>): string {
   const firstToken = tokens[0];
   switch (firstToken.value) {
@@ -107,8 +133,8 @@ export default {
   },
 
   methods: {
-    onStepClicked(event) {
-      const stepDiv = event.target;
+    onStepClicked(event: MouseEvent) {
+      const stepDiv: HTMLElement = event.target as HTMLElement;
       const index = Number(stepDiv.getAttribute("data-step"));
       const step = this.annotatedCode[index];
 
@@ -116,10 +142,16 @@ export default {
         UNREACHABLE();
       }
 
-      if (step.selected) {
-        ( this.controller as AppController ).clearStatementSelection();
+      if (event.shiftKey) {
+        const selSteps = rangeSelect(this.annotatedCode, step);
+          ( this.controller as AppController ).selectStatements(selSteps.map(s => s.originalLine))
+
       } else {
-        ( this.controller as AppController ).selectStatement(this.annotatedCode[index].originalLine)
+        if (step.selected) {
+          ( this.controller as AppController ).clearStatementSelection();
+        } else {
+          ( this.controller as AppController ).selectStatement(this.annotatedCode[index].originalLine)
+        }
       }
 
     }
