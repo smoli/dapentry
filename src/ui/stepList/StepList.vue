@@ -5,7 +5,7 @@
     <div v-for="(line, index) of annotatedCode" v-bind:data-step="index"
          class="drawable-steplist-step" :class="{ selected: line.selected }"
          @click="onStepClicked">{{ line.text }}
-      <i :title="$t('ui.stepList.pauseExplanation')" v-if="line.selected"
+      <i :title="$t('ui.stepList.pauseExplanation')" v-if="line.originalLine === lastSelectedLine"
          class="drawable-steplist-step-pause fa-solid fa-circle-pause"></i>
     </div>
 
@@ -109,6 +109,10 @@ export default {
           selected: selection.indexOf(anno.originalLine) !== -1
         }
       });
+    },
+
+    lastSelectedLine(): number {
+      return Math.max(...this.$store.state.code.selectedLines);
     }
   },
 
