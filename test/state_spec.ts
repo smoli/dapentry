@@ -23,7 +23,7 @@ describe('State', () => {
 
     it("can put data in a store", () => {
         const store = createAppStore();
-        const state = new State(store);
+        const state = new State(store, null);
 
         expect(store.state.drawing.aspectRatio).to.not.equal(AspectRatio.ar16_10);
         state.setAspectRatio(AspectRatio.ar16_10);
@@ -33,7 +33,7 @@ describe('State', () => {
 
     it("will load data from a persistence object if provided", async () => {
         const store = createAppStore();
-        const state = new State(store);
+        const state = new State(store, null);
 
         const pers = new MockPersistence()
 
