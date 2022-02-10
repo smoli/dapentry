@@ -22,3 +22,4 @@ dist/
 
 /buildPerf/
 /isolate*.log
+.parcel-cache
