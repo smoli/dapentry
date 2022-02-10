@@ -17,33 +17,7 @@ import {Parser, Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import {AppController} from "../../core/AppController";
 import {AnnotatedCodeLine} from "../../runtime/CodeManager";
 import {UNREACHABLE} from "../../core/Assertions";
-
-
-function rangeSelect(allSteps, clicked): Array<AnnotatedCodeLine> {
-  let inSelection = false;
-  let afterSelection = false;
-
-  const selection = [];
-
-  for (const step of allSteps) {
-    if (afterSelection && step.selected) {
-      step.selected = false;
-    } else if (inSelection && !step.selected) {
-      step.selected = true;
-      selection.push(step);
-    } else if (step.selected) {
-      selection.push(step);
-      inSelection = true;
-    }
-
-    if (step === clicked) {
-      afterSelection = true;
-      inSelection = false;
-    }
-  }
-  return selection;
-}
-
+import {rangeSelect} from "../core/rangeSelect";
 
 function getTextIdForTokens(tokens: Array<Token>): string {
   const firstToken = tokens[0];
@@ -82,7 +56,7 @@ function constructText(tokens, $t): string {
   const tokenTexts = tokens.map((t: Token) => {
     switch (t.type) {
       case TokenTypes.NUMBER:
-        return ( t.value as number ).toFixed(2);
+        return (t.value as number).toFixed(2);
 
       case TokenTypes.POINT:
         return `(${t.value[0].value}, ${t.value[1].value})`;
@@ -116,6 +90,12 @@ export default {
   name: "StepList",
   inject: ["controller"],
 
+  data() {
+    return {
+      selectedFirst: null
+    }
+  },
+
   computed: {
     annotatedCode(): Array<AnnotatedCodeLine> {
 
@@ -134,26 +114,32 @@ export default {
 
   methods: {
     onStepClicked(event: MouseEvent) {
+      const code = this.annotatedCode;
       const stepDiv: HTMLElement = event.target as HTMLElement;
       const index = Number(stepDiv.getAttribute("data-step"));
-      const step = this.annotatedCode[index];
+      const step = code[index];
 
       if (!step) {
         UNREACHABLE();
       }
 
       if (event.shiftKey) {
-        const selSteps = rangeSelect(this.annotatedCode, step);
-          ( this.controller as AppController ).selectStatements(selSteps.map(s => s.originalLine))
+        const selSteps = rangeSelect(
+            code.map(c => c.originalLine),
+            this.$store.state.code.selectedLines,
+            step.originalLine,
+            this.selectedFirst);
 
+        (this.controller as AppController).selectStatements(selSteps)
       } else {
-        if (step.selected) {
-          ( this.controller as AppController ).clearStatementSelection();
+        if (step.selected && this.$store.state.code.selectedLines.length === 1) {
+          (this.controller as AppController).clearStatementSelection();
+          this.selectedFirst = null;
         } else {
-          ( this.controller as AppController ).selectStatement(this.annotatedCode[index].originalLine)
+          (this.controller as AppController).selectStatement(this.annotatedCode[index].originalLine)
+          this.selectedFirst = this.annotatedCode[index].originalLine;
         }
       }
-
     }
   }
 
