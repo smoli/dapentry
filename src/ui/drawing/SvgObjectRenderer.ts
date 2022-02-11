@@ -119,7 +119,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     render(object: GrObject, selected: boolean) {
-        console.log(this._svg.attr("id"), object.instanceCount)
         this._renderedObjects.push(object);
         return this._render(object, selected);
     }

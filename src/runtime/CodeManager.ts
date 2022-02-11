@@ -114,6 +114,11 @@ export class CodeManager {
         this.memorizeRegistersAndLabels(statement);
     }
 
+
+    replaceStatement(index: number, ...newLines: Array<string>) {
+        this._code.splice(index, 1, ...newLines);
+    }
+
     /**
      * Remove a statement from the given position.
      * @param index

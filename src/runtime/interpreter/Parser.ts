@@ -84,9 +84,7 @@ export class Parser {
             }
         }
 
-        let  code = [...tokens.map(t => construct(t))].join("");
-        console.log("Constructed: ", code)
-        return code;
+        return [...tokens.map(t => construct(t))].join("");
     }
 }
 

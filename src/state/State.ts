@@ -17,6 +17,7 @@ const mutations = {
         set: "code/setCode",
         add: "code/add",
         insert: "code/insert",
+        replaceStatement: "code/replaceStatement",
         clearSelection: "code/clearSelection",
         setSelection: "code/setSelection",
         addToSelection: "code/addToSelection"
@@ -98,6 +99,14 @@ export class State {
         return this._store.getters["code/fullCode"]
     }
 
+    addCode(code:Array<string>) {
+        this.commit(mutations.code.add, code);
+    }
+
+    replaceStatement(index: number, ...newStatements:Array<string>) {
+        this.commit(mutations.code.replaceStatement, { index, newStatements })
+    }
+
     switchTool(newTool:ToolNames) {
         this.commit(mutations.tool.switch, newTool);
     }
@@ -113,12 +122,6 @@ export class State {
     get referenceObjectForTool():GrObject {
         return this.get(getters.tool.referenceObject);
     }
-
-    addCode(code:Array<string>) {
-        this.commit(mutations.code.add, code);
-    }
-
-
     setAspectRatio(ar: AspectRatio) {
         this.commit(mutations.drawing.setAspectRatio, ar);
     }

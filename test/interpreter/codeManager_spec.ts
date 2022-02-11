@@ -1,8 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {CodeManager} from "../../src/runtime/CodeManager";
-import {Interpreter} from "../../src/runtime/interpreter/Interpreter";
-import {Parser, TokenTypes} from "../../src/runtime/interpreter/Parser";
 
 
 describe('Code manager', () => {
@@ -179,6 +177,50 @@ describe('Code manager', () => {
         ]);
 
     });
+
+    it("can replace a code line", () => {
+        const m = new CodeManager();
+        const code = `
+            LOAD r1, 23
+            ADD r1, 23
+            LOAD r2, r1
+            ADD r3, r1, r2           
+        `;
+
+        m.addCodeString(code);
+
+        m.replaceStatement(1, "ADD r1, 1");
+
+        expect(m.code).to.deep.equal([
+            "LOAD r1, 23",
+            "ADD r1, 1",
+            "LOAD r2, r1",
+            "ADD r3, r1, r2"
+        ])
+    });
+
+    it("can replace a code line with multiple statements", () => {
+        const m = new CodeManager();
+        const code = `
+            LOAD r1, 23
+            ADD r1, 23
+            LOAD r2, r1
+            ADD r3, r1, r2           
+        `;
+
+        m.addCodeString(code);
+
+        m.replaceStatement(1, "ADD r1, 1", "ADD r1, 2");
+
+        expect(m.code).to.deep.equal([
+            "LOAD r1, 23",
+            "ADD r1, 1",
+            "ADD r1, 2",
+            "LOAD r2, r1",
+            "ADD r3, r1, r2"
+        ]);
+
+    })
 
     it('can provide a list with all statement lines that use a register as an argument', () => {
         const m = new CodeManager();

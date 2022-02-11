@@ -117,7 +117,6 @@ export class AppController {
         this._interpreter.clearObjects(this._canvas);
         this._performance.reset();
         this._performance.now("start");
-        console.log(this.state.fullCode);
         this._interpreter.parse(this.state.fullCode);
         this._performance.now("parsed");
 
@@ -237,8 +236,6 @@ export class AppController {
         const objects = this.state.objects;
         let i = current ? objects.indexOf(current) : -1;
         i += 1;
-
-        console.log(current, i);
 
         while (i < objects.length) {
             const next = objects[i];

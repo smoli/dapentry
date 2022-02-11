@@ -1,4 +1,5 @@
 import {State} from "./State";
+import {LibraryEntry} from "../core/Library";
 
 export class Persistence {
     private _state: State;
@@ -10,6 +11,8 @@ export class Persistence {
 
         const locale = await this.loadLocale();
         state.setLocale(locale);
+
+        await this.loadLibrary();
     }
 
     async saveAll():Promise<void> {
@@ -26,6 +29,21 @@ export class Persistence {
     }
 
 
+    async loadLibrary():Promise<Array<LibraryEntry>> {
+        const result = await fetch("http://localhost:8000/api/library", {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                Accept: "application/json"
+            }
+        });
+
+        const data = await result.json();
+
+        console.log(JSON.stringify(data, null, 2));
+
+        return []
+    }
 
 
     async loadLocale():Promise<string> {

@@ -1,7 +1,6 @@
 export const ui = {
     language: "Sprache",
     currentLanguage: "Deutsch",
-    appName: "Drawable",
     dataEditor: "Daten",
     stepEditor: "Schritte",
     propertiesEditor: "Eigenschaften",

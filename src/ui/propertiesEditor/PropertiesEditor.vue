@@ -35,7 +35,7 @@
 
 <script lang="ts">
 
-import {GrObject} from "../geometry/GrObject";
+import {GrObject} from "../../geometry/GrObject";
 
 function makeComputedProxy(access, defaultValue) {
   return {

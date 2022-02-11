@@ -24,7 +24,6 @@ function updateSizing(svg, vbWidth, vbHeight) {
   const containerAr = w / h;
   const vbAr = vbWidth / vbHeight; // Allways >= 1
 
-  console.log(vbAr, containerAr)
   if (vbAr < containerAr) {
     // Limited by height
     svg.removeAttribute("width")
@@ -34,9 +33,6 @@ function updateSizing(svg, vbWidth, vbHeight) {
     svg.removeAttribute("height")
     svg.setAttribute("width", w + "px")
   }
-
-
-  console.log(w, h)
 }
 
 

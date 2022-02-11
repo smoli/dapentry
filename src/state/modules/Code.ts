@@ -10,7 +10,7 @@ export interface CodeState {
 
 export const codeState = {
 
-    state():CodeState {
+    state(): CodeState {
         return {
             codeManager: new CodeManager(),
             code: [],
@@ -27,36 +27,31 @@ export const codeState = {
             return state.codeManager.annotatedCode;
         },
 
-        annotatedSelection(state:CodeState): Array<AnnotatedCodeLine> {
+        annotatedSelection(state: CodeState): Array<AnnotatedCodeLine> {
             return state.codeManager.annotatedCode.filter(a => state.selectedLines.indexOf(a.originalLine) !== -1);
         }
     },
 
     mutations: {
         setCode(state: CodeState, code: Array<string> = []) {
-                state.code = code;
-                state.codeManager.clear();
-                state.codeManager.addStatements(code);
+            state.codeManager.clear();
+            state.codeManager.addStatements(code);
+            state.code = state.codeManager.code.map(s => s);
         },
 
-        add(state: CodeState, code: Array<string>, insertAt: number = -1) {
-            if (insertAt === -1) {
-                state.code.push(...code);
-                state.codeManager.addStatements(code)
-            } else {
-                state.code.splice(insertAt, 0, ...code);
-                state.codeManager.insertStatements(code, insertAt)
-            }
+        add(state: CodeState, code: Array<string>) {
+            state.codeManager.addStatements(code)
+            state.code = state.codeManager.code.map(s => s);
         },
 
-        insert(state: CodeState, code: Array<string>, insertAt: number = -1) {
-            if (insertAt === -1) {
-                state.code.push(...code);
-                state.codeManager.addStatements(code)
-            } else {
-                state.code.splice(insertAt, 0, ...code);
-                state.codeManager.insertStatements(code, insertAt)
-            }
+        insert(state: CodeState, payload: { code: Array<string>, insertAt: number }) {
+            state.codeManager.insertStatements(payload.code, payload.insertAt)
+            state.code = state.codeManager.code.map(s => s);
+        },
+
+        replaceStatement(state: CodeState, payload: { index: number, newStatements: Array<string> }) {
+            state.codeManager.replaceStatement(payload.index, ...payload.newStatements);
+            state.code = state.codeManager.code.map(s => s);
         },
 
         clearSelection(state: CodeState) {

@@ -1,7 +1,7 @@
 export const ui = {
     language: "Language",
     currentLanguage: "English",
-    appName: "Drawable",
+    appName: "dapentry",
     dataEditor: "Data",
     stepEditor: "Steps",
     propertiesEditor: "Properties",
