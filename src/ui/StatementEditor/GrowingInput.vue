@@ -1,5 +1,5 @@
 <template>
-  <input ref="input" v-model="myValue" @keydown="onKeyDown"/>
+  <input ref="input" v-model="myValue" @keydown="onKeyDown" :type="type"/>
 </template>
 
 <script lang="ts">
@@ -41,23 +41,26 @@ function getFontSize(el = document.body) {
 
 export default {
   name: "GrowingInput",
-  props: ["value"],
+  props: ["value", "type"],
 
   data() {
+
     return {
-      myValue: this.value
+      myValue: this.value,
+      offset: this.type === "number" ? 20 : 0
     }
   },
 
   mounted() {
     const inp = this.$refs["input"];
-    inp.style.width = ( getTextWidth(this.myValue + "w", getFontSize(inp))) + "px";
+    inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
   },
 
   methods: {
-    onKeyDown(event) {
+    onKeyDown(event: KeyboardEvent) {
       const inp = this.$refs["input"];
-      inp.style.width = ( getTextWidth(this.myValue + "w", getFontSize(inp))) + "px";
+      const newChar = event.key.length === 1 ? event.key : ""
+      inp.style.width = ( getTextWidth(this.myValue + newChar, getFontSize(inp)) + this.offset) + "px";
     }
   }
 }

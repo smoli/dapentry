@@ -60,7 +60,7 @@ export default class GrowingInput extends Input {
         }
     }
 
-    onAfterRendering(oEvent: jQuery.Event) {
+    onAfterRendering(oEvent: Event) {
         this.__adjustWidthForValue();
         super.onAfterRendering(oEvent);
     }

@@ -42,7 +42,7 @@ export class Persistence {
 
         console.log(JSON.stringify(data, null, 2));
 
-        return []
+        return [];
     }
 
 
