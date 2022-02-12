@@ -6,6 +6,7 @@
       <StepList v-if="!hideStepList"></StepList>
     </div>
     <div class="drawable-main-column" v-if="!hideMainColumn">
+      <tool-bar v-if="!hideToolbar"></tool-bar>
       <statement-editor v-if="!hideStatementEditor"></statement-editor>
       <Drawing v-if="!hideDrawing"></Drawing>
       <samp class="drawable-tool-hint" v-if="!hideToolHint">Create Circle1 center at ( 100, 100 ) radius 50</samp>
@@ -25,17 +26,19 @@ import StepList from "./stepList/StepList";
 import PropertiesEditor from "./propertiesEditor/PropertiesEditor.vue";
 import DrawableHeader from "./header.vue";
 import StatementEditor from "./StatementEditor/StatementEditor";
+import ToolBar from "./ToolBar.vue";
 
 
 export default {
   name: "Drawable",
-  components: { StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
+  components: { ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
   inject: ["controller"],
   props: [
     "hideHeader",
     "hideLeftColumn",
     "hideDataEditor",
     "hideStepList",
+    "hideToolbar",
     "hideMainColumn",
     "hideStatementPreview",
     "hideStatementEditor",

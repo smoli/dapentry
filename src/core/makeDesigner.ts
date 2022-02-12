@@ -16,6 +16,7 @@ const i18n = createI18n({
 
 export interface LayoutOptions {
     hideHeader?: boolean,
+    hideToolbar?: boolean,
     hideLeftColumn?: boolean,
     hideDataEditor?: boolean,
     hideStepList?: boolean,
