@@ -1,5 +1,6 @@
 import {State} from "./State";
 import {LibraryEntry} from "../core/Library";
+import {DataField} from "./modules/Data";
 
 export class Persistence {
     private _state: State;
@@ -11,6 +12,9 @@ export class Persistence {
 
         const locale = await this.loadLocale();
         state.setLocale(locale);
+
+        const fields = await this.loadData();
+        state.setData(fields);
 
         await this.loadLibrary();
     }
@@ -30,7 +34,7 @@ export class Persistence {
 
 
     async loadLibrary():Promise<Array<LibraryEntry>> {
-        const result = await fetch("http://localhost:8000/api/library", {
+        const result = await fetch("http://api.drawable.de/api/library", {
             method: "GET",
             mode: "cors",
             headers: {
@@ -62,6 +66,13 @@ export class Persistence {
             "ROTATE Polygon2, 46.71673220901628, Polygon2@center",
             'SCALE Polygon2, 1, 0.75, "bottom"'
         ];*/
+    }
+
+    async loadData():Promise<Array<DataField>> {
+        return [
+            { name: "f1", value: [10, 20, 30, 40]},
+            { name: "f2", value: 5 }
+        ]
     }
 
 }

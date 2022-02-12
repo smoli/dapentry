@@ -1,7 +1,7 @@
 import {BaseAction} from "./BaseAction";
 import {Parser, TokenTypes} from "../runtime/interpreter/Parser";
 import {CodeManager} from "../runtime/CodeManager";
-import {NOT_IMPLEMENTED} from "../core/Assertions";
+import {NOT_IMPLEMENTED, UNREACHABLE} from "../core/Assertions";
 
 export class UpdateStatement extends BaseAction {
     private readonly _newValue: string;
@@ -62,20 +62,28 @@ export class UpdateStatement extends BaseAction {
             newStatements.push(Parser.constructCodeLine(tokens));
 
         } else { // Maybe a register name from data
-            NOT_IMPLEMENTED("Using data fields")
-            /*const dataValue = this.component.getAppState().getDataField(this._newValue);
+            const field = this.state.getDataField(this._newValue);
+            if (!field) {
+                UNREACHABLE("Unknown value. It's neither a number, a string nor a data field name");
+            }
+
+            const dataValue = field.value;
+
             token.type = TokenTypes.REGISTER;
 
-            if (dataValue && Array.isArray(dataValue.value)) {
+            if (Array.isArray(dataValue)) {
+                NOT_IMPLEMENTED("Entering array fields")
+/*
                 // Replace code to make the statement a loop over the data
                 const reg = this.component.getCodeManager().getCreatedRegisterForStatement(this._statementIndex);
                 newStatements = this.forEach(this.component.getCodeManager(),
                     reg, this._tokenIndex, this._newValue);
+*/
 
             } else {
                 token.value = this._newValue;
                 newStatements.push(Parser.constructCodeLine(tokens));
-            }*/
+            }
         }
 
         if (newStatements.length) {

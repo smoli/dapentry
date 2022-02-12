@@ -13,6 +13,7 @@ import {SetStrokeColor} from "../actions/SetStrokeColor";
 import {SetStrokeWidth} from "../actions/SetStrokeWidth";
 import {Persistence} from "../state/Persistence";
 import {UpdateStatement} from "../actions/UpdateStatement";
+import {DataFieldValue} from "../state/modules/Data";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -124,8 +125,7 @@ export class AppController {
         const codeSelection = this._state.store.state.code.selectedLines;
         if (codeSelection.length) {
             const index = Math.max(...codeSelection);
-            // TODO: Add length of scope code when we introduce the scope!
-            this._interpreter.pauseAfter(index);
+            this._interpreter.pauseAfter(index + this._state.dataCodeLength);
         } else {
             this._interpreter.clearPauseAfter();
         }
@@ -152,6 +152,13 @@ export class AppController {
     async setLocale(locale: string) {
         this.state.setLocale(locale);
         await this.save();
+    }
+
+    async setDataFieldValue(name: string, newValue: DataFieldValue) {
+        this.state.setDateFieldValue(name, newValue);
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence.saveCode();
     }
 
     async addStatement(code: string) {

@@ -3,7 +3,7 @@ export function UNREACHABLE(message:string = "") {
 }
 
 export function NOT_IMPLEMENTED(message: string = "") {
-    throw new Error("Branch not implement. " + message);
+    throw new Error("Branch not implemented. " + message);
 }
 
 export function ASSERT(condition:boolean, message: string) {

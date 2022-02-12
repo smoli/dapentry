@@ -77,6 +77,10 @@ export const AppConfig = {
         }
     },
 
+    Data: {
+        fieldNamePrefix: "f"
+    },
+
     UICore: {
         appModelName: "appModel"
     }

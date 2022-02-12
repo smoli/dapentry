@@ -1,5 +1,5 @@
 <template>
-  <GrowingInput :value="content.token.value" type="number" @change="onChange"/>
+  <GrowingInput :value="content.token.value" @change="onChange"/>
 </template>
 
 <script lang="ts">

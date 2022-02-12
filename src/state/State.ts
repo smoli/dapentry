@@ -4,6 +4,8 @@ import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
 import {AspectRatio} from "../geometry/GrCanvas";
 import {I18n} from "vue-i18n";
+import {DataField, DataFieldValue} from "./modules/Data";
+import {AppConfig} from "../core/AppConfig";
 
 
 const mutations = {
@@ -31,6 +33,13 @@ const mutations = {
         deselectAll: "drawing/deselectAll",
         isObjectSelected: "drawing/isObjectSelected",
         setAspectRatio: "drawing/setAspectRatio"
+    },
+
+    data: {
+        setData: "data/setData",
+        addField: "data/addField",
+        removeField: "data/removeField",
+        setFieldValue:"data/setFieldValue"
     }
 }
 
@@ -38,6 +47,12 @@ const getters = {
     code: {
         fullCode: "code/fullCode",
         annotatedSelection: "code/annotatedSelection"
+    },
+
+    data: {
+        newFieldName: "data/newFieldName",
+        dataCode: "data/dataCode",
+        dataCodeLength: "data/dataCodeLength"
     },
 
     drawing: {
@@ -96,7 +111,14 @@ export class State {
     }
 
     get fullCode():Array<string> {
-        return this._store.getters["code/fullCode"]
+        return [
+            ...this.get(getters.data.dataCode),
+            ...this.get(getters.code.fullCode)
+        ];
+    }
+
+    get dataCodeLength():number {
+        return this.get(getters.data.dataCodeLength);
     }
 
     addCode(code:Array<string>) {
@@ -168,6 +190,30 @@ export class State {
 
     get codeSelection(): Array<number> {
         return this._store.state.code.selectedLines;
+    }
+
+    getNewDataFieldName(prefix: string = AppConfig.Data.fieldNamePrefix): string {
+        return this.get(getters.data.newFieldName, prefix)
+    }
+
+    getDataField(name:string) {
+        return this._store.state.data.fields.find(f => f.name === name);
+    }
+
+    setData(fields: Array<DataField>) {
+        return this.commit(mutations.data.setData, fields);
+    }
+
+    addDataField(name: string, value: DataFieldValue) {
+        return this.commit(mutations.data.addField, { name, value });
+    }
+
+    removeDataField(name: string) {
+        return this.commit(mutations.data.removeField, name);
+    }
+
+    setDateFieldValue(name: string, value: DataFieldValue) {
+        return this.commit(mutations.data.setFieldValue, { name, value });
     }
 
 }
