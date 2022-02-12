@@ -12,6 +12,7 @@ import {SetFillOpacity} from "../actions/SetFillOpacity";
 import {SetStrokeColor} from "../actions/SetStrokeColor";
 import {SetStrokeWidth} from "../actions/SetStrokeWidth";
 import {Persistence} from "../state/Persistence";
+import {UpdateStatement} from "../actions/UpdateStatement";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -162,6 +163,13 @@ export class AppController {
 
     async addStatements(code: Array<string>) {
         await this.execute(new AddStatement(code));
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence.saveCode();
+    }
+
+    async updateStatement(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
+        await this.execute(new UpdateStatement(statementIndex, tokenIndex, tokenSubIndex, newValue));
         await this.runCode();
         this.updateDrawing();
         await this._persistence.saveCode();

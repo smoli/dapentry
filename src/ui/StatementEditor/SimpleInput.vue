@@ -9,10 +9,11 @@ export default {
   name: "SimpleInput",
   components: { GrowingInput },
   props: ["content"],
+  inject: ["controller"],
 
   methods: {
     onChange(event) {
-      alert("Change" + event.target.value)
+      this.controller.updateStatement(this.content.statementIndex, this.content.index, -1, event.target.value);
     }
   }
 }

@@ -15,7 +15,7 @@ import NumberInput from "./NumberInput.vue";
 import PointInput from "./PointInput.vue";
 
 
-function createSegments(tokens: Array<Token>, textTemplate: string): Array<any> {
+function createSegments(tokens: Array<Token>, textTemplate: string, statementIndex: number): Array<any> {
   if (!tokens || !tokens.length) {
     return []
   }
@@ -34,25 +34,25 @@ function createSegments(tokens: Array<Token>, textTemplate: string): Array<any> 
 
       switch (token.type) {
         case TokenTypes.REGISTER:
-          segments.push({ type: "SimpleInput", token, index });
+          segments.push({ type: "SimpleInput", token, index, statementIndex });
           break;
         case TokenTypes.REGISTERAT:
-          segments.push({ type: "SimpleInput", token, index });
+          segments.push({ type: "SimpleInput", token, index, statementIndex });
           break;
         case TokenTypes.NUMBER:
-          segments.push({ type: "NumberInput", token, index });
+          segments.push({ type: "NumberInput", token, index, statementIndex });
           break;
         case TokenTypes.STRING:
-          segments.push({ type: "SimpleInput", token, index });
+          segments.push({ type: "SimpleInput", token, index, statementIndex });
           break;
         case TokenTypes.POINT:
-          segments.push({ type: "PointInput", token, index });
+          segments.push({ type: "PointInput", token, index, statementIndex });
           break;
         case TokenTypes.ARRAY:
-          segments.push({ type: "SimpleInput", token, index });
+          segments.push({ type: "SimpleInput", token, index, statementIndex });
           break;
         case TokenTypes.EXPRESSION:
-          segments.push({ type: "SimpleInput", token, index });
+          segments.push({ type: "SimpleInput", token, index, statementIndex });
           break;
 
         default:
@@ -85,7 +85,7 @@ export default {
       const textID = getTextIdForTokens(tokens);
 
 
-      return createSegments(tokens, this.$i18n.tm("statements." + textID))
+      return createSegments(tokens, this.$i18n.tm("statements." + textID),  selection[0]);
     }
   }
 }

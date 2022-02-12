@@ -9,10 +9,10 @@ export class UpdateStatement extends BaseAction {
     private readonly _tokenIndex: number;
     private readonly _tokenSubIndex: number;
 
-    constructor(_statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
+    constructor(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
         super();
         this._newValue = newValue;
-        this._statementIndex = _statementIndex;
+        this._statementIndex = statementIndex;
         this._tokenIndex = tokenIndex;
         this._tokenSubIndex = tokenSubIndex;
     }
