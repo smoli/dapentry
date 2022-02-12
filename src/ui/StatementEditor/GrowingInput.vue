@@ -1,5 +1,5 @@
 <template>
-  <input ref="input" v-model="myValue" @keydown="onKeyDown" :type="type"/>
+  <input ref="input" v-model="myValue" @keydown="onKeyDown" :type="type" :disabled="disabled"/>
 </template>
 
 <script lang="ts">
@@ -41,7 +41,7 @@ function getFontSize(el = document.body) {
 
 export default {
   name: "GrowingInput",
-  props: ["value", "type"],
+  props: ["value", "type", "disabled"],
 
   data() {
 

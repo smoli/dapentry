@@ -8,4 +8,43 @@
   min-height: 5em;
   overflow: auto;
 
+
+
+  div > input {
+    margin: 0.2em;
+  }
+
+  div > button {
+    width: 1.7em;
+    border: none;
+    background-color: inherit;
+  }
+
+  div > button:hover {
+    border: 1px solid darken(@accentColor, 20%);
+    border-radius: @uiElementBorderRadius;
+    background-color: @accentColor;
+  }
+
+  div > button:active {
+    background-color: @highlightColor;
+    border-radius: @uiElementBorderRadius;
+    border: 1px solid darken(@highlightColor, 20%);
+    color: white;
+  }
+
+  .drawable-data-field-name {
+    background-color: inherit;
+    border: none;
+    font-weight: bold;
+  }
+
+  .drawable-data-field-name:focus {
+    background-color: @uiColor1;
+    border: none;
+    outline: none;
+    font-weight: normal;
+  }
+
+
 }
