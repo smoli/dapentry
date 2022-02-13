@@ -62,9 +62,11 @@ export enum RenderLayer {
 export abstract class ObjectRenderer {
 
     protected _objectClickCallback: ObjectClickCallback;
+    protected _poiAvailable: boolean;
 
-    protected constructor(onObjectClick: ObjectClickCallback = null) {
+    protected constructor(onObjectClick: ObjectClickCallback = null, poiAvailable: boolean) {
         this._objectClickCallback = onObjectClick;
+        this._poiAvailable = poiAvailable;
     }
 
     public abstract setupMouseHandlers(onMouseMove: MouseHandler,

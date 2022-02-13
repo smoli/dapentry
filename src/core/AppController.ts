@@ -54,13 +54,15 @@ class PerformanceMeasure {
 export interface ApplicationOptions {
     aspectRatio?: AspectRatio,
     drawingWidth?: number,
-    availableTools?: Array<ToolNames>
+    availableTools?: Array<ToolNames>,
+    poiAvailable?:boolean
 }
 
 const applicationDefaults: ApplicationOptions = {
     aspectRatio: AspectRatio.ar1_1,
     drawingWidth: 1000,
-    availableTools: Object.values(ToolNames) as Array<ToolNames>
+    availableTools: Object.values(ToolNames) as Array<ToolNames>,
+    poiAvailable: true
 }
 
 
@@ -71,6 +73,7 @@ export class AppController {
     private _performance: PerformanceMeasure = new PerformanceMeasure();
     private _styleManager: StyleManager = new StyleManager();
     private _persistence: Persistence;
+    private _poiAvailable: boolean;
 
     constructor(state: State,
                 interpreter: GfxInterpreter,
@@ -89,7 +92,21 @@ export class AppController {
     protected processOptions(options: ApplicationOptions) {
         this._canvas = GrCanvas.create(options.aspectRatio, options.drawingWidth);
 
-        this._state.setAvailableTools(options.availableTools);
+        const tools = [...options.availableTools];
+        if (tools.indexOf(ToolNames.Select) === -1) {
+            tools.push(ToolNames.Select);
+        }
+        if (tools.indexOf(ToolNames.None) === -1) {
+            tools.push(ToolNames.None);
+        }
+
+        this._state.setAvailableTools(tools);
+
+        this._poiAvailable = options.poiAvailable;
+    }
+
+    get poiAvailable():boolean {
+        return this._poiAvailable;
     }
 
     init() {

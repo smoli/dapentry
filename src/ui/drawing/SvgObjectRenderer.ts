@@ -63,8 +63,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
     private _objectInfo: { [key: string]: ObjectInfo };
     private _svg: Selection<any, any, any, any>;
 
-    constructor(onObjectClick: ObjectClickCallback = null) {
-        super(onObjectClick);
+    constructor(onObjectClick: ObjectClickCallback = null, poiAvailable: boolean) {
+        super(onObjectClick, poiAvailable);
         this._objectInfo = {}
     }
 
@@ -178,6 +178,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
     enablePOI(enabled: boolean, poiCallback: POICallback, except: Array<GrObject>) {
+        if (!this._poiAvailable) {
+            return;
+        }
         if (this._poiRenderingEnabled) {
             this._snappingLayer.selectAll("*").remove();
         }

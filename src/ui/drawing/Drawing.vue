@@ -54,7 +54,7 @@ export default {
   },
 
   mounted() {
-    const renderer = new SvgObjectRenderer(this.controller.handleObjectSelection.bind(this.controller));
+    const renderer = new SvgObjectRenderer(this.controller.handleObjectSelection.bind(this.controller), this.controller.poiAvailable);
     renderer.init(this.id)
     this.drawingController = new DrawingController(this.controller, renderer);
 

@@ -12,7 +12,7 @@ const strippedLayout:LayoutOptions = {
     hideStatementEditor: true,
     hideToolHint: true };
 
-const wide:ApplicationOptions = { aspectRatio: AspectRatio.ar3_2, drawingWidth: 400, availableTools: [] }
+const wide:ApplicationOptions = { aspectRatio: AspectRatio.ar3_2, drawingWidth: 600, availableTools: [] }
 const primitives = [ToolNames.Circle, ToolNames.Rectangle, ToolNames.Line];
-makeDesigner("intro-simple-shapes", { ...strippedLayout, hideToolbar: false }, { ...wide, availableTools: primitives });
-makeDesigner("intro-hotkeys", strippedLayout, {...wide, availableTools: primitives });
+makeDesigner("intro-simple-shapes", { ...strippedLayout, hideToolbar: false }, { ...wide, availableTools: primitives, poiAvailable: false });
+makeDesigner("intro-hotkeys", strippedLayout, {...wide, availableTools: primitives, poiAvailable: false });
