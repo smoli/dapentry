@@ -23,7 +23,7 @@ export class GfxCircle extends GfxObject {
             case AppConfig.Runtime.Opcodes.Circle.CenterRadius:
                 this._center = a as Point2Parameter;
 
-                if (b instanceof Point2Parameter || a instanceof AtParameter) {
+                if (b instanceof Point2Parameter || b instanceof AtParameter) {
                     this._p2 = b;
                 } else {
                     this._radius = b;
