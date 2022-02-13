@@ -51,6 +51,13 @@ export default {
     }
   },
 
+  watch: {
+    value() {
+      const inp = this.$refs["input"];
+      inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+    }
+  },
+
   mounted() {
     const inp = this.$refs["input"];
     inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
