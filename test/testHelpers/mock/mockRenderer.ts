@@ -18,7 +18,7 @@ export class MockRenderer extends ObjectRenderer {
     private _snapPoi: POI;
 
     constructor() {
-        super();
+        super(null, true);
     }
 
     setupMouseHandlers(onMouseMove: MouseHandler, onClick: MouseHandler, onAlternateClick: MouseHandler, onMouseDown: MouseHandler, onMouseUp: MouseHandler) {
