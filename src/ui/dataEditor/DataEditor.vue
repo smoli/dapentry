@@ -1,9 +1,9 @@
 <template>
   <section class="drawable-data-editor">
     <h2>{{ $t("ui.dataEditor") }}</h2>
-    <div v-for="field in fieldEditors">
-      <component :is="field.type" :field="field.field" />
-    </div>
+    <table class="drawable-data-field-list">
+      <component v-for="field in fieldEditors" :is="field.type" :field="field.field" />
+    </table>
     <button>+</button>
   </section>
 </template>

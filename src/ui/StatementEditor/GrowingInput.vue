@@ -1,5 +1,5 @@
 <template>
-  <input ref="input" v-model="myValue" @keydown="onKeyDown" :type="type" :disabled="disabled"/>
+  <input ref="input" @blur="$emit('onblur')" v-model="myValue" @keydown="onKeyDown" :type="type" :disabled="disabled"/>
 </template>
 
 <script lang="ts">
@@ -41,7 +41,7 @@ function getFontSize(el = document.body) {
 
 export default {
   name: "GrowingInput",
-  props: ["value", "type", "disabled"],
+  props: ["value", "type", "disabled", "autofocus"],
 
   data() {
 
@@ -54,6 +54,9 @@ export default {
   mounted() {
     const inp = this.$refs["input"];
     inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+    if (this.autofocus) {
+      inp.focus();
+    }
   },
 
   methods: {

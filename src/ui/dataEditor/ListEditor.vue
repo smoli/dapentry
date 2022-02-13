@@ -1,15 +1,15 @@
 <template>
-  <button class="drawable-data-field-remove">-</button>
-  <GrowingInput class="drawable-data-field-name" :value="field.name" />
-  <GrowingInput v-for="value of field.value" :value="value" />
-  <button class="drawable-data-field-add-value">+</button>
+  <FieldEditor :field="field">
+    <GrowingInput v-for="value of field.value" :value="value" />
+  </FieldEditor>
 </template>
 
 <script lang="ts">
 import GrowingInput from "../StatementEditor/GrowingInput.vue";
+import FieldEditor from "./FieldEditor.vue";
 export default {
   name: "ListEditor",
-  components: { GrowingInput },
+  components: { FieldEditor, GrowingInput },
   props: ["field"]
 }
 </script>

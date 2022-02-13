@@ -1,15 +1,15 @@
 <template>
-  <button>-</button>
-  <GrowingInput class="drawable-data-field-name" :value="field.name" disabled="disabled"/>
-  <GrowingInput :value="field.value" @change="onChange"/>
-  <button class="drawable-data-field-add-value">+</button>
+  <FieldEditor :field="field">
+    <GrowingInput :value="field.value" @change="onChange"/>
+  </FieldEditor>
 </template>
 
 <script lang="ts">
 import GrowingInput from "../StatementEditor/GrowingInput.vue";
+import FieldEditor from "./FieldEditor.vue";
 export default {
   name: "NumberEditor",
-  components: { GrowingInput },
+  components: { FieldEditor, GrowingInput },
   props: ["field"],
   inject: ["controller"],
 
