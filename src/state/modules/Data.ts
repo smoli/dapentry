@@ -71,6 +71,21 @@ export const dataState = {
                 }
                 return f;
             })
+        },
+
+        addValueToField(state: DataState, payload: { name: string, value: (number | string ) }) {
+            // @ts-ignore
+            state.fields = state.fields.map(f => {
+                if (f.name !== payload.name) {
+                    return f;
+                }
+
+                if (Array.isArray(f.value)) {
+                    return { name: f.name, value: [...f.value, payload.value ]}
+                }
+
+                return { name: f.name, value: [f.value, payload.value ]}
+            })
         }
     }
 }

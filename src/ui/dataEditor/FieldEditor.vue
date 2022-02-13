@@ -11,7 +11,7 @@
     </td>
     <td>
       <slot></slot>
-      <button class="drawable-data-field-add-value">+</button>
+      <button class="drawable-data-field-add-value" @click="onAddValue">+</button>
     </td>
   </tr>
 </template>
@@ -23,6 +23,8 @@ export default {
   name: "FieldEditor",
   props: ["field"],
   components: { GrowingInput },
+  inject: ["controller"],
+
   data() {
     return {
       editingFieldName: false
@@ -35,6 +37,10 @@ export default {
     },
     onFieldNameBlur() {
       this.editingFieldName = false;
+    },
+
+    onAddValue(event) {
+      this.controller.addValueToDataField(this.field.name, 4);
     }
   }
 }

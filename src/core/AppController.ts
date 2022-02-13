@@ -14,6 +14,7 @@ import {SetStrokeWidth} from "../actions/SetStrokeWidth";
 import {Persistence} from "../state/Persistence";
 import {UpdateStatement} from "../actions/UpdateStatement";
 import {DataFieldValue} from "../state/modules/Data";
+import {AddValueToDataField} from "../actions/AddValueToDataField";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -159,6 +160,12 @@ export class AppController {
         await this.runCode();
         this.updateDrawing();
         await this._persistence.saveCode();
+    }
+
+    async addValueToDataField(name: string, value: (number | string)) {
+        await this.execute(new AddValueToDataField(name, value));
+        await this.runCode();
+        this.updateDrawing();
     }
 
     async addStatement(code: string) {

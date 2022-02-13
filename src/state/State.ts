@@ -39,7 +39,8 @@ const mutations = {
         setData: "data/setData",
         addField: "data/addField",
         removeField: "data/removeField",
-        setFieldValue:"data/setFieldValue"
+        setFieldValue: "data/setFieldValue",
+        addValueToField: "data/addValueToField"
     }
 }
 
@@ -70,12 +71,12 @@ export class State {
     private readonly _store: Store<AppStore>;
     private _i18n: I18n;
 
-    constructor(store:Store<AppStore>, i18n: I18n) {
+    constructor(store: Store<AppStore>, i18n: I18n) {
         this._store = store;
         this._i18n = i18n;
     }
 
-    get store():Store<AppStore> {
+    get store(): Store<AppStore> {
         return this._store;
     }
 
@@ -83,7 +84,7 @@ export class State {
         this._i18n.global.locale = locale;
     }
 
-    get locale():string {
+    get locale(): string {
         const locale = this._i18n.global.locale;
         return locale as string;
     }
@@ -92,7 +93,7 @@ export class State {
         this._store.commit(type, payload, options);
     }
 
-    protected get(type:string, ...params):any {
+    protected get(type: string, ...params): any {
         console.log("Getting", type)
 
         if (params.length) {
@@ -102,7 +103,7 @@ export class State {
         }
     }
 
-    get objects():Array<GrObject> {
+    get objects(): Array<GrObject> {
         return this.get(getters.drawing.objects);
     }
 
@@ -110,26 +111,26 @@ export class State {
         this.commit(mutations.code.set, code);
     }
 
-    get fullCode():Array<string> {
+    get fullCode(): Array<string> {
         return [
             ...this.get(getters.data.dataCode),
             ...this.get(getters.code.fullCode)
         ];
     }
 
-    get dataCodeLength():number {
+    get dataCodeLength(): number {
         return this.get(getters.data.dataCodeLength);
     }
 
-    addCode(code:Array<string>) {
+    addCode(code: Array<string>) {
         this.commit(mutations.code.add, code);
     }
 
-    replaceStatement(index: number, ...newStatements:Array<string>) {
+    replaceStatement(index: number, ...newStatements: Array<string>) {
         this.commit(mutations.code.replaceStatement, { index, newStatements })
     }
 
-    switchTool(newTool:ToolNames) {
+    switchTool(newTool: ToolNames) {
         this.commit(mutations.tool.switch, newTool);
     }
 
@@ -141,9 +142,10 @@ export class State {
         this.commit(mutations.tool.setKeyPress, event);
     }
 
-    get referenceObjectForTool():GrObject {
+    get referenceObjectForTool(): GrObject {
         return this.get(getters.tool.referenceObject);
     }
+
     setAspectRatio(ar: AspectRatio) {
         this.commit(mutations.drawing.setAspectRatio, ar);
     }
@@ -159,7 +161,7 @@ export class State {
     selectObject(object: GrObject) {
         this.commit(mutations.drawing.selectObject, object);
     }
-    
+
     deselectObject(object: GrObject) {
         this.commit(mutations.drawing.deselectObject, object);
     }
@@ -172,7 +174,7 @@ export class State {
         return this.get(getters.drawing.isObjectSelected, object);
     }
 
-    get selection():Array<GrObject> {
+    get selection(): Array<GrObject> {
         return this.get(getters.drawing.selection);
     }
 
@@ -196,7 +198,7 @@ export class State {
         return this.get(getters.data.newFieldName, prefix)
     }
 
-    getDataField(name:string) {
+    getDataField(name: string) {
         return this._store.state.data.fields.find(f => f.name === name);
     }
 
@@ -206,6 +208,10 @@ export class State {
 
     addDataField(name: string, value: DataFieldValue) {
         return this.commit(mutations.data.addField, { name, value });
+    }
+
+    addValueToDataField(name: string, value: (number | string)) {
+        return this.commit(mutations.data.addValueToField, { name, value });
     }
 
     removeDataField(name: string) {
