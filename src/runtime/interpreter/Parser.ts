@@ -40,6 +40,7 @@ export class Parser {
                 case TokenTypes.OPERATOR:
                 case TokenTypes.NUMBER:
                 case TokenTypes.REGISTER:
+                case TokenTypes.OTHER:
                         sep = newSep;
                         return oldSep + token.value;
 
