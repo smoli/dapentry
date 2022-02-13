@@ -4,7 +4,8 @@ import {GrObject} from "../../geometry/GrObject";
 export interface ToolState {
     current: ToolNames,
     referenceObject: GrObject,
-    keyPress: KeyboardEvent
+    keyPress: KeyboardEvent,
+    available: Array<ToolNames>
 }
 
 export const toolState = {
@@ -12,12 +13,17 @@ export const toolState = {
         return {
             current: null,
             referenceObject: null,
-            keyPress: null
+            keyPress: null,
+            available: []
 
         }
     },
 
     mutations: {
+        setAvailable(state: ToolState, tools: Array<ToolNames>) {
+            state.available = tools;
+        },
+
         switch(state:ToolState, toolName:ToolNames) {
             state.current = toolName;
         },

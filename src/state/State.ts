@@ -10,6 +10,7 @@ import {AppConfig} from "../core/AppConfig";
 
 const mutations = {
     tool: {
+        setAvailable: "tool/setAvailable",
         switch: "tool/switch",
         setReferenceObject: "tool/setReferenceObject",
         setKeyPress: "tool/setKeyPress"
@@ -130,8 +131,14 @@ export class State {
         this.commit(mutations.code.replaceStatement, { index, newStatements })
     }
 
+    setAvailableTools(tools: Array<ToolNames>) {
+        return this.commit(mutations.tool.setAvailable, tools);
+    }
+
     switchTool(newTool: ToolNames) {
-        this.commit(mutations.tool.switch, newTool);
+        if (this._store.state.tool.available.indexOf(newTool) !== -1) {
+            this.commit(mutations.tool.switch, newTool);
+        }
     }
 
     setReferenceObjectForTool(object: GrObject = null) {

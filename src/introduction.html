@@ -5,6 +5,7 @@
     <title>Drawable</title>
     <link rel="stylesheet" href="ui/css/icons/fa/css/all.css">
     <link rel="stylesheet" href="ui/css/drawable.less">
+    <link rel="stylesheet" href="ui/css/introduction.less">
     <style>
         /* nunito-sans-regular - latin */
         @font-face {
@@ -13,29 +14,40 @@
             font-weight: 400;
             src: url('ui/css/fonts/nunito-sans-v11-latin-regular.eot'); /* IE9 Compat Modes */
             src: local(''),
-            url('ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-            url('ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-            url('ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */
-            url('ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-            url('ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
+            url('ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */ url('ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
         }
 
     </style>
 </head>
 <body>
+<section class="drawable-intro-intro">
+    <h1>How to use dapentry</h1>
+</section>
 
-<h1>Drawing shapes</h1>
-<p>
-    hit c to and draw a circle
-</p>
-<div class="drawable-app-container" id="intro-one" tabindex="0" style="width: 30em; height: 20em"></div>
+<section class="drawable-intro-content">
 
-<h1>Snapping</h1>
-<p>
-    hit c to and draw a circle
-</p>
-<div class="drawable-app-container" id="intro-two" tabindex="1" style="width: 30em; height: 20em"></div>
+    <section class="drawable-intro-howto">
 
+        <div class="drawable-app-container" id="intro-simple-shapes" tabindex="0"></div>
+        <div>
+            <h2>Drawing shapes</h2>
+            <p>
+                hit c to and draw a circle
+            </p>
+        </div>
+    </section>
+
+    <section class="drawable-intro-howto">
+
+        <div class="drawable-app-container" id="intro-hotkeys" tabindex="1"></div>
+        <div>
+            <h2>Hotkeys</h2>
+            <p>
+                hit c to and draw a circle
+            </p>
+        </div>
+    </section>
+</section>
 
 
 <script type="module" src="introduction/introduction.ts"></script>

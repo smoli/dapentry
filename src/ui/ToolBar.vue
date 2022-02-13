@@ -28,7 +28,7 @@ export default {
         { buttonContent: "G", name: ToolNames.Move },
         { buttonContent: "T", name: ToolNames.Rotate },
         { buttonContent: "S", name: ToolNames.Scale },
-      ]
+      ].filter(t => this.$store.state.tool.available.indexOf(t.name) !== -1)
     }
 
   },

@@ -53,12 +53,14 @@ class PerformanceMeasure {
 
 export interface ApplicationOptions {
     aspectRatio?: AspectRatio,
-    drawingWidth?: number
+    drawingWidth?: number,
+    availableTools?: Array<ToolNames>
 }
 
 const applicationDefaults: ApplicationOptions = {
     aspectRatio: AspectRatio.ar1_1,
-    drawingWidth: 1000
+    drawingWidth: 1000,
+    availableTools: Object.values(ToolNames) as Array<ToolNames>
 }
 
 
@@ -86,6 +88,8 @@ export class AppController {
 
     protected processOptions(options: ApplicationOptions) {
         this._canvas = GrCanvas.create(options.aspectRatio, options.drawingWidth);
+
+        this._state.setAvailableTools(options.availableTools);
     }
 
     init() {
@@ -106,7 +110,7 @@ export class AppController {
     }
 
     public async save(): Promise<any> {
-        await this._persistence.saveAll();
+        await this._persistence?.saveAll();
     }
 
     public async load(persistence: Persistence): Promise<any> {
@@ -159,7 +163,7 @@ export class AppController {
         this.state.setDateFieldValue(name, newValue);
         await this.runCode();
         this.updateDrawing();
-        await this._persistence.saveCode();
+        await this._persistence?.saveCode();
     }
 
     async addValueToDataField(name: string, value: (number | string)) {
@@ -172,21 +176,21 @@ export class AppController {
         await this.execute(new AddStatement([code]));
         await this.runCode();
         this.updateDrawing();
-        await this._persistence.saveCode();
+        await this._persistence?.saveCode();
     }
 
     async addStatements(code: Array<string>) {
         await this.execute(new AddStatement(code));
         await this.runCode();
         this.updateDrawing();
-        await this._persistence.saveCode();
+        await this._persistence?.saveCode();
     }
 
     async updateStatement(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
         await this.execute(new UpdateStatement(statementIndex, tokenIndex, tokenSubIndex, newValue));
         await this.runCode();
         this.updateDrawing();
-        await this._persistence.saveCode();
+        await this._persistence?.saveCode();
     }
 
     async clearStatementSelection() {
@@ -242,7 +246,6 @@ export class AppController {
             this.state.selectObject(object);
         }
     }
-
 
     public switchTool(newTool: ToolNames) {
         this._state.switchTool(newTool);
