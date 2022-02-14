@@ -5,9 +5,9 @@
     </td>
     <td>
       <span class="drawable-data-field-name" v-if="editingFieldName === false" @dblclick="onEditFieldName">{{ field.name }}</span>
-      =
       <GrowingInput autofocus="true" @onblur="onFieldNameBlur" v-if="editingFieldName === true"
                     class="drawable-data-field-name" :value="field.name"/>
+        =
     </td>
     <td>
       <slot></slot>

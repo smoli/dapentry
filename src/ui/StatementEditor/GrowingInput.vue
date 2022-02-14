@@ -1,5 +1,5 @@
 <template>
-  <input ref="input" @blur="$emit('onblur')" v-model="myValue" @keydown="onKeyDown" :type="type" :disabled="disabled"/>
+  <input ref="input" @blur="$emit('onblur')" v-model="myValue" @keydown="onKeyDown" @keyup="onKeyUp" :type="type" :disabled="disabled"/>
 </template>
 
 <script lang="ts">
@@ -71,6 +71,18 @@ export default {
       const inp = this.$refs["input"];
       const newChar = event.key.length === 1 ? event.key : ""
       inp.style.width = ( getTextWidth(this.myValue + newChar, getFontSize(inp)) + this.offset) + "px";
+    },
+
+    onKeyUp(event: KeyboardEvent) {
+      if (event.key !== "Backspace" && event.key !== "Delete" && event.key !== "Escape") {
+        return;
+      }
+      const inp = this.$refs["input"];
+
+      if (event.key === "Escape") {
+        inp.blur();
+      }
+      inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
     }
   }
 }
