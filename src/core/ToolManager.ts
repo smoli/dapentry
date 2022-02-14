@@ -6,6 +6,8 @@ import {GrObject} from "../geometry/GrObject";
 export type SwitchEvent = (number | string);
 export type SwitchCallback = (event:SwitchEvent, tool:Tool) => void;
 
+const NO_EVENT = -1;
+
 /**
  * Manages a set of tools and their lifecycle.
  */
@@ -15,8 +17,8 @@ export class ToolManager {
     private readonly _specificToolClassesAfterDone: { [key: string]: SwitchEvent };
 
     private _currentTool: Tool;
-    private _toolEventAfterAbort: SwitchEvent;
-    private _toolClassAfterDone: SwitchEvent;
+    private _toolEventAfterAbort: SwitchEvent = NO_EVENT;
+    private _toolClassAfterDone: SwitchEvent = NO_EVENT;
     private _doneCallback: (any) => void;
     private _previewCallback: (any) => void;
     private _abortCallback: () => void;
@@ -85,7 +87,6 @@ export class ToolManager {
     }
 
     protected getClassForAfterDone(toolInstance: Tool): typeof Tool {
-
         return this._tools[this.getEventForAfterDone(toolInstance)];
     }
 
@@ -114,7 +115,7 @@ export class ToolManager {
         if (this._currentTool) {
             this._abortCurrentTool();
 
-            if (this._toolEventAfterAbort) {
+            if (this._toolEventAfterAbort !== NO_EVENT) {
                 this._currentTool = this._makeToolInstance(this._tools[this._toolEventAfterAbort]);
                 if (this._switchCallBack) {
                     this._switchCallBack(this._toolEventAfterAbort, this._currentTool);
