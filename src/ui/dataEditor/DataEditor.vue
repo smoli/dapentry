@@ -4,7 +4,7 @@
     <table class="drawable-data-field-list">
       <component v-for="field in fieldEditors" :is="field.type" :field="field.field" />
     </table>
-    <button>+</button>
+    <button @click="onNewDataField">+</button>
   </section>
 </template>
 
@@ -47,9 +47,17 @@ function createFields(fields: Array<DataField>):Array<FieldEditor> {
 export default {
   name: "DataEditor",
   components: { NumberEditor, ListEditor },
+  inject: ["controller"],
+
   computed: {
     fieldEditors() {
       return createFields(this.$store.state.data.fields);
+    }
+  },
+
+  methods: {
+    onNewDataField() {
+      this.controller.addNewDataField(4);
     }
   }
 }

@@ -15,6 +15,7 @@ import {Persistence} from "../state/Persistence";
 import {UpdateStatement} from "../actions/UpdateStatement";
 import {DataFieldValue} from "../state/modules/Data";
 import {AddValueToDataField} from "../actions/AddValueToDataField";
+import {AddNewDataField} from "../actions/AddNewDataField";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -175,6 +176,11 @@ export class AppController {
         this.state.setLocale(locale);
         await this.save();
     }
+
+    async addNewDataField(value: DataFieldValue) {
+        await this.execute(new AddNewDataField(value));
+    }
+
 
     async setDataFieldValue(name: string, newValue: DataFieldValue) {
         this.state.setDateFieldValue(name, newValue);
