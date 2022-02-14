@@ -13,6 +13,7 @@ body {
   width: 100%;
   flex-direction: column;
   justify-content: center;
+  align-content: start;
 
   .drawable-app-header {
     display: flex;
@@ -27,6 +28,8 @@ body {
     display: flex;
     flex-direction: row;
     overflow: hidden;
+    align-content: start;
+
 
 
     .drawable-left-column {
@@ -35,6 +38,7 @@ body {
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      align-content: start;
     }
 
     .drawable-main-column {
@@ -68,7 +72,8 @@ body {
 
   .drawable-app-footer {
     display: block;
-    height: @footerHeight;
+    max-height: @footerHeight;
+    min-height: @footerHeight;
   }
 }
 
