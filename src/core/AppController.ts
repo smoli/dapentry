@@ -16,6 +16,7 @@ import {UpdateStatement} from "../actions/UpdateStatement";
 import {DataFieldValue} from "../state/modules/Data";
 import {AddValueToDataField} from "../actions/AddValueToDataField";
 import {AddNewDataField} from "../actions/AddNewDataField";
+import {RemoveDataField} from "../actions/RemoveDataField";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -179,6 +180,12 @@ export class AppController {
 
     async addNewDataField(value: DataFieldValue) {
         await this.execute(new AddNewDataField(value));
+    }
+
+    async removeDataField(name: string) {
+        await this.execute(new RemoveDataField(name));
+        await this.runCode();
+        this.updateDrawing();
     }
 
 

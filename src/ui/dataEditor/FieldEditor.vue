@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <button>-</button>
+      <button @click="onRemoveField">-</button>
     </td>
     <td>
       <span class="drawable-data-field-name" v-if="editingFieldName === false" @dblclick="onEditFieldName">{{ field.name }}</span>
@@ -41,6 +41,10 @@ export default {
 
     onAddValue(event) {
       this.controller.addValueToDataField(this.field.name, 4);
+    },
+
+    onRemoveField() {
+      this.controller.removeDataField(this.field.name);
     }
   }
 }

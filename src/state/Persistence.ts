@@ -8,7 +8,7 @@ export class Persistence {
     async load(state:State):Promise<void> {
         this._state = state;
         const code = await this.loadCode();
-        state.setCode(code);
+        // state.setCode(code);
 
         const locale = await this.loadLocale();
         state.setLocale(locale);
