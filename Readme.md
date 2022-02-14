@@ -17,16 +17,21 @@ It uses an interpreted language that resembles something like assembly to draw p
 creates the program in the background. [See here](doc/opcodes.md) for more details on the language and the interpreter.
 
 ## Bugs
-* [x] Fix scaling of rotated objects
-* [ ] Make objects guards
-* [x] Percentage-Point on vertical lines does not work
-* [x] Tool Lifecycle: Abort/teardown is not called properly 
-* [x] Expressions are not displayed in steps and operation editor
-* [x] Program does not always run as far as expected (better description needed)
+* [ ] Make objects guides
 
 ## Next steps
 
 ## Todos
+
+### Main Page
+* [ ] cool design
+* [ ] Why that name?
+
+### Introduction
+* [ ] Possibility to preload code into the designer instance
+* [ ] create polygons
+* [ ] extend polygons
+* [ ] working with data fields
 
 ### Architecture
 * [ ] move naming of objects to an external object
@@ -51,9 +56,9 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
   * [x] create polygon
 * [x] Define aspect ratio for a drawing
   * [ ] Maybe determine bounding box for drawing automatically when storing
-* [ ] make polygons open by default?
-* [ ] autoclose polygons?
-* [ ] enable fill rendering for open polygons
+* [ ] ~~make polygons open by default?~~
+* [ ] ~~autoclose polygons?~~
+* [ ] ~~enable fill rendering for open polygons~~
 
 ### Data editor
 * [ ] Create tables
@@ -61,13 +66,13 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 * [ ] Rename fields
 
 ### Style editor
-* [ ] define stroke color separately
+* [x] define stroke color separately
 
 ### Operation editor
 * [ ] Operation Editor
   * [ ] FOREACH
   * [ ] Enable the user to switch an DO/ENDDO to a FOREACH when assigning an array as the count
-* [ ] Auto growing input field
+* [x] Auto growing input field
 
 ### Language/Interpreter
 * [ ] Language Version annotation
@@ -96,9 +101,15 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 * [ ] Update texts for all statements
 * [ ] Show hints on what the active tool supports, like "hold shift to axis align, ..."
 * [ ] User friendly error messages. 
+* [ ] Use mouse drag to change numeric value
 
 
 ## Done
+* [x] Fix scaling of rotated objects
+* [x] Percentage-Point on vertical lines does not work
+* [x] Tool Lifecycle: Abort/teardown is not called properly
+* [x] Expressions are not displayed in steps and operation editor
+* [x] Program does not always run as far as expected (better description needed)
 * [x] Store app configuration in a central point
 * [x] Annotate generated code to define
   * [x] what statements to display on the ui

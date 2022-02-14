@@ -93,8 +93,6 @@ export class State {
     }
 
     protected get(type:string, ...params):any {
-        console.log("Getting", type)
-
         if (params.length) {
             return this._store.getters[type](...params);
         } else {

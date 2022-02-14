@@ -45,7 +45,6 @@ describe('Rectangle', () => {
     it("can be scaled smaller along one axis", () => {
         const re = new GrRectangle("r", 0, 0, 100, 100);
 
-        console.log(re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.top])
         expect(eqp(
             re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.top],
             { x: 0, y: -50}
@@ -79,18 +78,7 @@ describe('Rectangle', () => {
             { x: 0, y: 50}
         )).to.be.true;
 
-        console.log(re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.bottom])
         re.scale(1, 2, re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.bottom]);
-
-/*
-        expect(eqp(
-            re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.top],
-            { x: 0, y: -150}
-        )).to.be.true;
-*/
-        console.log(re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.bottom])
-        console.log(re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.center])
-
         expect(eqp(
             re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.bottom],
             { x: 0, y: 50}
@@ -105,14 +93,12 @@ describe('Rectangle', () => {
         const re = new GrRectangle("r", 0, 0, 100, 100);
 
         re.rotateByDeg(90);
-        console.log(re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.topRight]);
         expect(eqp(
             re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.topRight],
             { x: 50, y: 50}
         )).to.be.true;
 
         re.scale(0.5, 0.5, re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.topRight])
-        console.log(re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.topRight]);
 
         expect(eqp(
             re.pointsOfInterest(POIPurpose.MANIPULATION)[POI.topRight],
