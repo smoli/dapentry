@@ -61,7 +61,7 @@ export const dataState = {
         },
 
         removeField(state: DataState, name: string) {
-            state.fields = this.state.fields.filter(f => f.name !== name);
+            state.fields = state.fields.filter(f => f.name !== name);
         },
 
         setFieldValue(state: DataState, payload: { name: string, value: DataFieldValue }) {

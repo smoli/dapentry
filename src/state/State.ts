@@ -85,7 +85,7 @@ export class State {
         this._i18n.global.locale = locale;
     }
 
-    get locale(): string {
+    get locale():string {
         const locale = this._i18n.global.locale;
         return locale as string;
     }
