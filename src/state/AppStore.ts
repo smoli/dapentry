@@ -3,12 +3,14 @@ import {DrawingState, drawingState} from "./modules/Drawing";
 import {toolState, ToolState} from "./modules/Tool";
 import {codeState, CodeState} from "./modules/Code";
 import {DataState, dataState} from "./modules/Data";
+import {uiState, UIState} from "./modules/UI";
 
 export interface AppStore {
     drawing: DrawingState,
     tool: ToolState,
     code: CodeState,
-    data: DataState
+    data: DataState,
+    ui: UIState
 }
 
 
@@ -30,6 +32,10 @@ export function createAppStore(): Store<AppStore> {
             data: {
                 namespaced: true,
                 ...dataState
+            },
+            ui: {
+                namespaced: true,
+                ...uiState
             }
         }
     });

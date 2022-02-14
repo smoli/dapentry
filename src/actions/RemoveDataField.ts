@@ -1,5 +1,6 @@
 import {BaseAction} from "./BaseAction";
 import {DataFieldValue} from "../state/modules/Data";
+import {DialogCloseReason} from "../ui/core/ModalFactory";
 
 export class RemoveDataField extends BaseAction {
     private readonly _name: string;
@@ -9,8 +10,11 @@ export class RemoveDataField extends BaseAction {
         this._name = name;
     }
 
-    protected _execute(data: any): any {
-        this.state.removeDataField(this._name);
-
+    protected async _execute(data: any): Promise<any> {
+        const dialog = this.controller.modalFactory.createConfirmationModal();
+        const reason = await dialog.show();
+        if (reason === DialogCloseReason.YES) {
+            this.state.removeDataField(this._name);
+        }
     }
 }

@@ -17,6 +17,7 @@ import {DataFieldValue} from "../state/modules/Data";
 import {AddValueToDataField} from "../actions/AddValueToDataField";
 import {AddNewDataField} from "../actions/AddNewDataField";
 import {RemoveDataField} from "../actions/RemoveDataField";
+import {ModalFactory} from "../ui/core/ModalFactory";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -76,6 +77,7 @@ export class AppController {
     private _styleManager: StyleManager = new StyleManager();
     private _persistence: Persistence;
     private _poiAvailable: boolean;
+    private _modalFactory: ModalFactory;
 
     constructor(state: State,
                 interpreter: GfxInterpreter,
@@ -347,5 +349,13 @@ export class AppController {
         } else {
             this.passKeyPressToTool(event);
         }
+
+    }
+
+    get modalFactory(): ModalFactory {
+        if (!this._modalFactory) {
+            this._modalFactory = new ModalFactory(this.state);
+        }
+        return this._modalFactory;
     }
 }

@@ -4,10 +4,12 @@
       <button @click="onRemoveField">-</button>
     </td>
     <td>
-      <span class="drawable-data-field-name" v-if="editingFieldName === false" @dblclick="onEditFieldName">{{ field.name }}</span>
+      <span class="drawable-data-field-name" v-if="editingFieldName === false" @dblclick="onEditFieldName">{{
+          field.name
+        }}</span>
       <GrowingInput autofocus="true" @onblur="onFieldNameBlur" v-if="editingFieldName === true"
                     class="drawable-data-field-name" :value="field.name"/>
-        =
+      =
     </td>
     <td>
       <slot></slot>
@@ -43,7 +45,7 @@ export default {
       this.controller.addValueToDataField(this.field.name, 4);
     },
 
-    onRemoveField() {
+    async onRemoveField() {
       this.controller.removeDataField(this.field.name);
     }
   }

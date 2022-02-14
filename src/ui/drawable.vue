@@ -1,4 +1,5 @@
 <template>
+  <Modal v-if="$store.state.ui.modalComponent !== null"></Modal>
   <drawable-header v-if="!hideHeader"></drawable-header>
   <section class="drawable-app-main">
     <div class="drawable-left-column" v-if="!hideLeftColumn">
@@ -27,11 +28,12 @@ import PropertiesEditor from "./propertiesEditor/PropertiesEditor.vue";
 import DrawableHeader from "./header.vue";
 import StatementEditor from "./StatementEditor/StatementEditor";
 import ToolBar from "./ToolBar.vue";
+import Modal from "./core/Modal.vue";
 
 
 export default {
   name: "Drawable",
-  components: { ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
+  components: { Modal, ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
   inject: ["controller"],
   props: [
     "hideHeader",
