@@ -1,14 +1,32 @@
 <template>
-<h1>Confirm</h1>
-  <p>Are you sure</p>
-  <button @click="onYes">Yes</button>
-  <button @click="onNo">No</button>
+  <div class="drawable-modal-confirm">
+    <h1>Confirm</h1>
+    <p>{{ text }}</p>
+    <div class="drawable-modal-footer">
+      <button @click="onYes">{{ yesText }}</button>
+      <button @click="onNo">{{ noText }}</button>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 export default {
   name: "ConfirmationModal",
   props: ["handler"],
+
+  computed: {
+    text() {
+      return this.handler.text;
+    },
+
+    yesText() {
+      return this.handler.yesButtonText;
+    },
+
+    noText() {
+      return this.handler.noButtonText;
+    }
+  },
 
   methods: {
     onYes() {

@@ -1,10 +1,10 @@
 import {ModalDialog} from "../../ui/core/ModalFactory";
+import {shallowRef} from "vue";
 
 
 export interface UIState {
     modalComponent: any,
-    modalHandler: ModalDialog
-
+    modalHandler: ModalDialog,
 }
 
 
@@ -19,7 +19,7 @@ export const uiState = {
 
     mutations: {
         showModal(state: UIState, payload: { component: any, handler: ModalDialog }) {
-            state.modalComponent = payload.component;
+            state.modalComponent = shallowRef(payload.component);
             state.modalHandler = payload.handler;
         },
 

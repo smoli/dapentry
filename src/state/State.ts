@@ -88,6 +88,10 @@ export class State {
         return this._store;
     }
 
+    get i18n():I18n {
+        return  this._i18n;
+    }
+
     setLocale(locale: string) {
         this._i18n.global.locale = locale;
     }

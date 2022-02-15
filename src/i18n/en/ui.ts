@@ -6,6 +6,8 @@ export const ui = {
     stepEditor: "Steps",
     propertiesEditor: "Properties",
     aspectRatio: "Aspect ratio",
+    yes: "Yes",
+    no: "No",
     styleEditor: {
         title: "Style",
         fillColor: "Fill",
