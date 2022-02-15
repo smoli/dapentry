@@ -1,6 +1,8 @@
 <template>
   <section class="drawable-steplist-container">
-    <h2>{{ $t("ui.stepEditor") }}</h2>
+    <h2>{{ $t("ui.stepEditor") }}
+      <button @click="onLoopSelection" :disabled="noLinesSelected">Loop</button>
+    </h2>
 
     <div v-for="(line, index) of annotatedCode" v-bind:data-step="index"
          class="drawable-steplist-step" :class="{ selected: line.selected }"
@@ -32,7 +34,7 @@ function constructText(tokens, $t): string {
   const tokenTexts = tokens.map((t: Token) => {
     switch (t.type) {
       case TokenTypes.NUMBER:
-        return (t.value as number).toFixed(2);
+        return ( t.value as number ).toFixed(2);
 
       case TokenTypes.POINT:
         return `(${t.value[0].value}, ${t.value[1].value})`;
@@ -89,6 +91,10 @@ export default {
 
     lastSelectedLine(): number {
       return Math.max(...this.$store.state.code.selectedLines);
+    },
+
+    noLinesSelected():boolean {
+      return this.$store.state.code.selectedLines.length === 0;
     }
   },
 
@@ -110,16 +116,24 @@ export default {
             step.originalLine,
             this.selectedFirst);
 
-        (this.controller as AppController).selectStatements(selSteps)
+        ( this.controller as AppController ).selectStatements(selSteps)
       } else {
         if (step.selected && this.$store.state.code.selectedLines.length === 1) {
-          (this.controller as AppController).clearStatementSelection();
+          ( this.controller as AppController ).clearStatementSelection();
           this.selectedFirst = null;
         } else {
-          (this.controller as AppController).selectStatement(this.annotatedCode[index].originalLine)
+          ( this.controller as AppController ).selectStatement(this.annotatedCode[index].originalLine)
           this.selectedFirst = this.annotatedCode[index].originalLine;
         }
       }
+    },
+
+    async onLoopSelection() {
+      if (!this.$store.state.code.selectedLines.length) {
+        return;
+      }
+      await this.controller.loopStatements(this.$store.state.code.selectedLines)
+      await this.controller.clearStatementSelection();
     }
   }
 

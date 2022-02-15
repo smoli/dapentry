@@ -18,6 +18,7 @@ import {AddValueToDataField} from "../actions/AddValueToDataField";
 import {AddNewDataField} from "../actions/AddNewDataField";
 import {RemoveDataField} from "../actions/RemoveDataField";
 import {ModalFactory} from "../ui/core/ModalFactory";
+import {LoopStatements} from "../actions/LoopStatements";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -220,6 +221,13 @@ export class AppController {
 
     async updateStatement(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
         await this.execute(new UpdateStatement(statementIndex, tokenIndex, tokenSubIndex, newValue));
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence?.saveCode();
+    }
+
+    async loopStatements(statementIndexes: Array<number>) {
+        await this.execute(new LoopStatements(statementIndexes));
         await this.runCode();
         this.updateDrawing();
         await this._persistence?.saveCode();

@@ -142,6 +142,10 @@ export class State {
         this.commit(mutations.code.replaceStatement, { index, newStatements })
     }
 
+    insertStatements(insertAt: number, ...statements: Array<string>) {
+        this.commit(mutations.code.insert, { insertAt, statements })
+    }
+
     setAvailableTools(tools: Array<ToolNames>) {
         return this.commit(mutations.tool.setAvailable, tools);
     }

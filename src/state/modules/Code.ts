@@ -44,8 +44,8 @@ export const codeState = {
             state.code = state.codeManager.code.map(s => s);
         },
 
-        insert(state: CodeState, payload: { code: Array<string>, insertAt: number }) {
-            state.codeManager.insertStatements(payload.code, payload.insertAt)
+        insert(state: CodeState, payload: { statements: Array<string>, insertAt: number }) {
+            state.codeManager.insertStatements(payload.statements, payload.insertAt)
             state.code = state.codeManager.code.map(s => s);
         },
 
