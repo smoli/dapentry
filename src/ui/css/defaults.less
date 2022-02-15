@@ -1,14 +1,7 @@
-//https://coolors.co/5386e4-4c4b63-949396-aba8b2-c3c3c3
-//https://coolors.co/fe4a49-fed766-009fb7-e6e6ea-f4f4f8
-//https://coolors.co/6c756b-93acb5-96c5f7-a9d3ff-f2f4ff
-//https://coolors.co/2b2d42-e7e7e7-000000-ffa62b-9882ac
-//https://coolors.co/b0413e-e7e7e7-548687-473335
-
-
-//https://coolors.co/fed766-ff595e-0081cc-646165-e6e6ea-f4f4f8
+//https://coolors.co/fed766-0081cc-fd454a-44af69-646165-e6e6ea-f4f4f8
 
 // Orange yellow crayola
-@accentColor:#FED766;
+@ciMainColor:#FED766;
 
 // Green blue crayola
 @highlightColor:  #0081CC;
@@ -20,15 +13,14 @@
 // medium sea green
 @acceptColor: #44AF69;
 
-// Dim gray
-@uiColor3: #646165;
-
 // Ghost wire
 @uiColor1: #F4F4F8;
 
+// Dim gray
+@uiColor3: #646165;
+
 // Gainsboro
 @uiColor2: #E6E6EA;
-
 
 
 @drawableMainColor: coral;
@@ -37,23 +29,23 @@
 
 @uiElementBorderRadius: 0.2em;
 
-
+@buttonBorderDarkening: 20%;
 
 button {
-  background-color: @accentColor;
+  background-color: @ciMainColor;
   border-radius: @uiElementBorderRadius;
-  border: 1px solid darken(@accentColor, 20%);
+  border: 1px solid darken(@ciMainColor, @buttonBorderDarkening);
 }
 
 button:hover {
   background-color: @highlightColor;
-  border: 1px solid darken(@highlightColor, 20%);
+  border: 1px solid darken(@highlightColor, @buttonBorderDarkening);
   color: white;
 }
 
 button:active {
   background-color: darken(@highlightColor, 10%);
-  border: 1px solid darken(@highlightColor, 20%);
+  border: 1px solid darken(@highlightColor, @buttonBorderDarkening);
   color: white;
 }
 
@@ -61,7 +53,7 @@ button:active {
 
 button.drawable-ui-decline {
   background-color: @declineColor;
-  border: 1px solid darken(@declineColor, 20%);
+  border: 1px solid darken(@declineColor, @buttonBorderDarkening);
   color: white;
 }
 
@@ -74,25 +66,25 @@ button.drawable-ui-decline:hover {
 
 button.drawable-ui-decline:active {
   background-color: darken(@declineColor, 10%);
-  border: 1px solid darken(@declineColor, 20%);
+  border: 1px solid darken(@declineColor, @buttonBorderDarkening);
   color: white;
 }
 
 
 button.drawable-ui-accept {
   background-color: @acceptColor;
-  border: 1px solid darken(@acceptColor, 20%);
+  border: 1px solid darken(@acceptColor, @buttonBorderDarkening);
   color: white;
 }
 
 button.drawable-ui-accept:hover {
   background-color: lighten(@acceptColor, 5%);
-  border: 1px solid darken(@acceptColor, 20%);
+  border: 1px solid darken(@acceptColor, @buttonBorderDarkening);
   color: white;
 }
 
 button.drawable-ui-accept:active {
   background-color: darken(@acceptColor, 10%);
-  border: 1px solid darken(@acceptColor, 20%);
+  border: 1px solid darken(@acceptColor, @buttonBorderDarkening);
   color: white;
 }

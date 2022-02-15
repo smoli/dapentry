@@ -44,15 +44,15 @@
   }
 
   button:hover {
-    border: 1px solid darken(@accentColor, 20%);
+    border: 1px solid darken(@ciMainColor, @buttonBorderDarkening);
     border-radius: @uiElementBorderRadius;
-    background-color: @accentColor;
+    background-color: @ciMainColor;
   }
 
   button:active {
     background-color: @highlightColor;
     border-radius: @uiElementBorderRadius;
-    border: 1px solid darken(@highlightColor, 20%);
+    border: 1px solid darken(@highlightColor, @buttonBorderDarkening);
     color: white;
   }
 
