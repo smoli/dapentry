@@ -19,9 +19,16 @@
       min-height: 2em;
       width: 2em;
       margin: 0.2em;
+      background-color: @uiColor2;
+      border: 1px solid darken(@uiColor2, 20%);
     }
 
-    .drawable-tool-active {
+    button:hover {
+      background-color: @uiColor1;
+      color: @uiColor3;
+    }
+
+    button:active, .drawable-tool-active {
       background-color: @highlightColor;
       color: white;
       border-radius: @uiElementBorderRadius;
