@@ -6,7 +6,7 @@ import {AspectRatio} from "../geometry/GrCanvas";
 import {I18n} from "vue-i18n";
 import {DataField, DataFieldValue} from "./modules/Data";
 import {AppConfig} from "../core/AppConfig";
-import {ModalDialog} from "../ui/core/ModalFactory";
+import {ModalDialog} from "../ui/core/ModalDialog";
 
 
 const mutations = {

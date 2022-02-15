@@ -1,5 +1,5 @@
-import {ModalDialog} from "../../ui/core/ModalFactory";
 import {shallowRef} from "vue";
+import {ModalDialog} from "../../ui/core/ModalDialog";
 
 
 export interface UIState {

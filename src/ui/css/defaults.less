@@ -13,8 +13,12 @@
 // Green blue crayola
 @highlightColor:  #0081CC;
 
-// Sizzling red
-@alertColor: #FF595E;
+// red salsa
+@alertColor: #fd454a;
+@declineColor: #fd454a;
+
+// medium sea green
+@acceptColor: #44AF69;
 
 // Dim gray
 @uiColor3: #646165;
@@ -32,3 +36,63 @@
 @fontFamilies: "Nunito Sans", SansSerif, sans-serif;
 
 @uiElementBorderRadius: 0.2em;
+
+
+
+button {
+  background-color: @accentColor;
+  border-radius: @uiElementBorderRadius;
+  border: 1px solid darken(@accentColor, 20%);
+}
+
+button:hover {
+  background-color: @highlightColor;
+  border: 1px solid darken(@highlightColor, 20%);
+  color: white;
+}
+
+button:active {
+  background-color: darken(@highlightColor, 10%);
+  border: 1px solid darken(@highlightColor, 20%);
+  color: white;
+}
+
+
+
+button.drawable-ui-decline {
+  background-color: @declineColor;
+  border: 1px solid darken(@declineColor, 20%);
+  color: white;
+}
+
+button.drawable-ui-decline:hover {
+  background-color: lighten(@declineColor, 5%);
+  border: 1px solid darken(@declineColor, 50%);
+  //box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+button.drawable-ui-decline:active {
+  background-color: darken(@declineColor, 10%);
+  border: 1px solid darken(@declineColor, 20%);
+  color: white;
+}
+
+
+button.drawable-ui-accept {
+  background-color: @acceptColor;
+  border: 1px solid darken(@acceptColor, 20%);
+  color: white;
+}
+
+button.drawable-ui-accept:hover {
+  background-color: lighten(@acceptColor, 5%);
+  border: 1px solid darken(@acceptColor, 20%);
+  color: white;
+}
+
+button.drawable-ui-accept:active {
+  background-color: darken(@acceptColor, 10%);
+  border: 1px solid darken(@acceptColor, 20%);
+  color: white;
+}

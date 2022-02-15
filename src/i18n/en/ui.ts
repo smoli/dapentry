@@ -8,6 +8,7 @@ export const ui = {
     aspectRatio: "Aspect ratio",
     yes: "Yes",
     no: "No",
+    confirm: "Please confirm",
     styleEditor: {
         title: "Style",
         fillColor: "Fill",

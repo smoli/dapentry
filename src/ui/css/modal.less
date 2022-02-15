@@ -11,7 +11,7 @@
   justify-content: start;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.1);
-  padding: 3em;
+  padding: 3.5em;
 
 
   section {
@@ -41,27 +41,12 @@
       display: flex;
       flex-direction: row;
       justify-content: end;
-      padding: 0.5em 1em;
+      padding: 0 1em 1.5em;
 
       button {
-        background-color: @accentColor;
-        border-radius: @uiElementBorderRadius;
-        border: 1px solid darken(@accentColor, 20%);
         margin-left: 1em;
         min-width: 3em;
         padding: 0.5em 1em;
-      }
-
-      button:hover {
-        background-color: @highlightColor;
-        border: 1px solid darken(@highlightColor, 20%);
-        color: white;
-      }
-
-      button:active {
-        background-color: darken(@highlightColor, 10%);
-        border: 1px solid darken(@highlightColor, 20%);
-        color: white;
       }
     }
   }

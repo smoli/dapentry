@@ -7,6 +7,7 @@ export const ui = {
     aspectRatio: "Seitenverhältnis",
     yes: "Ja",
     no: "Nein",
+    confirm: "Bitte bestätigen",
     styleEditor: {
         title: "Style",
         fillColor: "Füllfarbe",

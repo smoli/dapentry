@@ -1,10 +1,10 @@
 <template>
   <div class="drawable-modal-confirm">
-    <h1>Confirm</h1>
+    <h1>{{ caption }}</h1>
     <p>{{ text }}</p>
     <div class="drawable-modal-footer">
-      <button @click="onYes">{{ yesText }}</button>
-      <button @click="onNo">{{ noText }}</button>
+      <button @click="onYes" class="drawable-ui-accept">{{ yesText }}</button>
+      <button @click="onNo" class="drawable-ui-decline">{{ noText }}</button>
     </div>
   </div>
 </template>
@@ -25,6 +25,10 @@ export default {
 
     noText() {
       return this.handler.noButtonText;
+    },
+
+    caption() {
+      return this.handler.caption;
     }
   },
 
