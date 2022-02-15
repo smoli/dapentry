@@ -4,7 +4,7 @@
     <table class="drawable-data-field-list">
       <component v-for="field in fieldEditors" :is="field.type" :field="field.field" />
     </table>
-    <button @click="onNewDataField">+</button>
+    <button @click="onNewDataField" class="drawable-ui-transparent">+</button>
   </section>
 </template>
 

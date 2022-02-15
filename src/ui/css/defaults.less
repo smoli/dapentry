@@ -88,3 +88,24 @@ button.drawable-ui-accept:active {
   border: 1px solid darken(@acceptColor, @buttonBorderDarkening);
   color: white;
 }
+
+
+button.drawable-ui-transparent,
+button.drawable-ui-transparent:not([enabled]):hover {
+  border: 1px solid transparent;
+  background-color: inherit;
+  color: @uiColor3;
+}
+
+button.drawable-ui-transparent:not([disabled]):hover {
+  border: 1px solid darken(@ciMainColor, @buttonBorderDarkening);
+  border-radius: @uiElementBorderRadius;
+  background-color: @ciMainColor;
+}
+
+button.drawable-ui-transparent:active {
+  background-color: @highlightColor !important;
+  border-radius: @uiElementBorderRadius;
+  border: 1px solid darken(@highlightColor, @buttonBorderDarkening) !important;
+  color: white !important;
+}

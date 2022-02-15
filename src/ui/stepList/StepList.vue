@@ -1,7 +1,10 @@
 <template>
   <section class="drawable-steplist-container">
     <h2>{{ $t("ui.stepEditor") }}
-      <button @click="onLoopSelection" :disabled="noLinesSelected">Loop</button>
+      <button @click="onLoopSelection"
+              :disabled="noLinesSelected"
+              class="drawable-ui-transparent"
+      >Loop</button>
     </h2>
 
     <div v-for="(line, index) of annotatedCode" v-bind:data-step="index"

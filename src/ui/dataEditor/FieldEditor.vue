@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <button @click="onRemoveField">-</button>
+      <button @click="onRemoveField" class="drawable-ui-transparent">-</button>
     </td>
     <td>
       <span class="drawable-data-field-name" v-if="editingFieldName === false" @dblclick="onEditFieldName">{{
@@ -13,7 +13,7 @@
     </td>
     <td>
       <slot></slot>
-      <button class="drawable-data-field-add-value" @click="onAddValue">+</button>
+      <button class="drawable-data-field-add-value drawable-ui-transparent" @click="onAddValue">+</button>
     </td>
   </tr>
 </template>
