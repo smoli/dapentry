@@ -14,7 +14,7 @@ export class LoopStatements extends BaseAction {
         return this.state.store.state.code.codeManager;
     }
 
-    _execute() {
+    async _execute() {
         const from = Math.min(...this._indexes);
         const to = Math.max(...this._indexes);
 
@@ -28,7 +28,13 @@ export class LoopStatements extends BaseAction {
             return;
         }
 
-
+        if (Math.max(...annotatedCode.map(c => c.level)) !== 0) {
+            const dialog = this.controller.modalFactory.createInfoModal();
+            await dialog.show({
+                text: "ui.infoMessages.nestedLoopsNotSupported"
+            })
+            return;
+        }
 
         this.state.insertStatements(from, "DO 2");
         this.state.insertStatements(to + 2, "ENDDO");  // + 2 because indexes change when inserting "DO"

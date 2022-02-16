@@ -32,7 +32,7 @@ describe('Loop statement', () => {
         ])
     });
 
-    it("Will wrap code that already contains a loop", () => {
+    xit("Will wrap code that already contains a loop", () => {
         const action = new LoopStatements([1, 2, 3, 4])
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state);
@@ -60,7 +60,7 @@ describe('Loop statement', () => {
         ])
     });
 
-    it("Will wrap code that contains a forEach", () => {
+    xit("Will wrap code that contains a forEach", () => {
         const action = new LoopStatements([2, 3, 4, 5])
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state);
