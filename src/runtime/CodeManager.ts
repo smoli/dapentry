@@ -3,6 +3,7 @@ import {StateMachine} from "./tools/StateMachine";
 import {Stack} from "./tools/Stack";
 import {ASSERT} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
+import App from "../../ui5stuff/controller/App.controller";
 
 
 export type TokenList = Array<Token>;
@@ -278,13 +279,24 @@ export class CodeManager {
                 continue;
             }
 
-            const doOpCode = findOpCode(tokens, "DO");
+            const doOpCode = findOpCode(tokens, AppConfig.Runtime.Opcodes.Do);
             if (doOpCode) {
-                blockStack.push({ code: "DO", replaces: findAllAnnotations(tokens, "REPLACE") })
+                blockStack.push({ code: AppConfig.Runtime.Opcodes.Do, replaces: findAllAnnotations(tokens, "REPLACE") });
             }
 
-            const endDo = findOpCode(tokens, "ENDDO");
+            const forEachOpCode = findOpCode(tokens, AppConfig.Runtime.Opcodes.ForEach);
+            if (forEachOpCode) {
+                blockStack.push({ code: AppConfig.Runtime.Opcodes.ForEach, replaces: findAllAnnotations(tokens, "REPLACE") });
+            }
+
+            const endDo = findOpCode(tokens, AppConfig.Runtime.Opcodes.EndDo);
             if (endDo) {
+                blockStack.pop();
+                level--;
+            }
+
+            const endEach = findOpCode(tokens, AppConfig.Runtime.Opcodes.EndEach);
+            if (endEach) {
                 blockStack.pop();
                 level--;
             }
@@ -334,7 +346,7 @@ export class CodeManager {
 
             ret.push({ originalLine, code: newLine, level });
 
-            if (doOpCode) {
+            if (doOpCode || forEachOpCode) {
                 level++;
             }
         }

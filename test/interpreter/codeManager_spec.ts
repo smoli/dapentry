@@ -548,6 +548,30 @@ describe('Code manager', () => {
 
         });
 
+
+        it("can tell for each statement how deeply nested it is in loops", () => {
+
+            const code = `
+                    LOAD r1, 10
+                    LOAD r2, [1, 2, 3, 4]
+                    FOREACH r2
+                        ADD r1, 1
+                        DO 5
+                            ADD r1, 2
+                        ENDDO
+                        ADD r1, 3
+                    ENDEACH
+                    ADD r1, 4
+                `;
+
+            const m = new CodeManager();
+            m.addCodeString(code);
+
+            expect(m.annotatedCode.map(c => c.level)).to.deep.equal([
+                0, 0, 0, 1, 1, 2, 1, 1, 0, 0
+            ]);
+        });
+
         it("can create blocks from DO/ENDDO", () => {
 
             const code = `
