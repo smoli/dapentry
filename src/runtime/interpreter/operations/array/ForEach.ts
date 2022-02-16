@@ -56,11 +56,12 @@ export class ForEach extends Operation {
     }
 
 
-    public static endEach() {
+    public static endEach(interpreter) {
         if (!ForEach._info.length) {
             throw new Error("Not within a loop");
         }
 
+        interpreter.popStack();
         ForEach._info.pop();
     }
 
@@ -118,7 +119,7 @@ export class EndForEach extends Operation {
             }
             interpreter.gotoLabel(info.label);
         } else {
-            interpreter.popStack();
+            ForEach.endEach(interpreter);
         }
 
 

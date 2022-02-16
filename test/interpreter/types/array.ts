@@ -125,7 +125,7 @@ describe('Array', () => {
 
     });
 
-    it("can be iterated over with special operations", async () => {
+    it("can be iterated over with foreach", async () => {
 
         const code = `
             LOAD a, [1, 2, 3, 4, 5, 6, 7]
@@ -144,6 +144,27 @@ describe('Array', () => {
         expect(i.getRegister("r")).to.equal((1 + 2 + 3 + 4 + 5 + 6 + 7))
         expect(i.getRegister("a")).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
         expect(i.getRegister("v")).to.be.undefined;
+    });
+
+    it("foreach can be nested", async () => {
+        const code = `
+            LOAD a, [1, 2, 3]
+            LOAD r, 0
+                      
+            FOREACH w, a
+                LOAD x, ^r                  
+                FOREACH v, a  
+                    ADD ^x, v
+                ENDEACH
+                LOAD ^r, x
+            ENDEACH     
+       `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r")).to.equal(3 * (1 + 2 + 3));
     });
 
     it("iteration is provided the index as well", async () => {
