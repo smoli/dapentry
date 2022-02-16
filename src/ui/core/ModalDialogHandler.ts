@@ -2,23 +2,7 @@ import {I18n} from "vue-i18n";
 import {ASSERT} from "../../core/Assertions";
 import {DialogCloseReason} from "./ModalFactory";
 
-export const InfoModalComponent = {
-    name: "InfoModal",
-    props: ["handler"],
-
-    methods: {
-        onClose() {
-            this.handler.close();
-        }
-    },
-    template: `
-      <p>Welcome from the modal world in a separate component</p>
-      <button @click="onClose">Close</button>
-    `
-}
-
-
-export class ModalDialog {
+export class ModalDialogHandler {
     private readonly _onClose: () => void;
     private readonly _onShow: () => void;
     private readonly _i18n: I18n;
@@ -73,3 +57,5 @@ export class ModalDialog {
         this._reject(error);
     }
 }
+
+

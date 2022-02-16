@@ -7,6 +7,8 @@ export const ui = {
     aspectRatio: "Seitenverhältnis",
     yes: "Ja",
     no: "Nein",
+    ok: "Ok",
+    information: "Information",
     confirm: "Bitte bestätigen",
     styleEditor: {
         title: "Style",
@@ -17,5 +19,8 @@ export const ui = {
     },
     stepList: {
         pauseExplanation: "Bild wird bis hier gezeichnet"
+    },
+    infoMessages: {
+        nestedLoopsNotSupported: "Aktuell werden verschachtelte Schleifen nicht unterstützt."
     }
 }

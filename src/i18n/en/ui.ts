@@ -8,6 +8,8 @@ export const ui = {
     aspectRatio: "Aspect ratio",
     yes: "Yes",
     no: "No",
+    ok: "Ok",
+    information: "Information",
     confirm: "Please confirm",
     styleEditor: {
         title: "Style",
@@ -18,5 +20,8 @@ export const ui = {
     },
     stepList: {
         pauseExplanation: "Image drawn up to here"
+    },
+    infoMessages: {
+        nestedLoopsNotSupported: "At the moment, nested loops are not supported."
     }
 }

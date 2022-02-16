@@ -6,7 +6,7 @@ import {AspectRatio} from "../geometry/GrCanvas";
 import {I18n} from "vue-i18n";
 import {DataField, DataFieldValue} from "./modules/Data";
 import {AppConfig} from "../core/AppConfig";
-import {ModalDialog} from "../ui/core/ModalDialog";
+import {ModalDialogHandler} from "../ui/core/ModalDialogHandler";
 
 
 const mutations = {
@@ -254,7 +254,7 @@ export class State {
         return this.commit(mutations.data.setFieldValue, { name, value });
     }
 
-    showModal(component: any, handler: ModalDialog) {
+    showModal(component: any, handler: ModalDialogHandler) {
         return this.commit(mutations.ui.showModal, { component, handler });
     }
 

@@ -1,5 +1,5 @@
 import {DialogCloseReason} from "./ModalFactory";
-import {ModalDialog} from "./ModalDialog";
+import {ModalDialogHandler} from "./ModalDialogHandler";
 
 
 export const ConfirmationModalComponent = {
@@ -52,11 +52,11 @@ export interface ConfirmationModalOptions {
     caption?: string
 }
 
-export class ConfirmationModal extends ModalDialog {
+export class ConfirmationModal extends ModalDialogHandler {
     private _options: ConfirmationModalOptions;
 
     get text(): string {
-        return this._options.text;
+        return this.t(this._options.text);
     }
 
     get noButtonText(): string {

@@ -1,6 +1,7 @@
 import {State} from "../../state/State";
 import {ConfirmationModalComponent, ConfirmationModal} from "./ConfirmationModal";
-import {InfoModalComponent, ModalDialog} from "./ModalDialog";
+import {InfoModalComponent, InfoModalHandler} from "./InfoModal";
+import {ModalDialogHandler} from "./ModalDialogHandler";
 
 export enum DialogCloseReason {
     OK,
@@ -8,7 +9,6 @@ export enum DialogCloseReason {
     YES,
     NO
 }
-
 
 export class ModalFactory {
     private _state: State;
@@ -18,7 +18,7 @@ export class ModalFactory {
     }
 
 
-    protected createModal<T>(component:any, HandlerClass: (typeof ModalDialog)):T {
+    protected createModal<T>(component:any, HandlerClass: (typeof ModalDialogHandler)):T {
         const handler = new HandlerClass(
             () => {
                 this._state.showModal(component, handler);
@@ -36,8 +36,8 @@ export class ModalFactory {
         return this.createModal<ConfirmationModal>(ConfirmationModalComponent, ConfirmationModal);
     }
 
-    createInfoModal():ModalDialog {
-        return this.createModal<ModalDialog>(InfoModalComponent, ModalDialog);
+    createInfoModal():InfoModalHandler {
+        return this.createModal<InfoModalHandler>(InfoModalComponent, InfoModalHandler);
     }
 
 }
