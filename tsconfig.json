@@ -10,9 +10,13 @@
     "noImplicitAny": false,
     "strictNullChecks": false
   },
+
   "include": [
-    "./src/**/*\\.(ts|vue)"
+    "./src/**/*.ts",
+    "./src/**/*.vue",
+    "./test/**/*.ts"
   ],
+  "files": ["./src/vue-shim.d.ts"],
   "exclude": [
     "node_modules",
     "ui5stuff"

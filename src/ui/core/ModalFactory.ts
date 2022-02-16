@@ -1,8 +1,6 @@
 import {State} from "../../state/State";
-import InfoModal from "../../ui/core/InfoModal.vue";
-import ConfirmationModal from "../../ui/core/ConfirmationModal.vue";
-import {ConfirmationModalHandler} from "./ConfirmationModalHandler";
-import {ModalDialog} from "./ModalDialog";
+import {ConfirmationModalComponent, ConfirmationModal} from "./ConfirmationModal";
+import {InfoModalComponent, ModalDialog} from "./ModalDialog";
 
 export enum DialogCloseReason {
     OK,
@@ -34,12 +32,12 @@ export class ModalFactory {
         return handler as unknown as T;
     }
 
-    createConfirmationModal():ConfirmationModalHandler {
-        return this.createModal<ConfirmationModalHandler>(ConfirmationModal, ConfirmationModalHandler);
+    createConfirmationModal():ConfirmationModal {
+        return this.createModal<ConfirmationModal>(ConfirmationModalComponent, ConfirmationModal);
     }
 
     createInfoModal():ModalDialog {
-        return this.createModal<ModalDialog>(InfoModal, ModalDialog);
+        return this.createModal<ModalDialog>(InfoModalComponent, ModalDialog);
     }
 
 }

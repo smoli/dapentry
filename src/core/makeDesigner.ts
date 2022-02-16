@@ -2,7 +2,7 @@ import {createI18n} from "vue-i18n";
 import {i18nMessages} from "../i18n/i18nMessages";
 import {AppController, ApplicationOptions} from "./AppController";
 import {createAppStore} from "../state/AppStore";
-import {createApp} from "vue";
+import {createApp} from "vue/dist/vue.esm-bundler";
 import Drawable from "../ui/drawable.vue";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {State} from "../state/State";
