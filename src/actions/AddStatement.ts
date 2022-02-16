@@ -9,6 +9,14 @@ export class AddStatement extends BaseAction {
     }
 
     protected _execute(data: any): any {
-        this.state.addCode(this._code);
+        const selectedCode = this.state.store.state.code.selectedLines;
+
+        if (selectedCode.length) {
+            const index = Math.max(...selectedCode);
+            this.state.insertStatements(index + 1, ...this._code);
+        } else {
+            this.state.addCode(this._code);
+        }
+
     }
 }
