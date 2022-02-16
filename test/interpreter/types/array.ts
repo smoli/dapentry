@@ -132,7 +132,7 @@ describe('Array', () => {
             LOAD r, 0
                                         
             FOREACH v, a  
-                ADD r, v
+                ADD ^r, v
             ENDEACH          
        `;
 
@@ -143,7 +143,7 @@ describe('Array', () => {
 
         expect(i.getRegister("r")).to.equal((1 + 2 + 3 + 4 + 5 + 6 + 7))
         expect(i.getRegister("a")).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
-        expect(i.getRegister("v")).to.equal(7)
+        expect(i.getRegister("v")).to.be.undefined;
     });
 
     it("iteration is provided the index as well", async () => {

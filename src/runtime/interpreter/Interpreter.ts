@@ -82,9 +82,11 @@ export class Interpreter {
         } else {
             this._currentFrame = new StackFrame(this._currentFrame);
         }
+
+        return this._currentFrame;
     }
 
-    public popStack(returnRegister: Parameter, receiveRegister: Parameter = null) {
+    public popStack(returnRegister: Parameter = null, receiveRegister: Parameter = null) {
         if (this._executed) {
             return;
         }

@@ -88,7 +88,25 @@ describe('DO', () => {
         await i.run();
 
         expect(i.getRegister("r1")).to.equal(12)
+    });
 
+    it("can be nested with a foreach", async () => {
+        const code = `
+            LOAD r1, 1
+            LOAD r2, [1, 2, 3, 4]
+            DO 2
+                LOAD r3, ^r1
+                FOREACH r2
+                    ADD ^r3, 1
+                ENDEACH
+                LOAD ^r1, r3                
+            ENDDO
+        `;
 
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(9);
     });
 });

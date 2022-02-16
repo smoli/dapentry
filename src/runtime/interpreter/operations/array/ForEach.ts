@@ -94,7 +94,7 @@ export class ForEach extends Operation {
             indexName
         })
 
-        const sf = this.closure;
+        const sf = interpreter.pushStack();
         sf.setRegister(loopValueName, iterator.value);
 
         if (indexName) {
@@ -117,6 +117,8 @@ export class EndForEach extends Operation {
                 this.closure.setRegister(info.indexName, info.iterator.index);
             }
             interpreter.gotoLabel(info.label);
+        } else {
+            interpreter.popStack();
         }
 
 
