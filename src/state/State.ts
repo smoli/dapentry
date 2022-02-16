@@ -119,6 +119,14 @@ export class State {
         return this.get(getters.drawing.objects);
     }
 
+    public setCodeString(code: string) {
+        return this.setCode(
+            code.split("\n")
+                .map(c => c.trim())
+                .filter(c => c.length !== 0)
+        );
+    }
+
     public setCode(code: Array<string>) {
         this.commit(mutations.code.set, code);
     }

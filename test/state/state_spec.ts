@@ -59,7 +59,28 @@ describe('State', () => {
             expect(state.store.state.code.code).to.deep.equal([
                 "LOAD r1, 10", "ADD r1, 10"
             ]);
+        });
+
+        it("can take a string of code", () => {
+            const store = createAppStore();
+            const state = new State(store, null);
+
+            const code = `
+                LOAD r1, 10
+                ADD r1, 20
+                ADD r1, 30
+            `;
+
+            state.setCodeString(code);
+            expect(state.store.state.code.code).to.deep.equal([
+                "LOAD r1, 10",
+                "ADD r1, 20",
+                "ADD r1, 30"
+            ]);
         })
+
+
+
 
         it("can replace statements", () => {
             const store = createAppStore();
