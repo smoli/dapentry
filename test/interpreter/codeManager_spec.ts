@@ -393,6 +393,26 @@ describe('Code manager', () => {
             }
         });
 
+        it("can find a matching enddo for a do statement", () => {
+            const m = new CodeManager();
+
+            const code = `
+                LOAD r1, 10
+                DO 5
+                    ADD r1, 10
+                    DO 4
+                        ADD r1, 1
+                    ENDDO
+                    ADD r1, 2
+                ENDDO
+                MUL r1, 2
+            `;
+
+            m.addCodeString(code);
+
+            expect(m.findMatchingEndDo(1)).to.equal(7);
+        })
+
         it("can create new unused label names", () => {
             const m = new CodeManager();
 

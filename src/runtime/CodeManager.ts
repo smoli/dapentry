@@ -1,6 +1,8 @@
 import {Parser, Token, TokenTypes} from "./interpreter/Parser";
 import {StateMachine} from "./tools/StateMachine";
 import {Stack} from "./tools/Stack";
+import {ASSERT} from "../core/Assertions";
+import {AppConfig} from "../core/AppConfig";
 
 
 export type TokenList = Array<Token>;
@@ -197,6 +199,34 @@ export class CodeManager {
         }
 
         return null;
+    }
+
+    findMatchingEndDo(index: number): number {
+        const code = this._code[index];
+        ASSERT(!!code, `Code does not exist at line ${index}`);
+
+        const opCode = this.getOpCode(Parser.parseLine(code));
+        ASSERT(opCode === AppConfig.Runtime.Opcodes.Do, `There is no DO-statement at ${index}`);
+
+        let nestLevel = 0;
+        for (let i = index + 1; i < this._code.length; i++) {
+            const opCode = this.getOpCode(Parser.parseLine(this._code[i]));
+
+            switch (opCode) {
+                case AppConfig.Runtime.Opcodes.Do:
+                    nestLevel++;
+                break;
+
+                case AppConfig.Runtime.Opcodes.EndDo:
+                    if (nestLevel === 0) {
+                        return i;
+                    }
+                    nestLevel--;
+                    break;
+            }
+        }
+
+        return -1;
     }
 
     /**

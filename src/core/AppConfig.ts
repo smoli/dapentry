@@ -73,7 +73,11 @@ export const AppConfig = {
             FillColor: "FILL",
             FillOpacity: "OPACITY",
             StrokeColor: "STROKE",
-            StrokeWidth: "STROKEWIDTH"
+            StrokeWidth: "STROKEWIDTH",
+            Do: "DO",
+            EndDo: "ENDDO",
+            ForEach: "FOREACH",
+            EndEach: "ENDEACH"
         }
     },
 

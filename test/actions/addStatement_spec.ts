@@ -3,16 +3,9 @@ import {expect} from "chai"
 import {AddStatement} from "../../src/actions/AddStatement";
 import {State} from "../../src/state/State";
 import {createAppStore} from "../../src/state/AppStore";
-import {AppController} from "../../src/core/AppController";
-
+import {MockController} from "../testHelpers/mock_controller";
 
 describe('Add statement action', () => {
-
-    class MockController extends AppController{
-        constructor(state:State) {
-            super(state, null, null)
-        }
-    }
 
     it('adds a statement at the end', () => {
         const action = new AddStatement(["ADD r1, 30"]);

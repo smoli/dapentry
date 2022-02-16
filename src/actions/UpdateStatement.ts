@@ -2,6 +2,7 @@ import {BaseAction} from "./BaseAction";
 import {Parser, TokenTypes} from "../runtime/interpreter/Parser";
 import {CodeManager} from "../runtime/CodeManager";
 import {NOT_IMPLEMENTED, UNREACHABLE} from "../core/Assertions";
+import {AppConfig} from "../core/AppConfig";
 
 export class UpdateStatement extends BaseAction {
     private readonly _newValue: string;
@@ -40,6 +41,10 @@ export class UpdateStatement extends BaseAction {
         return newStatements;
     }
 
+    protected checkIsArray(value:any):boolean {
+        return ( typeof value.forEach === "function");
+    }
+
     _execute() {
         const statement = this.codeManager.code[this._statementIndex];
         const tokens = Parser.parseLine(statement);
@@ -70,17 +75,19 @@ export class UpdateStatement extends BaseAction {
                 newStatements.push(Parser.constructCodeLine(tokens));
             } else {
                 const dataValue = field.value;
-                token.type = TokenTypes.REGISTER;
-                if (Array.isArray(dataValue)) {
-                    NOT_IMPLEMENTED("Entering array fields")
-                    /*
-                                    // Replace code to make the statement a loop over the data
-                                    const reg = this.component.getCodeManager().getCreatedRegisterForStatement(this._statementIndex);
-                                    newStatements = this.forEach(this.component.getCodeManager(),
-                                        reg, this._tokenIndex, this._newValue);
-                    */
+                if (this.checkIsArray(dataValue)
+                    && tokens[0].type === TokenTypes.OPCODE
+                    && tokens[0].value === AppConfig.Runtime.Opcodes.Do) {
+
+                    const endIndex = this.codeManager.findMatchingEndDo(this._statementIndex);
+
+                    if (endIndex !== -1) {
+                        this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} ${this._newValue}`);
+                        this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
+                    }
 
                 } else {
+                    token.type = TokenTypes.REGISTER;
                     token.value = this._newValue;
                     newStatements.push(Parser.constructCodeLine(tokens));
                 }

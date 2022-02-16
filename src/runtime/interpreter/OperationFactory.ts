@@ -31,6 +31,7 @@ import {Append} from "./operations/array/Append";
 import {EndForEach, ForEach} from "./operations/array/ForEach";
 import {Do, EndDo} from "./operations/Do";
 import {FuncDecl} from "./operations/FuncDecl";
+import {AppConfig} from "../../core/AppConfig";
 
 export class OperationFactory {
 
@@ -86,10 +87,10 @@ export function defaultOperationFactory() {
     operationFactory.addOperationClass("ITER", Iterator);
     operationFactory.addOperationClass("NEXT", IteratorNext);
     operationFactory.addOperationClass("JINE", IteratorJumpWhenNotDone);
-    operationFactory.addOperationClass("FOREACH", ForEach);
-    operationFactory.addOperationClass("ENDEACH", EndForEach);
-    operationFactory.addOperationClass("DO", Do);
-    operationFactory.addOperationClass("ENDDO", EndDo);
+    operationFactory.addOperationClass(AppConfig.Runtime.Opcodes.ForEach, ForEach);
+    operationFactory.addOperationClass(AppConfig.Runtime.Opcodes.EndEach, EndForEach);
+    operationFactory.addOperationClass(AppConfig.Runtime.Opcodes.Do, Do);
+    operationFactory.addOperationClass(AppConfig.Runtime.Opcodes.EndDo, EndDo);
     operationFactory.addOperationClass("HALT", Halt);
     operationFactory.addOperationClass("___LBL___", Label);
     operationFactory.addOperationClass("___FUNC___", FuncDecl);
