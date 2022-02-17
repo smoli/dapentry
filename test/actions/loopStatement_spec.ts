@@ -32,7 +32,7 @@ describe('Loop statement', () => {
         ])
     });
 
-    xit("Will wrap code that already contains a loop", () => {
+    it("Will not wrap code that already contains a loop", () => {
         const action = new LoopStatements([1, 2, 3, 4])
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state);
@@ -52,15 +52,13 @@ describe('Loop statement', () => {
         expect(state.store.state.code.code).to.deep.equal([
             "LOAD r1, 10",
             "DO 2",
-            "DO 2",
             "ADD r1, 2",
             "ADD r1, 3",
-            "ENDDO",
             "ENDDO"
         ])
     });
 
-    xit("Will wrap code that contains a forEach", () => {
+    it("Will not wrap code that contains a forEach", () => {
         const action = new LoopStatements([2, 3, 4, 5])
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state);
@@ -81,12 +79,10 @@ describe('Loop statement', () => {
         expect(state.store.state.code.code).to.deep.equal([
             "LOAD r1, 10",
             "LOAD r2, [1, 2, 3, 4]",
-            "DO 2",
             "FOREACH r2",
             "ADD r1, 2",
             "ADD r1, 3",
             "ENDEACH",
-            "ENDDO"
         ])
     });
 
