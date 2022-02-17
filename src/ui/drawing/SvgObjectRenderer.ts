@@ -85,8 +85,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._svg.on("contextmenu", onAlternateClick)
         this._svg.on("mousedown", onMouseDown)
         this._svg.on("mouseup", onMouseUp)
-        // this._svg.on("mouseleave", this._interActionMouseLeave.bind(this))
-        // this._svg.on("mouseenter", this._interActionMouseEnter.bind(this))
     }
 
     protected _setupLayers(container: d3.Selection<any, any, any, any>): void {
@@ -109,6 +107,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         if (layer === RenderLayer.Objects) {
             this._objectLayer.selectAll("*").remove();
             this._objectInfo = {};
+            this._renderedObjects = [];
         } else if (layer === RenderLayer.Interaction) {
             this._interactionLayer.selectAll("*").remove();
         }

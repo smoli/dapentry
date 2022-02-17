@@ -43,7 +43,6 @@ export function makeDesigner(containerId: string,
                              appOptions: ApplicationOptions = {}): AppController {
 
     const appStore = createAppStore();
-    // @ts-ignore
     const app = createApp(Drawable, layout);
     app.use(appStore);
     app.use(i18n);
