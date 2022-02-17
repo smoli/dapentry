@@ -1,8 +1,5 @@
-import {BoundingBox, GrObject, ObjectType} from "./GrObject";
+import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {Point2D} from "./Point2D";
-import {Line2D} from "./Line2D";
-import {Circle2D} from "./Circle2D";
-import {TWO_PI} from "./GeoMath";
 import {AppConfig} from "../core/AppConfig";
 
 export enum AspectRatio {
@@ -92,6 +89,32 @@ export class GrCanvas extends GrObject {
 
     set width(value: number) {
         this._width = value;
+    }
+
+    get topLeft(): Point2D {
+        return this.makePoint(-this.width / 2, -this.height / 2);
+    }
+
+    get topRight(): Point2D {
+        return this.makePoint(this.width / 2, -this.height / 2);
+    }
+
+    get bottomRight(): Point2D {
+        return this.makePoint(this.width / 2, this.height / 2);
+    }
+
+    get bottomLeft(): Point2D {
+        return this.makePoint(-this.width / 2, this.height / 2);
+    }
+
+    pointsOfInterest(purpose: POIPurpose): POIMap {
+        return {
+            ...super.pointsOfInterest(purpose),
+            [POI.topLeft]: this.topLeft.copy,
+            [POI.topRight]: this.topRight.copy,
+            [POI.bottomLeft]: this.bottomLeft.copy,
+            [POI.bottomRight]: this.bottomRight.copy
+        };
     }
 
 }
