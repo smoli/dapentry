@@ -212,6 +212,9 @@ export class AppController {
     }
 
     async addStatement(code: string) {
+        if (code === null) {
+            return;
+        }
         await this.execute(new AddStatement([code]));
         await this.runCode();
         this.updateDrawing();
@@ -219,6 +222,9 @@ export class AppController {
     }
 
     async addStatements(code: Array<string>) {
+        if (code.length === 0) {
+            return;
+        }
         await this.execute(new AddStatement(code));
         await this.runCode();
         this.updateDrawing();
@@ -299,7 +305,7 @@ export class AppController {
     }
 
     protected switchToDrawTool(newTool: ToolNames) {
-        this._state.deselectAll();
+        // this._state.deselectAll();
         this.switchTool(newTool);
     }
 
