@@ -213,6 +213,41 @@ describe('State', () => {
             state.addDataField("f3", [10, 20, 30]);
 
             expect(state.dataCodeLength).to.equal(3);
+        });
+
+        it("can set the value of an item if a list field", () => {
+            const store = createAppStore();
+            const state = new State(store, null);
+
+            state.addDataField("f3", [10, 20, 30]);
+            expect(state.store.state.data.fields).to.deep.equal([
+                {name: "f3", value: [10, 20, 30]}
+            ]);
+
+            state.setDataListFieldValue("f3", 1, 40);
+            expect(state.store.state.data.fields).to.deep.equal([
+                {name: "f3", value: [10, 40, 30]}
+            ]);
+        });
+
+        it("can add a value to a data field", () => {
+            const store = createAppStore();
+            const state = new State(store, null);
+
+            state.addDataField("f1", 10);
+            state.addDataField("f3", [10, 20, 30]);
+
+            state.addValueToDataField("f3", 40);
+            expect(state.store.state.data.fields).to.deep.equal([
+                {name: "f1", value: 10},
+                {name: "f3", value: [10, 20, 30, 40]}
+            ]);
+
+            state.addValueToDataField("f1", 20);
+            expect(state.store.state.data.fields).to.deep.equal([
+                {name: "f1", value: [10, 20]},
+                {name: "f3", value: [10, 20, 30, 40]}
+            ]);
 
         });
     });

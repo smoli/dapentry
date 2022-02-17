@@ -1,6 +1,6 @@
 <template>
   <FieldEditor :field="field">
-    <GrowingInput v-for="value of field.value" :value="value" />
+    <GrowingInput v-for="(value, index) of field.value" :value="value" @change="onValueChanged(index, $event)"/>
   </FieldEditor>
 </template>
 
@@ -10,6 +10,13 @@ import FieldEditor from "./FieldEditor.vue";
 export default {
   name: "ListEditor",
   components: { FieldEditor, GrowingInput },
-  props: ["field"]
+  props: ["field"],
+  inject: ["controller"],
+
+  methods: {
+    onValueChanged(index, event) {
+      this.controller.setDataListFieldValue(this.field.name, index, event.target.value);
+    }
+  }
 }
 </script>

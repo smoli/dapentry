@@ -199,6 +199,12 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
+    async setDataListFieldValue(name: string, index: number, value: DataFieldValue) {
+        this.state.setDataListFieldValue(name, index, value);
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence?.saveCode();
+    }
     async addValueToDataField(name: string, value: (number | string)) {
         await this.execute(new AddValueToDataField(name, value));
         await this.runCode();

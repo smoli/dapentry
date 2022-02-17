@@ -48,6 +48,7 @@ const mutations = {
         addField: "data/addField",
         removeField: "data/removeField",
         setFieldValue: "data/setFieldValue",
+        setListFieldValue: "data/setListFieldValue",
         addValueToField: "data/addValueToField"
     }
 }
@@ -252,6 +253,10 @@ export class State {
 
     setDateFieldValue(name: string, value: DataFieldValue) {
         return this.commit(mutations.data.setFieldValue, { name, value });
+    }
+
+    setDataListFieldValue(name: string, index: number, value: DataFieldValue) {
+        return this.commit(mutations.data.setListFieldValue, { name, index, value });
     }
 
     showModal(component: any, handler: ModalDialogHandler) {

@@ -73,6 +73,17 @@ export const dataState = {
             })
         },
 
+        setListFieldValue(state: DataState, payload: { name: string, index: number, value: DataFieldValue }) {
+            state.fields = state.fields.map(f => {
+                if (f.name === payload.name) {
+                    ASSERT(Array.isArray(f.value), "Can only set item value on array values");
+                    const value = (f.value as Array<any>).map((v, i) => i === payload.index ? payload.value : v)
+                    return { name: f.name, value }
+                }
+                return f;
+            })
+        },
+
         addValueToField(state: DataState, payload: { name: string, value: (number | string ) }) {
             // @ts-ignore
             state.fields = state.fields.map(f => {
