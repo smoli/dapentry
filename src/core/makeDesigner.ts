@@ -62,5 +62,17 @@ export function makeDesigner(containerId: string,
         mount.onmouseenter = () => mount.focus();
     }
 
+   /* window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
+        const dialog = appController.modalFactory.createInfoModal();
+        dialog.show({
+            text: errorMsg + "\n" + url + ":" + lineNumber,
+            caption: "Internal error"
+
+        }).then();
+        return false;
+    }*/
+
     return appController;
+
 }
+

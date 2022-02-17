@@ -34,6 +34,7 @@ export const AppConfig = {
 
     },
     Runtime: {
+        grObjectsGlobal: true,
         styleRegisterName: "$styles",
         defaultStyleRegisterName: "$styles.default",
         canvasObjectName: "Canvas",

@@ -20,6 +20,10 @@ class GlobalStackFrame extends StackFrame {
         return this._data[name]
     }
 
+    setRegister(name: string, value: any, tryNonLocal: boolean = false) {
+        this._data[name] = value;
+    }
+
     getPC(): number {
         return this._data.pc
     }
@@ -56,7 +60,7 @@ export class Interpreter {
     private _paused: boolean = false;
     private _operationFactory: OperationFactory;
 
-    private _globals: GlobalStackFrame = new GlobalStackFrame();
+    protected _globals: GlobalStackFrame = new GlobalStackFrame();
     private _labels: { [key: string]: number } = {};
     private _pauseAfter: number = Number.MAX_SAFE_INTEGER;
     private _pauseAtAfterIterations: number;

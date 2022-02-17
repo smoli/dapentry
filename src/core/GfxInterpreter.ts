@@ -33,11 +33,11 @@ import {GfxFillOpacity} from "../runtime/gfx/GfxFillOpacity";
  * @param OpClass
  * @param objectCallBack
  */
-function makeGfxOperation(OpClass: (typeof Operation), objectCallBack: (GrObject) => void) {
+function makeGfxOperation(OpClass: ( typeof Operation ), objectCallBack: (GrObject) => void) {
     return class C extends OpClass {
         async execute(interpreter: Interpreter): Promise<any> {
             const r = await super.execute(interpreter);
-            objectCallBack((this as unknown as GfxOperation).target);
+            objectCallBack(( this as unknown as GfxOperation ).target);
             return r;
         }
     }
@@ -56,66 +56,80 @@ export class GfxInterpreter extends Interpreter {
 
         this._library = library;
 
+        let objCallback = this.objectCallBack.bind(this);
+        if (AppConfig.Runtime.grObjectsGlobal) {
+            objCallback = this.objectCallBackGlobal.bind(this);
+        }
+
         Object.values(AppConfig.Runtime.Opcodes.Circle)
             .forEach(opcode => {
-                this.addOperation(opcode, makeGfxOperation(GfxCircle, this.objectCallBack.bind(this)));
+                this.addOperation(opcode, makeGfxOperation(GfxCircle, objCallback));
             })
 
         Object.values(AppConfig.Runtime.Opcodes.Rect)
             .forEach(opcode => {
-                this.addOperation(opcode, makeGfxOperation(GfxRect, this.objectCallBack.bind(this)));
+                this.addOperation(opcode, makeGfxOperation(GfxRect, objCallback));
             })
 
         Object.values(AppConfig.Runtime.Opcodes.Line)
             .forEach(opcode => {
-                this.addOperation(opcode, makeGfxOperation(GfxLine, this.objectCallBack.bind(this)));
+                this.addOperation(opcode, makeGfxOperation(GfxLine, objCallback));
             })
 
         Object.values(AppConfig.Runtime.Opcodes.Move)
             .forEach(opcode => {
-                this.addOperation(opcode, makeGfxOperation(GfxMove, this.objectCallBack.bind(this)));
+                this.addOperation(opcode, makeGfxOperation(GfxMove, objCallback));
             })
 
-        this.addOperation(AppConfig.Runtime.Opcodes.Poly.Create, makeGfxOperation(GfxPolygon, this.objectCallBack.bind(this)));
-        this.addOperation(AppConfig.Runtime.Opcodes.Poly.Extend, makeGfxOperation(GfxExtendPolygon, this.objectCallBack.bind(this)));
+        this.addOperation(AppConfig.Runtime.Opcodes.Poly.Create, makeGfxOperation(GfxPolygon, objCallback));
+        this.addOperation(AppConfig.Runtime.Opcodes.Poly.Extend, makeGfxOperation(GfxExtendPolygon, objCallback));
 
-        this.addOperation("QUAD", makeGfxOperation(GfxQuadratic, this.objectCallBack.bind(this)));
-        this.addOperation("BEZIER", makeGfxOperation(GfxBezier, this.objectCallBack.bind(this)));
+        this.addOperation("QUAD", makeGfxOperation(GfxQuadratic, objCallback));
+        this.addOperation("BEZIER", makeGfxOperation(GfxBezier, objCallback));
 
-        this.addOperation("ROTATE", makeGfxOperation(GfxRotate, this.objectCallBack.bind(this)));
-        this.addOperation("SCALE", makeGfxOperation(GfxScale, this.objectCallBack.bind(this)));
+        this.addOperation("ROTATE", makeGfxOperation(GfxRotate, objCallback));
+        this.addOperation("SCALE", makeGfxOperation(GfxScale, objCallback));
 
-        this.addOperation(AppConfig.Runtime.Opcodes.FillColor, makeGfxOperation(GfxFill, this.objectCallBack.bind(this)));
-        this.addOperation(AppConfig.Runtime.Opcodes.FillOpacity, makeGfxOperation(GfxFillOpacity, this.objectCallBack.bind(this)));
-        this.addOperation(AppConfig.Runtime.Opcodes.StrokeColor, makeGfxOperation(GfxStrokeColor, this.objectCallBack.bind(this)));
-        this.addOperation(AppConfig.Runtime.Opcodes.StrokeWidth, makeGfxOperation(GfxStroke, this.objectCallBack.bind(this)));
+        this.addOperation(AppConfig.Runtime.Opcodes.FillColor, makeGfxOperation(GfxFill, objCallback));
+        this.addOperation(AppConfig.Runtime.Opcodes.FillOpacity, makeGfxOperation(GfxFillOpacity, objCallback));
+        this.addOperation(AppConfig.Runtime.Opcodes.StrokeColor, makeGfxOperation(GfxStrokeColor, objCallback));
+        this.addOperation(AppConfig.Runtime.Opcodes.StrokeWidth, makeGfxOperation(GfxStroke, objCallback));
 
         if (this._library) {
             // This operation makes only sense if the interpreter has a library.
             // This basically prevents nested instantiation for now.
             // TODO: Do we want nested instantiation? How do we prevent recursion?
-            this.addOperation("MAKE", makeGfxOperation(GfxMake, this.objectCallBack.bind(this)));
+            this.addOperation("MAKE", makeGfxOperation(GfxMake, objCallback));
         }
 
         this.addOperation("OBLIST", GfxObjectList);
         this.addOperation("COMPOSITE", GfxComposite);
     }
 
-    get library():Library {
+    get library(): Library {
         return this._library;
     }
 
-    get code():Array<string> {
+    get code(): Array<string> {
         return this._program.map(p => p ? p.opcode : "NOP");
     }
 
-    protected objectCallBack(object:GrObject) {
+    protected objectCallBack(object: GrObject) {
         if (object.uniqueName.startsWith("$")) {
             return;
         }
 
+        this._objects[object.uniqueName] = object;
+        this._lastObjectTouched = object;
+    }
+
+    protected objectCallBackGlobal(object: GrObject) {
+        if (object.uniqueName.startsWith("$")) {
+            return;
+        }
 
         this._objects[object.uniqueName] = object;
+        this._globals.setRegister(object.uniqueName, object);
         this._lastObjectTouched = object;
     }
 
@@ -127,11 +141,11 @@ export class GfxInterpreter extends Interpreter {
         }
     }
 
-    get objects():Array<GrObject> {
+    get objects(): Array<GrObject> {
         return Object.values(this._objects);
     }
 
-    get lastObjectTouched():GrObject {
+    get lastObjectTouched(): GrObject {
         return this._lastObjectTouched;
     }
 }
@@ -208,7 +222,7 @@ class GfxMake extends GfxOperation {
             ...this.getScope()
         });
 
-        const resultObject:GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;
+        const resultObject: GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;
 
         resultObject.updateName(this._target.name);
 
