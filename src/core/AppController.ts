@@ -251,6 +251,7 @@ export class AppController {
     }
 
     public async setFillColorForSelection(value: string) {
+        debugger;
         await this.execute(new SetFillColor(this.state.selection, value));
         await this.runCode();
         this.updateDrawing()

@@ -88,4 +88,68 @@ export class GrObjectList extends GrObject {
 
         return this._objects.last.at(where);
     }
+
+    get style() {
+        if (!this._objects.last) {
+            return null;
+        }
+        return this._objects.last.style;
+    }
+
+    get fillOpacity() {
+        if (!this._objects.last) {
+            return null;
+        }
+        return this._objects.last.fillOpacity;
+    }
+
+    get fillColor() {
+        if (!this._objects.last) {
+            return null;
+        }
+        return this._objects.last.fillColor;
+    }
+
+    get strokeColor() {
+        if (!this._objects.last) {
+            return null;
+        }
+        return this._objects.last.strokeColor;
+    }
+
+    get strokeWidth() {
+        if (!this._objects.last) {
+            return null;
+        }
+        return this._objects.last.strokeWidth;
+    }
+
+    set fillOpacity(value) {
+        if (!this._objects.last) {
+            return;
+        }
+        this._objects.last.fillOpacity = value;
+    }
+
+    set fillColor(value) {
+        if (!this._objects.last) {
+            return;
+        }
+        this._objects.last.fillColor = value;
+    }
+
+    set strokeColor(value) {
+        if (!this._objects.last) {
+            return;
+        }
+        this._objects.last.strokeColor = value;
+    }
+
+    set strokeWidth(value) {
+        if (!this._objects.last) {
+            return;
+        }
+        this._objects.last.strokeWidth = value;
+    }
+
 }

@@ -118,5 +118,37 @@ describe('Loop statement', () => {
         ])
     });
 
+    it("can do two subsequent loops of course", () => {
+        const action = new LoopStatements([6])
+        const state = new State(createAppStore(), null);
+        action.controller = new MockController(state);
+
+        const code = `
+        LOAD r1, 10
+        LOAD r2, [1, 2, 3, 4]
+        FOREACH r2
+        ADD r1, 2
+        ADD r1, 3
+        ENDEACH
+        ADD r1, 4
+        `;
+
+        state.setCodeString(code);
+
+        action.execute(null);
+
+        expect(state.store.state.code.code).to.deep.equal([
+            "LOAD r1, 10",
+            "LOAD r2, [1, 2, 3, 4]",
+            "FOREACH r2",
+            "ADD r1, 2",
+            "ADD r1, 3",
+            "ENDEACH",
+            "DO 2",
+            "ADD r1, 4",
+            "ENDDO"
+        ])
+    })
+
 
 });

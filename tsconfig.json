@@ -5,7 +5,7 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "removeComments": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false

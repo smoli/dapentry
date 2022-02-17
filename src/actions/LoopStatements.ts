@@ -1,6 +1,7 @@
 import {BaseAction} from "./BaseAction";
 import {CodeManager} from "../runtime/CodeManager";
 import {ASSERT} from "../core/Assertions";
+import {filter} from "d3";
 
 export class LoopStatements extends BaseAction {
     private _indexes: Array<number>;
@@ -28,7 +29,11 @@ export class LoopStatements extends BaseAction {
             return;
         }
 
-        if (Math.max(...annotatedCode.map(c => c.level)) !== 0) {
+        const selectedLevels = annotatedCode
+            .filter(c => this._indexes.indexOf(c.originalLine) !== -1)
+            .map(c => c.level)
+
+        if (Math.max(...selectedLevels) !== 0) {
             const dialog = this.controller.modalFactory.createInfoModal();
             await dialog.show({
                 text: "ui.infoMessages.nestedLoopsNotSupported"

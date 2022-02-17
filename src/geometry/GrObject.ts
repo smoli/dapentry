@@ -240,7 +240,7 @@ export abstract class GrObject {
     }
 
     public set style(value: Style) {
-        this._style = value;
+        this._style = { ...value };
     }
 
     public set fillColor(value: string) {
@@ -258,6 +258,24 @@ export abstract class GrObject {
     public set strokeColor(value: string) {
         this._style.strokeColor = value;
     }
+
+    public get fillColor():string {
+        return this._style.fillColor;
+    }
+
+    public get fillOpacity():number {
+        return this._style.fillOpacity;
+    }
+
+    public get strokeWidth():number {
+        return this._style.strokeWidth;
+    }
+
+    public get strokeColor():string {
+        return this._style.strokeColor;
+    }
+
+
 
     public get y(): number {
         return this._center.y;

@@ -43,6 +43,18 @@ export abstract class BaseAction {
         return {data: result};
     }
 
+
+    protected addOrInsertStatement(code) {
+        const selectedCode = this.state.store.state.code.selectedLines;
+
+        if (selectedCode.length) {
+            const index = Math.max(...selectedCode);
+            this.state.insertStatements(index + 1, ...code);
+        } else {
+            this.state.addCode(code);
+        }
+    }
+
     protected _execute(data: any): any {
         NOT_IMPLEMENTED()
     }

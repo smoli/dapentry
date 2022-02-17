@@ -15,6 +15,6 @@ export class SetStrokeColor extends BaseAction {
     protected _execute(data: any): any {
         const opCode = AppConfig.Runtime.Opcodes.StrokeColor;
         const code = this._objectNames.map(n => `${opCode} ${n}, "${this._color}"`)
-        this.state.addCode(code);
+        this.addOrInsertStatement(code);
     }
 }
