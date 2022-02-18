@@ -20,6 +20,8 @@ import {RemoveDataField} from "../actions/RemoveDataField";
 import {ModalFactory} from "../ui/core/ModalFactory";
 import {LoopStatements} from "../actions/LoopStatements";
 import {RenameDataField} from "../actions/RenameDataField";
+import {BatchAction} from "../actions/BatchAction";
+import {AddStatementToSelection} from "../actions/AddStatementToSelection";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -177,6 +179,12 @@ export class AppController {
         await action.execute(null);
     }
 
+    protected async executeBatch(...actions: Array<BaseAction>) {
+        actions.forEach(a => a.controller = this);
+        const batch = new BatchAction(...actions);
+        await batch.execute(null);
+    }
+
     async setLocale(locale: string) {
         this.state.setLocale(locale);
         await this.save();
@@ -222,7 +230,16 @@ export class AppController {
         if (code === null) {
             return;
         }
-        await this.execute(new AddStatement([code]));
+        if (this.state.codeSelection?.length) {
+            const newIndex = Math.max(...this.state.codeSelection) + 1;
+            await this.executeBatch(
+                new AddStatement([code]),
+                new AddStatementToSelection(newIndex)
+            );
+        } else {
+            await this.execute(new AddStatement([code]));
+        }
+
         await this.runCode();
         this.updateDrawing();
         await this._persistence?.saveCode();
