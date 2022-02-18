@@ -81,6 +81,7 @@ export default {
 
       if (event.key === "Escape") {
         inp.value = this.value;
+        inp.style.width = ( getTextWidth(this.value, getFontSize(inp)) + this.offset) + "px";
         inp.blur();
       }
 
