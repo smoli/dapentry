@@ -16,7 +16,8 @@ export class RenameDataField extends BaseAction {
     }
 
     protected async _execute(data: any): Promise<any> {
-        const exists = this.codeManager.registerExists(this._newName);
+        const exists = this.codeManager.registerExists(this._newName)
+                    || !!this.state.getDataField(this._newName);
 
         if (exists) {
             const dialog = this.controller.modalFactory.createInfoModal();
