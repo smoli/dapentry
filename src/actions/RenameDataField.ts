@@ -1,5 +1,6 @@
 import {BaseAction} from "./BaseAction";
 import {CodeManager} from "../runtime/CodeManager";
+import {AppConfig} from "../core/AppConfig";
 
 export class RenameDataField extends BaseAction {
     private readonly _oldName: string;
@@ -16,7 +17,8 @@ export class RenameDataField extends BaseAction {
     }
 
     protected validate(name:string): boolean {
-        return !!name.match(/^[a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*$/);
+        return !!name.match(AppConfig.Runtime.allowedFieldNames)
+             && AppConfig.Runtime.forbiddenDataFieldNames.indexOf(name) === -1;
     }
 
     protected async _execute(data: any): Promise<any> {
@@ -39,7 +41,6 @@ export class RenameDataField extends BaseAction {
             return;
         }
 
-        this.codeManager.renameRegister(this._oldName, this._newName);
         this.state.renameDataField(this._oldName, this._newName);
     }
 }

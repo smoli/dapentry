@@ -38,6 +38,8 @@ export const AppConfig = {
         styleRegisterName: "$styles",
         defaultStyleRegisterName: "$styles.default",
         canvasObjectName: "Canvas",
+        allowedFieldNames: /^[a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*$/,
+        forbiddenDataFieldNames: [],
 
         Opcodes: {
             Circle: {
@@ -90,3 +92,5 @@ export const AppConfig = {
         appModelName: "appModel"
     }
 }
+
+AppConfig.Runtime.forbiddenDataFieldNames.push(AppConfig.Runtime.styleRegisterName, AppConfig.Runtime.canvasObjectName);
