@@ -15,6 +15,10 @@ export class RenameDataField extends BaseAction {
         return this.state.store.state.code.codeManager;
     }
 
+    protected validate(name:string): boolean {
+        return !!name.match(/^[a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*$/);
+    }
+
     protected async _execute(data: any): Promise<any> {
         const exists = this.codeManager.registerExists(this._newName)
                     || !!this.state.getDataField(this._newName);
@@ -23,6 +27,14 @@ export class RenameDataField extends BaseAction {
             const dialog = this.controller.modalFactory.createInfoModal();
             await dialog.show({
                 text: `Cannot rename ${this._oldName}. Name ${this._newName} is already in use.`
+            });
+            return;
+        }
+
+        if (!this.validate(this._newName)) {
+            const dialog = this.controller.modalFactory.createInfoModal();
+            await dialog.show({
+                text: `Cannot rename ${this._oldName}. Name ${this._newName} is not a valid name for a data field.`
             });
             return;
         }
