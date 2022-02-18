@@ -19,6 +19,7 @@ import {AddNewDataField} from "../actions/AddNewDataField";
 import {RemoveDataField} from "../actions/RemoveDataField";
 import {ModalFactory} from "../ui/core/ModalFactory";
 import {LoopStatements} from "../actions/LoopStatements";
+import {RenameDataField} from "../actions/RenameDataField";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -207,6 +208,12 @@ export class AppController {
     }
     async addValueToDataField(name: string, value: (number | string)) {
         await this.execute(new AddValueToDataField(name, value));
+        await this.runCode();
+        this.updateDrawing();
+    }
+
+    async renameDataField(oldName: string, newName: string) {
+        await this.execute(new RenameDataField(oldName, newName));
         await this.runCode();
         this.updateDrawing();
     }

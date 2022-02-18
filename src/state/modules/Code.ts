@@ -1,4 +1,5 @@
 import {AnnotatedCodeLine, CodeManager} from "../../runtime/CodeManager";
+import {ASSERT} from "../../core/Assertions";
 
 
 export interface CodeState {
@@ -64,6 +65,12 @@ export const codeState = {
 
         addToSelection(state: CodeState, selection: Array<number>) {
             state.selectedLines = [...state.selectedLines, ...selection];
+        },
+
+        renameRegister(state: CodeState, payload: { oldName: string, newName: string }) {
+            ASSERT(state.codeManager.registerExists(payload.newName) === false, "Cannot rename to an existing name");
+            state.codeManager.renameRegister(payload.oldName, payload.newName);
+            state.code = state.codeManager.code.map(s => s);
         }
     }
 }

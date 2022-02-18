@@ -4,6 +4,10 @@ import {State} from "../../src/state/State";
 import {AspectRatio} from "../../src/geometry/GrCanvas";
 import {expect} from "chai";
 import {Persistence} from "../../src/state/Persistence";
+import {GrCircle} from "../../src/geometry/GrCircle";
+import exp = require("constants");
+import {Parser} from "../../src/runtime/interpreter/Parser";
+import {T_NUMBER, T_OPCODE, T_REGISTER} from "../testHelpers/tokens";
 
 
 class MockPersistence extends Persistence {
@@ -250,6 +254,33 @@ describe('State', () => {
             ]);
 
         });
+
+        it('can rename a data field including its usages in the code', () => {
+            const store = createAppStore();
+            const state = new State(store, null);
+
+            state.addDataField("f1", 10);
+
+            const code = `
+                LOAD r2, f1
+                ADD r2, 10
+            `;
+
+            state.setCodeString(code);
+
+            state.renameDataField("f1", "f2");
+
+            expect(state.store.state.data.fields).to.deep.equal([
+                { name: "f2", value: 10}
+            ]);
+
+            expect(state.store.state.code.code.map(c => Parser.parseLine(c))).to.deep.equal([
+                [ T_OPCODE("LOAD"), T_REGISTER("r2"), T_REGISTER("f2")],
+                [ T_OPCODE("ADD"), T_REGISTER("r2"), T_NUMBER(10)]
+            ]);
+
+
+        });
     });
 
     describe("working with statements", () => {
@@ -285,6 +316,24 @@ describe('State', () => {
             expect(state.codeSelection).to.deep.equal([]);
             state.addToCodeSelection([2, 3])
             expect(state.codeSelection).to.deep.equal([2, 3]);
+        });
+    });
+
+    describe("working with the drawing", ()  => {
+        it('can get a specific object', () => {
+            const store = createAppStore();
+            const state = new State(store, null);
+
+            const c1 = new GrCircle("c1", 0, 0, 100);
+            const c2 = new GrCircle("c2", 0, 0, 100);
+            const c3 = new GrCircle("c3", 0, 0, 100);
+            const c4 = new GrCircle("c4", 0, 0, 100);
+
+            state.setObjectsOnDrawing([c1, c2, c3, c4]);
+
+            // We cannot test for instance equality, because the vuex state
+            // wraps everything into a proxy object
+            expect(state.getObject("c1").instanceCount).to.equal(c1.instanceCount);
         });
     });
 })

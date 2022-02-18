@@ -64,6 +64,10 @@ export const dataState = {
             state.fields = state.fields.filter(f => f.name !== name);
         },
 
+        renameField(state: DataState, payload: { oldName: string, newName: string} ) {
+            state.fields = state.fields.map(f => f.name === payload.oldName ? { ...f, name: payload.newName} : f)
+        },
+
         setFieldValue(state: DataState, payload: { name: string, value: DataFieldValue }) {
             state.fields = state.fields.map(f => {
                 if (f.name === payload.name) {

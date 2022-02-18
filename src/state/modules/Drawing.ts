@@ -41,6 +41,10 @@ export const drawingState = {
 
         selection(state) {
             return state.selection;
+        },
+
+        object: (state:DrawingState) => (uniqueName:string) => {
+            return state.objects.find(o => o.uniqueName === uniqueName);
         }
     },
 

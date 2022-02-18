@@ -30,7 +30,8 @@ const mutations = {
         replaceStatement: "code/replaceStatement",
         clearSelection: "code/clearSelection",
         setSelection: "code/setSelection",
-        addToSelection: "code/addToSelection"
+        addToSelection: "code/addToSelection",
+        renameRegister: "code/renameRegister"
     },
 
     drawing: {
@@ -47,6 +48,7 @@ const mutations = {
         setData: "data/setData",
         addField: "data/addField",
         removeField: "data/removeField",
+        renameField: "data/renameField",
         setFieldValue: "data/setFieldValue",
         setListFieldValue: "data/setListFieldValue",
         addValueToField: "data/addValueToField"
@@ -66,6 +68,7 @@ const getters = {
     },
 
     drawing: {
+        object: "drawing/object",
         objects: "drawing/objects",
         isObjectSelected: "drawing/isObjectSelected",
         selection: "drawing/selection"
@@ -107,8 +110,6 @@ export class State {
     }
 
     protected get(type: string, ...params): any {
-        console.log("Getting", type)
-
         if (params.length) {
             return this._store.getters[type](...params);
         } else {
@@ -118,6 +119,10 @@ export class State {
 
     get objects(): Array<GrObject> {
         return this.get(getters.drawing.objects);
+    }
+
+    getObject(uniqueName: string):GrObject {
+        return this.get(getters.drawing.object, uniqueName);
     }
 
     public setCodeString(code: string) {
@@ -156,7 +161,7 @@ export class State {
     }
 
     setAvailableTools(tools: Array<ToolNames>) {
-        return this.commit(mutations.tool.setAvailable, tools);
+        this.commit(mutations.tool.setAvailable, tools);
     }
 
     switchTool(newTool: ToolNames) {
@@ -236,35 +241,40 @@ export class State {
     }
 
     setData(fields: Array<DataField>) {
-        return this.commit(mutations.data.setData, fields);
+        this.commit(mutations.data.setData, fields);
     }
 
     addDataField(name: string, value: DataFieldValue) {
-        return this.commit(mutations.data.addField, { name, value });
+        this.commit(mutations.data.addField, { name, value });
     }
 
     addValueToDataField(name: string, value: (number | string)) {
-        return this.commit(mutations.data.addValueToField, { name, value });
+        this.commit(mutations.data.addValueToField, { name, value });
     }
 
     removeDataField(name: string) {
-        return this.commit(mutations.data.removeField, name);
+        this.commit(mutations.data.removeField, name);
+    }
+
+    renameDataField(oldName: string, newName: string) {
+        this.commit(mutations.data.renameField, { oldName, newName });
+        this.commit(mutations.code.renameRegister, { oldName, newName});
     }
 
     setDateFieldValue(name: string, value: DataFieldValue) {
-        return this.commit(mutations.data.setFieldValue, { name, value });
+        this.commit(mutations.data.setFieldValue, { name, value });
     }
 
     setDataListFieldValue(name: string, index: number, value: DataFieldValue) {
-        return this.commit(mutations.data.setListFieldValue, { name, index, value });
+        this.commit(mutations.data.setListFieldValue, { name, index, value });
     }
 
     showModal(component: any, handler: ModalDialogHandler) {
-        return this.commit(mutations.ui.showModal, { component, handler });
+        this.commit(mutations.ui.showModal, { component, handler });
     }
 
     hideModal() {
-        return this.commit(mutations.ui.hideModal);
+        this.commit(mutations.ui.hideModal);
     }
 
 }
