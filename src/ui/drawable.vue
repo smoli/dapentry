@@ -10,7 +10,7 @@
       <tool-bar v-if="!hideToolbar"></tool-bar>
       <statement-editor v-if="!hideStatementEditor"></statement-editor>
       <Drawing v-if="!hideDrawing"></Drawing>
-      <samp class="drawable-tool-hint" v-if="!hideToolHint">Create Circle1 center at ( 100, 100 ) radius 50</samp>
+      <ToolHint v-if="!hideToolHint"></ToolHint>
     </div>
     <div class="drawable-right-column" v-if="!hideRightColumn">
       <PropertiesEditor></PropertiesEditor>
@@ -29,11 +29,12 @@ import DrawableHeader from "./header.vue";
 import StatementEditor from "./StatementEditor/StatementEditor";
 import ToolBar from "./ToolBar.vue";
 import Modal from "./core/Modal.vue";
+import ToolHint from "./ToolHint.vue";
 
 
 export default {
   name: "Drawable",
-  components: { Modal, ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
+  components: { ToolHint, Modal, ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
   inject: ["controller"],
   props: [
     "hideHeader",
