@@ -14,6 +14,7 @@ import SimpleInput from "./SimpleInput.vue";
 import NumberInput from "./NumberInput.vue";
 import PointInput from "./PointInput.vue";
 import ExpressionInput from "./ExpressionInput.vue";
+import AtRegisterInput from "./AtRegisterInput.vue";
 
 
 function createSegments(tokens: Array<Token>, textTemplate: string, statementIndex: number): Array<any> {
@@ -38,7 +39,7 @@ function createSegments(tokens: Array<Token>, textTemplate: string, statementInd
           segments.push({ type: "SimpleInput", token, index, statementIndex });
           break;
         case TokenTypes.REGISTERAT:
-          segments.push({ type: "SimpleInput", token, index, statementIndex });
+          segments.push({ type: "AtRegisterInput", token, index, statementIndex });
           break;
         case TokenTypes.NUMBER:
           segments.push({ type: "NumberInput", token, index, statementIndex });
@@ -70,7 +71,7 @@ function createSegments(tokens: Array<Token>, textTemplate: string, statementInd
 
 export default {
   name: "StatementEditor",
-  components: { PointInput, NumberInput, SimpleInput, ExpressionInput, Static },
+  components: { AtRegisterInput, PointInput, NumberInput, SimpleInput, ExpressionInput, Static },
   computed: {
     segments() {
       const selection: Array<number> = this.$store.state.code.selectedLines;
