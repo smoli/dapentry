@@ -1,7 +1,7 @@
 <template>
-  <div class="drawable-modal" @click="onClickedForCancel">
+  <div v-for="m of $store.state.ui.modalComponent" class="drawable-modal" @click="onClickedForCancel">
     <section @click="onClickedOnDialog">
-      <component :is="$store.state.ui.modalComponent" :handler="$store.state.ui.modalHandler" />
+      <component  :is="m.component" :handler="m.handler" />
     </section>
   </div>
 </template>

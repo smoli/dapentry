@@ -1,5 +1,5 @@
 <template>
-  <Modal v-if="$store.state.ui.modalComponent !== null"></Modal>
+  <Modal v-if="$store.state.ui.modalComponent.length !== 0"></Modal>
   <drawable-header v-if="!hideHeader"></drawable-header>
   <section class="drawable-app-main">
     <div class="drawable-left-column" v-if="!hideLeftColumn">

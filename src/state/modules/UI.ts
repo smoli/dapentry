@@ -3,8 +3,7 @@ import {ModalDialogHandler} from "../../ui/core/ModalDialogHandler";
 
 
 export interface UIState {
-    modalComponent: any,
-    modalHandler: ModalDialogHandler,
+    modalComponent: Array<{ component: any, handler: ModalDialogHandler }>
 }
 
 
@@ -12,19 +11,18 @@ export const uiState = {
 
     state(): UIState {
         return {
-            modalComponent: null,
-            modalHandler: null
+            modalComponent: []
         }
     },
 
     mutations: {
         showModal(state: UIState, payload: { component: any, handler: ModalDialogHandler }) {
-            state.modalComponent = shallowRef(payload.component);
-            state.modalHandler = payload.handler;
+            state.modalComponent = [...state.modalComponent,
+                { component: shallowRef(payload.component), handler: payload.handler }];
         },
 
         hideModal(state: UIState) {
-            state.modalHandler = state.modalComponent = null;
+            state.modalComponent.pop();
         }
     }
 }
