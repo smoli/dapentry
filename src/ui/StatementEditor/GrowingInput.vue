@@ -74,14 +74,20 @@ export default {
     },
 
     onKeyUp(event: KeyboardEvent) {
-      if (event.key !== "Backspace" && event.key !== "Delete" && event.key !== "Escape") {
+      if (event.key !== "Backspace" && event.key !== "Delete" && event.key !== "Escape" && event.key !== "Enter") {
         return;
       }
       const inp = this.$refs["input"];
 
       if (event.key === "Escape") {
+        inp.value = this.value;
         inp.blur();
       }
+
+      if (event.key === "Enter") {
+        inp.blur();
+      }
+
       inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
     }
   }
