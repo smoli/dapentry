@@ -3,7 +3,6 @@ import {StateMachine} from "./tools/StateMachine";
 import {Stack} from "./tools/Stack";
 import {ASSERT} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
-import App from "../../ui5stuff/controller/App.controller";
 
 
 export type TokenList = Array<Token>;
@@ -461,12 +460,12 @@ export class CodeManager {
             return preference;
         }
 
-        let suff = 0;
-        while (memory.indexOf(preference + suff) !== -1) {
-            suff++;
+        let suffix = 0;
+        while (memory.indexOf(preference + suffix) !== -1) {
+            suffix++;
         }
 
-        return preference + suff;
+        return preference + suffix;
     }
 
     public makeUniqueRegisterName(preference): string {
@@ -475,6 +474,54 @@ export class CodeManager {
 
     public registerExists(registerName): boolean {
         return this._registers.indexOf(registerName) !== -1;
+    }
+
+    public renameRegister(oldName:string, newName:string):boolean {
+        if (this.registerExists(newName)) {
+            return false;
+        }
+
+        const renameInToken = (token:Token) => {
+            if (token.type === TokenTypes.REGISTER && token.value === oldName) {
+                token.value = newName;
+                return;
+            }
+
+            if (token.type === TokenTypes.REGISTERAT && token.value[0].value === oldName) {
+                token.value[0].value = newName;
+                return;
+            }
+
+            if (token.type === TokenTypes.REGISTERAT) {
+                return renameInToken(token.value[1])
+            }
+
+            if (token.type === TokenTypes.POINT) {
+                renameInToken(token.value[0]);
+                renameInToken(token.value[1]);
+            }
+
+            if (token.type === TokenTypes.ARRAY) {
+                (token.value as Array<Token>).forEach(t => renameInToken(t));
+            }
+
+            if (token.type === TokenTypes.EXPRESSION) {
+                renameInToken(token.value[0]);
+                renameInToken(token.value[2]);
+                return;
+            }
+        }
+
+        const renameInLine = (line: string) => {
+            const tokens = Parser.parseLine(line);
+
+            tokens.forEach(t => renameInToken(t));
+
+            return Parser.constructCodeLine(tokens);
+        }
+
+        this._code = this._code.map(l => renameInLine(l));
+        this._registers = this._registers.map(r => r === oldName ? newName : r);
     }
 
     public makeUniqueLabelName(preference): string {

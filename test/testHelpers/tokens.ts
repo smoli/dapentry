@@ -20,16 +20,28 @@ export function T_NAME(name: string): Token {
     return { type: TokenTypes.NAME, value: name };
 }
 
-export function T_REGISTERAT(name: string, where: ( string | number )): Token {
+export function T_REGISTERAT(name: string, where: ( string | number | Token)): Token {
     if (typeof where === "string") {
         return { type: TokenTypes.REGISTERAT, value: [T_REGISTER(name), T_NAME(where)] }
-    } else {
+    } else if (typeof where === "number") {
         return { type: TokenTypes.REGISTERAT, value: [T_REGISTER(name), T_NUMBER(where)] }
+    } else {
+        return { type: TokenTypes.REGISTERAT, value: [T_REGISTER(name), where] }
     }
 }
 
+
+
 export function T_POINT_NN(x: number, y: number): Token {
     return { type: TokenTypes.POINT, value: [T_NUMBER(x), T_NUMBER(y)] }
+}
+
+export function T_POINT(x: Token, y: Token): Token {
+    return { type: TokenTypes.POINT, value: [x, y] }
+}
+
+export function T_ARRAY(...tokens:Array<Token>): Token {
+    return { type: TokenTypes.ARRAY, value: tokens };
 }
 
 export function T_OPERATOR(value: string): Token {
