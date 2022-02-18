@@ -25,43 +25,43 @@ export class GrCanvas extends GrObject {
         this._height = height;
     }
 
-    static create(aspectRatio: AspectRatio, width: number): GrCanvas {
+    static create(aspectRatio: AspectRatio, height: number): GrCanvas {
         switch (aspectRatio) {
             case AspectRatio.ar1_1:
-                return GrCanvas.create_1_1(width);
+                return GrCanvas.create_1_1(height);
 
             case AspectRatio.ar3_2:
-                return GrCanvas.create_3_2(width);
+                return GrCanvas.create_3_2(height);
 
             case AspectRatio.ar4_3:
-                return GrCanvas.create_4_3(width);
+                return GrCanvas.create_4_3(height);
 
             case AspectRatio.ar16_9:
-                return GrCanvas.create_16_9(width);
+                return GrCanvas.create_16_9(height);
 
             case AspectRatio.ar16_10:
-                return GrCanvas.create_16_10(width);
+                return GrCanvas.create_16_10(height);
         }
     }
 
-    static create_1_1(width: number): GrCanvas {
-        return new GrCanvas(0, 0, width, width);
+    static create_1_1(height: number): GrCanvas {
+        return new GrCanvas(0, 0, height, height);
     }
 
-    static create_3_2(width:number): GrCanvas {
-        return new GrCanvas(0, 0, width, 2 * width / 3);
+    static create_3_2(height:number): GrCanvas {
+        return new GrCanvas(0, 0, 3 * height / 2, height);
     }
 
-    static create_4_3(width:number): GrCanvas {
-        return new GrCanvas(0, 0, width, 3 * width / 4);
+    static create_4_3(height:number): GrCanvas {
+        return new GrCanvas(0, 0, 4 * height / 3, height);
     }
 
-    static create_16_10(width:number): GrCanvas {
-        return new GrCanvas(0, 0, width, 10 * width / 16);
+    static create_16_10(height:number): GrCanvas {
+        return new GrCanvas(0, 0, 16 * height / 10, height);
     }
 
-    static create_16_9(width:number): GrCanvas {
-        return new GrCanvas(0, 0, width, 9 * width / 16);
+    static create_16_9(height:number): GrCanvas {
+        return new GrCanvas(0, 0, 16 * height / 9, height);
     }
 
     get isSelectable(): boolean {
