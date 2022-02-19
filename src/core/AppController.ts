@@ -62,7 +62,7 @@ export interface ApplicationOptions {
     aspectRatio?: AspectRatio,
     drawingWidth?: number,
     availableTools?: Array<ToolNames>,
-    poiAvailable?:boolean
+    poiAvailable?: boolean
 }
 
 const applicationDefaults: ApplicationOptions = {
@@ -113,7 +113,7 @@ export class AppController {
         this._poiAvailable = options.poiAvailable;
     }
 
-    get poiAvailable():boolean {
+    get poiAvailable(): boolean {
         return this._poiAvailable;
     }
 
@@ -173,7 +173,6 @@ export class AppController {
         this._state.setObjectsOnDrawing(this._interpreter.objects);
     }
 
-
     protected async execute(action: BaseAction) {
         action.controller = this;
         await action.execute(null);
@@ -183,6 +182,28 @@ export class AppController {
         actions.forEach(a => a.controller = this);
         const batch = new BatchAction(...actions);
         await batch.execute(null);
+    }
+
+    async nextStep() {
+        if (this.state.codeSelection.length === 0) {
+            return;
+        }
+
+        if (!this._interpreter.stopped) {
+            const a = this.state.store.state.code.codeManager.annotatedCode.map(a => a.originalLine);
+            const offset = this.state.dataCodeLength;
+
+            await this._interpreter.next();
+            let max = 100;
+            while (!this._interpreter.stopped &&
+                    max-- &&
+                    a.indexOf(this._interpreter.pc - offset) === -1) {
+                await this._interpreter.next();
+            }
+
+            this._state.setCodeSelection([this._interpreter.pc - this.state.dataCodeLength]);
+        }
+        this.updateDrawing();
     }
 
     async setLocale(locale: string) {
@@ -214,7 +235,8 @@ export class AppController {
         this.updateDrawing();
         await this._persistence?.saveCode();
     }
-    async addValueToDataField(name: string, value: (number | string)) {
+
+    async addValueToDataField(name: string, value: ( number | string )) {
         await this.execute(new AddValueToDataField(name, value));
         await this.runCode();
         this.updateDrawing();
@@ -280,6 +302,7 @@ export class AppController {
         await this.runCode();
         this.updateDrawing();
     }
+
     async selectStatements(indexes: Array<number>) {
         this._state.setCodeSelection(indexes);
         await this.runCode();
@@ -355,7 +378,7 @@ export class AppController {
         this._state.passKeyPressToTool(event);
     }
 
-    public handleKeyEvent(event: KeyboardEvent) {
+    public async handleKeyEvent(event: KeyboardEvent) {
         if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
             return;
         }
@@ -366,7 +389,7 @@ export class AppController {
 
         if (event.code === AppConfig.Keys.NextStepCode) {
             // Todo: We can now do this here
-            // this.fireNextStep();
+            await this.nextStep();
         } else if (event.code === AppConfig.Keys.DeleteCode) {
             // Todo: We can now do this here
             // this.fireObjectDeleted();
