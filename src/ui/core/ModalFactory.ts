@@ -2,6 +2,7 @@ import {State} from "../../state/State";
 import {ConfirmationModalComponent, ConfirmationModal} from "./ConfirmationModal";
 import {InfoModalComponent, InfoModalHandler} from "./InfoModal";
 import {ModalDialogHandler} from "./ModalDialogHandler";
+import {DataEditorModal, DataEditorModalComponent} from "./DataEditorModal";
 
 export enum DialogCloseReason {
     OK,
@@ -38,6 +39,10 @@ export class ModalFactory {
 
     createInfoModal():InfoModalHandler {
         return this.createModal<InfoModalHandler>(InfoModalComponent, InfoModalHandler);
+    }
+
+    createDataEditorModal():DataEditorModal {
+        return this.createModal<DataEditorModal>(DataEditorModalComponent, DataEditorModal);
     }
 
 }

@@ -1,6 +1,7 @@
 <template>
   <section class="drawable-data-editor">
-    <h2>{{ $t("ui.dataEditor") }}</h2>
+    <h2 v-if="!hideCaption">{{ $t("ui.dataEditor") }}</h2>
+    <button v-if="!hideCaption" @click="onMaximize">Maxi</button>
     <table class="drawable-data-field-list">
       <component v-for="field in fieldEditors" :is="field.type" :field="field.field" />
     </table>
@@ -13,8 +14,8 @@
 
 import {DataField} from "../../state/modules/Data";
 import {UNREACHABLE} from "../../core/Assertions";
-import NumberEditor from "./NumberEditor";
-import ListEditor from "./ListEditor";
+import NumberEditor from "./NumberEditor.vue";
+import ListEditor from "./ListEditor.vue";
 
 interface FieldEditor {
   type: string,
@@ -47,6 +48,7 @@ function createFields(fields: Array<DataField>):Array<FieldEditor> {
 export default {
   name: "DataEditor",
   components: { NumberEditor, ListEditor },
+  props: ["hideCaption"],
   inject: ["controller"],
 
   computed: {
@@ -58,6 +60,11 @@ export default {
   methods: {
     onNewDataField() {
       this.controller.addNewDataField(4);
+    },
+
+    async onMaximize() {
+        const de = this.controller.modalFactory.createDataEditorModal();
+        await de.show();
     }
   }
 }
