@@ -1,5 +1,10 @@
 import {GrObject} from "../geometry/GrObject";
 
+export enum InteractionEventKind {
+    none,
+    pointer,
+    key
+}
 export enum InteractionEvents {
     Click,
     AlternateClick,
@@ -15,6 +20,7 @@ export enum InteractionEvents {
 }
 
 export interface InteractionEventData {
+    kind: InteractionEventKind,
     interactionEvent: InteractionEvents,
     x: number,
     y: number,

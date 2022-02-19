@@ -16,12 +16,12 @@ then open [http://localhost:8080/index.html](http://localhost:8080/index.html)
 It uses an interpreted language that resembles something like assembly to draw pictures. User interaction
 creates the program in the background. [See here](doc/opcodes.md) for more details on the language and the interpreter.
 
-## Bugs
-* [ ] Make objects guides
 
-## Next steps
+## Todos:
 
-## Todos
+[https://trello.com/b/4Lzs5OFu/dapentry](https://trello.com/b/4Lzs5OFu/dapentry)
+
+
 
 ### Main Page
 * [ ] cool design
@@ -33,78 +33,29 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 * [ ] extend polygons
 * [ ] working with data fields
 
-### Architecture
-* [ ] move naming of objects to an external object
-
-### Drawing
-* [ ] Snapping
-  * [x] Generalize snap handling 
-  * [ ] Allow for cycling through overlapping snappoints - use k-d-tree instead of Browser-Mouse-Events? https://en.wikipedia.org/wiki/K-d_tree
-  * [ ] Allow to disable poi snapping
-  * [ ] snap on intersections
-* [ ] Add a method getPointAtPercentage to GrObject
-  * [ ] implement for rects
-  * [ ] implement for polygons
-* [ ] rotate around pivot
-  * [x] GrLine
-* [ ] enable move and creation tools to use percentage points
-  * [ ] make it available for the first point of a polygon
-  * [ ] better show where the point lies when using as the first point on a line or a polygon
-* [ ] enable move and creation operations to use percentage points
-  * [x] create circle
-  * [x] create rectangle
-  * [x] create polygon
-* [x] Define aspect ratio for a drawing
-  * [ ] Maybe determine bounding box for drawing automatically when storing
-* [ ] ~~make polygons open by default?~~
-* [ ] ~~autoclose polygons?~~
-* [ ] ~~enable fill rendering for open polygons~~
-
-### Data editor
-* [ ] Create tables
-* [ ] Load data from file
-* [ ] Rename fields
-
-### Style editor
-* [x] define stroke color separately
-
-### Operation editor
-* [ ] Operation Editor
-  * [ ] FOREACH
-  * [ ] Enable the user to switch an DO/ENDDO to a FOREACH when assigning an array as the count
-* [x] Auto growing input field
 
 ### Language/Interpreter
 * [ ] Language Version annotation
 * [ ] extend parser to recognize 43.34% as  the number 0.4334
-* [ ] extend parder to recognise 1e12 as the number it is
+* [ ] extend parser to recognise 1e12 as the number it is
 * [ ] Maybe configure what kind of Parameter-Class to use for a given token type. This removes dependency of Point2D from core runtime
 
-### Library
-* [ ] Library
-  * [x] Provide ability to insert a drawing
-  * [ ] Provide ability to define the size of the insertion
-  * [ ] Provide ability to alter arguments of an instance (e.g. change no of spokes on star)
-  * [ ] Provide ability to put a drawing into the library
-  * [ ] Provide ability to edit a drawing from the library
 
-### Publishing
-* [ ] Create a published version of the drawing
-  * [ ] Static SVG
-  * [ ] Static Bitmap
-  * [ ] Dynamic component to embed on a website
-    * [ ] Generate JS-Code for the program
-
-
-### UI
-* [ ] Show preview of the currently generated statement
-* [ ] Update texts for all statements
-* [ ] Show hints on what the active tool supports, like "hold shift to axis align, ..."
-* [ ] User friendly error messages. 
-* [ ] Use mouse drag to change numeric value
 
 
 ## Done
+* [x] rotate around pivot
+  * [x] GrLine
+* [x] Define aspect ratio for a drawing
+  * [ ] ~~Maybe determine bounding box for drawing automatically when storing~~
+* [x] Rename fields
+* [x] define stroke color separately
+* [x] Show hints on what the active tool supports, like "hold shift to axis align, ..."
+* [x] User friendly error messages.
+* [X] Operation Editor
+  * [X] FOREACH
+  * [X] Enable the user to switch an DO/ENDDO to a FOREACH when assigning an array as the count
+* [x] Auto growing input field
 * [x] Fix scaling of rotated objects
 * [x] Percentage-Point on vertical lines does not work
 * [x] Tool Lifecycle: Abort/teardown is not called properly
@@ -137,6 +88,10 @@ creates the program in the background. [See here](doc/opcodes.md) for more detai
 * Data Editor
   * [x] Allow for expression in fields
 
+## Cancelled
+* [ ] ~~make polygons open by default?~~
+* [ ] ~~autoclose polygons?~~
+* [ ] ~~enable fill rendering for open polygons~~
 
 ## Tests
 

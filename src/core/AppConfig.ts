@@ -13,7 +13,7 @@ export const AppConfig = {
 
         NextStepCode: "ArrowDown",
         DeleteCode: "Delete",
-        ObjectSnapCode: "AltLeft",
+        ObjectSnapCode: "Tab",
         AbortToolKeyCode: "Escape",
 
         CircleP2PModifierName: "alt",

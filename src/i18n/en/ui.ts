@@ -27,7 +27,7 @@ export const ui = {
     toolHint: {
         Circle: "New circle. Define center and radius. Hold [ALT] to define from point to point.",
         Rectangle: "New rectangle. Define two points.",
-        Line: "New line. Define to points. Use [Atl] to cycle object to snap on. Hold [Shift] for axis aligned lines.",
+        Line: "New line. Define to points. Use [Tab] to cycle object to snap on. Hold [Shift] for axis aligned lines.",
         Polygon: "New Polygon. Define point by point. Hold [Shift] for axis alignment. Close with right click. [Shift]-right click to create open polygon. Polygon selected: extend",
         Move: "Move object by grabbing a point. Hold [Shift] for axis alignment",
         Rotate: "Rotate object by grabbing a point.",

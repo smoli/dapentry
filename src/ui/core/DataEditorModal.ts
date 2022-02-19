@@ -1,6 +1,5 @@
 import {DialogCloseReason} from "./ModalFactory";
 import {ModalDialogHandler} from "./ModalDialogHandler";
-import DataEditor from "../dataEditor/DataEditor.vue";
 
 
 export const DataEditorModalComponent = {
@@ -22,8 +21,6 @@ export const DataEditorModalComponent = {
             this.handler.closeDataEditor();
         }
     },
-
-    components: {DataEditor},
 
     template: `
       <div class="drawable-data-editor-modal">

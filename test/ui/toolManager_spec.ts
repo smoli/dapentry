@@ -2,7 +2,7 @@ import {describe} from "mocha";
 import {expect} from "chai"
 import {ToolManager} from "../../src/core/ToolManager";
 import {SnapInfo, Tool} from "../../src/tools/Tool";
-import {InteractionEventData, InteractionEvents} from "../../src/core/InteractionEvents";
+import {InteractionEventData, InteractionEventKind, InteractionEvents} from "../../src/core/InteractionEvents";
 import {GrCircle} from "../../src/geometry/GrCircle";
 import {GrObject} from "../../src/geometry/GrObject";
 
@@ -379,6 +379,7 @@ describe('The ToolManager', () => {
             (t.currentTool as TestTool).selection = [];
 
             t.pump(InteractionEvents.Click, {
+                kind: InteractionEventKind.pointer,
                 interactionEvent: InteractionEvents.Click,
                 x: 0,
                 y: 0,

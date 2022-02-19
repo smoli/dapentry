@@ -1,4 +1,4 @@
-import {InteractionEventData} from "../../src/core/InteractionEvents";
+import {InteractionEventData, InteractionEventKind} from "../../src/core/InteractionEvents";
 
 
 export interface modifiers {
@@ -15,6 +15,7 @@ export function makeAClick(x:number, y:number, button: number = 0, mods:modifier
     lastX = x;
     lastY = y;
     return {
+        kind: InteractionEventKind.pointer,
         alt: !!mods.alt,
         button,
         buttons: 0,
@@ -36,6 +37,7 @@ export function makeAMove(x: number, y: number, mods: modifiers = {}): Interacti
     lastX = x;
     lastY = y;
     return {
+        kind: InteractionEventKind.pointer,
         alt: !!mods.alt,
         button: 0,
         buttons: 0,

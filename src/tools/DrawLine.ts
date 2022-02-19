@@ -57,7 +57,7 @@ export class DrawLine extends Tool {
 
             case States.Drag:
                 this._line.x2 = eventData.x;
-                this._line.y2 = eventData.y
+                this._line.y2 = eventData.y;
                 this._secondSnapInfo = snapInfo;
                 this._renderer.renderLine(RenderLayer.Interaction, this._line, false);
                 break;

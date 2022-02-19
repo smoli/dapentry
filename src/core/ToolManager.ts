@@ -1,6 +1,6 @@
 import {Tool} from "../tools/Tool";
 import {ObjectRenderer} from "./ObjectRenderer";
-import {InteractionEventData, InteractionEvents} from "./InteractionEvents";
+import {InteractionEventData, InteractionEventKind, InteractionEvents} from "./InteractionEvents";
 import {GrObject} from "../geometry/GrObject";
 
 export type SwitchEvent = (number | string);
@@ -193,6 +193,7 @@ export class ToolManager {
         if (this._currentTool && (this._selection.length || pumpEmpty)) {
             this.pump(InteractionEvents.Selection,
                 {
+                    kind: InteractionEventKind.none,
                     selection: [...this._selection],        // If tools store the selection we don't want to mess with their state
                     interactionEvent: InteractionEvents.Selection,
                     x: 0,

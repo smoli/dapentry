@@ -1,5 +1,5 @@
 import {ObjectRenderer, RenderLayer} from "../../core/ObjectRenderer";
-import {InteractionEventData, InteractionEvents} from "../../core/InteractionEvents";
+import {InteractionEventData, InteractionEventKind, InteractionEvents} from "../../core/InteractionEvents";
 import {LibraryEntry} from "../../core/Library";
 import {ToolNames} from "../../tools/ToolNames";
 import {SwitchEvent, ToolManager} from "../../core/ToolManager";
@@ -111,8 +111,9 @@ export class DrawingController {
     }
 
 
-    _makeEmptyInteractionEvent(): InteractionEventData {
+    _makeEmptyInteractionEvent(kind: InteractionEventKind): InteractionEventData {
         return {
+            kind,
             alt: false,
             button: 0,
             buttons: 0,
@@ -156,14 +157,14 @@ export class DrawingController {
         if (domEvent) {
             if (domEvent instanceof KeyboardEvent) {
                 ed = {
-                    ...this._makeEmptyInteractionEvent(),
+                    ...this._makeEmptyInteractionEvent(InteractionEventKind.key),
                     interactionEvent,
                     key: domEvent.key, keyCode: domEvent.keyCode,
                 }
             } else {
                 const [x, y] = this._renderer.pointerCoordsFromEvent(domEvent);
                 ed = {
-                    ...this._makeEmptyInteractionEvent(),
+                    ...this._makeEmptyInteractionEvent(InteractionEventKind.pointer),
                     interactionEvent,
                     x,
                     y,
@@ -186,7 +187,7 @@ export class DrawingController {
                 ed.y = this._lastMouse.y;
             }
         } else {
-            ed = this._makeEmptyInteractionEvent();
+            ed = this._makeEmptyInteractionEvent(InteractionEventKind.none);
         }
 
         ed.object = this._referenceObject;

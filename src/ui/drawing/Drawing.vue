@@ -133,6 +133,16 @@ export default {
     },
 
     keyPress(event) {
+      if (event.key === "Shift"
+          || event.key === "Alt"
+          || event.key === "Control"
+          || event.key === "Meta"
+      ) {
+        // We do not pass these key presses on. These can be used as modifiers on mouse events
+        // If we pass these on, they are pumped to the tool unnecessarily
+        return;
+      }
+
       this.drawingController.passKeyPressToTool(event)
     }
   },
