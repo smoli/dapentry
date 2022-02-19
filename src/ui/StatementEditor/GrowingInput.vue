@@ -1,11 +1,15 @@
 <template>
-  <input ref="input" @blur="$emit('onblur')" v-model="myValue" @keydown="onKeyDown" @keyup="onKeyUp" :type="type" :disabled="disabled"/>
+  <input ref="input"
+         @blur="$emit('onblur')"
+         v-model="myValue"
+         @keydown="onKeyDown"
+         @keyup="onKeyUp"
+         @mousedown="onMouseDown"
+         :type="type"
+         :disabled="disabled"/>
 </template>
 
-<script lang="ts">
-
-
-/**
+<script lang="ts">/**
  * https://stackoverflow.com/a/21015393
  *
  *
@@ -16,6 +20,9 @@
  *
  * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
  */
+import {AppConfig} from "../../core/AppConfig";
+
+
 function getTextWidth(text, font) {
   // re-use canvas object for better performance
   // @ts-ignore
@@ -90,6 +97,34 @@ export default {
       }
 
       inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+    },
+
+    onMouseDown(event: MouseEvent) {
+      if (event[AppConfig.Keys.NumericDragModifierName]) {
+        if (isNaN(this.myValue)) {
+          return;
+        }
+        event.preventDefault();
+
+        const oldMouseMoveHandler = window.onmousemove;
+        const oldMouseUpHandler = window.onmouseup;
+        const inp = this.$refs["input"];
+        inp.focus();
+
+        window.onmousemove = (event: MouseEvent) => {
+          this.myValue = Number(this.myValue) + event.movementX;
+          const inp = this.$refs["input"];
+          inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+          const e = new Event("change");
+          inp.dispatchEvent(e);
+        }
+
+        window.onmouseup = () => {
+          window.onmousemove = oldMouseMoveHandler;
+          window.onmouseup = oldMouseUpHandler;
+        }
+
+      }
     }
   }
 }

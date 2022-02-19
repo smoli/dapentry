@@ -18,7 +18,8 @@ export const AppConfig = {
 
         CircleP2PModifierName: "alt",
         ToolAxisAlignModifierName: "shift",
-        ObjectSnappingStepModifierName: "shift"
+        ObjectSnappingStepModifierName: "shift",
+        NumericDragModifierName: "ctrlKey"
     },
 
     Tools: {
