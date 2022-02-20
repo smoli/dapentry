@@ -8,7 +8,7 @@ import {UpdateStatement} from "../../src/actions/UpdateStatement";
 describe('Update statement', () => {
 
     it('switches a do to a foreach if the new value is an array register', () => {
-        const action = new UpdateStatement(1, 1, -1, "a");
+        const action = new UpdateStatement(1, [1], "a");
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state);
 

@@ -1,21 +1,18 @@
 import {BaseAction} from "./BaseAction";
 import {Parser, TokenTypes} from "../runtime/interpreter/Parser";
 import {CodeManager} from "../runtime/CodeManager";
-import {NOT_IMPLEMENTED, UNREACHABLE} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
 
 export class UpdateStatement extends BaseAction {
     private readonly _newValue: string;
     private readonly _statementIndex: number;
-    private readonly _tokenIndex: number;
-    private readonly _tokenSubIndex: number;
+    private readonly _tokenIndexes: Array<number>;
 
-    constructor(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
+    constructor(statementIndex: number, tokenIndexes: Array<number>, newValue: string) {
         super();
         this._newValue = newValue;
         this._statementIndex = statementIndex;
-        this._tokenIndex = tokenIndex;
-        this._tokenSubIndex = tokenSubIndex;
+        this._tokenIndexes = tokenIndexes;
     }
 
     get codeManager(): CodeManager {
@@ -48,11 +45,11 @@ export class UpdateStatement extends BaseAction {
     _execute() {
         const statement = this.codeManager.code[this._statementIndex];
         const tokens = Parser.parseLine(statement);
-        let token = tokens[this._tokenIndex];
+        let token:any = { value: tokens };
 
-        if (this._tokenSubIndex != -1) {
-            token = token.value[this._tokenSubIndex];
-        }
+            for (let i of this._tokenIndexes) {
+                token = token.value[i];
+            }
 
         let newStatements: string[] = [];
 

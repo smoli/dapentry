@@ -1,10 +1,11 @@
 <template>
   <input ref="input"
          @blur="$emit('onblur')"
-         v-model="myValue"
+         :value="value"
          @keydown="onKeyDown"
          @keyup="onKeyUp"
          @mousedown="onMouseDown"
+         @change="onChange"
          :type="type"
          :disabled="disabled"/>
 </template>
@@ -53,7 +54,7 @@ export default {
   data() {
 
     return {
-      myValue: this.value,
+      originalValue: this.value,
       offset: this.type === "number" ? 20 : 0
     }
   },
@@ -61,13 +62,13 @@ export default {
   watch: {
     value() {
       const inp = this.$refs["input"];
-      inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+      inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
     }
   },
 
   mounted() {
     const inp = this.$refs["input"];
-    inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+    inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
     if (this.autofocus) {
       inp.focus();
     }
@@ -77,7 +78,7 @@ export default {
     onKeyDown(event: KeyboardEvent) {
       const inp = this.$refs["input"];
       const newChar = event.key.length === 1 ? event.key : ""
-      inp.style.width = ( getTextWidth(this.myValue + newChar, getFontSize(inp)) + this.offset) + "px";
+      inp.style.width = ( getTextWidth(inp.value + newChar, getFontSize(inp)) + this.offset) + "px";
     },
 
     onKeyUp(event: KeyboardEvent) {
@@ -87,8 +88,8 @@ export default {
       const inp = this.$refs["input"];
 
       if (event.key === "Escape") {
-        inp.value = this.value;
-        inp.style.width = ( getTextWidth(this.value, getFontSize(inp)) + this.offset) + "px";
+        inp.value = this.originalValue;
+        inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
         inp.blur();
       }
 
@@ -96,25 +97,29 @@ export default {
         inp.blur();
       }
 
-      inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+      inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
+    },
+
+    onChange() {
+        this.originalValue = this.$refs["input"].value;
     },
 
     onMouseDown(event: MouseEvent) {
+      const inp = this.$refs["input"];
       if (event[AppConfig.Keys.NumericDragModifierName]) {
-        if (isNaN(this.myValue)) {
+        if (isNaN(inp.value)) {
           return;
         }
         event.preventDefault();
 
         const oldMouseMoveHandler = window.onmousemove;
         const oldMouseUpHandler = window.onmouseup;
-        const inp = this.$refs["input"];
         inp.focus();
 
         window.onmousemove = (event: MouseEvent) => {
-          this.myValue = Number(this.myValue) + event.movementX;
           const inp = this.$refs["input"];
-          inp.style.width = ( getTextWidth(this.myValue, getFontSize(inp)) + this.offset) + "px";
+          this.originalValue = inp.value = Number(inp.value) + event.movementX;
+          inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
           const e = new Event("change");
           inp.dispatchEvent(e);
         }

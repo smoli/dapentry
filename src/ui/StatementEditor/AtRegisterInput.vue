@@ -14,11 +14,11 @@ export default {
 
   methods: {
     onChangeObject(event) {
-      this.controller.updateStatement(this.content.statementIndex, this.content.index, 0, event.target.value);
+      this.controller.updateStatement(this.content.statementIndex, [...this.content.subIndexes, 0], event.target.value);
     },
 
     onChangeWhere(event) {
-      this.controller.updateStatement(this.content.statementIndex, this.content.index, 1, event.target.value);
+      this.controller.updateStatement(this.content.statementIndex, [...this.content.subIndexes, 1], event.target.value);
     }
   }
 

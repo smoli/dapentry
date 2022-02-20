@@ -12,7 +12,7 @@ export default {
 
   methods: {
     onChange(event) {
-      this.controller.updateStatement(this.content.statementIndex, this.content.index, -1, event.target.value);
+      this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, event.target.value);
     }
   }
 

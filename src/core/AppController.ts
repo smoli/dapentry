@@ -277,8 +277,8 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
-    async updateStatement(statementIndex: number, tokenIndex: number, tokenSubIndex: number, newValue: string) {
-        await this.execute(new UpdateStatement(statementIndex, tokenIndex, tokenSubIndex, newValue));
+    async updateStatement(statementIndex: number, tokenIndexes: Array<number>, newValue: string) {
+        await this.execute(new UpdateStatement(statementIndex, tokenIndexes, newValue));
         await this.runCode();
         this.updateDrawing();
         await this._persistence?.saveCode();
