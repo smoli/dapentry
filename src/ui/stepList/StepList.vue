@@ -53,6 +53,9 @@ function constructText(tokens, $t): string {
       case TokenTypes.EXPRESSION:
         return Parser.constructCodeLine([t]);
 
+      case TokenTypes.ARRAY:
+        return `${(t.value as Array<Token>).length} ${$t("ui.points")}`
+
       default:
         return t.value;
     }

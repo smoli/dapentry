@@ -9,6 +9,8 @@ export const ui = {
     yes: "Yes",
     no: "No",
     ok: "Ok",
+    close: "Close",
+    points: "points",
     information: "Information",
     confirm: "Please confirm",
     styleEditor: {
