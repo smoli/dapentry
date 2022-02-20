@@ -1,9 +1,15 @@
 <template>
-  <GrowingInput :value="content.token.value" @change="onChange"/>
+  <GrowingInput :value="content.token.value"
+                @change="onChange"
+                @dragenter="onDragEnter"
+                @dragover="onDragOver"
+                @drop="onDrop"/>
 </template>
 
 <script lang="ts">
 import GrowingInput from "./GrowingInput.vue";
+import {deSerializeDNDInfo, DnDDataType, makeDnDHandlers} from "../dnd/DnDInfo";
+
 export default {
   name: "NumberInput",
   components: { GrowingInput },
@@ -13,7 +19,14 @@ export default {
   methods: {
     onChange(event) {
       this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, event.target.value);
-    }
+    },
+
+    ...makeDnDHandlers(function (event: DragEvent) {
+      event.preventDefault();
+      const info = deSerializeDNDInfo(event.dataTransfer.getData(DnDDataType.Register));
+      this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, info.value1);
+    }, DnDDataType.Register),
+
   }
 
 }

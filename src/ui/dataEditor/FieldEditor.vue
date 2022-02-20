@@ -4,11 +4,17 @@
       <button @click="onRemoveField" class="drawable-ui-transparent">-</button>
     </td>
     <td>
-      <span class="drawable-data-field-name" v-if="editingFieldName === false" @dblclick="onEditFieldName">{{
-          field.name
-        }}</span>
+      <span class="drawable-data-field-name"
+            v-if="editingFieldName === false"
+            @dblclick="onEditFieldName"
+            draggable="true"
+            @dragstart="onDragStart">
+        {{ field.name }}
+      </span>
+
       <GrowingInput ref="fieldName" autofocus="true" @onblur="onFieldNameBlur" v-if="editingFieldName === true"
-                    class="drawable-data-field-name" :value="field.name" @change="onFieldNameChange"/>
+                    class="drawable-data-field-name" :value="field.name" @change="onFieldNameChange"
+      />
       =
     </td>
     <td>
@@ -20,6 +26,7 @@
 
 <script lang="ts">
 import GrowingInput from "../StatementEditor/GrowingInput.vue";
+import {DnDDataType, DnDInfo, serializeDNDInfo} from "../dnd/DnDInfo";
 
 export default {
   name: "FieldEditor",
@@ -50,9 +57,19 @@ export default {
     },
 
     onFieldNameChange(event) {
-      // TODO: Validate fieldname
       this.controller.renameDataField(this.field.name, event.target.value);
       this.$refs["fieldName"].blur();
+    },
+
+    onDragStart(event: DragEvent) {
+
+      const info: DnDInfo = {
+        value1: this.field.name,
+        type: DnDDataType.Register
+      }
+
+      event.dataTransfer.setData(DnDDataType.Register, serializeDNDInfo(info));
+
     }
 
 

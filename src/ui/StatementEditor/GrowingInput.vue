@@ -49,7 +49,7 @@ function getFontSize(el = document.body) {
 
 export default {
   name: "GrowingInput",
-  props: ["value", "type", "disabled", "autofocus", "min", "max"],
+  props: ["value", "type", "disabled", "autofocus", "min", "max", "draggable"],
 
   data() {
 

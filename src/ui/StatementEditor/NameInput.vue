@@ -11,22 +11,15 @@ import GrowingInput from "./GrowingInput.vue";
 import {deSerializeDNDInfo, DnDDataType, makeDnDHandlers} from "../dnd/DnDInfo";
 
 export default {
-  name: "SimpleInput",
+  name: "NameInput",
   components: { GrowingInput },
   props: ["content"],
   inject: ["controller"],
 
   methods: {
     onChange(event) {
-      this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, event.target.value);
-    },
-
-    ...makeDnDHandlers(function (event: DragEvent) {
-      event.preventDefault();
-      const info = deSerializeDNDInfo(event.dataTransfer.getData(DnDDataType.Register));
-      this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, info.value1);
-    }, DnDDataType.Register),
-
+      // this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, event.target.value);
+    }
   }
 }
 </script>
