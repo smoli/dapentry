@@ -1,6 +1,6 @@
 <template>
   <GrowingInput :value="content.token.value[0].value" @change="onChangeObject"/>
-  <GrowingInput :value="content.token.value[1].value" @change="onChangeWhere"/>
+  <GrowingInput :value="content.token.value[1].value" @change="onChangeWhere" min="0" max="1"/>
 </template>
 
 <script lang="ts">

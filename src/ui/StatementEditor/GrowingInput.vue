@@ -49,7 +49,7 @@ function getFontSize(el = document.body) {
 
 export default {
   name: "GrowingInput",
-  props: ["value", "type", "disabled", "autofocus"],
+  props: ["value", "type", "disabled", "autofocus", "min", "max"],
 
   data() {
 
@@ -116,9 +116,27 @@ export default {
         const oldMouseUpHandler = window.onmouseup;
         inp.focus();
 
+        let min = Number.MIN_SAFE_INTEGER;
+        let max = Number.MAX_SAFE_INTEGER;
+        let factor = 1;
+        if (this.min !== undefined && this.max !== undefined) {
+          min = this.min;
+          max = this.max;
+          factor = (max - min) / 400;
+        }
+
         window.onmousemove = (event: MouseEvent) => {
           const inp = this.$refs["input"];
-          this.originalValue = inp.value = Number(inp.value) + event.movementX;
+
+          let nv = Number(inp.value) + factor * event.movementX;
+
+          if (nv < min) {
+            nv = min;
+          } else if (nv > max) {
+            nv = max;
+          }
+
+          this.originalValue = inp.value = nv.toFixed(2);
           inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
           const e = new Event("change");
           inp.dispatchEvent(e);
