@@ -1,9 +1,9 @@
 
 export const statements = {
-    "CIRCLE": "Create {1} center at {3} and a radius of {4}",
-    "CIRCLECR": "Create {1} center at {3} and a radius of {4}",
+    "CIRCLE": "Create {1} center at {3} with radius {4}",
+    "CIRCLECR": "Create {1} center at {3} with radius {4}",
     "CIRCLECP": "Create {1} center at {3} touching {4}",
-    "RECT": "Create {1} starting at {3} with a width of {4} and a height of {5}",
+    "RECT": "Create {1} starting at {3} with width {4} and height {5}",
     "RECTPP": "Create {1} from {3} to {4}",
     "RECTC": "Create {1} center at {3} width {4} and height {5}",
     "RECTTL": "Create {1} top left at {3} width {4} and height {5}",

@@ -2,7 +2,9 @@
   <section class="drawable-properties-container">
     <div v-if="selectionCount === 1">
       <div class="drawable-properties-style">
-        <h2>Style</h2>
+        <h2>Style
+          <span>of {{objectName }}</span>
+        </h2>
         <div>
           <input type="color" v-model="fillColor"
                  @change="onFillColorChange">
@@ -28,6 +30,23 @@
                  @change="onStrokeWidthChange">
           <label>{{ $t("ui.styleEditor.strokeWidth") }} {{ strokeWidth }}</label>
         </div>
+
+        <div>
+
+          <h2>Properties
+          <span>of {{objectName }}</span>
+          </h2>
+          <div v-for="prop of publishedProperties">
+            <span draggable="true"
+                  @dragstart="onDragPropStart(prop.name, $event)"
+                  class="drawable-properties-prop-name">{{ prop.name }}</span> = {{ prop.value.toFixed(2) }}
+          </div>
+
+          <div v-for="poi of publishedPoints">
+            <span class="drawable-properties-prop-name">{{ poi.name }}</span> = {{ poi.value.x.toFixed(2) }},
+            {{ poi.value.y.toFixed(2) }}
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -35,7 +54,8 @@
 
 <script lang="ts">
 
-import {GrObject} from "../../geometry/GrObject";
+import {GrObject, POI, POIPurpose} from "../../geometry/GrObject";
+import {DnDDataType, DnDInfo, serializeDNDInfo} from "../dnd/DnDInfo";
 
 function makeComputedProxy(access, defaultValue) {
   return {
@@ -78,6 +98,16 @@ export default {
 
     onStrokeWidthChange(event) {
       this.controller.setStrokeWidthForSelection(event.target.value);
+    },
+
+    onDragPropStart(propName: string, event:DragEvent) {
+      const info: DnDInfo = {
+        value1: this.objectName + "@" + propName,
+        type: DnDDataType.Register
+      }
+
+      event.dataTransfer.setData(DnDDataType.Register, serializeDNDInfo(info));
+
     }
   },
   computed: {
@@ -91,6 +121,37 @@ export default {
     selectionCount() {
       return this.$store.state.drawing.selection ? this.$store.state.drawing.selection.length : 0;
     },
+
+    objectName() {
+      if (this.$store.state.drawing.selection.length === 0) {
+        return [];
+      }
+      const obj: GrObject = this.$store.state.drawing.selection[0];
+      return obj.uniqueName;
+    },
+
+    publishedProperties() {
+      if (this.$store.state.drawing.selection.length === 0) {
+        return [];
+      }
+      const obj: GrObject = this.$store.state.drawing.selection[0];
+      return obj.publishedProperties;
+    },
+
+    publishedPoints() {
+      if (this.$store.state.drawing.selection.length === 0) {
+        return [];
+      }
+      const obj: GrObject = this.$store.state.drawing.selection[0];
+      const poi = obj.pointsOfInterest(POIPurpose.MANIPULATION);
+
+      return Object.keys(poi)
+          .map(name => {
+            return { name: POI[name], value: poi[name] }
+          })
+
+    }
+
   },
   watch: {
     selection(newSel: Array<GrObject>) {

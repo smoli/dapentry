@@ -1,7 +1,7 @@
 <template>
   <section class="drawable-data-editor">
     <h2 v-if="!hideCaption">{{ $t("ui.dataEditor") }}</h2>
-    <button v-if="!hideCaption" @click="onMaximize">Maxi</button>
+<!--    <button v-if="!hideCaption" @click="onMaximize">Maxi</button>-->
     <table class="drawable-data-field-list">
       <component v-for="field in fieldEditors" :is="field.type" :field="field.field" />
     </table>
