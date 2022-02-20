@@ -111,6 +111,7 @@ export default {
   watch: {
     dimensions(dims) {
       updateSizing(document.getElementById(this.id), dims.width, dims.height);
+      this.drawingController.setView(dims.width, dims.height, this.viewBoxParameters.bezelSize);
     },
 
     currentTool(newTool, oldTool) {
