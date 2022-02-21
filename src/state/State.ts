@@ -7,6 +7,7 @@ import {I18n} from "vue-i18n";
 import {DataField, DataFieldValue} from "./modules/Data";
 import {AppConfig} from "../core/AppConfig";
 import {ModalDialogHandler} from "../ui/core/ModalDialogHandler";
+import {LibraryEntry} from "../core/Library";
 
 
 const mutations = {
@@ -53,6 +54,10 @@ const mutations = {
         setFieldValue: "data/setFieldValue",
         setListFieldValue: "data/setListFieldValue",
         addValueToField: "data/addValueToField"
+    },
+
+    library: {
+        add: "library/add"
     }
 }
 
@@ -77,12 +82,16 @@ const getters = {
 
     tool: {
         referenceObject: "tool/referenceObject"
+    },
+
+    library: {
+        getEntry: "library/getEntry"
     }
 }
 
 export class State {
     private readonly _store: Store<AppStore>;
-    private _i18n: I18n;
+    private readonly _i18n: I18n;
 
     constructor(store: Store<AppStore>, i18n: I18n) {
         this._store = store;
@@ -280,6 +289,14 @@ export class State {
 
     hideModal() {
         this.commit(mutations.ui.hideModal);
+    }
+
+    addLibraryEntry(entry: LibraryEntry) {
+        this.commit(mutations.library.add, entry);
+    }
+
+    getLibraryEntry(name: string):LibraryEntry {
+        return this.get(getters.library.getEntry, name);
     }
 
 }

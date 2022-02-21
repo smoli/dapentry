@@ -16,7 +16,10 @@
       <PropertiesEditor></PropertiesEditor>
     </div>
   </section>
-  <section class="drawable-app-footer" v-if="!hideFooter">Footer</section>
+  <section class="drawable-app-footer" v-if="!hideFooter">
+    <LibraryList></LibraryList>
+
+  </section>
 </template>
 
 <script lang="ts">
@@ -30,11 +33,12 @@ import StatementEditor from "./StatementEditor/StatementEditor";
 import ToolBar from "./ToolBar.vue";
 import Modal from "./core/Modal.vue";
 import ToolHint from "./ToolHint.vue";
+import LibraryList from "./library/LibraryList.vue";
 
 
 export default {
   name: "Drawable",
-  components: { ToolHint, Modal, ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
+  components: { LibraryList, ToolHint, Modal, ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
   inject: ["controller"],
   props: [
     "hideHeader",

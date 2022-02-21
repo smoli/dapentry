@@ -97,7 +97,18 @@ export const AppConfig = {
 
     UICore: {
         appModelName: "appModel"
+    },
+
+    API: {
+        baseUrl: "http://localhost:8000/api",
+        library: "library"
     }
 }
 
 AppConfig.Runtime.forbiddenDataFieldNames.push(AppConfig.Runtime.styleRegisterName, AppConfig.Runtime.canvasObjectName);
+Object.keys(AppConfig.API)
+    .forEach(key => {
+        if (key !== "baseUrl") {
+            AppConfig.API[key] = AppConfig.API.baseUrl + "/" + AppConfig.API[key];
+        }
+    });

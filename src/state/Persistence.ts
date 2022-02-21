@@ -1,6 +1,8 @@
 import {State} from "./State";
 import {LibraryEntry} from "../core/Library";
 import {DataField} from "./modules/Data";
+import {AspectRatio} from "../geometry/GrCanvas";
+import {AppConfig} from "../core/AppConfig";
 
 export class Persistence {
     private _state: State;
@@ -16,7 +18,9 @@ export class Persistence {
         const fields = await this.loadData();
         state.setData(fields);
 
-        await this.loadLibrary();
+        const libraryEntries = await this.loadLibrary();
+
+        libraryEntries.forEach(e => state.addLibraryEntry(e));
     }
 
     async saveAll():Promise<void> {
@@ -34,7 +38,7 @@ export class Persistence {
 
 
     async loadLibrary():Promise<Array<LibraryEntry>> {
-        const result = await fetch("http://api.drawable.de/api/library", {
+        const result = await fetch(`${AppConfig.API.library}`, {
             method: "GET",
             mode: "cors",
             headers: {
@@ -46,7 +50,12 @@ export class Persistence {
 
         console.log(JSON.stringify(data, null, 2));
 
-        return [];
+        return data.map(e => {
+            return {
+                ...e,
+                aspectRatio: AspectRatio[e.aspect]
+            }
+        });
     }
 
 
