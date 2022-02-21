@@ -2,13 +2,14 @@ import {BaseAction} from "./BaseAction";
 import {DataFieldValue} from "../state/modules/Data";
 import {DialogCloseReason} from "../ui/core/ModalFactory";
 import {CodeManager} from "../runtime/CodeManager";
+import {GrObject} from "../geometry/GrObject";
 
-export class DeleteStatements extends BaseAction {
-    private readonly _indexes: Array<number>;
+export class DeleteObjects extends BaseAction {
+    private readonly _objects: Array<GrObject>;
 
-    constructor(indexes: Array<number>) {
+    constructor(objects: Array<GrObject>) {
         super();
-        this._indexes = indexes;
+        this._objects = objects;
     }
 
     get codeManager(): CodeManager {
@@ -16,10 +17,12 @@ export class DeleteStatements extends BaseAction {
     }
 
     protected async _execute(data: any): Promise<any> {
+
+        const statements = this._objects.map(o => this.codeManager.getCreationStatement(o.uniqueName))
+
         let deletesOthers = false;
-        let creates = null;
-        for (const i of this._indexes) {
-            creates = this.codeManager.getCreatedRegisterForStatement(i);
+        for (const i of statements) {
+            const creates = this.codeManager.getCreatedRegisterForStatement(i);
             if (creates) {
                 const lines = this.codeManager.getStatementIndexesWithParticipation(creates);
                 if (lines.length > 1) {
@@ -33,17 +36,17 @@ export class DeleteStatements extends BaseAction {
             const dialog = this.controller.modalFactory.createConfirmationModal();
 
             const reason = await dialog.show({
-                text: `This statement creates "${creates}". It is used in other statements that must also be deleted.`,
-                caption: "Delete statement for object?",
+                text: `Deleting this will delete other statement or objects that depend on this`,
+                caption: "Delete object?",
                 yesButtonTextId: "Yes, delete",
-                noButtonTextId: "No, keep statement"
+                noButtonTextId: "No, keep object"
             })
 
             if (reason === DialogCloseReason.YES) {
-                this.state.removeStatements(this._indexes);
+                this.state.removeStatements(statements);
             }
         } else {
-            this.state.removeStatements(this._indexes);
+            this.state.removeStatements(statements);
         }
     }
 }

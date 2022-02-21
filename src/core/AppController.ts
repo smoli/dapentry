@@ -23,6 +23,7 @@ import {RenameDataField} from "../actions/RenameDataField";
 import {BatchAction} from "../actions/BatchAction";
 import {AddStatementToSelection} from "../actions/AddStatementToSelection";
 import {DeleteStatements} from "../actions/DeleteStatements";
+import {DeleteObjects} from "../actions/DeleteObjects";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -290,6 +291,19 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
+    async deleteSelectedObjects() {
+        if (this.state.selection.length === 0) {
+            return;
+        }
+        this.state.clearCodeSelection();
+        const toDelete = [...this.state.selection];
+        this.state.deselectAll();
+        await this.execute(new DeleteObjects(toDelete));
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence?.saveCode();
+    }
+
     async updateStatement(statementIndex: number, tokenIndexes: Array<number>, newValue: string) {
         await this.execute(new UpdateStatement(statementIndex, tokenIndexes, newValue));
         await this.runCode();
@@ -400,11 +414,9 @@ export class AppController {
         }
 
         if (event.code === AppConfig.Keys.NextStepCode) {
-            // Todo: We can now do this here
             await this.nextStep();
         } else if (event.code === AppConfig.Keys.DeleteCode) {
-            // Todo: We can now do this here
-            // this.fireObjectDeleted();
+            await this.deleteSelectedObjects();
         } else if (event.code === AppConfig.Keys.ObjectSnapCode) {
             event.preventDefault();
             this.selectReferenceObjectForTool();
