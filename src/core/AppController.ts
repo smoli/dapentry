@@ -280,11 +280,7 @@ export class AppController {
     }
 
     async deleteStatements(indexes: Array<number>) {
-        const newSelection = this.state.codeSelection.filter(i => !indexes.includes(i))
-        if (newSelection.length !== this.state.codeSelection.length) {
-            this._state.setCodeSelection(newSelection);
-        }
-
+        this.state.clearCodeSelection();
         await this.execute(new DeleteStatements(indexes));
         await this.runCode();
         this.updateDrawing();

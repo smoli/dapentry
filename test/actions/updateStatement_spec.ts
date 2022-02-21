@@ -4,6 +4,9 @@ import {State} from "../../src/state/State";
 import {createAppStore} from "../../src/state/AppStore";
 import {MockController} from "../testHelpers/mock_controller";
 import {UpdateStatement} from "../../src/actions/UpdateStatement";
+import {createDeflateRaw} from "zlib";
+import {Parser} from "../../src/runtime/interpreter/Parser";
+import {T_NUMBER, T_OPCODE, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
 
 describe('Update statement', () => {
 
@@ -29,6 +32,29 @@ describe('Update statement', () => {
             "ADD r1, 2",
             "ENDEACH"
         ])
+    });
+
+    it("switches the where type to register if necessary", async () => {
+        const state = new State(createAppStore(), null);
+        const action = new UpdateStatement(1, [2, 1], "f1");
+        action.controller = new MockController(state);
+
+        const code = `
+                LOAD r1, 10
+                LOAD r2, r1@5
+            `
+
+        state.addDataField("f1", 4);
+        state.setCodeString(code);
+
+        await action.execute(null);
+
+        expect(state.store.state.code.code.map(p => Parser.parseLine(p))).to.deep.equal([
+            [T_OPCODE("LOAD"), T_REGISTER("r1"), T_NUMBER(10)],
+            [T_OPCODE("LOAD"), T_REGISTER("r2"), T_REGISTERAT("r1", T_REGISTER("f1"))]
+        ]);
+
+
     });
 
 

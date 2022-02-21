@@ -54,7 +54,11 @@ export class Parser {
 
                 case TokenTypes.REGISTERAT:
                         sep = newSep;
-                        return oldSep + token.value[0].value + "@" + token.value[1].value;
+                        if (token.value[1].type === TokenTypes.REGISTER) {
+                            return oldSep + token.value[0].value + "@(" + token.value[1].value + ")";
+                        } else {
+                            return oldSep + token.value[0].value + "@" + token.value[1].value;
+                        }
 
                 case TokenTypes.POINT:
                         sep = ""

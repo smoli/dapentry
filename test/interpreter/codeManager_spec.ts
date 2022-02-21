@@ -478,7 +478,7 @@ describe('Code manager', () => {
                 [T_OPCODE("LOAD"), T_REGISTER("r2"), T_ARRAY(T_NUMBER(10), T_NUMBER(20), T_REGISTER("r10"), T_NUMBER(10))],
                 [T_OPCODE("LOAD"), T_REGISTER("r3"), T_REGISTERAT("r2", 1)],
                 [T_OPCODE("LOAD"), T_REGISTER("r4"), T_POINT(T_REGISTER("r10"), T_REGISTERAT("r2", 2))],
-                [T_OPCODE("LOAD"), T_REGISTER("r5"), T_EXPRESSION(T_REGISTER("r10"), "+", T_EXPRESSION(T_NUMBER(2), "*", T_REGISTERAT("r2", T_NAME("r10"))))]
+                [T_OPCODE("LOAD"), T_REGISTER("r5"), T_EXPRESSION(T_REGISTER("r10"), "+", T_EXPRESSION(T_NUMBER(2), "*", T_REGISTERAT("r2", T_REGISTER("r10"))))]
             ])
 
             expect(m.registerExists("r1")).to.be.false;
