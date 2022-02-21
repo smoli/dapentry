@@ -26,7 +26,7 @@ export class ModalDialogHandler {
         return this.i18n.global.t(id);
     }
 
-    show(...params: Array<any>): Promise<any> {
+    async show(...params: Array<any>): Promise<any> {
         ASSERT(this._showing === false, "Dialog already showing");
 
         this._showing = true;

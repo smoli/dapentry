@@ -27,6 +27,7 @@ const mutations = {
         set: "code/setCode",
         add: "code/add",
         insert: "code/insert",
+        remove: "code/remove",
         replaceStatement: "code/replaceStatement",
         clearSelection: "code/clearSelection",
         setSelection: "code/setSelection",
@@ -158,6 +159,10 @@ export class State {
 
     insertStatements(insertAt: number, ...statements: Array<string>) {
         this.commit(mutations.code.insert, { insertAt, statements })
+    }
+
+    removeStatements(indexes: Array<number>) {
+        this.commit(mutations.code.remove, indexes);
     }
 
     setAvailableTools(tools: Array<ToolNames>) {

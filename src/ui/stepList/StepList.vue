@@ -11,6 +11,10 @@
          class="drawable-steplist-step" :class="{ selected: line.selected }"
          :style="{ 'margin-left': line.level + 'em' }"
          @click="onStepClicked">{{ line.text }}
+      <button @click="onDeleteStep(line, $event)"
+              class="drawable-steplist-step-delete drawable-ui-transparent">
+        x
+      </button>
       <i :title="$t('ui.stepList.pauseExplanation')" v-if="line.originalLine === lastSelectedLine"
          class="drawable-steplist-step-pause fa-solid fa-circle-pause"></i>
     </div>
@@ -22,7 +26,7 @@
 import {Parser, Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import {AppController} from "../../core/AppController";
 import {AnnotatedCodeLine} from "../../runtime/CodeManager";
-import {UNREACHABLE} from "../../core/Assertions";
+import {ASSERT, UNREACHABLE} from "../../core/Assertions";
 import {rangeSelect} from "../core/rangeSelect";
 import {getTextIdForTokens} from "../core/GetTextIdForTokens";
 
@@ -112,9 +116,7 @@ export default {
       const index = Number(stepDiv.getAttribute("data-step"));
       const step = code[index];
 
-      if (!step) {
-        UNREACHABLE();
-      }
+      ASSERT(!!step, "There is no step!")
 
       if (event.shiftKey) {
         const selSteps = rangeSelect(
@@ -141,6 +143,11 @@ export default {
       }
       await this.controller.loopStatements(this.$store.state.code.selectedLines)
       await this.controller.clearStatementSelection();
+    },
+
+    async onDeleteStep(step: AnnotatedCodeLine, event:Event) {
+      event.stopPropagation();
+      await this.controller.deleteStatements([step.originalLine]);
     }
   }
 

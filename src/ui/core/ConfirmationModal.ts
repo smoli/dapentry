@@ -71,7 +71,7 @@ export class ConfirmationModal extends ModalDialogHandler {
         return this.t(this._options.caption || "ui.confirm");
     }
 
-    show(options: ConfirmationModalOptions): Promise<any> {
+    async show(options: ConfirmationModalOptions): Promise<any> {
         this._options = options;
 
         return super.show();

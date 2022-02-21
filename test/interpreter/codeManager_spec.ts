@@ -266,6 +266,8 @@ describe('Code manager', () => {
             ADD r3, r1, r4@(r2)
             ADD ^r2, 12
             LOAD r4, 1        
+            LOAD r5, [1, 2, 3, r2, 5]
+            LOAD r6, (10, r2)
         `;
 
             m.addCodeString(code);

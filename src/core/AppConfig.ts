@@ -67,6 +67,12 @@ export const AppConfig = {
                 Create: "POLY",
                 Extend: "EXTPOLY"
             },
+            Quad: {
+                Create: "QUAD"
+            },
+            Bezier: {
+                Create: "BEZIER"
+            },
             Move: {
                 Legacy: "MOVE",
                 ByVector: "MOVEBY",

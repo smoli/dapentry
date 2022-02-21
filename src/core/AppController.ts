@@ -22,6 +22,7 @@ import {LoopStatements} from "../actions/LoopStatements";
 import {RenameDataField} from "../actions/RenameDataField";
 import {BatchAction} from "../actions/BatchAction";
 import {AddStatementToSelection} from "../actions/AddStatementToSelection";
+import {DeleteStatements} from "../actions/DeleteStatements";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -272,6 +273,13 @@ export class AppController {
             return;
         }
         await this.execute(new AddStatement(code));
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence?.saveCode();
+    }
+
+    async deleteStatements(indexes: Array<number>) {
+        await this.execute(new DeleteStatements(indexes));
         await this.runCode();
         this.updateDrawing();
         await this._persistence?.saveCode();

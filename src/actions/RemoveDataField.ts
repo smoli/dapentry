@@ -1,5 +1,4 @@
 import {BaseAction} from "./BaseAction";
-import {DataFieldValue} from "../state/modules/Data";
 import {DialogCloseReason} from "../ui/core/ModalFactory";
 
 export class RemoveDataField extends BaseAction {

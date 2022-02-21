@@ -1,5 +1,10 @@
-import {AnnotatedCodeLine, CodeManager} from "../../runtime/CodeManager";
+import {AnnotatedCodeLine, CodeManager, CreationInfo} from "../../runtime/CodeManager";
 import {ASSERT} from "../../core/Assertions";
+import {AppConfig} from "../../core/AppConfig";
+import {GfxCircle} from "../../runtime/gfx/GfxCircle";
+import {GfxRect} from "../../runtime/gfx/GfxRect";
+import {GfxLine} from "../../runtime/gfx/GfxLine";
+import {GfxPolygon} from "../../runtime/gfx/GfxPolygon";
 
 
 export interface CodeState {
@@ -9,11 +14,35 @@ export interface CodeState {
 }
 
 
+const creationStatements: CreationInfo = {
+
+}
+
+Object.values(AppConfig.Runtime.Opcodes.Circle)
+    .forEach(opcode => {
+        creationStatements[opcode] = 1;
+    })
+
+Object.values(AppConfig.Runtime.Opcodes.Rect)
+    .forEach(opcode => {
+        creationStatements[opcode] = 1;
+    })
+
+Object.values(AppConfig.Runtime.Opcodes.Line)
+    .forEach(opcode => {
+        creationStatements[opcode] = 1;
+    })
+
+creationStatements[AppConfig.Runtime.Opcodes.Poly.Create] = 1;
+creationStatements[AppConfig.Runtime.Opcodes.Quad.Create] = 1;
+creationStatements[AppConfig.Runtime.Opcodes.Bezier.Create] = 1;
+creationStatements["LOAD"] = 1;
+
 export const codeState = {
 
     state(): CodeState {
         return {
-            codeManager: new CodeManager(),
+            codeManager: new CodeManager(creationStatements),
             code: [],
             selectedLines: []
         }
@@ -47,6 +76,20 @@ export const codeState = {
 
         insert(state: CodeState, payload: { statements: Array<string>, insertAt: number }) {
             state.codeManager.insertStatements(payload.statements, payload.insertAt)
+            state.code = state.codeManager.code.map(s => s);
+        },
+
+        remove(state: CodeState, indexes: Array<number>) {
+            indexes.sort((a, b) => b - a);
+
+            for (const i of indexes) {
+                const r = state.codeManager.getCreatedRegisterForStatement(i)
+                if (r) {
+                    state.codeManager.removeStatementsForRegister(r)
+                } else {
+                    state.codeManager.removeStatements([i]);
+                }
+            }
             state.code = state.codeManager.code.map(s => s);
         },
 

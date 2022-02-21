@@ -132,6 +132,19 @@ export class CodeManager {
     }
 
     /**
+     * Removes a list of statements.
+     * @param indexes
+     */
+    removeStatements(indexes: Array<number>) {
+        {
+            const i = [...indexes];
+            i.sort((a, b) => b - a);
+            i.forEach(i => this._code.splice(i, 1));
+            this.refreshRegisterAndLabelMemory();
+        }
+    }
+
+    /**
      * Replace the statement at the given index with the new one.
      * This performs no range check.
      * @param index
@@ -215,7 +228,7 @@ export class CodeManager {
             switch (opCode) {
                 case AppConfig.Runtime.Opcodes.Do:
                     nestLevel++;
-                break;
+                    break;
 
                 case AppConfig.Runtime.Opcodes.EndDo:
                     if (nestLevel === 0) {
@@ -280,12 +293,18 @@ export class CodeManager {
 
             const doOpCode = findOpCode(tokens, AppConfig.Runtime.Opcodes.Do);
             if (doOpCode) {
-                blockStack.push({ code: AppConfig.Runtime.Opcodes.Do, replaces: findAllAnnotations(tokens, "REPLACE") });
+                blockStack.push({
+                    code: AppConfig.Runtime.Opcodes.Do,
+                    replaces: findAllAnnotations(tokens, "REPLACE")
+                });
             }
 
             const forEachOpCode = findOpCode(tokens, AppConfig.Runtime.Opcodes.ForEach);
             if (forEachOpCode) {
-                blockStack.push({ code: AppConfig.Runtime.Opcodes.ForEach, replaces: findAllAnnotations(tokens, "REPLACE") });
+                blockStack.push({
+                    code: AppConfig.Runtime.Opcodes.ForEach,
+                    replaces: findAllAnnotations(tokens, "REPLACE")
+                });
             }
 
             const endDo = findOpCode(tokens, AppConfig.Runtime.Opcodes.EndDo);
@@ -435,19 +454,40 @@ export class CodeManager {
         const ret = [];
         for (let i = 0; i < this._code.length; i++) {
             const tokens = this.getTokensForStatement(i);
+
+            const tokenHasRegister = (token: Token) => {
+                switch (token.type) {
+                    case TokenTypes.REGISTER:
+                        return token.value === registerName;
+
+                    case TokenTypes.NONLOCALREGISTER:
+                        return token.value === registerName;
+
+                    case TokenTypes.REGISTERAT:
+                        return token.value[0].value === registerName || tokenHasRegister(token.value[1])
+
+                    case TokenTypes.POINT:
+                        return tokenHasRegister(token.value[0]) || tokenHasRegister(token.value[1])
+
+                    case TokenTypes.ARRAY:
+                        for (const v of token.value as Array<Token>) {
+                            if (tokenHasRegister(v)) {
+                                return true;
+                            }
+                        }
+                        return false;
+
+                    case TokenTypes.EXPRESSION:
+                        return tokenHasRegister(token.value[0]) || tokenHasRegister(token.value[2])
+
+                    default:
+                        return false;
+                }
+            }
+
             for (const token of tokens) {
-                if (token.type === TokenTypes.REGISTER && token.value === registerName) {
+                if (tokenHasRegister(token)) {
                     ret.push(i);
-                    break;
-                } else if (token.type === TokenTypes.REGISTERAT && token.value[0].value === registerName) {
-                    ret.push(i);
-                    break;
-                } else if (token.type === TokenTypes.REGISTERAT && token.value[1].type === TokenTypes.REGISTER && token.value[1].value === registerName) {
-                    ret.push(i);
-                    break;
-                } else if (token.type === TokenTypes.NONLOCALREGISTER && token.value === registerName) {
-                    ret.push(i);
-                    break;
                 }
             }
         }
@@ -476,12 +516,12 @@ export class CodeManager {
         return this._registers.indexOf(registerName) !== -1;
     }
 
-    public renameRegister(oldName:string, newName:string):boolean {
+    public renameRegister(oldName: string, newName: string): boolean {
         if (this.registerExists(newName)) {
             return false;
         }
 
-        const renameInToken = (token:Token) => {
+        const renameInToken = (token: Token) => {
             if (token.type === TokenTypes.REGISTER && token.value === oldName) {
                 token.value = newName;
                 return;
@@ -502,7 +542,7 @@ export class CodeManager {
             }
 
             if (token.type === TokenTypes.ARRAY) {
-                (token.value as Array<Token>).forEach(t => renameInToken(t));
+                ( token.value as Array<Token> ).forEach(t => renameInToken(t));
             }
 
             if (token.type === TokenTypes.EXPRESSION) {
