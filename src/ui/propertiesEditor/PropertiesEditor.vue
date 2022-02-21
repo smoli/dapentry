@@ -38,7 +38,7 @@
           </h2>
           <div v-for="prop of publishedProperties">
             <span draggable="true"
-                  @dragstart="onDragPropStart(prop.name, $event)"
+                  @dragstart="onDragPropStart(prop.id, $event)"
                   class="drawable-properties-prop-name">{{ prop.name }}</span> = {{ prop.value.toFixed(2) }}
           </div>
 
@@ -100,9 +100,9 @@ export default {
       this.controller.setStrokeWidthForSelection(event.target.value);
     },
 
-    onDragPropStart(propName: string, event:DragEvent) {
+    onDragPropStart(propId: string, event:DragEvent) {
       const info: DnDInfo = {
-        value1: this.objectName + "@" + propName,
+        value1: this.objectName + "@" + propId,
         type: DnDDataType.Register
       }
 

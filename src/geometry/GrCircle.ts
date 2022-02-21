@@ -89,14 +89,17 @@ export class GrCircle extends GrObject {
         return [
             {
                 name: "Radius",
+                id: "radius",
                 value: this._radius
             },
             {
                 name: "Area",
+                id: "area",
                 value: this._radius ** 2 * Math.PI
             },
             {
                 name: "Circumference",
+                id: "circumference",
                 value: this._radius * 2 * Math.PI
             },
             ...super.publishedProperties

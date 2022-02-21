@@ -120,18 +120,22 @@ export class GrRectangle extends GrObject {
         return [
             {
                 name: "Width",
+                id: "width",
                 value: this._width
             },
             {
                 name: "Height",
+                id: "height",
                 value: this._height
             },
             {
                 name: "Area",
+                id: "area",
                 value: this._width * this._height
             },
             {
                 name: "Circumference",
+                id: "circumference",
                 value: 2 * (this._width + this._height)
             },
             ...super.publishedProperties

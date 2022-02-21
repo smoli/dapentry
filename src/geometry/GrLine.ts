@@ -210,14 +210,17 @@ export class GrLine extends GrObject {
         return [
             {
                 name: "Length",
+                id: "length",
                 value: vec.length
             },
             {
                 name: "Angle to X-Axis",
+                id: "angle",
                 value: rad2deg(vec.angleTo(new Point2D(1, 0)))
             },
             {
                 name: "Angle to Y-Axis",
+                id: "angley",
                 value: rad2deg(vec.angleTo(new Point2D(0, 1)))
             }
         ];

@@ -59,6 +59,7 @@ export type POIMap = { [key in POI]?: Point2D };
 
 export interface ObjectProperty {
     name: string,
+    id: string,
     value: (number | string),
     description?: string
 }
@@ -482,7 +483,7 @@ export abstract class GrObject {
                 return poi;
             }
 
-            const publ = this.publishedProperties.find(p => p.name === where);
+            const publ = this.publishedProperties.find(p => p.id === where);
             if (publ) {
                 return publ.value;
             }
@@ -521,6 +522,7 @@ export abstract class GrObject {
         return [
             {
                 name: "Rotation",
+                id: "rotation",
                 value: rad2deg(this._xAxis.angleTo(new Point2D(1, 0)))
             }
         ];

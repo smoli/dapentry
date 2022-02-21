@@ -231,6 +231,7 @@ export class GrPolygon extends GrPolygonBase {
         return [
             {
                 name: "Circumference",
+                id: "circumference",
                 value: length
             },
             ...super.publishedProperties
