@@ -43,7 +43,9 @@
           </div>
 
           <div v-for="poi of publishedPoints">
-            <span class="drawable-properties-prop-name">{{ poi.name }}</span> = {{ poi.value.x.toFixed(2) }},
+            <span draggable="true"
+                  class="drawable-properties-prop-name"
+                  @dragstart="onDragPointStart(poi, $event)">{{ poi.name }}</span> = {{ poi.value.x.toFixed(2) }},
             {{ poi.value.y.toFixed(2) }}
           </div>
         </div>
@@ -56,6 +58,7 @@
 
 import {GrObject, POI, POIPurpose} from "../../geometry/GrObject";
 import {DnDDataType, DnDInfo, serializeDNDInfo} from "../dnd/DnDInfo";
+import {Point2D} from "../../geometry/Point2D";
 
 function makeComputedProxy(access, defaultValue) {
   return {
@@ -83,33 +86,6 @@ export default {
     }
   },
 
-  methods: {
-    onFillColorChange(event) {
-      this.controller.setFillColorForSelection(event.target.value);
-    },
-
-    onOpacityChange(event) {
-      this.controller.setFillOpacityForSelection(event.target.value);
-    },
-
-    onStrokeColorChange(event) {
-      this.controller.setStrokeColorForSelection(event.target.value);
-    },
-
-    onStrokeWidthChange(event) {
-      this.controller.setStrokeWidthForSelection(event.target.value);
-    },
-
-    onDragPropStart(propId: string, event:DragEvent) {
-      const info: DnDInfo = {
-        value1: this.objectName + "@" + propId,
-        type: DnDDataType.Register
-      }
-
-      event.dataTransfer.setData(DnDDataType.Register, serializeDNDInfo(info));
-
-    }
-  },
   computed: {
     fillOpacity: makeComputedProxy("fillOpacity", 1),
     fillColor: makeComputedProxy("fillColor", "#000000"),
@@ -163,6 +139,41 @@ export default {
       }
     }
   },
+  methods: {
+    onFillColorChange(event) {
+      this.controller.setFillColorForSelection(event.target.value);
+    },
+
+    onOpacityChange(event) {
+      this.controller.setFillOpacityForSelection(event.target.value);
+    },
+
+    onStrokeColorChange(event) {
+      this.controller.setStrokeColorForSelection(event.target.value);
+    },
+
+    onStrokeWidthChange(event) {
+      this.controller.setStrokeWidthForSelection(event.target.value);
+    },
+
+    onDragPropStart(propId: string, event:DragEvent) {
+      const info: DnDInfo = {
+        value1: this.objectName + "@" + propId,
+        type: DnDDataType.Register
+      }
+
+      event.dataTransfer.setData(DnDDataType.Register, serializeDNDInfo(info));
+    },
+
+    onDragPointStart(poi: { name: string, value: Point2D }, event) {
+      const info: DnDInfo = {
+        value1: this.objectName + "@" + poi.name,
+        type: DnDDataType.PointRegister
+      }
+
+      event.dataTransfer.setData(DnDDataType.PointRegister, serializeDNDInfo(info));
+    }
+  }
 
 }
 </script>
