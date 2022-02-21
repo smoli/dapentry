@@ -24,6 +24,7 @@ import {BatchAction} from "../actions/BatchAction";
 import {AddStatementToSelection} from "../actions/AddStatementToSelection";
 import {DeleteStatements} from "../actions/DeleteStatements";
 import {DeleteObjects} from "../actions/DeleteObjects";
+import {LibraryEntry} from "./Library";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -62,16 +63,18 @@ class PerformanceMeasure {
 
 export interface ApplicationOptions {
     aspectRatio?: AspectRatio,
-    drawingWidth?: number,
+    drawingHeight?: number,
     availableTools?: Array<ToolNames>,
-    poiAvailable?: boolean
+    poiAvailable?: boolean,
+    libraryAvailable?: boolean
 }
 
-const applicationDefaults: ApplicationOptions = {
+export const applicationDefaults: ApplicationOptions = {
     aspectRatio: AspectRatio.ar1_1,
-    drawingWidth: 1000,
+    drawingHeight: 1000,
     availableTools: Object.values(ToolNames) as Array<ToolNames>,
-    poiAvailable: true
+    poiAvailable: true,
+    libraryAvailable: true
 }
 
 
@@ -84,6 +87,7 @@ export class AppController {
     private _persistence: Persistence;
     private _poiAvailable: boolean;
     private _modalFactory: ModalFactory;
+    private _defaultDrawingHeight: number;
 
     constructor(state: State,
                 interpreter: GfxInterpreter,
@@ -100,7 +104,7 @@ export class AppController {
     }
 
     protected processOptions(options: ApplicationOptions) {
-        this._canvas = GrCanvas.create(options.aspectRatio, options.drawingWidth);
+        this._canvas = GrCanvas.create(options.aspectRatio, options.drawingHeight);
 
         const tools = [...options.availableTools];
         if (tools.indexOf(ToolNames.Select) === -1) {
@@ -113,6 +117,7 @@ export class AppController {
         this._state.setAvailableTools(tools);
 
         this._poiAvailable = options.poiAvailable;
+        this._defaultDrawingHeight = options.drawingHeight;
     }
 
     get poiAvailable(): boolean {
@@ -124,7 +129,7 @@ export class AppController {
     }
 
     public async setAspectRatio(ar: AspectRatio) {
-        this._canvas = GrCanvas.create(ar, 1000);
+        this._canvas = GrCanvas.create(ar, this._defaultDrawingHeight);
         this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
         this._state.setAspectRatio(ar);
 
@@ -369,13 +374,16 @@ export class AppController {
         }
     }
 
-    public switchTool(newTool: ToolNames) {
-        this._state.switchTool(newTool);
+    public switchTool(newTool: ToolNames, ...params: Array<any>) {
+        this._state.switchTool(newTool, ...params);
     }
 
     protected switchToDrawTool(newTool: ToolNames) {
-        // this._state.deselectAll();
         this.switchTool(newTool);
+    }
+
+    public switchToInsertLibraryEntryTool(entry:LibraryEntry) {
+        this.switchTool(ToolNames.Instance, entry);
     }
 
     protected selectReferenceObjectForTool() {

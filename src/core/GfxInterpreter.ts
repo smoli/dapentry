@@ -196,11 +196,11 @@ class GfxMake extends GfxOperation {
         }
 
         let i = 0;
-        for (const k in this._entry.arguments) {
-            if (this._args && this._args[i]) {
-                ret[k] = this._args[i].finalized(this.closure);
+        for (const k of this._entry.arguments) {
+            if (this._args && this._args[k.name]) {
+                ret[k.name] = this._args[k.name].finalized(this.closure);
             } else {
-                ret[k] = this._entry.arguments[k].default;
+                ret[k.name] = k.default;
             }
             i++;
         }

@@ -118,7 +118,12 @@ export default {
       if (newTool === oldTool) {
         console.log("WARNING: Same-tool-switch ", newTool)
       }
-      this.drawingController.switchTool(newTool);
+      const params = this.$store.state.tool.currentParams;
+      if (params) {
+        this.drawingController.switchTool(newTool, ...params);
+      } else {
+        this.drawingController.switchTool(newTool);
+      }
     },
 
     objects(newObjectList) {

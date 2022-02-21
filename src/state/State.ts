@@ -178,11 +178,11 @@ export class State {
         this.commit(mutations.tool.setAvailable, tools);
     }
 
-    switchTool(newTool: ToolNames) {
-        if (this._store.state.tool.available.indexOf(newTool) !== -1 || newTool === null) {
-            this.commit(mutations.tool.switch, newTool);
+    switchTool(toolName: ToolNames, ...params: Array<any>) {
+        if (this._store.state.tool.available.indexOf(toolName) !== -1 || toolName === null) {
+            this.commit(mutations.tool.switch, { toolName, params });
         } else {
-            console.log(`Tool ${ToolNames[newTool]}(${newTool}) is not available`)
+            console.log(`Tool ${ToolNames[toolName]}(${toolName}) is not available`)
         }
     }
 

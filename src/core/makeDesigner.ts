@@ -1,11 +1,12 @@
 import {createI18n} from "vue-i18n";
 import {i18nMessages} from "../i18n/i18nMessages";
-import {AppController, ApplicationOptions} from "./AppController";
+import {AppController, applicationDefaults, ApplicationOptions} from "./AppController";
 import {createAppStore} from "../state/AppStore";
 import {createApp} from "vue/dist/vue.esm-bundler";
 import Drawable from "../ui/drawable.vue";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {State} from "../state/State";
+import {Library} from "./Library";
 
 const navigatorLanguage = navigator.language ? navigator.language.split("-")[0] : "en"
 const i18n = createI18n({
@@ -40,15 +41,22 @@ export interface LayoutOptions {
  */
 export function makeDesigner(containerId: string,
                              layout: LayoutOptions = {},
-                             appOptions: ApplicationOptions = {}): AppController {
+                             appOptions: ApplicationOptions = applicationDefaults): AppController {
 
     const appStore = createAppStore();
     const app = createApp(Drawable, layout);
     app.use(appStore);
     app.use(i18n);
 
-    const interpreter = new GfxInterpreter()
-    const appController = new AppController(new State(appStore, i18n), interpreter, appOptions);
+    const state = new State(appStore, i18n);
+    let library = null;
+
+    if (appOptions.libraryAvailable) {
+        library = new Library(state);
+    }
+
+    const interpreter = new GfxInterpreter(library);
+    const appController = new AppController(state, interpreter, appOptions);
 
     app.provide("controller", appController);
     app.mount("#" + containerId);

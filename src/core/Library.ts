@@ -1,4 +1,5 @@
 import {AspectRatio} from "../geometry/GrCanvas";
+import {State} from "../state/State";
 
 export enum LibraryEntryArgumentType {
      Number = "number"
@@ -6,6 +7,7 @@ export enum LibraryEntryArgumentType {
 
 export interface LibraryEntryArgument {
     type: LibraryEntryArgumentType,
+    name: string,
     default: any,
     description: string
 }
@@ -18,6 +20,22 @@ export interface LibraryEntry {
     lastUpdate: Date,
     version?: string,
     aspectRatio: AspectRatio,
-    arguments: { [key:string]: LibraryEntryArgument }
+    arguments: Array<LibraryEntryArgument>,
     code: string
+}
+
+
+/**
+ * This class acts as a proxy to the state.
+ * It helps us decouple the GfxInterpreter from the UI.
+ */
+export class Library {
+    private _state: State;
+    constructor(state:State) {
+        this._state = state;
+    }
+
+    getEntry(name:string): LibraryEntry {
+        return this._state.getLibraryEntry(name);
+    }
 }

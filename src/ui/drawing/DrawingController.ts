@@ -236,16 +236,12 @@ export class DrawingController {
         this._pumpToTool(InteractionEvents.Key, event);
     }
 
-    public startToolInsertLibraryEntry(entry: LibraryEntry) {
-        this._toolManager.switch(ToolNames.Instance, entry);
-    }
-
-    public switchTool(newTool: ToolNames) {
+    public switchTool(newTool: ToolNames, ...params: Array<any>) {
         if (newTool === null) {
             this._pumpToTool(InteractionEvents.Cancel, null);
             this._toolManager.abortCurrentTool();
         } else {
-            this._toolManager.switch(newTool);
+            this._toolManager.switch(newTool, ...params);
         }
     }
 }
