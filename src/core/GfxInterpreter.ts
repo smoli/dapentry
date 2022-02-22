@@ -22,6 +22,7 @@ import {Point2Parameter} from "../runtime/interpreter/types/Point2Parameter";
 import {AppConfig} from "./AppConfig";
 import {GfxStrokeColor} from "../runtime/gfx/GfxStrokeColor";
 import {GfxFillOpacity} from "../runtime/gfx/GfxFillOpacity";
+import {GfxText} from "../runtime/gfx/GfxText";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -86,6 +87,7 @@ export class GfxInterpreter extends Interpreter {
 
         this.addOperation("QUAD", makeGfxOperation(GfxQuadratic, objCallback));
         this.addOperation("BEZIER", makeGfxOperation(GfxBezier, objCallback));
+        this.addOperation(AppConfig.Runtime.Opcodes.Text, makeGfxOperation(GfxText, objCallback));
 
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, objCallback));
         this.addOperation("SCALE", makeGfxOperation(GfxScale, objCallback));

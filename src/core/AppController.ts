@@ -448,6 +448,8 @@ export class AppController {
             this.switchToDrawTool(ToolNames.Rectangle);
         } else if (event.key === AppConfig.Keys.DrawLineKey) {
             this.switchToDrawTool(ToolNames.Line);
+        } else if (event.key === AppConfig.Keys.DrawTextKey) {
+            this.switchToDrawTool(ToolNames.Text);
         } else if (event.key === AppConfig.Keys.DrawPolygonKey) {
             this.switchToDrawTool(ToolNames.Polygon);
         } else if (event.key === AppConfig.Keys.DrawQuadricKey) {

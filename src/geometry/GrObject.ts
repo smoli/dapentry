@@ -11,6 +11,7 @@ export enum ObjectType {
     Ellipse,
     Square,
     Line,
+    Text,
     Polygon,
     Quadratic,
     Bezier,

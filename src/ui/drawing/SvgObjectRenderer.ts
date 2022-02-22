@@ -3,13 +3,14 @@ import {Selection} from 'd3';
 import {GrObject, ObjectType, POIPurpose} from "../../geometry/GrObject";
 import {
     HandleMouseCallBack,
-    InfoHandle, MouseHandler,
+    InfoHandle,
+    MouseHandler,
     ObjectClickCallback,
     ObjectRenderer,
     POICallback,
     RenderLayer
 } from "../../core/ObjectRenderer";
-import {InteractionEventData, InteractionEvents} from "../../core/InteractionEvents";
+import {InteractionEventData, InteractionEventKind, InteractionEvents} from "../../core/InteractionEvents";
 import {GrCircle} from "../../geometry/GrCircle";
 import {GrRectangle} from "../../geometry/GrRectangle";
 import {GrLine} from "../../geometry/GrLine";
@@ -19,6 +20,8 @@ import {GrCompositeObject} from "../../geometry/GrCompositeObject";
 import {GrObjectList} from "../../geometry/GrObjectList";
 import {GrCanvas} from "../../geometry/GrCanvas";
 import {AppConfig} from "../../core/AppConfig";
+import {GrText} from "../../geometry/GrText";
+import {TextAlignement} from "../../core/StyleManager";
 
 enum ToolClasses {
     object = "grObject",
@@ -141,6 +144,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
             case ObjectType.Line:
                 this._renderLine(this._objectLayer, object as GrLine, parent, enableMouseEvents);
+                break;
+
+            case ObjectType.Text:
+                this._renderText(this._objectLayer, object as GrText, parent, enableMouseEvents);
                 break;
 
             case ObjectType.Polygon:
@@ -393,6 +400,64 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return this._renderLine(this.getLayer(layer), line, null, enableMouseEvents);
     }
 
+
+    protected _renderText(layer: d3.Selection<any, any, any, any>, text: GrText, parent: Selection<any, any, any, any>, enableMouseEvents: boolean) {
+        const o = this.getObjectOrCreate(layer, text, "text", parent, enableMouseEvents);
+
+        const t = o.select(ToolClassSelectors.object);
+        t.attr("x", text.x)
+            .attr("y", text.y)
+            .text(text.text);
+        this._createTextStyle(t, text);
+
+        return t;
+    }
+
+    renderText(layer: RenderLayer, text: GrText, enableMouseEvents: boolean) {
+        return this._renderText(this.getLayer(layer), text, null, enableMouseEvents);
+    }
+
+    protected _createTextStyle(elem: d3.Selection<any, any, any, any>, text: GrText) {
+        if (!text.style) {
+            return
+        }
+
+        let align = "start";
+        let valign = "baseline";
+        switch (text.style.textAlignment) {
+            case TextAlignement.center:
+                align = "middle";
+                break
+            case TextAlignement.start:
+                align = "start";
+                break;
+            case TextAlignement.end:
+                align = "end";
+                break;
+        }
+
+        switch (text.style.verticalAlignment) {
+            case TextAlignement.center:
+                valign = "central";
+                break
+            case TextAlignement.start:
+                valign = "hanging";
+                break;
+            case TextAlignement.end:
+                valign = "baseline";
+                break;
+
+        }
+
+        elem.attr("style", `fill: ${text.style.fillColor}; fill-opacity: ${text.style.fillOpacity};` +
+                           `stroke: ${text.style.strokeColor}; stroke-width: ${text.style.strokeWidth};` +
+                           `font-family: ${text.style.fontFamily}; font-size: ${text.style.fontSize};` +
+                           `text-anchor: ${align};` +
+                           `alignment-baseline: ${valign};`
+        );
+    }
+
+
     renderPolygon(layer: RenderLayer, polygon: GrPolygon, enableMouseEvents: boolean = true) {
         return this._renderPolygon(this.getLayer(layer), polygon, null, enableMouseEvents);
     }
@@ -509,6 +574,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         elem.attr("style", `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}; stroke-width: ${object.style.strokeWidth}`);
     }
 
+
     renderBoundingRepresentation(object: GrObject) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
@@ -528,6 +594,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
                 case ObjectType.Rectangle:
                     this.renderRectangleBRep(g, object as GrRectangle);
+                    break;
+
+                case ObjectType.Text:
+                    this.renderTextBRep(g, object as GrText);
                     break;
 
                 case ObjectType.Composite:
@@ -652,14 +722,38 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 .classed(ToolClasses.boundingBox, true);
         }
 
-        const d = [
-            p2d(rectangle.topLeft, "M"),
-            p2d(rectangle.topRight),
-            p2d(rectangle.bottomRight),
-            p2d(rectangle.bottomLeft), "Z"].join(" ");
-        c.attr("d", d);
+        c.attr("d", this.getRectanglePath(
+            rectangle.topLeft,
+            rectangle.topRight,
+            rectangle.bottomLeft,
+            rectangle.bottomRight
+        ));
     }
 
+    protected renderTextBRep(g: Selection<any, any, any, any>, text: GrText) {
+        let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
+        if (c.empty()) {
+            // Not yet drawing a bounding representation
+            c = g.select("g" + ToolClassSelectors.boundingBox).append("path")
+                .classed(ToolClasses.boundingBox, true);
+        }
+
+        c.attr("d", this.getRectanglePath(
+            text.topLeft,
+            text.topRight,
+            text.bottomLeft,
+            text.bottomRight
+        ));
+    }
+
+
+    protected  getRectanglePath(tl:Point2D, tr: Point2D, bl: Point2D, br: Point2D): string {
+        return [
+            p2d(tl, "M"),
+            p2d(tr),
+            p2d(br),
+            p2d(bl), "Z"].join(" ");
+    }
 
     protected renderCompositeBRep(g: Selection<any, any, any, any>, compositeObject: GrCompositeObject) {
         let c = g.select("g" + ToolClassSelectors.boundingBox).selectAll(ToolClassSelectors.boundingBox);
@@ -728,6 +822,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         function makeEvent(interactionEvent, event: MouseEvent) {
             const d3MEv = d3.pointer(event, svgObject.node());
             const ed: InteractionEventData = {
+                kind: InteractionEventKind.pointer,
                 interactionEvent,
                 x: d3MEv[0],
                 y: d3MEv[1],

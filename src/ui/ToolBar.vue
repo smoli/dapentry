@@ -24,6 +24,7 @@ export default {
       { buttonContent: "C", name: ToolNames.Circle },
       { buttonContent: "R", name: ToolNames.Rectangle },
       { buttonContent: "L", name: ToolNames.Line },
+      { buttonContent: "W", name: ToolNames.Text },
       { buttonContent: "P", name: ToolNames.Polygon },
       { buttonContent: "G", name: ToolNames.Move },
       { buttonContent: "T", name: ToolNames.Rotate },

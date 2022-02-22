@@ -3,6 +3,7 @@ export enum ToolNames {
     Circle,
     Rectangle,
     Line,
+    Text,
     Polygon,
     Quadric,
     Instance,

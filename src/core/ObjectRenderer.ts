@@ -26,6 +26,7 @@ import {GrRectangle} from "../geometry/GrRectangle";
 import {GrLine} from "../geometry/GrLine";
 import {GrBezier, GrPolygon, GrQuadratic} from "../geometry/GrPolygon";
 import {Point2D} from "../geometry/Point2D";
+import {GrText} from "../geometry/GrText";
 
 /**
  * Callback signature for functions invoked when an object is clicked
@@ -129,6 +130,14 @@ export abstract class ObjectRenderer {
     public abstract renderQuadratic(layer:RenderLayer, quadric: GrQuadratic, enableMouseEvents: boolean): void;
     public abstract renderBezier(layer:RenderLayer, bezier: GrBezier, enableMouseEvents: boolean): void;
 
+
+    /**
+     * Render a text on the given layer.
+     * @param layer
+     * @param text
+     * @param enableMouseEvents
+     */
+    public abstract renderText(layer: RenderLayer, text: GrText, enableMouseEvents: boolean): void;
 
     /**
      * Render the bounding representation for an object on the object layer

@@ -365,6 +365,10 @@ export abstract class Tool {
         return this.makeStatement(opcode, targetName, AppConfig.Runtime.defaultStyleRegisterName, ...args);
     }
 
+    protected makeStyledCreateStatement(opcode, targetName, style, ...args) {
+        return this.makeStatement(opcode, targetName, style, ...args);
+    }
+
     protected makeStatement(opcode, ...args) {
 
         const lArgs = args.filter(a => a !== undefined && a !== null).map(a => {

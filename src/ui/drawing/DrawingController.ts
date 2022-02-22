@@ -16,6 +16,7 @@ import {DrawLibraryInstance} from "../../tools/DrawLibraryInstance";
 import {AppController} from "../../core/AppController";
 import {Point2D} from "../../geometry/Point2D";
 import {GrObject} from "../../geometry/GrObject";
+import {DrawText} from "../../tools/DrawText";
 
 export class DrawingController {
     private _renderer: ObjectRenderer;
@@ -96,6 +97,7 @@ export class DrawingController {
 
         this._toolManager.addTool(DrawCircle, ToolNames.Circle);
         this._toolManager.addTool(DrawLine, ToolNames.Line);
+        this._toolManager.addTool(DrawText, ToolNames.Text);
         this._toolManager.addTool(DrawRectangle, ToolNames.Rectangle);
         this._toolManager.addTool(MoveTool, ToolNames.Move);
         this._toolManager.addTool(RotateTool, ToolNames.Rotate);

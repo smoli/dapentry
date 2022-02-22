@@ -4,6 +4,7 @@ export const AppConfig = {
         DrawCircleKey: "c",
         DrawRectKey: "r",
         DrawLineKey: "l",
+        DrawTextKey: "w",
         DrawPolygonKey: "p",
         DrawQuadricKey: "q",
 
@@ -38,6 +39,7 @@ export const AppConfig = {
         grObjectsGlobal: true,
         styleRegisterName: "$styles",
         defaultStyleRegisterName: "$styles.default",
+        defaultTextStyleRegisterName: "$styles.textDefault",
         canvasObjectName: "Canvas",
         allowedFieldNames: /^[a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*$/,
         forbiddenDataFieldNames: [],
@@ -80,6 +82,7 @@ export const AppConfig = {
                 AlongY: "MOVEY",
                 ToPoint: "MOVETO"
             },
+            Text: "TEXT",
             FillColor: "FILL",
             FillOpacity: "OPACITY",
             StrokeColor: "STROKE",

@@ -12,6 +12,7 @@ export const statements = {
     "RECTBR": "Create {1} bottom right at {3} width {4} and height {5}",
     "LINE": "Create {1} from {3} to {4}",
     "LINEPP": "Create {1} from {3} to {4}",
+    "TEXT": "Create {1} at {3} saying {4}",
     "POLY": "Create {1} with {3}",
     "EXTPOLY": "Extend {1} with {2}",
     "QUAD": "Create {1}",
