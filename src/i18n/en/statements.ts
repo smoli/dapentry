@@ -30,6 +30,6 @@ export const statements = {
     "DO_VALUE_INDEX": "Repeat {3} times",
     "FOREACH": "For each value of {1}",
     "ENDEACH": "end each",
-    "MAKE": "Insert",
+    "MAKE": "Insert {1} size {4} at {5} with",
     "ENDDO": "end repeat"
 }

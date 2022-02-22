@@ -1,22 +1,28 @@
 <template>
   <section class="drawable-steplist-container">
-    <h2>{{ $t("ui.stepEditor") }}
+    <h2 @click="toggleDisplay">{{ $t("ui.stepEditor") }}
       <button @click="onLoopSelection"
               :disabled="noLinesSelected"
               class="drawable-ui-transparent"
-      >Loop</button>
+      >Loop
+      </button>
     </h2>
 
-    <div v-for="(line, index) of annotatedCode" v-bind:data-step="index"
-         class="drawable-steplist-step" :class="{ selected: line.selected }"
-         :style="{ 'margin-left': line.level + 'em' }"
-         @click="onStepClicked">{{ line.text }}
-      <button @click="onDeleteStep(line, $event)"
-              class="drawable-steplist-step-delete drawable-ui-transparent">
-        x
-      </button>
-      <i :title="$t('ui.stepList.pauseExplanation')" v-if="line.originalLine === lastSelectedLine"
-         class="drawable-steplist-step-pause fa-solid fa-circle-pause"></i>
+    <div v-if="!showCode">
+      <div v-for="(line, index) of annotatedCode" v-bind:data-step="index"
+           class="drawable-steplist-step" :class="{ selected: line.selected }"
+           :style="{ 'margin-left': line.level + 'em' }"
+           @click="onStepClicked">{{ line.text }}
+        <button @click="onDeleteStep(line, $event)"
+                class="drawable-steplist-step-delete drawable-ui-transparent">
+          x
+        </button>
+        <i :title="$t('ui.stepList.pauseExplanation')" v-if="line.originalLine === lastSelectedLine"
+           class="drawable-steplist-step-pause fa-solid fa-circle-pause"></i>
+      </div>
+    </div>
+    <div v-if="showCode">
+      <textarea rows="35" cols="37" style="font-family: monospace; font-size: 10pt" disabled="disable">{{ code }}</textarea>
     </div>
 
   </section>
@@ -58,7 +64,7 @@ function constructText(tokens, $t): string {
         return Parser.constructCodeLine([t]);
 
       case TokenTypes.ARRAY:
-        return `${(t.value as Array<Token>).length} ${$t("ui.points")}`
+        return `${( t.value as Array<Token> ).length} ${$t("ui.points")}`
 
       default:
         return t.value;
@@ -81,7 +87,8 @@ export default {
 
   data() {
     return {
-      selectedFirst: null
+      selectedFirst: null,
+      showCode: false
     }
   },
 
@@ -104,8 +111,12 @@ export default {
       return Math.max(...this.$store.state.code.selectedLines);
     },
 
-    noLinesSelected():boolean {
+    noLinesSelected(): boolean {
       return this.$store.state.code.selectedLines.length === 0;
+    },
+
+    code():string {
+        return this.$store.state.code.code.join("\n");
     }
   },
 
@@ -137,17 +148,25 @@ export default {
       }
     },
 
-    async onLoopSelection() {
+    async onLoopSelection(event) {
       if (!this.$store.state.code.selectedLines.length) {
         return;
       }
+      event.stopPropagation();
       await this.controller.loopStatements(this.$store.state.code.selectedLines)
       await this.controller.clearStatementSelection();
     },
 
-    async onDeleteStep(step: AnnotatedCodeLine, event:Event) {
+    async onDeleteStep(step: AnnotatedCodeLine, event: Event) {
       event.stopPropagation();
       await this.controller.deleteStatements([step.originalLine]);
+    },
+
+    toggleDisplay() {
+      if (window.location.hostname !== "localhost") {
+        return;
+      }
+      this.showCode = !this.showCode;
     }
   }
 

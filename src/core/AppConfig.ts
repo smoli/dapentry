@@ -87,7 +87,8 @@ export const AppConfig = {
             Do: "DO",
             EndDo: "ENDDO",
             ForEach: "FOREACH",
-            EndEach: "ENDEACH"
+            EndEach: "ENDEACH",
+            MakeInstance: "MAKE"
         }
     },
 

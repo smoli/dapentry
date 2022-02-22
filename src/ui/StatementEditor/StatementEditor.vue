@@ -15,14 +15,17 @@ import PointInput from "./PointInput.vue";
 import ExpressionInput from "./ExpressionInput.vue";
 import AtRegisterInput from "./AtRegisterInput.vue";
 import ArrayInput from "./ArrayInput.vue";
-import {createSegments} from "./createSegments";
+import {createSegments, createSegmentsForMakeOp} from "./createSegments";
+import {getLibraryEntryNameFromMakeStatement, isMakeStatement} from "../../core/statements";
 
 
 export default {
   name: "StatementEditor",
+  inject: ["controller"],
+
   components: { AtRegisterInput, PointInput, ArrayInput, NumberInput, SimpleInput, ExpressionInput, Static },
   computed: {
-    segments() {
+    segments: function () {
       const selection: Array<number> = this.$store.state.code.selectedLines;
 
       if (selection.length !== 1) {
@@ -35,8 +38,14 @@ export default {
       const tokens = Parser.parseLine(codeLine);
       const textID = getTextIdForTokens(tokens);
 
+      if (isMakeStatement(tokens)) {
+        const entryName = getLibraryEntryNameFromMakeStatement(tokens);
+        const entry = this.controller.state.getLibraryEntry(entryName);
+        return createSegmentsForMakeOp(tokens, entry, this.$i18n.tm("statements." + textID), selection[0])
+      } else {
+        return createSegments(tokens, this.$i18n.tm("statements." + textID), selection[0]);
+      }
 
-      return createSegments(tokens, this.$i18n.tm("statements." + textID),  selection[0]);
     }
   }
 }

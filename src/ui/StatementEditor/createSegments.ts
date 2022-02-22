@@ -1,11 +1,13 @@
 import {Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import {UNREACHABLE} from "../../core/Assertions";
+import {LibraryEntry} from "../../core/Library";
 
 export interface SegmentInfo {
     type: string,
-    token: Token,
-    statementIndex: number,
-    subIndexes: Array<number>
+    value?: string,
+    token?: Token,
+    statementIndex?: number,
+    subIndexes?: Array<number>
 }
 
 export function createSegmentInfoForToken(token, statementIndex, indexes: Array<number> = []): SegmentInfo {
@@ -37,7 +39,24 @@ export function createSegmentInfoForToken(token, statementIndex, indexes: Array<
     }
 }
 
-export function createSegments(tokens: Array<Token>, textTemplate: string, statementIndex: number): Array<any> {
+
+
+export function createSegmentsForMakeOp(tokens: Array<Token>, entry: LibraryEntry, textTemplate: string, statementIndex: number): Array<SegmentInfo> {
+
+    const segments = createSegments(tokens, textTemplate, statementIndex);
+
+    entry.arguments.forEach((arg, i) => {
+        segments.push({ type: "Static", value: arg.name });
+        const index = tokens.length - entry.arguments.length + i;
+        const t = tokens[index];
+        segments.push(createSegmentInfoForToken(t, statementIndex, [index]));
+    });
+
+
+    return segments;
+}
+
+export function createSegments(tokens: Array<Token>, textTemplate: string, statementIndex: number): Array<SegmentInfo> {
     if (!tokens || !tokens.length) {
         return []
     }

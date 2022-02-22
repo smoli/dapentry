@@ -52,6 +52,7 @@ export class DrawLibraryInstance extends Tool {
             case States.CenterPoint:
                 this._point = new Point2D(eventData.x, eventData.y);
                 this._state.next(InteractionEvents.Click);
+                this.snapInfoUsed(snapInfo);
                 break;
 
             case States.Done:
@@ -60,8 +61,20 @@ export class DrawLibraryInstance extends Tool {
         return this.isDone;
     }
 
-    public get result(): any {
+    protected getResult(snapInfos: Array<SnapInfo>): any {
         const name = GrObject.getNewObjectName(this._libraryEntry.name);
-        return `MAKE ${name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${this._width}, (${this._point.x}, ${this._point.y})`;
+
+        if (!snapInfos || snapInfos.length === 0) {
+            return null;
+        }
+
+        const point = this.makePointCodeFromSnapInfo(snapInfos[0]);
+        let statement =  `MAKE ${name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${this._width}, ${point}`;
+
+        this._libraryEntry.arguments.forEach(arg => {
+            statement += ", " + arg.default * 1.2;
+        })
+
+        return statement;
     }
 }

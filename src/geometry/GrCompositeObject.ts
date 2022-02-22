@@ -1,6 +1,7 @@
 import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {Point2D} from "./Point2D";
+import {Style} from "../core/StyleManager";
 
 class ObjectArray extends Array<GrObject> {
     private _baseName: string;
@@ -186,5 +187,30 @@ export class GrCompositeObject extends GrObject {
 
     set strokeColor(value: string) {
         this._objects.forEach(o => o.strokeColor = value);
+    }
+
+    set strokeWidth(value: number) {
+        this._objects.forEach(o => o.strokeWidth = value);
+    }
+
+
+    get style():Style {
+        return this._objects[0].style
+    }
+
+    get fillColor(): string {
+        return this._objects[0].fillColor;
+    }
+
+    get fillOpacity(): number {
+        return this._objects[0].fillOpacity;
+    }
+
+    get strokeColor(): string {
+        return this._objects[0].strokeColor;
+    }
+
+    get strokeWidth(): number {
+        return this._objects[0].strokeWidth;
     }
 }
