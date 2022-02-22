@@ -72,7 +72,9 @@ export function createSegments(tokens: Array<Token>, textTemplate: string, state
         if (m[0] == "{") {
             const index = Number(m.match(/(\d+)/)[0]);
             const token = tokens[index];
-            segments.push(createSegmentInfoForToken(token, statementIndex, [index]))
+            if (token) {
+                segments.push(createSegmentInfoForToken(token, statementIndex, [index]))
+            }
         } else {
             segments.push({ type: "Static", value: m });
         }
