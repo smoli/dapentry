@@ -173,7 +173,23 @@ export class AppController {
             [this._canvas.name]: this._canvas
         });
         this._performance.now("computed");
-        return Promise.resolve();
+        this.updateSelection();
+    }
+
+    /**
+     * After the program is run, the selection must be updated
+     * as instances changed and maybe some objects are gone.
+     * @protected
+     */
+    protected updateSelection() {
+        const curr = this.state.selection;
+        const objects = this._interpreter.objects;
+
+        const newSelection = curr.map(old => {
+            return objects.find(o => o.uniqueName === old.uniqueName);
+        }).filter(o => !!o);
+
+        newSelection.forEach(o => this.state.selectObject(o));
     }
 
     protected updateDrawing() {
