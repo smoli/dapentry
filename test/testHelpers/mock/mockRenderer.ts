@@ -11,6 +11,7 @@ import {GrCircle} from "../../../src/geometry/GrCircle";
 import {Point2D} from "../../../src/geometry/Point2D";
 import {GrLine} from "../../../src/geometry/GrLine";
 import {GrRectangle} from "../../../src/geometry/GrRectangle";
+import {GrText} from "../../../src/geometry/GrText";
 
 export class MockRenderer extends ObjectRenderer {
     private _poiCallback: POICallback;
@@ -87,6 +88,9 @@ export class MockRenderer extends ObjectRenderer {
     }
 
     renderLine(layer: RenderLayer, line: GrLine, enableMouseEvents: boolean): void {
+    }
+
+    renderText(layer: RenderLayer, text: GrText, enableMouseEvents: boolean) {
     }
 
     renderPolygon(layer: RenderLayer, polygon: GrPolygon, enableMouseEvents: boolean): void {

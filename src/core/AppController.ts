@@ -310,9 +310,9 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
-    async deleteStatements(indexes: Array<number>) {
+    async deleteStatements(index: number) {
         this.state.clearCodeSelection();
-        await this.execute(new DeleteStatements(indexes));
+        await this.execute(new DeleteStatements(index));
         await this.runCode();
         this.updateDrawing();
         await this._persistence?.saveCode();

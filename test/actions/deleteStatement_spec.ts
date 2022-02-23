@@ -9,7 +9,7 @@ import {DialogCloseReason} from "../../src/ui/core/ModalFactory";
 describe('Delete statement', () => {
 
     it('can delete a statement', () => {
-        const action = new DeleteStatements([1]);
+        const action = new DeleteStatements(1);
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state);
 
@@ -31,35 +31,9 @@ describe('Delete statement', () => {
         ])
     });
 
-    it('can delete multiple statement', async () => {
-        const action = new DeleteStatements([1, 3, 5]);
-        const state = new State(createAppStore(), null);
-        action.controller = new MockController(state);
-
-        const code = `
-            LOAD r1, 10
-            LOAD r2, 20
-            LOAD r3, 30
-            LOAD r4, 40
-            LOAD r5, 50
-            LOAD r6, 60
-            LOAD r7, 70
-        `;
-
-        state.setCodeString(code);
-
-        await action.execute(null);
-
-        expect(state.store.state.code.code).to.deep.equal([
-            "LOAD r1, 10",
-            "LOAD r3, 30",
-            "LOAD r5, 50",
-            "LOAD r7, 70"
-        ])
-    });
 
     it("will remove all dependent statements when a creation statement is deleted", async () => {
-        const action = new DeleteStatements([0]);
+        const action = new DeleteStatements(0);
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state);
         const code = `
@@ -89,7 +63,7 @@ describe('Delete statement', () => {
     })
 
     it("will do nothing if the user says no", async () => {
-        const action = new DeleteStatements([0]);
+        const action = new DeleteStatements(0);
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state, () => DialogCloseReason.NO);
         const code = `
@@ -122,6 +96,35 @@ describe('Delete statement', () => {
             "LOAD r6, r1 + 2"
         ])
 
-    })
+    });
+
+    it('will remove the whole loop when a do statement is deleted',  async () => {
+        const action = new DeleteStatements(3);
+        const state = new State(createAppStore(), null);
+        action.controller = new MockController(state, () => DialogCloseReason.NO);
+        const code = `
+                LOAD r1, 10
+                DO 5
+                    ADD r1, 10
+                    DO 4
+                        ADD r1, 1
+                    ENDDO
+                    ADD r1, 2
+                ENDDO
+                MUL r1, 2
+            `;
+
+        state.setCodeString(code);
+        await action.execute(null);
+
+        expect(state.store.state.code.code).to.deep.equal([
+            "LOAD r1, 10",
+            "DO 5",
+            "ADD r1, 10",
+            "ADD r1, 2",
+            "ENDDO",
+            "MUL r1, 2"
+        ])
+    });
 
 });

@@ -170,8 +170,8 @@ export class State {
         this.commit(mutations.code.insert, { insertAt, statements })
     }
 
-    removeStatements(indexes: Array<number>) {
-        this.commit(mutations.code.remove, indexes);
+    removeStatement(index: number) {
+        this.commit(mutations.code.remove, index);
     }
 
     setAvailableTools(tools: Array<ToolNames>) {

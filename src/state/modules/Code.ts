@@ -14,9 +14,7 @@ export interface CodeState {
 }
 
 
-const creationStatements: CreationInfo = {
-
-}
+const creationStatements: CreationInfo = {}
 
 Object.values(AppConfig.Runtime.Opcodes.Circle)
     .forEach(opcode => {
@@ -79,17 +77,8 @@ export const codeState = {
             state.code = state.codeManager.code.map(s => s);
         },
 
-        remove(state: CodeState, indexes: Array<number>) {
-            indexes.sort((a, b) => b - a);
-
-            for (const i of indexes) {
-                const r = state.codeManager.getCreatedRegisterForStatement(i)
-                if (r) {
-                    state.codeManager.removeStatementsForRegister(r)
-                } else {
-                    state.codeManager.removeStatements([i]);
-                }
-            }
+        remove(state: CodeState, index: number) {
+            state.codeManager.removeStatement(index);
             state.code = state.codeManager.code.map(s => s);
         },
 

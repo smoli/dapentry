@@ -3,6 +3,7 @@ import {StateMachine} from "./tools/StateMachine";
 import {Stack} from "./tools/Stack";
 import {ASSERT} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
+import App from "../../ui5stuff/controller/App.controller";
 
 
 export type TokenList = Array<Token>;
@@ -126,23 +127,59 @@ export class CodeManager {
      * @param index
      */
     removeStatement(index: number) {
-        this._code.splice(index, 1);
-        this.refreshRegisterAndLabelMemory();
+        const indexes = Array.from(this._determineIndexesToDelete(index));
+        indexes.sort((a, b) => b - a);
 
-    }
-
-    /**
-     * Removes a list of statements.
-     * @param indexes
-     */
-    removeStatements(indexes: Array<number>) {
-        {
-            const i = [...indexes];
-            i.sort((a, b) => b - a);
-            i.forEach(i => this._code.splice(i, 1));
-            this.refreshRegisterAndLabelMemory();
+        for (const i of indexes) {
+            this._removeStatement(i);
         }
+        this.refreshRegisterAndLabelMemory();
     }
+
+
+    protected _determineIndexesToDelete(index: number): Set<number> {
+
+        const indexes: Set<number> = new Set<number>();
+        indexes.add(index);
+
+        let upTo = index;
+        let dir = 1;
+        const opCode = this.getOpCodeForStatement(index);
+        if (opCode === AppConfig.Runtime.Opcodes.Do) {
+            upTo = this.findMatchingEndDo(index);
+        } else if (opCode === AppConfig.Runtime.Opcodes.ForEach) {
+            upTo = this.findMatchingEndEach(index);
+        } else if (opCode === AppConfig.Runtime.Opcodes.EndDo) {
+            upTo = this.findMatchingDo(index);
+            dir = -1;
+        } else if (opCode === AppConfig.Runtime.Opcodes.EndEach) {
+            upTo = this.findMatchingForEach(index);
+            dir = -1;
+        }
+
+        if (upTo !== index) {
+            for (let i = index + dir; i !== upTo; i += dir) {
+                indexes.add(i);
+            }
+            indexes.add(upTo);
+        }
+
+        // determine dependent indexes
+        for (const i of indexes) {
+            const r = this.getCreatedRegisterForStatement(i);
+            if (r) {
+                const depIndexes = this.getStatementIndexesWithParticipation(r, true);
+                depIndexes.forEach(e => indexes.add(e));
+            }
+        }
+
+        return indexes;
+    }
+
+    protected _removeStatement(index: number) {
+        this._code.splice(index, 1);
+    }
+
 
     /**
      * Replace the statement at the given index with the new one.
@@ -175,7 +212,7 @@ export class CodeManager {
      * @param deep
      */
     removeStatementsForRegister(registerName: string, deep: boolean = true) {
-        const lines = this.getStatementIndexesWithParticipation(registerName);
+        const lines = Array.from(this.getStatementIndexesWithParticipation(registerName));
         const removedRegisters = [];
 
         let i = lines.length;
@@ -189,12 +226,14 @@ export class CodeManager {
                     }
                 }
             }
-            this.removeStatement(index);
+            this._removeStatement(index);
         }
 
         if (deep) {
             removedRegisters.forEach(r => this.removeStatementsForRegister(r));
         }
+        this.refreshRegisterAndLabelMemory();
+
     }
 
     /**
@@ -208,29 +247,51 @@ export class CodeManager {
         const t = this.getTokensForStatement(index);
         const opCode = this.getOpCode(t);
         if (this._creationOpcodes[opCode]) {
-            return t[this._creationOpcodes[opCode]].value as string;
+            const r = t[this._creationOpcodes[opCode]].value;
+            const s = this.getCreationStatement(r as string);
+
+            if (s === index) {
+                return r as string;
+            }
         }
 
         return null;
     }
 
     findMatchingEndDo(index: number): number {
+        return this.findMatchingStatements(
+            index,
+            AppConfig.Runtime.Opcodes.Do,
+            AppConfig.Runtime.Opcodes.EndDo
+        );
+    }
+
+    findMatchingDo(index: number): number {
+        return this.findMatchingStatements(
+            index,
+            AppConfig.Runtime.Opcodes.EndDo,
+            AppConfig.Runtime.Opcodes.Do,
+            -1
+        );
+    }
+
+    findMatchingStatements(index: number, openOpCode: string, endingOpCode: string, direction: number = 1) {
         const code = this._code[index];
         ASSERT(!!code, `Code does not exist at line ${index}`);
 
         const opCode = this.getOpCode(Parser.parseLine(code));
-        ASSERT(opCode === AppConfig.Runtime.Opcodes.Do, `There is no DO-statement at ${index}`);
+        ASSERT(opCode === openOpCode, `There is no ${openOpCode}-statement at ${index}`);
 
         let nestLevel = 0;
-        for (let i = index + 1; i < this._code.length; i++) {
+        for (let i = index + direction; i > 0 && i < this._code.length; i += direction) {
             const opCode = this.getOpCode(Parser.parseLine(this._code[i]));
 
             switch (opCode) {
-                case AppConfig.Runtime.Opcodes.Do:
+                case openOpCode:
                     nestLevel++;
                     break;
 
-                case AppConfig.Runtime.Opcodes.EndDo:
+                case endingOpCode:
                     if (nestLevel === 0) {
                         return i;
                     }
@@ -241,6 +302,25 @@ export class CodeManager {
 
         return -1;
     }
+
+
+    findMatchingEndEach(index: number): number {
+        return this.findMatchingStatements(
+            index,
+            AppConfig.Runtime.Opcodes.ForEach,
+            AppConfig.Runtime.Opcodes.EndEach
+        );
+    }
+
+    findMatchingForEach(index: number): number {
+        return this.findMatchingStatements(
+            index,
+            AppConfig.Runtime.Opcodes.EndEach,
+            AppConfig.Runtime.Opcodes.ForEach,
+            -1
+        );
+    }
+
 
     /**
      * Returns the code as an array of strings.
@@ -388,6 +468,10 @@ export class CodeManager {
         return tokens[0].value as string;
     }
 
+    getOpCodeForStatement(index: number): string {
+        return this.getOpCode(this.getTokensForStatement(index));
+    }
+
 
     /**
      * Gets the operation that initialises the register value first,
@@ -449,9 +533,12 @@ export class CodeManager {
      * argument.
      *
      * @param registerName
+     * @param deep
      */
-    getStatementIndexesWithParticipation(registerName: string): Array<number> {
+    getStatementIndexesWithParticipation(registerName: string, deep: boolean = false): Set<number> {
         const ret = [];
+        const created = [];
+
         for (let i = 0; i < this._code.length; i++) {
             const tokens = this.getTokensForStatement(i);
 
@@ -485,14 +572,33 @@ export class CodeManager {
                 }
             }
 
+
+            let found = false;
             for (const token of tokens) {
                 if (tokenHasRegister(token)) {
                     ret.push(i);
+                    found = true;
+
+                }
+            }
+
+            if (found) {
+                if (deep) {
+                    const r = this.getCreatedRegisterForStatement(i);
+                    if (r && !created.includes(r) && r !== registerName) {
+                        created.push(r);
+                    }
                 }
             }
         }
 
-        return ret;
+        if (deep) {
+            for (const r of created) {
+                ret.push(...this.getStatementIndexesWithParticipation(r, deep));
+            }
+        }
+
+        return new Set(ret);
     }
 
     protected makeUniqueName(memory: string[], preference: string): string {
@@ -595,6 +701,12 @@ export class CodeManager {
                         walk(token.value as Array<Token>);
                         break;
                     case TokenTypes.ARRAY:
+                        walk(token.value as Array<Token>);
+                        break;
+                    case TokenTypes.REGISTERAT:
+                        walk(token.value as Array<Token>);
+                        break;
+                    case TokenTypes.EXPRESSION:
                         walk(token.value as Array<Token>);
                         break;
 

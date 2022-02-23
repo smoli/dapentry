@@ -1,8 +1,8 @@
 import {BaseAction} from "./BaseAction";
-import {DataFieldValue} from "../state/modules/Data";
 import {DialogCloseReason} from "../ui/core/ModalFactory";
 import {CodeManager} from "../runtime/CodeManager";
 import {GrObject} from "../geometry/GrObject";
+import {ASSERT} from "../core/Assertions";
 
 export class DeleteObjects extends BaseAction {
     private readonly _objects: Array<GrObject>;
@@ -20,12 +20,14 @@ export class DeleteObjects extends BaseAction {
 
         const statements = this._objects.map(o => this.codeManager.getCreationStatement(o.uniqueName))
 
+        ASSERT(statements.length === 1, "There can only be one creation statement for an object!")
+
         let deletesOthers = false;
         for (const i of statements) {
             const creates = this.codeManager.getCreatedRegisterForStatement(i);
             if (creates) {
                 const lines = this.codeManager.getStatementIndexesWithParticipation(creates);
-                if (lines.length > 1) {
+                if (lines.size > 1) {
                     deletesOthers = true;
                     break;
                 }
@@ -43,10 +45,10 @@ export class DeleteObjects extends BaseAction {
             })
 
             if (reason === DialogCloseReason.YES) {
-                this.state.removeStatements(statements);
+                this.state.removeStatement(statements[0]);
             }
         } else {
-            this.state.removeStatements(statements);
+            this.state.removeStatement(statements[0]);
         }
     }
 }

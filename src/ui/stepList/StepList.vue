@@ -159,7 +159,7 @@ export default {
 
     async onDeleteStep(step: AnnotatedCodeLine, event: Event) {
       event.stopPropagation();
-      await this.controller.deleteStatements([step.originalLine]);
+      await this.controller.deleteStatements(step.originalLine);
     },
 
     toggleDisplay() {
