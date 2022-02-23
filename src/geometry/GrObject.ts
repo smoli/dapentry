@@ -522,6 +522,11 @@ export abstract class GrObject {
     public get publishedProperties(): Array<ObjectProperty> {
         return [
             {
+              name: "Instance",
+              id: "instance",
+              value: this._instanceCount
+            },
+            {
                 name: "Rotation",
                 id: "rotation",
                 value: rad2deg(this._xAxis.angleTo(new Point2D(1, 0)))

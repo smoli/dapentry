@@ -124,7 +124,7 @@ export class DrawRectangle extends Tool {
             else opcode = AppConfig.Runtime.Opcodes.Rect.BottomRightWH
         }
 
-        if (this._firstSnap.object && this._secondSnap.object) {
+        if (this._firstSnap?.object && this._secondSnap?.object) {
             opcode = AppConfig.Runtime.Opcodes.Rect.PointPoint;
         }
 
