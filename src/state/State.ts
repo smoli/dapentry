@@ -21,7 +21,8 @@ const mutations = {
         setAvailable: "tool/setAvailable",
         switch: "tool/switch",
         setReferenceObject: "tool/setReferenceObject",
-        setKeyPress: "tool/setKeyPress"
+        setKeyPress: "tool/setKeyPress",
+        setPreview: "tool/setPreview"
     },
 
     code: {
@@ -196,6 +197,10 @@ export class State {
 
     get referenceObjectForTool(): GrObject {
         return this.get(getters.tool.referenceObject);
+    }
+
+    setToolPreview(preview: string) {
+        this.commit(mutations.tool.setPreview, preview);
     }
 
     setAspectRatio(ar: AspectRatio) {

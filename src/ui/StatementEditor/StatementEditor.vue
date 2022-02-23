@@ -1,6 +1,7 @@
 <template>
   <!--  <samp class="drawable-statement-preview">{{ selectedLine }}</samp>-->
   <div class="drawable-statement-editor">
+    <span v-if="$store.state.tool.current">{{ preview }}</span>
     <component v-for="segment of segments" :is="segment.type" :content="segment"></component>
   </div>
 </template>
@@ -18,6 +19,7 @@ import AtRegisterInput from "./AtRegisterInput.vue";
 import ArrayInput from "./ArrayInput.vue";
 import {createSegments, createSegmentsForMakeOp} from "./createSegments";
 import {getLibraryEntryNameFromMakeStatement, isMakeStatement} from "../../core/statements";
+import {constructText} from "../core/ConstructText";
 
 
 export default {
@@ -26,6 +28,18 @@ export default {
 
   components: { AtRegisterInput, PointInput, ArrayInput, NumberInput, SimpleInput, StringInput, ExpressionInput, Static },
   computed: {
+
+    preview: function() {
+      const preview = this.$store.state.tool.preview;
+      if (!preview) {
+        return null;
+      }
+
+      const tokens = Parser.parseLine(preview);
+      return constructText(tokens, this.$t);
+
+
+    },
     segments: function () {
       const selection: Array<number> = this.$store.state.code.selectedLines;
 

@@ -6,7 +6,8 @@ export interface ToolState {
     currentParams: Array<any>,
     referenceObject: GrObject,
     keyPress: KeyboardEvent,
-    available: Array<ToolNames>
+    available: Array<ToolNames>,
+    preview: string
 }
 
 export const toolState = {
@@ -16,7 +17,8 @@ export const toolState = {
             currentParams: null,
             referenceObject: null,
             keyPress: null,
-            available: []
+            available: [],
+            preview: null
 
         }
     },
@@ -37,6 +39,10 @@ export const toolState = {
 
         setKeyPress(state:ToolState, event: KeyboardEvent) {
             state.keyPress = event;
+        },
+
+        setPreview(state:ToolState, preview: string) {
+            state.preview = preview;
         }
     },
     getters: {

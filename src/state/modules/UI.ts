@@ -3,7 +3,8 @@ import {ModalDialogHandler} from "../../ui/core/ModalDialogHandler";
 
 
 export interface UIState {
-    modalComponent: Array<{ component: any, handler: ModalDialogHandler }>
+    modalComponent: Array<{ component: any, handler: ModalDialogHandler }>,
+
 }
 
 
