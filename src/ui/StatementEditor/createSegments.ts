@@ -22,7 +22,7 @@ export function createSegmentInfoForToken(token, statementIndex, indexes: Array<
             return { type: "NumberInput", token, statementIndex, subIndexes: indexes };
 
         case TokenTypes.STRING:
-            return { type: "SimpleInput", token, statementIndex, subIndexes: indexes };
+            return { type: "StringInput", token, statementIndex, subIndexes: indexes };
 
         case TokenTypes.POINT:
             return { type: "PointInput", token, statementIndex, subIndexes: indexes };

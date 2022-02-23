@@ -54,7 +54,7 @@ export class UpdateStatement extends BaseAction {
         let newStatements: string[] = [];
 
         if (this._newValue.match(/^"[^"]*"$/)) { // String literal
-            token.value = this._newValue;
+            token.value = this._newValue.replace(/"/g, "");
             token.type = TokenTypes.STRING;
             newStatements.push(Parser.constructCodeLine(tokens));
 
