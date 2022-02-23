@@ -189,6 +189,7 @@ export class AppController {
             return objects.find(o => o.uniqueName === old.uniqueName);
         }).filter(o => !!o);
 
+        this.state.deselectAll();
         newSelection.forEach(o => this.state.selectObject(o));
     }
 
@@ -219,8 +220,8 @@ export class AppController {
             await this._interpreter.next();
             let max = 100;
             while (!this._interpreter.stopped &&
-                    max-- &&
-                    a.indexOf(this._interpreter.pc - offset) === -1) {
+            max-- &&
+            a.indexOf(this._interpreter.pc - offset) === -1) {
                 await this._interpreter.next();
             }
 
@@ -295,6 +296,15 @@ export class AppController {
             return;
         }
         await this.execute(new AddStatement(code));
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence?.saveCode();
+    }
+
+    async setCode(code: string) {
+        await this.execute(new AddStatement(code.split("\n")
+            .map(c => c.trim())
+            .filter(c => c.length !== 0)));
         await this.runCode();
         this.updateDrawing();
         await this._persistence?.saveCode();
@@ -398,7 +408,7 @@ export class AppController {
         this.switchTool(newTool);
     }
 
-    public switchToInsertLibraryEntryTool(entry:LibraryEntry) {
+    public switchToInsertLibraryEntryTool(entry: LibraryEntry) {
         this.switchTool(ToolNames.Instance, entry);
     }
 

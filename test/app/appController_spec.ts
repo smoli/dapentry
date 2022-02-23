@@ -2,11 +2,12 @@ import {describe, it} from "mocha";
 import {expect} from "chai"
 import {AppController} from "../../src/core/AppController";
 import {State} from "../../src/state/State";
-import {AppState} from "../../ui5stuff/model/AppState";
 import {createAppStore} from "../../src/state/AppStore";
 import {GfxInterpreter} from "../../src/core/GfxInterpreter";
 import {T_ARRAY, T_NUMBER, T_OPCODE, T_POINT, T_REGISTER} from "../testHelpers/tokens";
 import {Parser} from "../../src/runtime/interpreter/Parser";
+import {ObjectType} from "../../src/geometry/GrObject";
+import exp = require("constants");
 
 
 describe('App controller', () => {
@@ -70,6 +71,40 @@ describe('App controller', () => {
             ]
         );
     });
+
+
+    describe("handles the selection status of objects", () => {
+
+        it('updates the selection with the new object instances when the code is run', async () => {
+                const state = new State(createAppStore(), null);
+                const inter = new GfxInterpreter();
+                const controller = new AppController(state, inter);
+
+                state.addDataField("f1", 100);
+
+                const code = `
+                    CIRCLECR Circle1,$styles.default,(355.48, 221.11),f1
+                    CIRCLECR Circle2,$styles.default,(478.19, 440.50),f1
+                `;
+
+                await controller.setCode(code);
+
+                const objs1 = state.objects.filter(o => o.type !== ObjectType.Canvas);
+                expect(objs1.length).to.equal(2);
+
+                await controller.handleObjectSelection(objs1[0]);
+                expect(state.selection.length).to.equal(1);
+
+                await controller.setDataFieldValue("f1", 200);
+                const objs2 = state.objects.filter(o => o.type !== ObjectType.Canvas);
+                expect(objs2.length).to.equal(2);
+
+                expect(state.selection.length).to.equal(1);
+                expect(state.selection[0]).to.equal(objs2[0]);
+                expect(objs1[0].uniqueName).to.equal(objs2[0].uniqueName);
+                expect(objs1[0]).to.not.equal(objs2[0]);
+        });
+    })
 
     describe('program stepping functionality', () => {
 
