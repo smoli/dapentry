@@ -5,71 +5,55 @@ import {Point2D} from "../geometry/Point2D";
 import {LibraryEntry} from "../core/Library";
 import {GrObject} from "../geometry/GrObject";
 import {AppConfig} from "../core/AppConfig";
-
-enum States {
-    Wait = "DrawLibraryInstance.Wait",
-    DragSize = "DrawLibraryInstance.DragRadius",
-    CenterPoint = "DrawLibraryInstance.CenterPoint",
-    Done = "DrawLibraryInstance.Done",
-}
+import {RenderLayer} from "../core/ObjectRenderer";
+import {GrRectangle} from "../geometry/GrRectangle";
+import {DrawRectangle} from "./DrawRectangle";
+import {AspectRatio} from "../geometry/GrCanvas";
 
 
-export class DrawLibraryInstance extends Tool {
-    private _point: Point2D;
-    private _width: number = 100;
+export class DrawLibraryInstance extends DrawRectangle {
     private _libraryEntry: LibraryEntry;
+    private _name: string;
 
     constructor(renderer, libraryEntry:LibraryEntry) {
         super(renderer);
-        this.setWaitDoneStates(States.Wait, States.Done);
-
-        this._state.add(state(States.Wait), InteractionEvents.Click, state(States.CenterPoint));
-        this._state.add(state(States.CenterPoint), InteractionEvents.Click, state(States.Done));
-/*
-        this._state.add(state(States.DragSize), InteractionEvents.MouseMove, state(States.DragSize));
-        this._state.add(state(States.DragSize), InteractionEvents.Click, state(States.Done));
-*/
-        this._state.start(state(States.Wait));
 
         this._libraryEntry = libraryEntry;
+        this._name = GrObject.getNewObjectName(this._libraryEntry.name);
     }
 
-    public reset() {
-        super.reset();
-    }
+    protected _calculateRect(x2: number, y2: number) {
+        const x1 = this._x1;
+        const y1 = this._y1;
+        const w = Math.max(this._x1, x2) - x1;
+        let h = w;
 
-    protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
-        const eventData = snapInfo.event;
-
-        if (interactionEvent === InteractionEvents.Cancel) {
-            this.reset();
-            return false;
-        }
-
-        this._state.next(interactionEvent);
-
-        switch (this._state.state.id) {
-            case States.CenterPoint:
-                this._point = new Point2D(eventData.x, eventData.y);
-                this._state.next(InteractionEvents.Click);
-                this.snapInfoUsed(snapInfo);
+        switch (this._libraryEntry.aspectRatio) {
+            case AspectRatio.ar1_1:
+                h = w;
+                break;
+            case AspectRatio.ar3_2:
+                h = 2 * w / 3;
+                break;
+            case AspectRatio.ar4_3:
+                h = 3 * w / 4;
+                break;
+            case AspectRatio.ar16_10:
+                h = 10 * w / 16;
+                break;
+            case AspectRatio.ar16_9:
+                h = 9 * w / 16;
                 break;
 
-            case States.Done:
         }
 
-        return this.isDone;
+        return {x1, y1, w: 2 * w, h: 2 * h}
     }
 
-    protected getResult(snapInfos: Array<SnapInfo>): any {
-        const name = GrObject.getNewObjectName(this._libraryEntry.name);
+    protected getResult(): any {
 
-        if (!snapInfos || snapInfos.length === 0) {
-            return null;
-        }
-
-        const point = this.makePointCodeFromSnapInfo(snapInfos[0]);
-        let statement =  `MAKE ${name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${this._width}, ${point}`;
+        const point = this.makePointCodeFromSnapInfo(this._firstSnap || this._waitSnap);
+        let statement =  `MAKE ${this._name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${this._rect?.width || 0}, ${point}`;
 
         this._libraryEntry.arguments.forEach(arg => {
             statement += ", " + arg.default * 1.2;

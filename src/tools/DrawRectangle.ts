@@ -15,12 +15,12 @@ enum States {
 
 export class DrawRectangle extends Tool {
 
-    private _rect:GrRectangle;
-    private _x1:number;
-    private _y1:number;
-    private _firstSnap: SnapInfo;
-    private _secondSnap: SnapInfo;
-    private _waitSnap: SnapInfo;
+    protected _rect:GrRectangle;
+    protected _x1:number;
+    protected _y1:number;
+    protected _firstSnap: SnapInfo;
+    protected _secondSnap: SnapInfo;
+    protected _waitSnap: SnapInfo;
 
     constructor(renderer) {
         super(renderer);
@@ -69,8 +69,8 @@ export class DrawRectangle extends Tool {
             case States.Done: // pass through
             case States.DragSize:
                 calcRect = this._calculateRect(eventData.x, eventData.y)
-                this._rect.x = calcRect.x1 + calcRect.w / 2;
-                this._rect.y = calcRect.y1 + calcRect.h / 2;
+                this._rect.x = calcRect.x1;
+                this._rect.y = calcRect.y1;
                 this._secondSnap = snapInfo;
                 this._rect.width = calcRect.w;
                 this._rect.height = calcRect.h;
@@ -92,10 +92,10 @@ export class DrawRectangle extends Tool {
         const w = Math.max(this._x1, x2) - x1;
         const h = Math.max(this._y1, y2) - y1;
 
-        return {x1, y1, w, h}
+        return {x1: x1 + w / 2, y1: y1 + h / 2, w, h}
     }
 
-    public getResult(usedSnapInfos:Array<SnapInfo>): any {
+    protected getResult(usedSnapInfos:Array<SnapInfo>): any {
 
         let opcode: string;
 
