@@ -65,7 +65,7 @@ export class GrCanvas extends GrObject {
     }
 
     get isSelectable(): boolean {
-        return false;
+        return true;
     }
 
     protected copy(): GrObject {

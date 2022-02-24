@@ -171,7 +171,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 break;
 
             case ObjectType.Canvas:
-                this._renderCanvas(this._backgroundLayer, object as GrCanvas, parent, false);
+                this._renderCanvas(this._backgroundLayer, object as GrCanvas, parent, enableMouseEvents);
                 break;
 
         }
@@ -897,7 +897,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         this._infoLayer.selectAll("*").remove();
     }
 
-    private _renderCanvas(_backgroundLayer: d3.Selection<any, any, any, any>, object: GrCanvas, parent: d3.Selection<any, any, any, any>, b: boolean) {
+    private _renderCanvas(_backgroundLayer: d3.Selection<any, any, any, any>, object: GrCanvas, parent: d3.Selection<any, any, any, any>, enableMouseEvents: boolean) {
         let c = _backgroundLayer.selectAll(".stsDrawableCanvasDisplay");
 
         if (c.empty()) {
@@ -909,7 +909,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
             .attr("width", object.width)
             .attr("height", object.height)
             .classed("stsDrawableCanvasDisplay", true);
-
+        if (enableMouseEvents) {
+            c.on("click", () => {
+                this._fireSelect(object);
+            });
+        }
     }
 
     pointerCoordsFromEvent(event: MouseEvent) {

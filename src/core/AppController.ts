@@ -6,7 +6,7 @@ import {AddStatement} from "../actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {AspectRatio, GrCanvas} from "../geometry/GrCanvas";
 import {StyleManager} from "./StyleManager";
-import {GrObject} from "../geometry/GrObject";
+import {GrObject, ObjectType} from "../geometry/GrObject";
 import {SetFillColor} from "../actions/SetFillColor";
 import {SetFillOpacity} from "../actions/SetFillOpacity";
 import {SetStrokeColor} from "../actions/SetStrokeColor";
@@ -389,6 +389,11 @@ export class AppController {
 
     public handleObjectSelection(object: GrObject) {
         if (!object.isSelectable) {
+            return;
+        }
+
+        if (object.type === ObjectType.Canvas) {
+            this.state.deselectAll();
             return;
         }
 
