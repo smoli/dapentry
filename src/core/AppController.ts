@@ -77,6 +77,10 @@ export const applicationDefaults: ApplicationOptions = {
     libraryAvailable: true
 }
 
+const toolsThatAllowSelection:Array<ToolNames> = [
+    ToolNames.Select, ToolNames.Move, ToolNames.Rotate, ToolNames.Scale
+];
+
 
 export class AppController {
     private readonly _state: State;
@@ -388,6 +392,13 @@ export class AppController {
     }
 
     public handleObjectSelection(object: GrObject) {
+
+        const currentTool = this._state.store.state.tool.current;
+
+        if (!toolsThatAllowSelection.includes(currentTool)) {
+            return;
+        }
+
         if (!object.isSelectable) {
             return;
         }
