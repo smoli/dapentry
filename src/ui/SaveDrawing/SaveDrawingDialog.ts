@@ -145,8 +145,11 @@ export class SaveDrawingHandler extends ModalDialogHandler {
             res.error("publishedObjects", "At least one object must be published");
         }
 
+
         if (data.name.length === 0) {
             res.error("name", "Name cannot be empty");
+        } else if (!data.name.match(/^[a-zA-Z][a-zA-Z0-9-_]+$/)) {
+            res.error("name", "Name must start with a character and can only contain character, digits, - and _")
         }
 
         if (data.description.length === 0) {

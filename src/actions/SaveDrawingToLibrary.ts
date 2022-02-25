@@ -2,7 +2,6 @@ import {BaseAction} from "./BaseAction";
 import {DialogCloseReason} from "../ui/core/ModalFactory";
 import SaveDrawingDialog, {SaveDrawingHandler} from "../ui/SaveDrawing/SaveDrawingDialog";
 import {AspectRatio} from "../geometry/GrCanvas";
-import {UNREACHABLE} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
 
 
