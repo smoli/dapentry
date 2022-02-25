@@ -5,50 +5,48 @@ export default {
     template: `
       <div class="drawable-modal-confirm">
       <h1>Save drawing to library</h1>
-      <div>
-        <label>Name *</label><input v-model="name">
-        <div>{{ validation.messageFor.name }}</div>
-        </div>
-      <div>
-        <label>Description *</label><input v-model="description">
-        <div>{{ validation.messageFor.description }}</div>
-      </div>
-      
-      <p>
-        <label>Which objects should be published?</label>
-        <div>{{ validation.messageFor.publishedObjects }}</div>
-      <ul>
-        <li v-for="obj of publishedObjects">
-          <input type="checkbox" v-model="obj.use"/>
-          {{ obj.object.uniqueName }}
-        </li>
-      </ul>
-      <p>
-        <label>Arguments of the drawing</label>
-      <ul>
-        <table>
-          <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Default Value</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="arg of arguments">
-            <td>
-              {{ arg.field.name }}
-            </td>
-            <td>
-              <input value="" :placeholder="'What does ' + arg.field.name + 'do ...'" v-model="arg.description"/>
-            </td>
-            <td>
-              {{ arg.field.value }}
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </ul>
+      <form>
+        <label>Name *</label><input v-model="name"><br/>
+        <div class="drawable-form-validation-message">{{ validation.messageFor.name }}</div>
+
+        <label>Description *</label><input v-model="description"><br/>
+        <div class="drawable-form-validation-message">{{ validation.messageFor.description }}</div>
+
+        <section>
+          <h3>Which objects should be published?</h3>
+          <div class="drawable-form-validation-message">{{ validation.messageFor.publishedObjects }}</div>
+            <span class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
+              <input :id="'cbx' + i" type="checkbox" v-model="obj.use"/>
+              <label :for="'cbx' + i">{{ obj.object.uniqueName }}</label>
+            </span>
+          </section>
+        <section>
+          <h3>Arguments of the drawing</h3>
+          <table>
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Default Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="arg of arguments">
+              <td>
+                {{ arg.field.name }}
+              </td>
+              <td>
+                <input value="" :placeholder="'What does ' + arg.field.name + 'do ...'" v-model="arg.description"/>
+              </td>
+              <td>
+                {{ arg.field.value }}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </section>
+        
+      </form>
       <div class="drawable-modal-footer">
         <button @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Yes</button>
         <button @click="onNo" class="drawable-ui-decline">No</button>
@@ -59,9 +57,6 @@ export default {
     name: "SaveDrawingDialog",
     props: ["handler"],
 
-    async mounted() {
-        this.validation = await this.handler.validate(this.$data);
-    },
 
     data() {
         return {
@@ -79,7 +74,8 @@ export default {
                     object
                 }
             }),
-            validation: new ValidationResult()
+            validation: new ValidationResult(),
+            validationActive: false
         }
     },
 
@@ -92,7 +88,7 @@ export default {
 
         async description() {
             this.validation = await this.validate();
-            },
+        },
 
         publishedObjects: {
             async handler() {
@@ -105,11 +101,18 @@ export default {
     methods: {
 
         validate() {
+            if (!this.validationActive) {
+                return Promise.resolve(this.validation);
+            }
             return this.handler.validate(this.$data);
         },
 
-        onYes() {
-            this.handler.yes(this.$data);
+        async onYes() {
+            this.validationActive = true;
+            this.validation = await this.validate();
+            if (this.validation.valid) {
+                this.handler.yes(this.$data);
+            }
         },
         onNo() {
             this.handler.no();
@@ -123,9 +126,9 @@ import {API} from "../../api/API";
 
 
 class ValidationResult {
-    errors: { [key: string]: string } = { };
+    errors: { [key: string]: string } = {};
 
-    get valid():boolean {
+    get valid(): boolean {
         return Object.keys(this.errors).length === 0;
     }
 
@@ -133,7 +136,7 @@ class ValidationResult {
         this.errors[key] = message;
     }
 
-    get messageFor():{ [key: string]: string } {
+    get messageFor(): { [key: string]: string } {
         return this.errors;
     }
 }
