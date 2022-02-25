@@ -397,7 +397,7 @@ export class AppController {
 
         const currentTool = this._state.store.state.tool.current;
 
-        if (!toolsThatAllowSelection.includes(currentTool)) {
+        if (currentTool && !toolsThatAllowSelection.includes(currentTool)) {
             return;
         }
 
