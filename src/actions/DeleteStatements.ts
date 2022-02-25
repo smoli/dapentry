@@ -48,7 +48,7 @@ export class DeleteStatements extends BaseAction {
         if (deletesOthers) {
             const dialog = this.controller.modalFactory.createConfirmationModal();
 
-            const reason = await dialog.show({
+            const { reason } = await dialog.show({
                 text: `This statement creates "${creates}". It is used in other statements that must also be deleted.`,
                 caption: "Delete statement for object?",
                 yesButtonTextId: "Yes, delete",

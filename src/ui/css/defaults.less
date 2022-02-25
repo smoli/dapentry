@@ -89,6 +89,14 @@ button.drawable-ui-accept:active {
   color: white;
 }
 
+button.drawable-ui-accept:disabled,
+button.drawable-ui-accept:disabled:hover {
+  background-color: desaturate(@acceptColor, 20%);
+  border: 1px solid darken(@acceptColor, @buttonBorderDarkening);
+  color: lightgray;
+}
+
+
 
 button.drawable-ui-transparent,
 button.drawable-ui-transparent:not([enabled]):hover {

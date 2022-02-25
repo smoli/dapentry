@@ -25,6 +25,8 @@ import {AddStatementToSelection} from "../actions/AddStatementToSelection";
 import {DeleteStatements} from "../actions/DeleteStatements";
 import {DeleteObjects} from "../actions/DeleteObjects";
 import {LibraryEntry} from "./Library";
+import SaveDrawingDialog, {SaveDrawingHandler} from "../ui/SaveDrawing/SaveDrawingDialog";
+import {SaveDrawingToLibrary} from "../actions/SaveDrawingToLibrary";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -497,5 +499,9 @@ export class AppController {
             this._modalFactory = new ModalFactory(this.state);
         }
         return this._modalFactory;
+    }
+
+    public async saveDrawingToLibrary() {
+        await this.execute(new SaveDrawingToLibrary());
     }
 }

@@ -19,7 +19,7 @@ export class ModalFactory {
     }
 
 
-    protected createModal<T>(component:any, HandlerClass: (typeof ModalDialogHandler)):T {
+    public createModal<T>(component:any, HandlerClass: (typeof ModalDialogHandler)):T {
         const handler = new HandlerClass(
             () => {
                 this._state.showModal(component, handler);

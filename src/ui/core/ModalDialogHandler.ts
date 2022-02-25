@@ -2,12 +2,17 @@ import {I18n} from "vue-i18n";
 import {ASSERT} from "../../core/Assertions";
 import {DialogCloseReason} from "./ModalFactory";
 
+export interface DialogCloseInfo {
+    reason: DialogCloseReason,
+    data: any
+}
+
 export class ModalDialogHandler {
     private readonly _onClose: () => void;
     private readonly _onShow: () => void;
     private readonly _i18n: I18n;
 
-    private _resolve: (value: DialogCloseReason) => void;
+    private _resolve: (value: DialogCloseInfo) => void;
     private _reject: (reason?: any) => void;
     private _showing: boolean = false;
 
@@ -26,7 +31,7 @@ export class ModalDialogHandler {
         return this.i18n.global.t(id);
     }
 
-    async show(...params: Array<any>): Promise<any> {
+    async show(...params: Array<any>): Promise<DialogCloseInfo> {
         ASSERT(this._showing === false, "Dialog already showing");
 
         this._showing = true;
@@ -37,20 +42,23 @@ export class ModalDialogHandler {
         });
     }
 
-    cancel() {
+    cancel(data: any = null) {
         this._onClose();
         this._showing = false;
-        this._resolve(DialogCloseReason.CANCEL);
+        this._resolve({
+            reason: DialogCloseReason.CANCEL,
+            data
+        });
     }
 
-    close(reason: DialogCloseReason) {
+    close(reason: DialogCloseReason, data: any = null) {
         this._onClose();
         this._showing = false;
-        this._resolve(reason);
+        this._resolve({ reason, data });
     }
 
-    protected resolve(reason: DialogCloseReason) {
-        this._resolve(reason);
+    protected resolve(reason: DialogCloseReason, data: any = null) {
+        this._resolve({ reason, data });
     }
 
     protected reject(error) {

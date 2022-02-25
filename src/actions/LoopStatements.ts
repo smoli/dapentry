@@ -1,7 +1,6 @@
 import {BaseAction} from "./BaseAction";
 import {CodeManager} from "../runtime/CodeManager";
 import {ASSERT} from "../core/Assertions";
-import {filter} from "d3";
 
 export class LoopStatements extends BaseAction {
     private _indexes: Array<number>;

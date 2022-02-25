@@ -1,4 +1,5 @@
 <template>
+  <button @click="onSave">Save current</button>
   <button v-for="entry in entries" @click="onInsertEntry(entry)">{{ entry.name }}</button>
 </template>
 
@@ -18,6 +19,10 @@ export default {
   methods: {
     onInsertEntry(entry: LibraryEntry) {
       this.controller.switchToInsertLibraryEntryTool(entry);
+    },
+
+    onSave() {
+      this.controller.saveDrawingToLibrary();
     }
   }
 }

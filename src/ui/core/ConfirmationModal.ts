@@ -1,5 +1,5 @@
 import {DialogCloseReason} from "./ModalFactory";
-import {ModalDialogHandler} from "./ModalDialogHandler";
+import {DialogCloseInfo, ModalDialogHandler} from "./ModalDialogHandler";
 
 
 export const ConfirmationModalComponent = {
@@ -71,7 +71,7 @@ export class ConfirmationModal extends ModalDialogHandler {
         return this.t(this._options.caption || "ui.confirm");
     }
 
-    async show(options: ConfirmationModalOptions): Promise<any> {
+    async show(options: ConfirmationModalOptions): Promise<DialogCloseInfo> {
         this._options = options;
 
         return super.show();
