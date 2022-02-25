@@ -15,11 +15,11 @@ export default {
         <section>
           <h3>Which objects should be published?</h3>
           <div class="drawable-form-validation-message">{{ validation.messageFor.publishedObjects }}</div>
-            <span class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
+          <span class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
               <input :id="'cbx' + i" type="checkbox" v-model="obj.use"/>
               <label :for="'cbx' + i">{{ obj.object.uniqueName }}</label>
             </span>
-          </section>
+        </section>
         <section>
           <h3>Arguments of the drawing</h3>
           <table>
@@ -45,7 +45,7 @@ export default {
             </tbody>
           </table>
         </section>
-        
+
       </form>
       <div class="drawable-modal-footer">
         <button @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Yes</button>
@@ -68,12 +68,14 @@ export default {
                     field
                 }
             }),
-            publishedObjects: this.$store.state.drawing.objects.map(object => {
-                return {
-                    use: false,
-                    object
-                }
-            }),
+            publishedObjects: this.$store.state.drawing.objects
+                .filter(object => object.type !== ObjectType.Canvas)
+                .map(object => {
+                    return {
+                        use: false,
+                        object
+                    }
+                }),
             validation: new ValidationResult(),
             validationActive: false
         }
@@ -121,7 +123,7 @@ export default {
 }
 
 import {ModalDialogHandler} from "../core/ModalDialogHandler";
-import {GrObject} from "../../geometry/GrObject";
+import {GrObject, ObjectType} from "../../geometry/GrObject";
 import {API} from "../../api/API";
 
 
