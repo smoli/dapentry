@@ -18,7 +18,7 @@ export class API {
 
     static get fetch():FetchFunc {
         if (!API._fetch) {
-            return window.fetch;
+            return window.fetch.bind(window);
         }
         return API._fetch
     }

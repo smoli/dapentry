@@ -1,4 +1,5 @@
 import {DialogCloseReason} from "../core/ModalFactory";
+import * as _ from "lodash";
 
 export default {
     template: `
@@ -83,23 +84,30 @@ export default {
     },
 
     watch: {
-        async name() {
-            this.validation = await this.handler.validate(this.$data);
+        name() {
+            _.debounce(() => {
+                this.validate().then(r => this.validation = r);
+            }, 400)();
         },
 
         async description() {
-            this.validation = await this.handler.validate(this.$data);
+            this.validation = await this.validate();
             },
 
         publishedObjects: {
             async handler() {
-                this.validation = await this.handler.validate(this.$data);
+                this.validation = await this.validate();
             },
             deep: true
         }
     },
 
     methods: {
+
+        validate() {
+            return this.handler.validate(this.$data);
+        },
+
         onYes() {
             this.handler.yes(this.$data);
         },
@@ -111,6 +119,8 @@ export default {
 
 import {ModalDialogHandler} from "../core/ModalDialogHandler";
 import {GrObject} from "../../geometry/GrObject";
+import {API} from "../../api/API";
+
 
 class ValidationResult {
     errors: { [key: string]: string } = { };
@@ -129,14 +139,18 @@ class ValidationResult {
 }
 
 export class SaveDrawingHandler extends ModalDialogHandler {
-    yes(data) {
-        this.close(DialogCloseReason.YES, data);
+
+    async yes(data) {
+        const validation = await this.validate(data);
+
+        if (validation.valid) {
+            this.close(DialogCloseReason.YES, data);
+        }
     }
 
     no() {
         this.close(DialogCloseReason.NO);
     }
-
 
     async validate(data: { name: string, description: string, publishedObjects: Array<{ use: boolean, object: GrObject }> }): Promise<ValidationResult> {
         const res = new ValidationResult();
@@ -150,6 +164,12 @@ export class SaveDrawingHandler extends ModalDialogHandler {
             res.error("name", "Name cannot be empty");
         } else if (!data.name.match(/^[a-zA-Z][a-zA-Z0-9-_]+$/)) {
             res.error("name", "Name must start with a character and can only contain character, digits, - and _")
+        }
+
+        const nameExists = await API.doesNameExist(data.name);
+
+        if (nameExists.data) {
+            res.error("name", `${data.name} already exists`);
         }
 
         if (data.description.length === 0) {

@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "d3": "^7.3.0",
+    "lodash": "^4.17.21",
     "vue": "^3.2.29",
     "vue-i18n": "^9.2.0-beta.30",
     "vuex": "^4.0.2"
@@ -25,6 +26,7 @@
     "@types/chai": "^4.3.0",
     "@types/d3": "^7.1.0",
     "@types/jquery": "^3.5.1",
+    "@types/lodash": "^4.14.178",
     "@types/mocha": "^9.0.0",
     "@types/node": "^17.0.5",
     "@types/node-fetch": "^2.6.1",
