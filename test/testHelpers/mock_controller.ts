@@ -32,7 +32,7 @@ export class MockController extends AppController {
                         console.log("Mocked confirmation modal with", options)
                         const reason = onConfirm();
                         console.log("Said ", DialogCloseReason[reason])
-                        return Promise.resolve(reason);
+                        return Promise.resolve({reason});
                     }
                 }
             }
