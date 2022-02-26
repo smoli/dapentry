@@ -10,7 +10,7 @@ export class UpdateStatement extends BaseAction {
 
     constructor(statementIndex: number, tokenIndexes: Array<number>, newValue: string) {
         super();
-        this._newValue = newValue;
+        this._newValue = newValue.trim();
         this._statementIndex = statementIndex;
         this._tokenIndexes = tokenIndexes;
     }
