@@ -3,7 +3,7 @@ GFXBCTS
 
 ## What is this?
 
-This is heavily based on - some might call it a clone of - http://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/
+This is heavily based on - some might call it a clone of - [Drawing dynamic visualisations by Bret Victor](http://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/)
 
 ## How to build and run
 
