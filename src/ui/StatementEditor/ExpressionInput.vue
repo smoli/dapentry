@@ -18,7 +18,7 @@ export default {
 
   computed: {
       expressionString() {
-        return Parser.constructCodeLine([this.content.token]);
+        return Parser.constructCodeLine([this.content.token]).trim();
       }
   },
 
