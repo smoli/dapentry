@@ -12,14 +12,7 @@ export interface SegmentInfo {
 
 export function createSegmentInfoForToken(token, statementIndex, indexes: Array<number> = []): SegmentInfo {
     switch (token.type) {
-        case TokenTypes.REGISTER:
-            return { type: "SimpleInput", token, statementIndex, subIndexes: indexes };
 
-        case TokenTypes.REGISTERAT:
-            return { type: "AtRegisterInput", token, statementIndex, subIndexes: indexes };
-
-        case TokenTypes.NUMBER:
-            return { type: "NumberInput", token, statementIndex, subIndexes: indexes };
 
         case TokenTypes.STRING:
             return { type: "StringInput", token, statementIndex, subIndexes: indexes };
@@ -30,6 +23,13 @@ export function createSegmentInfoForToken(token, statementIndex, indexes: Array<
         case TokenTypes.ARRAY:
             return { type: "ArrayInput", token, statementIndex, subIndexes: indexes };
 
+        case TokenTypes.REGISTERAT:
+            // return { type: "AtRegisterInput", token, statementIndex, subIndexes: indexes };
+        case TokenTypes.REGISTER:
+            // return { type: "SimpleInput", token, statementIndex, subIndexes: indexes };
+        case TokenTypes.NUMBER:
+            // return { type: "NumberInput", token, statementIndex, subIndexes: indexes };
+        case TokenTypes.MATHFUNC:       //fall through
         case TokenTypes.EXPRESSION:
             return { type: "ExpressionInput", token, statementIndex, subIndexes: indexes };
 

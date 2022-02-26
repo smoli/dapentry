@@ -20,7 +20,7 @@ export function T_NAME(name: string): Token {
     return { type: TokenTypes.NAME, value: name };
 }
 
-export function T_REGISTERAT(name: string, where: ( string | number | Token)): Token {
+export function T_REGISTERAT(name: string, where: ( string | number | Token )): Token {
     if (typeof where === "string") {
         return { type: TokenTypes.REGISTERAT, value: [T_REGISTER(name), T_NAME(where)] }
     } else if (typeof where === "number") {
@@ -31,7 +31,6 @@ export function T_REGISTERAT(name: string, where: ( string | number | Token)): T
 }
 
 
-
 export function T_POINT_NN(x: number, y: number): Token {
     return { type: TokenTypes.POINT, value: [T_NUMBER(x), T_NUMBER(y)] }
 }
@@ -40,7 +39,7 @@ export function T_POINT(x: Token, y: Token): Token {
     return { type: TokenTypes.POINT, value: [x, y] }
 }
 
-export function T_ARRAY(...tokens:Array<Token>): Token {
+export function T_ARRAY(...tokens: Array<Token>): Token {
     return { type: TokenTypes.ARRAY, value: tokens };
 }
 
@@ -58,4 +57,13 @@ export function T_ANNOTATION(name: string, ...args): Token {
 
 export function T_EXPRESSION(value1: Token, operator: string, value2: Token): Token {
     return { type: TokenTypes.EXPRESSION, value: [value1, T_OPERATOR(operator), value2] };
+}
+
+export function T_MATHFUNC(name: string, value: Token): Token {
+    return {
+        type: TokenTypes.MATHFUNC, value: [
+            T_NAME(name),
+            value
+        ]
+    }
 }
