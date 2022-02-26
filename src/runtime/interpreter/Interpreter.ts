@@ -9,6 +9,8 @@ import {ArrayParameter} from "./types/ArrayParameter";
 import {ExpressionParameter} from "./types/ExpressionParameter";
 import {AtParameter} from "./types/AtParameter";
 import {FuncDecl} from "./operations/FuncDecl";
+import {MathFuncParameter} from "./types/MathFuncParameter";
+import {makeParameter} from "./makeParameter";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -366,43 +368,6 @@ export class Interpreter {
         this._program = lines.map((l, i) => this.parseLine(l, i));
     }
 
-    private makeParameter(token): Parameter {
-        switch (token.type) {
-
-            case TokenTypes.REGISTER:   //pass through
-            case TokenTypes.NUMBER:     //pass through
-            case TokenTypes.STRING:
-                return new Parameter(token.type === TokenTypes.REGISTER, token.value);
-
-            case TokenTypes.NONLOCALREGISTER:
-                return new Parameter(token.type === TokenTypes.NONLOCALREGISTER, token.value, true);
-
-            case TokenTypes.REGISTERAT:
-                return new AtParameter(token.value[0].value, token.value[1].value, token.value[1].type);
-
-            case TokenTypes.POINT:
-                return new Point2Parameter(
-                    this.makeParameter(token.value[0]),
-                    this.makeParameter(token.value[1])
-                )
-
-            case TokenTypes.ARRAY:
-                return new ArrayParameter(
-                    (token.value as Array<any>).map(token => this.makeParameter(token))
-                )
-
-            case TokenTypes.ANNOTATION:
-                // Annotations are ignored for execution
-                break;
-
-            case TokenTypes.EXPRESSION:
-                return new ExpressionParameter(token);
-
-            case TokenTypes.OTHER:
-                break;
-        }
-    }
-
     private parseLine(line: string, index:number): any {
         const tokens = Parser.parseLine(line, index);
 
@@ -426,7 +391,7 @@ export class Interpreter {
                     return new LabelParameter(false, token.value);
 
                 default:
-                    return this.makeParameter(token)
+                    return makeParameter(token)
             }
         }).filter(p => !!p);
 

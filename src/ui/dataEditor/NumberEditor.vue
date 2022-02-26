@@ -15,7 +15,7 @@ export default {
 
   methods: {
     onChange(event) {
-      this.controller.setDataFieldValue(this.field.name, Number(event.target.value));
+      this.controller.setDataFieldValue(this.field.name, event.target.value);
     }
   }
 }

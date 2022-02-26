@@ -5,12 +5,12 @@ export class ArrayParameter extends Parameter {
 
     private _value: Array<any> = []
 
-    constructor(value:Array<any>) {
+    constructor(value: Array<any>) {
         super(false, null)
         this._value = value;
     }
 
-    protected _getValue(param:Parameter, closure):any {
+    protected _getValue(param: Parameter, closure): any {
         if (param.isRegister) {
             return closure.getRegister(param.name)
         } else {
@@ -18,11 +18,11 @@ export class ArrayParameter extends Parameter {
         }
     }
 
-    get length():number {
+    get length(): number {
         return this._value.length;
     }
 
-    public getAtIndex(index:number, closure: StackFrame):any {
+    public getAtIndex(index: number, closure: StackFrame): any {
         return this._getValue(this._value[index], closure);
     }
 
@@ -31,7 +31,7 @@ export class ArrayParameter extends Parameter {
     }
 
     finalized(closure): any {
-        return this._value.map(v => v.finalized(closure))
+        return [...this._value.map(v => v.finalized(closure))]
     }
 
 }

@@ -1,5 +1,7 @@
 import {Parameter} from "../Parameter";
 import {Token, TokenTypes} from "../Parser";
+import {MathFuncParameter} from "./MathFuncParameter";
+import {makeParameter} from "../makeParameter";
 
 interface ExpressionToken extends Token {
     parameter?: Parameter;
@@ -23,6 +25,13 @@ export class ExpressionParameter extends Parameter {
                     return {
                         type: thing.type,
                         value: thing.value
+                    }
+
+                case TokenTypes.MATHFUNC:
+                    return {
+                        type:thing.type,
+                        value: null,
+                        parameter: new MathFuncParameter(thing.value[0].value, makeParameter(thing.value[1]))
                     }
 
                 case TokenTypes.REGISTER:
@@ -66,8 +75,12 @@ export class ExpressionParameter extends Parameter {
                         return token.value;
                     case TokenTypes.STRING:
                         return token.value;
+
+                    case TokenTypes.MATHFUNC:
                     case TokenTypes.REGISTER:
                         return token.parameter.finalized(closure);
+
+
                     default:
                         throw new Error(`Unsupported token ${TokenTypes[token.type]} in expression`)
                 }

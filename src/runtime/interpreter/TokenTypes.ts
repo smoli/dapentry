@@ -13,5 +13,6 @@ export enum TokenTypes {
     OPERATOR,
     ANNOTATION,
     NAME,
+    MATHFUNC,
     OTHER
 }

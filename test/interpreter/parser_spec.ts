@@ -4,7 +4,7 @@ import {Parser, TokenTypes, Token} from "../../src/runtime/interpreter/Parser";
 import {
     T_ANNOTATION,
     T_EXPRESSION,
-    T_LABEL,
+    T_LABEL, T_MATHFUNC,
     T_NUMBER,
     T_OPCODE,
     T_OPERATOR, T_POINT_NN,
@@ -248,6 +248,48 @@ describe('Parser', () => {
                 )
             ])
         });
-
     });
+
+    describe("Parsing expressions", () => {
+        it("can parse a string as an expression", () => {
+
+            const code = "max(r1) + 234 * 23";
+
+            const tokens = Parser.parseExpression(code);
+
+            expect(tokens).to.deep.equal(
+                T_EXPRESSION(
+                    T_MATHFUNC("max", T_REGISTER("r1")),
+                    "+",
+                    T_EXPRESSION(
+                        T_NUMBER(234),
+                        "*",
+                        T_NUMBER(23)
+                    )
+                )
+            );
+        });
+
+        it("parses a single number as well", () => {
+            const code = "234";
+
+            const tokens = Parser.parseExpression(code);
+
+            expect(tokens).to.deep.equal(
+                        T_NUMBER(234)
+            );
+        });
+
+        it("parses a single register as well", () => {
+            const code = "r1";
+
+            const tokens = Parser.parseExpression(code);
+
+            expect(tokens).to.deep.equal(
+                        T_REGISTER("r1")
+            );
+        });
+
+
+    })
 });

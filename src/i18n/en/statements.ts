@@ -25,7 +25,7 @@ export const statements = {
     "STROKE": "Make {1} stroke {2} wide",
     "ROTATE": "Rotate {1} by {2}",
     "APPEND": "Append {2} to {1}",
-    "SCALE": "Scale",
+    "SCALE": "Scale {1} by {2} and {3} around {4}",
     "DO_NONE": "Repeat {1} times",
     "DO_VALUE": "Repeat {2} times",
     "DO_VALUE_INDEX": "Repeat {3} times",

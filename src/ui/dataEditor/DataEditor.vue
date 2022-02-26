@@ -36,11 +36,9 @@ function createFields(fields: Array<DataField>):Array<FieldEditor> {
         return { type: "ListEditor", field}
       }
 
-      if (typeof field.value === "number") {
-        return { type: "NumberEditor", field }
-      }
 
-      UNREACHABLE(`Unsupported field value ${field.value} on ${field.name}`);
+        return { type: "NumberEditor", field }
+      
   });
 }
 

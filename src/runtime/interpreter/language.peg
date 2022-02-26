@@ -23,7 +23,8 @@
     OPERATOR: 11,
     ANNOTATION: 12,
     NAME: 13,
-    OTHER: 14
+    MATHFUNC: 14,
+    OTHER: 15
   }
 
 }
@@ -79,9 +80,11 @@
 
   Factor
     = "(" _ expr:Eval _ ")"  { return expr }
+    / MathFunc
     / RegPropAccess
     / Number
     / Register
+
 
 
 
@@ -102,6 +105,11 @@
       return aot
       }
 
+  MathFunc "MathFunc"
+  	= name:FuncName "(" _ exp:Eval _ ")" {
+    	return { type: TokenTypes.MATHFUNC, value: [name, exp] }
+    }
+
   Argument "Argument"
       = arg:(Eval/String) {
       return arg
@@ -113,8 +121,13 @@
     	return { type: TokenTypes.REGISTERPROP, value: [head, tail]}
     }
 
+ FuncName "PropName"
+  = Name { return { type: TokenTypes.NAME, value: text() } }
+
+
   PropName "PropName"
   = Name { return { type: TokenTypes.NAME, value: text() } }
+
   PropRegister "PropRegister"
   = "(" reg:Name ")" { return { type: TokenTypes.REGISTER, value: reg }}
 

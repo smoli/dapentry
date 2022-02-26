@@ -1,6 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {Interpreter} from "../../../src/runtime/interpreter/Interpreter";
+import exp = require("constants");
 
 
 describe('Code can have expressions', () => {
@@ -62,4 +63,45 @@ describe('Code can have expressions', () => {
 
         expect(i.getRegister("r2")).to.equal(28);
     });
+
+    it("can also use predefined mathematical functions", async () => {
+
+        const code = `
+            LOAD a, [1, 2, 3, 4, 5, 6, 7, 8]
+            LOAD b, [1, 2, 3, 4, 5, 6, 7]
+            LOAD max, max(a)
+            LOAD min, min(a)
+            LOAD avg, avg(a)
+            LOAD medA, median(a)
+            LOAD medB, median(b)
+            LOAD sizeA, size(a)
+            LOAD sizeB, size(b)
+        `
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(i.getRegister("max")).to.equal(8);
+        expect(i.getRegister("min")).to.equal(1);
+        expect(i.getRegister("avg")).to.equal((1 + 2 + 3 + 4 + 5 + 6 + 7 + 8) / 8);
+        expect(i.getRegister("medA")).to.equal(4.5);
+        expect(i.getRegister("medB")).to.equal(4);
+        expect(i.getRegister("sizeA")).to.equal(8);
+        expect(i.getRegister("sizeB")).to.equal(7);
+    })
+
+    it("mathematical functions can be parts of bigger expressions", async () => {
+
+        const code = `
+            LOAD a, [1, 2, 3, 4, 5, 6, 7, 8]
+            LOAD c, 1 / max(a)
+        `
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(i.getRegister("c")).to.equal(1 / 8);
+    })
+
+
 });
