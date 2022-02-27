@@ -3,6 +3,7 @@ import {LibraryEntry} from "../core/Library";
 import {DataField} from "./modules/Data";
 import {AspectRatio} from "../geometry/GrCanvas";
 import {AppConfig} from "../core/AppConfig";
+import {API, APIResponse} from "../api/API";
 
 export class Persistence {
     private _state: State;
@@ -38,24 +39,23 @@ export class Persistence {
 
 
     async loadLibrary():Promise<Array<LibraryEntry>> {
-        const result = await fetch(`${AppConfig.API.library}`, {
-            method: "GET",
-            mode: "cors",
-            headers: {
-                Accept: "application/json"
-            }
-        });
+        const response: APIResponse = await API.getLibraryEntries();
 
-        const data = await result.json();
-
-        console.log(JSON.stringify(data, null, 2));
-
-        return data.map(e => {
+        const r =  response.data.map(e => {
             return {
                 ...e,
-                aspectRatio: AspectRatio[e.aspect]
+                aspectRatio: AspectRatio[e.aspect],
+                arguments: e.arguments.map(arg => {
+                    return {
+                        ...arg,
+                        default: JSON.parse(arg.default)
+                    }
+                })
             }
         });
+        console.log(r);
+
+        return r;
     }
 
 

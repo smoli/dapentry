@@ -58,6 +58,33 @@ export class API {
             })
     }
 
+    static async postNewLibraryEntry(data) {
+        const response = await fetch(AppConfig.API.library, {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        return API.makeResponse(response, async () => {
+            return null;
+        })
+    }
+
+    static async getLibraryEntries():Promise<APIResponse> {
+        const response = await fetch(`${AppConfig.API.library}`, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+                Accept: "application/json"
+            }
+        });
+
+        return API.makeResponse(response, async () => response.json());
+    }
 
 }
 

@@ -3,6 +3,7 @@ import {DialogCloseReason} from "../ui/core/ModalFactory";
 import SaveDrawingDialog, {SaveDrawingHandler} from "../ui/SaveDrawing/SaveDrawingDialog";
 import {AspectRatio} from "../geometry/GrCanvas";
 import {AppConfig} from "../core/AppConfig";
+import {API} from "../api/API";
 
 
 interface APILibraryEntryPOST {
@@ -46,7 +47,7 @@ export class SaveDrawingToLibrary extends BaseAction {
                 return {
                     name: arg.field.name,
                     description: arg.description,
-                    default: "" + arg.field.value
+                    default: "" + JSON.stringify(arg.field.value)
                 }
             })
         }
@@ -65,15 +66,6 @@ export class SaveDrawingToLibrary extends BaseAction {
             return;
         }
 
-
-        await fetch(AppConfig.API.library, {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.makePostData(data))
-        });
+        return API.postNewLibraryEntry(this.makePostData(data));
     }
 }
