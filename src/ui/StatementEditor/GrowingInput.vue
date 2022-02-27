@@ -59,26 +59,34 @@ export default {
     }
   },
 
-  watch: {
-    value() {
-      const inp = this.$refs["input"];
-      inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
-    }
+  updated() {
+    const inp = this.$refs["input"];
+    this.updateWidth(inp.value);
   },
+
+
 
   mounted() {
     const inp = this.$refs["input"];
-    inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
+    this.updateWidth(this.originalValue);
     if (this.autofocus) {
       inp.focus();
     }
   },
 
   methods: {
+    updateWidth(value) {
+      const inp = this.$refs["input"];
+      if (!inp) {
+        return;
+      }
+      inp.style.width = ( getTextWidth(value, getFontSize(inp)) + this.offset ) + "px";
+    },
+
     onKeyDown(event: KeyboardEvent) {
       const inp = this.$refs["input"];
       const newChar = event.key.length === 1 ? event.key : ""
-      inp.style.width = ( getTextWidth(inp.value + newChar, getFontSize(inp)) + this.offset) + "px";
+      this.updateWidth(inp.value + newChar);
     },
 
     onKeyUp(event: KeyboardEvent) {
@@ -89,7 +97,7 @@ export default {
 
       if (event.key === "Escape") {
         inp.value = this.originalValue;
-        inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
+        this.updateWidth(inp.value);
         inp.blur();
       }
 
@@ -97,11 +105,11 @@ export default {
         inp.blur();
       }
 
-      inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
+      this.updateWidth(inp.value);
     },
 
     onChange() {
-        this.originalValue = this.$refs["input"].value;
+      this.originalValue = this.$refs["input"].value;
     },
 
     onMouseDown(event: MouseEvent) {
@@ -122,7 +130,7 @@ export default {
         if (this.min !== undefined && this.max !== undefined) {
           min = this.min;
           max = this.max;
-          factor = (max - min) / 400;
+          factor = ( max - min ) / 400;
         }
 
         window.onmousemove = (event: MouseEvent) => {
@@ -137,7 +145,7 @@ export default {
           }
 
           this.originalValue = inp.value = nv.toFixed(2);
-          inp.style.width = ( getTextWidth(inp.value, getFontSize(inp)) + this.offset) + "px";
+          this.updateWidth(inp.value);
           const e = new Event("change");
           inp.dispatchEvent(e);
         }
