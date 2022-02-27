@@ -1,13 +1,10 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GrCircle} from "../../src/geometry/GrCircle";
-import {eq, eqp} from "../../src/geometry/GeoMath";
 import {GrRectangle} from "../../src/geometry/GrRectangle";
 import {GrObjectList} from "../../src/geometry/GrObjectList";
 import {StyleManager} from "../../src/core/StyleManager";
-import {AppConfig} from "../../src/core/AppConfig";
-
-
+import {POI, POIPurpose} from "../../src/geometry/GrObject";
 
 
 describe('GrObjectList', () => {
@@ -53,6 +50,44 @@ describe('GrObjectList', () => {
         expect(l.style.strokeColor).to.equal("green");
         expect(l.style.strokeWidth).to.equal(30);
 
+    });
+
+    it("uses the scaling pois of the last object", () => {
+        let c1 = GrCircle.create(null, 0, 0, 100);
+        let c2 = GrCircle.create(null, 0, 0, 200);
+        let l = new GrObjectList(null);
+
+        l.addObject(c1);
+        l.addObject(c2);
+        expect(l.pointsOfInterest(POIPurpose.SCALING)[POI.left]).to.deep.equal({ x: -200, y: 0})
+    })
+
+    it("uses the manipulation pois of the last object", () => {
+        let c1 = GrCircle.create(null, 0, 0, 100);
+        let c2 = GrCircle.create(null, 0, 0, 200);
+        let l = new GrObjectList(null);
+
+        l.addObject(c1);
+        l.addObject(c2);
+        expect(l.pointsOfInterest(POIPurpose.MANIPULATION)[POI.left]).to.deep.equal({ x: -200, y: 0})
+    })
+
+    it("uses the snapping pois of the last but one object of there are at least two", () => {
+        let c1 = GrCircle.create(null, 0, 0, 100);
+        let c2 = GrCircle.create(null, 0, 0, 200);
+        let l = new GrObjectList(null);
+
+        l.addObject(c1);
+        l.addObject(c2);
+        expect(l.pointsOfInterest(POIPurpose.SNAPPING)[POI.left]).to.deep.equal({ x: -100, y: 0})
+    })
+
+    it("uses the snapping pois of the last object of there is only one", () => {
+        let c1 = GrCircle.create(null, 0, 0, 200);
+        let l = new GrObjectList(null);
+
+        l.addObject(c1);
+        expect(l.pointsOfInterest(POIPurpose.SNAPPING)[POI.left]).to.deep.equal({ x: -200, y: 0})
     })
 
 
