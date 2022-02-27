@@ -603,6 +603,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 case ObjectType.Composite:
                     this.renderCompositeBRep(g, object as GrCompositeObject);
                     break;
+
+                case ObjectType.List:
+                    this.renderObjectListBRep(g, object as GrObjectList);
+
                 /*
                                 case ObjectType.Ellipse:
                                     break;
@@ -771,7 +775,21 @@ export class SvgObjectRenderer extends ObjectRenderer {
         c.attr("d", d);
     }
 
+    protected renderObjectListBRep(g: Selection<any, any, any, any>, list: GrObjectList) {
+        for (const o of list.objects)
+            this.renderBoundingRepresentation(o);
+    }
+
+    protected removeObjectListBoundingRepresentation(list: GrObjectList) {
+        for (const o of list.objects)
+            this.removeBoundingRepresentation(o);
+    }
+
     public removeBoundingRepresentation(object: GrObject) {
+        if (object.type === ObjectType.List) {
+            this.removeObjectListBoundingRepresentation(object as GrObjectList);
+        }
+
         if (object instanceof GrCanvas) {
             return;
         }
