@@ -2,6 +2,7 @@ import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrOb
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {Point2D} from "./Point2D";
 import {Style} from "../core/StyleManager";
+import {GrObjectList} from "./GrObjectList";
 
 class ObjectArray extends Array<GrObject> {
     private _baseName: string;
@@ -165,7 +166,6 @@ export class GrCompositeObject extends GrObject {
 
 
     movePOI(poi: POI, byVector: Point2D) {
-        this._objects.forEach(o => o.movePOI(POI.center, byVector));
         super.movePOI(POI.center, byVector);
     }
 

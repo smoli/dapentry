@@ -433,7 +433,6 @@ export abstract class GrObject {
      * @param byVector        The vector to move the POI by
      */
     public movePOI(poi: POI, byVector: Point2D): void {
-        console.log("Moving", this.uniqueName);
         this._center.add(byVector);
     }
 /*

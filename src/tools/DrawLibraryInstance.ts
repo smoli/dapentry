@@ -8,7 +8,7 @@ import {AppConfig} from "../core/AppConfig";
 import {RenderLayer} from "../core/ObjectRenderer";
 import {GrRectangle} from "../geometry/GrRectangle";
 import {DrawRectangle} from "./DrawRectangle";
-import {AspectRatio} from "../geometry/GrCanvas";
+import {AspectRatio, getHeightForWidth} from "../geometry/GrCanvas";
 
 
 export class DrawLibraryInstance extends DrawRectangle {
@@ -26,27 +26,7 @@ export class DrawLibraryInstance extends DrawRectangle {
         const x1 = this._x1;
         const y1 = this._y1;
         const w = Math.max(this._x1, x2) - x1;
-        let h = w;
-
-        switch (this._libraryEntry.aspectRatio) {
-            case AspectRatio.ar1_1:
-                h = w;
-                break;
-            case AspectRatio.ar3_2:
-                h = 2 * w / 3;
-                break;
-            case AspectRatio.ar4_3:
-                h = 3 * w / 4;
-                break;
-            case AspectRatio.ar16_10:
-                h = 10 * w / 16;
-                break;
-            case AspectRatio.ar16_9:
-                h = 9 * w / 16;
-                break;
-
-        }
-
+        let h = getHeightForWidth(w, this._libraryEntry.aspectRatio);
         return {x1, y1, w: 2 * w, h: 2 * h}
     }
 
@@ -56,7 +36,7 @@ export class DrawLibraryInstance extends DrawRectangle {
         let statement =  `MAKE ${this._name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${this._rect?.width || 0}, ${point}`;
 
         this._libraryEntry.arguments.forEach(arg => {
-            statement += ", " + arg.default * 1.2;
+            statement += ", " + JSON.stringify(arg.default);
         })
 
         return statement;

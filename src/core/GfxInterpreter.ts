@@ -17,7 +17,7 @@ import {GfxExtendPolygon} from "../runtime/gfx/GfxExtendPolygon";
 import {Parameter} from "../runtime/interpreter/Parameter";
 import {GrCompositeObject} from "../geometry/GrCompositeObject";
 import {Library, LibraryEntry} from "./Library";
-import {GrCanvas} from "../geometry/GrCanvas";
+import {getHeightForWidth, GrCanvas} from "../geometry/GrCanvas";
 import {Point2Parameter} from "../runtime/interpreter/types/Point2Parameter";
 import {AppConfig} from "./AppConfig";
 import {GfxStrokeColor} from "../runtime/gfx/GfxStrokeColor";
@@ -179,12 +179,30 @@ class GfxMake extends GfxOperation {
     }
 
 
+    protected getScopeCode(): Array<string> {
+        return this._entry.arguments.map((field, i) => {
+            const arg = this._args && this._args[i];
+            let v = field.default;
+            if (arg) {
+                v = arg.finalized(this.closure);
+            }
+
+            if (Array.isArray(v)) {
+                    return `LOAD ${field.name}, [${v.join(", ")}]`;
+            }
+            return `LOAD ${field.name}, ${v}`;
+        });
+    }
+
     protected setup(outerInterpreter: GfxInterpreter) {
         if (!this._entry) {
             this._entry = outerInterpreter.library.getEntry(this._entryID.value);
-            this._interpreter.parse(this._entry.code);
         }
 
+        // We do this everytime, because the arguments may contain code...
+        const code = this.getScopeCode().join("\n") + "\n" + this._entry.code;
+        console.log(code);
+        this._interpreter.parse(code);
         // We do this everytime, because when we're in a loop and width points to a register
         // the value of width might change between iterations.
         this._canvas = GrCanvas.create(this._entry.aspectRatio, this._width.finalized(this.closure));
@@ -221,15 +239,18 @@ class GfxMake extends GfxOperation {
         this._interpreter.clearObjects();
         await this._interpreter.run({
             [AppConfig.Runtime.styleRegisterName]: this.styles,
-            [this._canvas.uniqueName]: this._canvas,
-            ...this.getScope()
+            [this._canvas.uniqueName]: this._canvas
         });
 
         const resultObject: GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;
 
         resultObject.updateName(this._target.name);
+        resultObject.width = this._width.finalized(this.closure);
+        resultObject.height = getHeightForWidth(resultObject.width, this._entry.aspectRatio);
+        const p = this._position.finalized(this.closure);
 
-        resultObject.movePOI(POI.center, this._position.finalized(this.closure).sub(resultObject.center));
+        resultObject.x = p.x;
+        resultObject.y = p.y;
 
         this.target = resultObject;
     }

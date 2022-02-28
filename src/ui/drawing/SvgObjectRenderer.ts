@@ -314,6 +314,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 this._render(child, false, g.select(ToolClassSelectors.object), false);
             })
         }
+
+        g.attr("transform", `translate(${comp.x - comp.width / 2} ${comp.y - comp.height / 2})`);
     }
 
     private _renderList(layer: Selection<any, any, any, any>, list: GrObjectList, parent: Selection<any, any, any, any>, enableMouseEvents: boolean) {
@@ -450,10 +452,10 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
 
         elem.attr("style", `fill: ${text.style.fillColor}; fill-opacity: ${text.style.fillOpacity};` +
-                           `stroke: ${text.style.strokeColor}; stroke-width: ${text.style.strokeWidth};` +
-                           `font-family: ${text.style.fontFamily}; font-size: ${text.style.fontSize};` +
-                           `text-anchor: ${align};` +
-                           `alignment-baseline: ${valign};`
+            `stroke: ${text.style.strokeColor}; stroke-width: ${text.style.strokeWidth};` +
+            `font-family: ${text.style.fontFamily}; font-size: ${text.style.fontSize};` +
+            `text-anchor: ${align};` +
+            `alignment-baseline: ${valign};`
         );
     }
 
@@ -751,7 +753,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
     }
 
 
-    protected  getRectanglePath(tl:Point2D, tr: Point2D, bl: Point2D, br: Point2D): string {
+    protected getRectanglePath(tl: Point2D, tr: Point2D, bl: Point2D, br: Point2D): string {
         return [
             p2d(tl, "M"),
             p2d(tr),
@@ -767,11 +769,9 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 .classed(ToolClasses.boundingBox, true);
         }
 
-        const d = [
-            p2d(compositeObject.topLeft, "M"),
-            p2d(compositeObject.topRight),
-            p2d(compositeObject.bottomRight),
-            p2d(compositeObject.bottomLeft), "Z"].join(" ");
+        // Composite defines it's own refrence system and thus
+        // it's the only one that uses a translated g
+        const d = `M 0 0 L ${compositeObject.width} 0 L ${compositeObject.width} ${compositeObject.height} L 0 ${compositeObject.height} Z`
         c.attr("d", d);
     }
 
@@ -802,9 +802,11 @@ export class SvgObjectRenderer extends ObjectRenderer {
     public updateHandle(object: GrObject, id: string, p: Point2D) {
         const g = this.getObject(this._objectLayer, object);
         if (g) {
-            g.select(`#${object.uniqueName}-handle-${id}`)
-                .attr("cx", p.x)
-                .attr("cy", p.y);
+            if (object.type !== ObjectType.Composite) {
+                g.select(`#${object.uniqueName}-handle-${id}`)
+                    .attr("cx", p.x)
+                    .attr("cy", p.y);
+            }
         }
     }
 
@@ -814,9 +816,16 @@ export class SvgObjectRenderer extends ObjectRenderer {
             this._objectInfo[object.uniqueName].handles.push(p);
             const handle = g.append("circle");
 
-            handle.attr("cx", p.x)
-                .attr("cy", p.y)
-                .attr("r", AppConfig.SVG.transformationHandleSize);
+            if (object.type === ObjectType.Composite) {
+                const l = object as GrCompositeObject;
+                handle.attr("cx", p.x - l.x + l.width / 2)
+                    .attr("cy", p.y - l.y + l.height / 2)
+                    .attr("r", AppConfig.SVG.transformationHandleSize);
+            } else {
+                handle.attr("cx", p.x)
+                    .attr("cy", p.y)
+                    .attr("r", AppConfig.SVG.transformationHandleSize);
+            }
 
             handle.data<Point2D>([p])
                 .attr("id", `${object.uniqueName}-handle-${id}`)

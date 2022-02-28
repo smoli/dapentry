@@ -10,6 +10,44 @@ export enum AspectRatio {
     ar16_9
 }
 
+export function getWidthForHeight(height: number, ar: AspectRatio) {
+    switch (ar) {
+        case AspectRatio.ar1_1:
+            return height;
+
+        case AspectRatio.ar3_2:
+            return 3 * height / 2;
+
+        case AspectRatio.ar4_3:
+            return 4 * height / 3;
+
+        case AspectRatio.ar16_10:
+            return 16 * height / 10;
+
+        case AspectRatio.ar16_9:
+            return 16 * height / 9;
+    }
+}
+
+export function getHeightForWidth(width: number, ar: AspectRatio) {
+    switch (ar) {
+        case AspectRatio.ar1_1:
+            return width;
+
+        case AspectRatio.ar3_2:
+            return 2 * width / 3;
+
+        case AspectRatio.ar4_3:
+            return 3 * width / 4;
+
+        case AspectRatio.ar16_10:
+            return 10 * width / 16;
+
+        case AspectRatio.ar16_9:
+            return 9 * width / 16;
+    }
+}
+
 export class GrCanvas extends GrObject {
     private _width: number;
     private _height: number;

@@ -79,6 +79,7 @@ export class GrObjectList extends GrObject {
         }
     }
 
+
     at(where: WHERE_VALUE): (Point2D | string | number) {
         if (!this._objects.last) {
             return null;
