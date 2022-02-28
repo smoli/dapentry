@@ -38,7 +38,16 @@ import {deSerializeDNDInfo, DnDDataType, makeDnDHandlers} from "../dnd/DnDInfo";
 
 export default {
   name: "ArrayInput",
-  components: { GrowingInput, AtRegisterInput, PointInput, NumberInput, StringInput, SimpleInput, ExpressionInput, Static },
+  components: {
+    GrowingInput,
+    AtRegisterInput,
+    PointInput,
+    NumberInput,
+    StringInput,
+    SimpleInput,
+    ExpressionInput,
+    Static
+  },
   props: ["content"],
   inject: ["controller"],
 
@@ -51,7 +60,7 @@ export default {
 
   computed: {
     placeHolder() {
-        return `List(${this.content.token.value.length})`
+      return `List(${this.content.token.value.length})`
     },
 
     displayedSegment() {
@@ -70,7 +79,7 @@ export default {
 
   methods: {
     onSwitchMode() {
-        this.listMode = !this.listMode;
+      this.listMode = !this.listMode;
     },
 
     prevIndex() {
@@ -86,7 +95,7 @@ export default {
     },
 
     onSingleRepFocus(event) {
-        event.target.value = "";
+      event.target.value = "";
     },
 
     onSingleRepChange(event) {

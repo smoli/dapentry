@@ -61,14 +61,20 @@ export default {
       this.$refs["fieldName"].blur();
     },
 
-    onDragStart(event: DragEvent) {
+    onDragStart: function (event: DragEvent) {
+
+      let type = DnDDataType.Register;
+
+      if (Array.isArray(this.field.value)) {
+        type = DnDDataType.ArrayRegister;
+      }
 
       const info: DnDInfo = {
         value1: this.field.name,
-        type: DnDDataType.Register
+        type: type
       }
 
-      event.dataTransfer.setData(DnDDataType.Register, serializeDNDInfo(info));
+      event.dataTransfer.setData(type, serializeDNDInfo(info));
 
     }
 
