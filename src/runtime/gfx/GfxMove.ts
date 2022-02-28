@@ -1,4 +1,3 @@
-import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
 import {Point2Parameter} from "../interpreter/types/Point2Parameter";
 import {GrObject, POI} from "../../geometry/GrObject";
@@ -99,11 +98,10 @@ export class GfxMove extends GfxOperation {
         if (this._targetPoint.name === this._referencePoint.name) {
             // Same Object:
             if (this.target instanceof GrObjectList) {
-                console.log(this.target.objects.length);
                 // @ts-ignore
-                from = this.target.objects[this.target.objects.length - 2].at(this._targetPoint.where) as Point2D;
+                to = this.target.objects[this.target.objects.length - 2].at(this._referencePoint.where) as Point2D;
                 // @ts-ignore
-                to = this.target.objects[this.target.objects.length - 1].at(this._referencePoint.where) as Point2D;
+                from = this.target.objects[this.target.objects.length - 1].at(this._targetPoint.where) as Point2D;
             } else {
                 return new Point2D(0, 0);
             }
