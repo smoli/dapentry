@@ -129,7 +129,7 @@
   = Name { return { type: TokenTypes.NAME, value: text() } }
 
   PropRegister "PropRegister"
-  = "(" reg:Name ")" { return { type: TokenTypes.REGISTER, value: reg }}
+  = "(" reg:Eval ")" { return reg }
 
    Register "Register"
       = nonlocal:"^"? reg:Name {

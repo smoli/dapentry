@@ -1,5 +1,6 @@
 import {Operation} from "../Operation";
 import {LabelParameter, Parameter} from "../Parameter";
+import {Interpreter} from "../Interpreter";
 import {FunctionStackFrame} from "../FunctionStackFrame";
 
 export class Call extends Operation {
@@ -38,7 +39,7 @@ export class Call extends Operation {
         return this._label.value
     }
 
-    async execute(interpreter): Promise<any> {
+    async execute(interpreter: Interpreter): Promise<any> {
         const returnPoint = interpreter.pc;
         const newFrame: FunctionStackFrame = new FunctionStackFrame(null, returnPoint, this._receiver);
         interpreter.pushStack(newFrame);

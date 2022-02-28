@@ -11,8 +11,9 @@ import {UNREACHABLE} from "../../core/Assertions";
 
 export class GfxMove extends GfxOperation {
     private _vector: Point2Parameter;
-    private _targetPoint: string | number;
-    private _referencePoint: string | number;
+    private _targetPoint: Parameter;
+    private _targetPOI: string;
+    private _referencePoint: Parameter;
     private _reference: Parameter;
 
 
@@ -47,28 +48,32 @@ export class GfxMove extends GfxOperation {
                 break;
 
             case "P2":
-                this._targetPoint = "center";
+                this._targetPOI = "center";
+                this._targetPoint = new Parameter(false, "center");
                 this._vector = b as Point2Parameter;
                 break;
 
             case "@2":
                 atA = a as AtParameter
-                this._targetPoint = atA.where;
+                this._targetPoint = atA;
+                this._targetPOI = atA.where;
                 this._vector = b as Point2Parameter;
                 break;
 
             case "P@":
                 reference = new Parameter(true, b.name);
                 this._reference = reference;
-                this._targetPoint = "center";
-                this._referencePoint = (b as AtParameter).where;
+                this._targetPOI = "center";
+                this._targetPoint = new Parameter(false, "center");
+                this._referencePoint = (b as AtParameter);
                 break;
 
             case "@@":
                 reference = new Parameter(true, b.name);
                 this._reference = reference;
-                this._targetPoint = (a as AtParameter).where;
-                this._referencePoint = (b as AtParameter).where;
+                this._targetPoint = (a as AtParameter);
+                this._targetPOI = (a as AtParameter).where;
+                this._referencePoint = (b as AtParameter);
 
                 break;
 
@@ -78,7 +83,7 @@ export class GfxMove extends GfxOperation {
 
     }
 
-    get reference():GrObject {
+    get reference(): GrObject {
         return this._reference.finalized(this.closure);
     }
 
@@ -87,36 +92,41 @@ export class GfxMove extends GfxOperation {
             return this._vector.finalized(this.closure);
         }
 
-        let target = this.target;
-        let reference = this.reference;
+        let from = this.targetPoint;
+        let to = this.referencePoint;
 
-        if (target === reference) {
-            if (target instanceof GrObjectList) {
-                reference = target.objects[target.objects.length - 2];
-                target = target.objects[target.objects.length - 1];
+
+        if (this._targetPoint.name === this._referencePoint.name) {
+            // Same Object:
+            if (this.target instanceof GrObjectList) {
+                console.log(this.target.objects.length);
+                // @ts-ignore
+                from = this.target.objects[this.target.objects.length - 2].at(this._targetPoint.where) as Point2D;
+                // @ts-ignore
+                to = this.target.objects[this.target.objects.length - 1].at(this._referencePoint.where) as Point2D;
             } else {
                 return new Point2D(0, 0);
             }
         }
 
-        const from = target.at(this._targetPoint) as Point2D;
-        const to = reference.at(this._referencePoint) as Point2D;
-
         return to.copy.sub(from);
     }
 
+    get targetPoint(): Point2D {
+        return this._targetPoint.finalized(this.closure);
+    }
+
+    get referencePoint(): Point2D {
+        return this._referencePoint.finalized(this.closure);
+    }
+
     async execute(): Promise<any> {
-        let poi = this._targetPoint
-        if (typeof poi === "number") {
+        let poi = this._targetPOI;
+        if (!isNaN(Number(poi))) {
             poi = "center";
         }
 
-        poi = POI[poi];
-
-        if (this.target instanceof GrObjectList) {
-            this.target.objects[this.target.objects.length - 1].movePOI(poi as POI, this.vector);
-        } else {
-            this.target.movePOI(poi as POI, this.vector);
-        }
+        const p = POI[poi];
+        this.target.movePOI(p, this.vector);
     }
 }

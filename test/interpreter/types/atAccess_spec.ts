@@ -25,6 +25,24 @@ describe('at-access', () => {
 
         expect(i.getRegister("r1")).to.equal("At(12)")
         expect(i.getRegister("r2")).to.equal("At(hello)")
+    });
 
+    it('can use an expression', async () => {
+        const code = `
+            LOAD r1, 2
+            LOAD r2, test@(r1)             
+            LOAD r3, test@(r1 * 2 + 1)             
+            LOAD r4, test@(r1 * r1)             
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run({
+            test: new AtTester()
+        });
+
+        expect(i.getRegister("r2")).to.equal("At(2)")
+        expect(i.getRegister("r3")).to.equal("At(5)")
+        expect(i.getRegister("r4")).to.equal("At(4)")
     });
 });

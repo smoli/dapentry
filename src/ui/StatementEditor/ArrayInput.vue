@@ -9,7 +9,7 @@
       <component :is="displayedSegment.type"
                  :content="displayedSegment" @change="onChange"></component>
       <button class="drawable-array-input-iterator" v-if="itemCount > 1" @click="nextIndex">&gt;</button>
-      <span class="drawable-array-input-index">{{ displayedIndex }}/{{ itemCount }}</span>
+      <span class="drawable-array-input-index" v-if="itemCount > 1">{{ displayedIndex + 1 }}/{{ itemCount }}</span>
     </span>
     <span v-else>
       <GrowingInput :value="placeHolder"
@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       displayedIndex: 0,
-      listMode: false
+      listMode: this.content.token.value.length === 1
     }
   },
 

@@ -204,7 +204,7 @@ function peg$parse(input, options) {
       peg$c34 = peg$otherExpectation("PropName"),
       peg$c35 = function() { return { type: TokenTypes.NAME, value: text() } },
       peg$c36 = peg$otherExpectation("PropRegister"),
-      peg$c37 = function(reg) { return { type: TokenTypes.REGISTER, value: reg }},
+      peg$c37 = function(reg) { return reg },
       peg$c38 = peg$otherExpectation("Register"),
       peg$c39 = "^",
       peg$c40 = peg$literalExpectation("^", false),
@@ -1205,7 +1205,7 @@ function peg$parse(input, options) {
       if (peg$silentFails === 0) { peg$fail(peg$c17); }
     }
     if (s1 !== peg$FAILED) {
-      s2 = peg$parseName();
+      s2 = peg$parseEval();
       if (s2 !== peg$FAILED) {
         if (input.charCodeAt(peg$currPos) === 41) {
           s3 = peg$c18;
