@@ -5,6 +5,7 @@ import {createAppStore} from "../../src/state/AppStore";
 import {MockController} from "../testHelpers/mock_controller";
 import {UpdateStatement} from "../../src/actions/UpdateStatement";
 import {LoopStatements} from "../../src/actions/LoopStatements";
+import {AppConfig} from "../../src/core/AppConfig";
 
 describe('Loop statement', () => {
 
@@ -25,7 +26,7 @@ describe('Loop statement', () => {
 
         expect(state.store.state.code.code).to.deep.equal([
             "LOAD r1, 10",
-            "DO 2",
+            "DO " + AppConfig.Actions.LoopStatements.iterations,
             "ADD r1, 2",
             "ADD r1, 3",
             "ENDDO"
@@ -140,7 +141,7 @@ describe('Loop statement', () => {
             "ADD r1, 2",
             "ADD r1, 3",
             "ENDEACH",
-            "DO 2",
+            "DO " + AppConfig.Actions.LoopStatements.iterations,
             "ADD r1, 4",
             "ENDDO"
         ])

@@ -1,6 +1,7 @@
 import {BaseAction} from "./BaseAction";
 import {CodeManager} from "../runtime/CodeManager";
 import {ASSERT} from "../core/Assertions";
+import {AppConfig} from "../core/AppConfig";
 
 export class LoopStatements extends BaseAction {
     private _indexes: Array<number>;
@@ -40,7 +41,7 @@ export class LoopStatements extends BaseAction {
             return;
         }
 
-        this.state.insertStatements(from, "DO 2");
+        this.state.insertStatements(from, `DO ${AppConfig.Actions.LoopStatements.iterations}`);
         this.state.insertStatements(to + 2, "ENDDO");  // + 2 because indexes change when inserting "DO"
     }
 

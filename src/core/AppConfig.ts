@@ -23,6 +23,13 @@ export const AppConfig = {
         NumericDragModifierName: "ctrlKey"
     },
 
+    Actions: {
+        LoopStatements: {
+            iterations: 4
+        }
+
+    },
+
     Tools: {
         AxisAlignmentThreshold: 20,
         ObjectSnappingStep: 0.05,
