@@ -33,7 +33,10 @@ export class DrawLibraryInstance extends DrawRectangle {
     protected getResult(): any {
 
         const point = this.makePointCodeFromSnapInfo(this._firstSnap || this._waitSnap);
-        let statement =  `MAKE ${this._name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${this._rect?.width || 0}, ${point}`;
+
+        const w = this._rect?.width || 0
+
+        let statement =  `MAKE ${this._name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${w.toFixed(2)}, ${point}`;
 
         this._libraryEntry.arguments.forEach(arg => {
             statement += ", " + JSON.stringify(arg.default);
