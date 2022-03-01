@@ -14,6 +14,7 @@ export default {
 
         <section>
           <h3>Published objects</h3>
+          <span>Guides are will always be included as unpublished.</span><br/>
           <div class="drawable-form-validation-message">{{ validation.messageFor.publishedObjects }}</div>
           <span class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
               <input :id="'cbx' + i" type="checkbox" v-model="obj.use"/>
@@ -75,10 +76,10 @@ export default {
                 }
             }),
             publishedObjects: this.$store.state.drawing.objects
-                .filter(object => object.type !== ObjectType.Canvas)
+                .filter(object => object.type !== ObjectType.Canvas && !object.isGuide)
                 .map(object => {
                     return {
-                        use: false,
+                        use: true,
                         object
                     }
                 }),
