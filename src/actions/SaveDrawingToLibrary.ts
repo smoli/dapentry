@@ -37,6 +37,14 @@ export class SaveDrawingToLibrary extends BaseAction {
 
 
     protected makePostData(data): APILibraryEntryPOST {
+
+        const convert = v => {
+            if (Array.isArray(v)) {
+                return JSON.stringify(v);
+            }
+            return v;
+        }
+
         return {
             name: data.name,
             description: data.description,
@@ -46,7 +54,7 @@ export class SaveDrawingToLibrary extends BaseAction {
                 return {
                     name: arg.field.name,
                     description: arg.description,
-                    default: "" + JSON.stringify(arg.field.value),
+                    default: "" + convert(arg.field.value),
                     public: arg.public
                 }
             })

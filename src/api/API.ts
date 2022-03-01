@@ -78,7 +78,13 @@ export class API {
 
     static convertAPILibraryEntry(data: any): LibraryEntry {
         const convert = v => {
-            const p = JSON.parse(v);
+            let p;
+
+            try {
+                p = JSON.parse(v);
+            } catch(e) {
+                p = v;
+            }
 
             if (Array.isArray(p)) {
                 return p.map(v => convert(v));

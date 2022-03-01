@@ -1,11 +1,12 @@
 import {
     HandleMouseCallBack,
-    InfoHandle, MouseHandler,
+    InfoHandle,
+    MouseHandler,
     ObjectRenderer,
     POICallback,
     RenderLayer
 } from "../../../src/core/ObjectRenderer";
-import {GrObject, POI} from "../../../src/geometry/GrObject";
+import {GrObject, POI, POIPurpose} from "../../../src/geometry/GrObject";
 import {GrBezier, GrPolygon, GrQuadratic} from "../../../src/geometry/GrPolygon";
 import {GrCircle} from "../../../src/geometry/GrCircle";
 import {Point2D} from "../../../src/geometry/Point2D";
@@ -34,13 +35,17 @@ export class MockRenderer extends ObjectRenderer {
         if (this._poiCallback) {
             this._snapObject = object;
             this._snapPoi = poiId;
-            this._poiCallback(object, poiId, true)
+            this._poiCallback(object, poiId, object.pointsOfInterest(POIPurpose.MANIPULATION)[poiId], true)
         }
     }
 
     unHitLastPoi() {
         if (this._poiCallback && this._snapObject) {
-            this._poiCallback(this._snapObject, this._snapPoi, false);
+            this._poiCallback(
+                this._snapObject,
+                this._snapPoi,
+                this._snapObject.pointsOfInterest(POIPurpose.MANIPULATION)[this._snapPoi],
+                false);
             this._snapObject = null;
         }
     }

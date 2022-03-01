@@ -43,6 +43,7 @@ export class Persistence {
         const response: APIResponse = await API.getLibraryEntries();
 
         // Todo: Error checking
+        console.log(response.data);
 
         return response.data;
     }

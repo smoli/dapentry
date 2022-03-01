@@ -1,7 +1,6 @@
 import {Operation} from "../../Operation";
 import {Parameter} from "../../Parameter";
 import {ArrayIterator} from "../../types/ArrayIterator";
-import {StackFrame} from "../../StackFrame";
 import {Interpreter} from "../../Interpreter";
 import {getParameterConfig} from "../../../gfx/GfxOperation";
 
@@ -105,9 +104,7 @@ export class ForEach extends Operation {
 }
 
 export class EndForEach extends Operation {
-
     async execute(interpreter: Interpreter): Promise<any> {
-
         const info = ForEach.topLoopInfo;
 
         info.iterator.next();
@@ -121,8 +118,6 @@ export class EndForEach extends Operation {
         } else {
             ForEach.endEach(interpreter);
         }
-
-
     }
 
 }

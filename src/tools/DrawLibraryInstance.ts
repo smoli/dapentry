@@ -33,7 +33,13 @@ export class DrawLibraryInstance extends DrawRectangle {
         let statement =  `MAKE ${this._name}, "${this._libraryEntry.name}", ${AppConfig.Runtime.styleRegisterName}, ${w.toFixed(2)}, ${point}`;
 
         this._libraryEntry.arguments.forEach(arg => {
-            statement += ", " + JSON.stringify(arg.default);
+            let v = arg.default;
+
+            if (Array.isArray(v)) {
+                v = JSON.stringify(v);
+            }
+
+            statement += ", " + v;
         })
 
         return statement;
