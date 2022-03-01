@@ -41,14 +41,21 @@ export class Persistence {
     async loadLibrary():Promise<Array<LibraryEntry>> {
         const response: APIResponse = await API.getLibraryEntries();
 
-        const r =  response.data.map(e => {
+        const r:Array<LibraryEntry> =  response.data.map(e => {
             return {
                 ...e,
                 aspectRatio: AspectRatio[e.aspect],
-                arguments: e.arguments.map(arg => {
+                arguments: e.arguments.filter(a => !!a.public).map(arg => {
                     return {
                         ...arg,
-                        default: JSON.parse(arg.default)
+                        default: JSON.parse(arg.default),
+
+                    }
+                }),
+                fields:e.arguments.filter(a => !a.public).map(arg => {
+                    return {
+                        ...arg,
+                        default: JSON.parse(arg.default),
                     }
                 })
             }

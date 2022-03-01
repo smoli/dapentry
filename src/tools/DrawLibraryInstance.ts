@@ -1,14 +1,8 @@
-import {state} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEvents} from "../core/InteractionEvents";
-import {SnapInfo, Tool} from "./Tool";
-import {Point2D} from "../geometry/Point2D";
 import {LibraryEntry} from "../core/Library";
 import {GrObject} from "../geometry/GrObject";
 import {AppConfig} from "../core/AppConfig";
-import {RenderLayer} from "../core/ObjectRenderer";
-import {GrRectangle} from "../geometry/GrRectangle";
 import {DrawRectangle} from "./DrawRectangle";
-import {AspectRatio, getHeightForWidth} from "../geometry/GrCanvas";
+import {getHeightForWidth} from "../geometry/GrCanvas";
 
 
 export class DrawLibraryInstance extends DrawRectangle {

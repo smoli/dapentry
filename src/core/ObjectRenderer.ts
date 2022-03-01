@@ -35,7 +35,7 @@ import {GrText} from "../geometry/GrText";
  */
 export type ObjectClickCallback = (object: GrObject) => void;
 
-export type POICallback = (object:GrObject, poiId:number, hit:boolean) => void;
+export type POICallback = (object:GrObject, poiId:number, point: Point2D, hit:boolean) => void;
 
 export type MouseHandler = (MouseEvent) => void;
 

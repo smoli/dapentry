@@ -13,7 +13,7 @@ export default {
         <div class="drawable-form-validation-message">{{ validation.messageFor.description }}</div>
 
         <section>
-          <h3>Which objects should be published?</h3>
+          <h3>Published objects</h3>
           <div class="drawable-form-validation-message">{{ validation.messageFor.publishedObjects }}</div>
           <span class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
               <input :id="'cbx' + i" type="checkbox" v-model="obj.use"/>
@@ -22,9 +22,11 @@ export default {
         </section>
         <section>
           <h3>Arguments of the drawing</h3>
+          <span>Public args can be changed when reusing the drawing.</span>
           <table>
             <thead>
             <tr>
+              <th>pub</th>
               <th>Name</th>
               <th>Description</th>
               <th>Default Value</th>
@@ -33,13 +35,16 @@ export default {
             <tbody>
             <tr v-for="arg of arguments">
               <td>
+                <input v-model="arg.public" type="checkbox"/>
+              </td>
+              <td>
                 {{ arg.field.name }}
               </td>
               <td>
-                <input value="" :placeholder="'What does ' + arg.field.name + 'do ...'" v-model="arg.description"/>
+                <input value="" :placeholder="'What does ' + arg.field.name + ' do ...'" v-model="arg.description"/>
               </td>
               <td>
-                {{ arg.field.value }}
+                <span>{{ arg.field.value }}</span>
               </td>
             </tr>
             </tbody>
@@ -65,7 +70,8 @@ export default {
             arguments: this.$store.state.data.fields.map(field => {
                 return {
                     description: "",
-                    field
+                    field,
+                    public: false
                 }
             }),
             publishedObjects: this.$store.state.drawing.objects

@@ -21,6 +21,7 @@ export interface LibraryEntry {
     version?: string,
     aspectRatio: AspectRatio,
     arguments: Array<LibraryEntryArgument>,
+    fields: Array<LibraryEntryArgument>,
     code: string
 }
 

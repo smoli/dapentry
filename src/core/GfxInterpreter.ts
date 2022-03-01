@@ -10,7 +10,7 @@ import {GfxMove} from "../runtime/gfx/GfxMove";
 import {GfxRotate} from "../runtime/gfx/GfxRotate";
 import {GfxFill} from "../runtime/gfx/GfxFill";
 import {GfxStroke} from "../runtime/gfx/GfxStroke";
-import {GrObject, POI} from "../geometry/GrObject";
+import {GrObject} from "../geometry/GrObject";
 import {GfxComposite, GfxObjectList} from "../runtime/gfx/GfxObject";
 import {GfxScale} from "../runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "../runtime/gfx/GfxExtendPolygon";
@@ -100,7 +100,7 @@ export class GfxInterpreter extends Interpreter {
         if (this._library) {
             // This operation makes only sense if the interpreter has a library.
             // This basically prevents nested instantiation for now.
-            // TODO: Do we want nested instantiation? How do we prevent recursion?
+            // TODO: Do we want nested instantiation? How do we prevent to many recursions?
             this.addOperation("MAKE", makeGfxOperation(GfxMake, objCallback));
         }
 
@@ -180,7 +180,7 @@ class GfxMake extends GfxOperation {
 
 
     protected getScopeCode(): Array<string> {
-        return this._entry.arguments.map((field, i) => {
+        const code = this._entry.arguments.map((field, i) => {
             const arg = this._args && this._args[i];
             let v = field.default;
             if (arg) {
@@ -192,6 +192,12 @@ class GfxMake extends GfxOperation {
             }
             return `LOAD ${field.name}, ${v}`;
         });
+
+        code.push(...this._entry.fields.map(field => {
+            return `LOAD ${field.name}, ${field.default}`;
+        }))
+
+        return code;
     }
 
     protected setup(outerInterpreter: GfxInterpreter) {
@@ -208,26 +214,6 @@ class GfxMake extends GfxOperation {
         this._canvas = GrCanvas.create(this._entry.aspectRatio, this._width.finalized(this.closure));
     }
 
-    protected getScope(): { [key: string]: any } {
-        const ret = {};
-
-        if (!this._entry) {
-            return {};
-        }
-
-        let i = 0;
-        for (const k of this._entry.arguments) {
-            const arg = this._args && this._args[i];
-            if (arg) {
-                ret[k.name] = arg.finalized(this.closure);
-            } else {
-                ret[k.name] = k.default;
-            }
-            i++;
-        }
-
-        return ret;
-    }
 
     get styles(): any {
         return this._styles.finalized(this.closure);

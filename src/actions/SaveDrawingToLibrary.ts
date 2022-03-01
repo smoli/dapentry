@@ -2,7 +2,6 @@ import {BaseAction} from "./BaseAction";
 import {DialogCloseReason} from "../ui/core/ModalFactory";
 import SaveDrawingDialog, {SaveDrawingHandler} from "../ui/SaveDrawing/SaveDrawingDialog";
 import {AspectRatio} from "../geometry/GrCanvas";
-import {AppConfig} from "../core/AppConfig";
 import {API} from "../api/API";
 
 
@@ -11,7 +10,7 @@ interface APILibraryEntryPOST {
     description: string,
     code: string,
     aspect: string,
-    arguments: Array<{ name: string, description: string, default: string }>
+    arguments: Array<{ name: string, description: string, default: string, public: true }>
 }
 
 
@@ -47,7 +46,8 @@ export class SaveDrawingToLibrary extends BaseAction {
                 return {
                     name: arg.field.name,
                     description: arg.description,
-                    default: "" + JSON.stringify(arg.field.value)
+                    default: "" + JSON.stringify(arg.field.value),
+                    public: arg.public
                 }
             })
         }
