@@ -25,7 +25,6 @@ import {AddStatementToSelection} from "../actions/AddStatementToSelection";
 import {DeleteStatements} from "../actions/DeleteStatements";
 import {DeleteObjects} from "../actions/DeleteObjects";
 import {LibraryEntry} from "./Library";
-import SaveDrawingDialog, {SaveDrawingHandler} from "../ui/SaveDrawing/SaveDrawingDialog";
 import {SaveDrawingToLibrary} from "../actions/SaveDrawingToLibrary";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
@@ -94,6 +93,7 @@ export class AppController {
     private _poiAvailable: boolean;
     private _modalFactory: ModalFactory;
     private _defaultDrawingHeight: number;
+    private _guides: { [key: string]: boolean } = {};
 
     constructor(state: State,
                 interpreter: GfxInterpreter,
@@ -180,6 +180,7 @@ export class AppController {
         });
         this._performance.now("computed");
         this.updateSelection();
+        this.updateGuides();
     }
 
     /**
@@ -197,6 +198,14 @@ export class AppController {
 
         this.state.deselectAll();
         newSelection.forEach(o => this.state.selectObject(o));
+    }
+
+    protected updateGuides() {
+        this._interpreter.objects.forEach(o => {
+            if (this._guides[o.uniqueName]) {
+                o.markAsGuide();
+            }
+        })
     }
 
     protected updateDrawing() {
@@ -418,6 +427,14 @@ export class AppController {
         }
     }
 
+    public makeSelectedObjectsGuides() {
+        this._state.selection.forEach(o => {
+            this._guides[o.uniqueName] = true;
+            o.markAsGuide();
+        });
+        this.updateDrawing();
+    }
+
     public switchTool(newTool: ToolNames, ...params: Array<any>) {
         this._state.switchTool(newTool, ...params);
     }
@@ -488,6 +505,8 @@ export class AppController {
             this._state.switchTool(ToolNames.Rotate);
         } else if (event.key === AppConfig.Keys.ScaleKey) {
             this._state.switchTool(ToolNames.Scale);
+        } else if (event.key === AppConfig.Keys.MarkAsGuideKey) {
+            this.makeSelectedObjectsGuides();
         } else {
             this.passKeyPressToTool(event);
         }

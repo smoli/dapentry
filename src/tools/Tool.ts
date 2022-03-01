@@ -1,9 +1,8 @@
 import {state, StateMachine} from "../runtime/tools/StateMachine";
-import {InteractionEventData, InteractionEventKind, InteractionEvents} from "../core/InteractionEvents";
+import {InteractionEventData, InteractionEvents} from "../core/InteractionEvents";
 import {InfoHandle, ObjectRenderer} from "../core/ObjectRenderer";
-import {GrObject, POI, POIPurpose} from "../geometry/GrObject";
+import {GrObject, POI} from "../geometry/GrObject";
 import {Point2D} from "../geometry/Point2D";
-import {GrObjectList} from "../geometry/GrObjectList";
 import {AppConfig} from "../core/AppConfig";
 
 export interface SnapInfo {
@@ -242,17 +241,19 @@ export abstract class Tool {
 
         let handle;
 
-        const lObjToExclude = objectsToExclude.filter(o => ( o instanceof GrObjectList && o.objects.length < 2 ) || !( o instanceof GrObjectList ));
+        // const lObjToExclude = objectsToExclude.filter(o => ( o instanceof GrObjectList && o.objects.length < 2 ) || !( o instanceof GrObjectList ));
+
+        const lObjToExclude = [];
 
         if (this._target) {
             lObjToExclude.push(this._target);
         }
 
-        this._renderer.enablePOI(true, (object: GrObject, poiId: number, hit: boolean) => {
+        this._renderer.enablePOI(true, (object: GrObject, poiId: number, point: Point2D, hit: boolean) => {
             if (hit) {
                 this._snappingObject = object;
                 this._snappingPOI = poiId;
-                this._snapPoint = this._snappingObject.pointsOfInterest(POIPurpose.SNAPPING)[this._snappingPOI]
+                this._snapPoint = point;
                 handle = this._renderer.renderInfoText(this._snapPoint, POI[poiId]);
             } else {
                 this._snapPoint = this._snappingPOI = this._snappingObject = null;

@@ -27,14 +27,16 @@ enum ToolClasses {
     object = "grObject",
     handle = "transformationHandle",
     poi = "pointOfInterest",
-    boundingBox = "boundingBox"
+    boundingBox = "boundingBox",
+    guide = "guide"
 }
 
 enum ToolClassSelectors {
     object = ".grObject",
     handle = ".transformationHandle",
     poi = ".pointOfInterest",
-    boundingBox = ".boundingBox"
+    boundingBox = ".boundingBox",
+    guide = ".guide"
 }
 
 interface ObjectInfo {
@@ -276,6 +278,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
             svgGroup.append("g").classed(ToolClasses.boundingBox, true);
             svgGroup.append("g").classed(ToolClasses.handle, true);
         }
+
+        svgGroup.classed(ToolClasses.guide, object.isGuide);
         return svgGroup;
     }
 
@@ -572,7 +576,13 @@ export class SvgObjectRenderer extends ObjectRenderer {
         if (!object.style) {
             return
         }
-        elem.attr("style", `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}; stroke-width: ${object.style.strokeWidth}`);
+
+        if (object.isGuide) {
+            elem.classed(ToolClasses.guide, object.isGuide);
+        } else {
+            elem.attr("style", `fill: ${object.style.fillColor}; fill-opacity: ${object.style.fillOpacity}; stroke: ${object.style.strokeColor}; stroke-width: ${object.style.strokeWidth}`);
+        }
+
     }
 
 

@@ -105,6 +105,7 @@ export abstract class GrObject {
 
     protected _uniqueName: string;
     protected _parent: GrObject = null;
+    protected _isGuide: boolean = false;
 
     protected _center: Point2D;
     protected _xAxis: Point2D = new Point2D(1, 0);
@@ -157,7 +158,14 @@ export abstract class GrObject {
         } else {
             GrObject.addName(this._uniqueName)
         }
+    }
 
+    public get isGuide():boolean {
+        return this._isGuide;
+    }
+
+    public markAsGuide() {
+        this._isGuide = true;
     }
 
     /**
@@ -173,6 +181,11 @@ export abstract class GrObject {
         copy._style = {...this._style};
         copy._xAxis = this._xAxis.copy;
         copy._yAxis = this._yAxis.copy;
+
+        if (this.isGuide) {
+            copy.markAsGuide();
+        }
+
         return copy;
     }
 

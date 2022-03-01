@@ -12,6 +12,8 @@ export const AppConfig = {
         MoveKey: "g",
         ScaleKey: "s",
 
+        MarkAsGuideKey: "h",
+
         NextStepCode: "ArrowDown",
         DeleteCode: "Delete",
         ObjectSnapCode: "Tab",
