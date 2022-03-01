@@ -42,44 +42,9 @@ export class Persistence {
     async loadLibrary():Promise<Array<LibraryEntry>> {
         const response: APIResponse = await API.getLibraryEntries();
 
-        const convert = v => {
-            const p = JSON.parse(v);
+        // Todo: Error checking
 
-            if (Array.isArray(p)) {
-                return p.map(v => convert(v));
-            }
-
-            const n = Number(p);
-
-            if (isNaN(n)) {
-                return v;
-            }
-
-            return n;
-        }
-
-        const r:Array<LibraryEntry> =  response.data.map(e => {
-            return {
-                ...e,
-                aspectRatio: AspectRatio[e.aspect],
-                arguments: e.arguments.filter(a => !!a.public).map(arg => {
-                    return {
-                        ...arg,
-                        default: convert(arg.default),
-
-                    }
-                }),
-                fields:e.arguments.filter(a => !a.public).map(arg => {
-                    return {
-                        ...arg,
-                        default: convert(arg.default),
-                    }
-                })
-            }
-        });
-        console.log(r);
-
-        return r;
+        return response.data;
     }
 
 

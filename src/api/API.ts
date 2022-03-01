@@ -1,4 +1,6 @@
 import {AppConfig} from "../core/AppConfig";
+import {LibraryEntry} from "../core/Library";
+import {AspectRatio} from "../geometry/GrCanvas";
 
 
 export type FetchFunc = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
@@ -12,11 +14,11 @@ export interface APIResponse {
 export class API {
     private static _fetch: FetchFunc;
 
-    static setFetch(value:FetchFunc) {
+    static setFetch(value: FetchFunc) {
         API._fetch = value;
     }
 
-    static get fetch():FetchFunc {
+    static get fetch(): FetchFunc {
         if (!API._fetch) {
             return window.fetch.bind(window);
         }
@@ -42,7 +44,7 @@ export class API {
         }
     }
 
-     static async doesNameExist(name: string): Promise<APIResponse> {
+    static async doesNameExist(name: string): Promise<APIResponse> {
 
         const response = await API.fetch(AppConfig.API.names + "/" + name, {
             headers: {
@@ -74,7 +76,47 @@ export class API {
         })
     }
 
-    static async getLibraryEntries():Promise<APIResponse> {
+    static convertAPILibraryEntry(data: any): LibraryEntry {
+        const convert = v => {
+            const p = JSON.parse(v);
+
+            if (Array.isArray(p)) {
+                return p.map(v => convert(v));
+            }
+
+            const n = Number(p);
+
+            if (isNaN(n)) {
+                return v;
+            }
+
+            return n;
+        }
+
+        const res = {
+            ...data,
+            aspectRatio: AspectRatio[data.aspect],
+            arguments: data.arguments.filter(a => !!a.public).map(arg => {
+                return {
+                    ...arg,
+                    default: convert(arg.default),
+
+                }
+            }),
+            fields: data.arguments.filter(a => !a.public).map(arg => {
+                return {
+                    ...arg,
+                    default: convert(arg.default),
+                }
+            })
+        }
+
+        delete res.aspect;
+
+        return res;
+    }
+
+    static async getLibraryEntries(): Promise<APIResponse> {
         const response = await fetch(`${AppConfig.API.library}`, {
             method: "GET",
             mode: "cors",
@@ -83,7 +125,10 @@ export class API {
             }
         });
 
-        return API.makeResponse(response, async () => response.json());
+        return API.makeResponse(response, async () => {
+            const r = await response.json() as Array<any>;
+            return r.map(r => API.convertAPILibraryEntry(r))
+        });
     }
 
 }
