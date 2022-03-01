@@ -64,17 +64,18 @@ export default {
     onDragStart: function (event: DragEvent) {
 
       let type = DnDDataType.Register;
-
-      if (Array.isArray(this.field.value)) {
-        type = DnDDataType.ArrayRegister;
-      }
-
       const info: DnDInfo = {
         value1: this.field.name,
         type: type
       }
 
       event.dataTransfer.setData(type, serializeDNDInfo(info));
+
+      if (Array.isArray(this.field.value)) {
+        info.type = type = DnDDataType.ArrayRegister;
+        event.dataTransfer.setData(type, serializeDNDInfo(info));
+      }
+
 
     }
 
