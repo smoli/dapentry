@@ -24,7 +24,7 @@ export const dataState = {
         dataCode(state: DataState) {
             return state.fields.map(field => {
                 if (Array.isArray(field.value)) {
-                    return `LOAD ${field.name}, [${field.value.join(", ")}]`;
+                    return `ITER ${field.name}, [${field.value.join(", ")}]`;
                 }
                 return `LOAD ${field.name}, ${field.value}`;
             });

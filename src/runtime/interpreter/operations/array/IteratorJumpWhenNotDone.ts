@@ -13,6 +13,20 @@ export class IteratorJumpWhenNotDone extends Operation {
         this._label = label;
     }
 
+    protected _getParam(param) {
+        let r = null;
+        if (param.isRegister) {
+            if (param.components) {
+                return this.closure.getRegisterWithComponents(param.name, param.components);
+            }
+            r = this.closure.getRegister(param.name);
+        } else {
+            r = param.value;
+        }
+
+        return r;
+    }
+
     get iterator(): ArrayIterator {
         return this._getParam(this._iterator);
     }

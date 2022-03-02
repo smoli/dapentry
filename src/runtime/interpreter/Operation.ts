@@ -1,6 +1,8 @@
 import {Interpreter} from "./Interpreter";
 import {StackFrame} from "./StackFrame";
 import {Parameter} from "./Parameter";
+import {ArrayIterator} from "./types/ArrayIterator";
+import {ArrayParameter} from "./types/ArrayParameter";
 
 export class Operation {
 
@@ -25,21 +27,32 @@ export class Operation {
 
 
     protected _getParam(param) {
+        let r = null;
         if (param.isRegister) {
             if (param.components) {
                 return this.closure.getRegisterWithComponents(param.name, param.components);
             }
-            return this.closure.getRegister(param.name);
+            r = this.closure.getRegister(param.name);
         } else {
-            return param.value;
+            r = param.value;
         }
+
+        if (r && r.finalized) {
+            r = r.finalized(this.closure);
+        }
+
+        return r;
     }
 
     protected _setParam(param: Parameter, value: any) {
-        if (param.components) {
-            return this.closure.setRegisterWithComponents(param.name, param.components, value);
+        let lValue = value;
+        if (value instanceof ArrayIterator) {
+            lValue = value.finalized(this.closure);
         }
-        return this.closure.setRegister(param.name, value, param.isNonLocal);
+        if (param.components) {
+            return this.closure.setRegisterWithComponents(param.name, param.components, lValue);
+        }
+        return this.closure.setRegister(param.name, lValue, param.isNonLocal);
     }
 
     async execute(interpreter: Interpreter): Promise<any> {

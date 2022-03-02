@@ -1,17 +1,18 @@
 import {Parameter} from "../Parameter";
-import {IInterpreterType} from "./IInterpreterType";
 import {ArrayParameter} from "./ArrayParameter";
 
 export interface IteratorState { index: number; value: any; done: boolean }
 
 export class ArrayIterator extends Parameter {
 
-    private _array: ArrayParameter;
+    private _array: Array<any>;
     private _index: number;
     private _max: number;
 
-    constructor(value:ArrayParameter) {
+    constructor(value:Array<any>) {
         super(false, null)
+
+
         this._array = value;
         this._index = 0;
         this._max = this._array.length
@@ -37,12 +38,20 @@ export class ArrayIterator extends Parameter {
         return this._array[index];
     }
 
+    get array():Array<any> {
+        return this._array;
+    }
+
     get index():number {
         return this._index;
     }
 
     get value():any {
         return this.atIndex(this._index);
+    }
+
+    reset() {
+        this._index = 0;
     }
 
     finalized(closure): any {

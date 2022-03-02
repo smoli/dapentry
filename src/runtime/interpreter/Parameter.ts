@@ -46,6 +46,10 @@ export class Parameter {
                 }
             }
         }
+        if (r && r.finalized) {
+            return r.finalized(closure)
+        }
+
         return r;
     }
 

@@ -61,7 +61,23 @@ export class ForEach extends Operation {
         }
 
         interpreter.popStack();
-        ForEach._info.pop();
+        const info = ForEach._info.pop();
+
+        info.iterator.reset();
+    }
+
+    protected _getParam(param) {
+        let r = null;
+        if (param.isRegister) {
+            if (param.components) {
+                return this.closure.getRegisterWithComponents(param.name, param.components);
+            }
+            r = this.closure.getRegister(param.name);
+        } else {
+            r = param.value;
+        }
+
+        return r;
     }
 
     get value(): any {
@@ -77,11 +93,19 @@ export class ForEach extends Operation {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const iterator = new ArrayIterator(this.value);
+        const v = this.value;
+        let iterator = v;
+        let loopValueName = null;
+
+        if (!(v instanceof ArrayIterator)) {
+            iterator = new ArrayIterator(v);
+            loopValueName = this._target.name;
+        }
+
+
         const labelName = "$FOREACH" + ForEach._info.length;
         interpreter.setLabel(labelName);
 
-        const loopValueName = this._target.name;
         let indexName = null;
         if (this._index) {
             indexName = this._index.name;
@@ -89,16 +113,18 @@ export class ForEach extends Operation {
 
         ForEach._info.push({
             label: labelName,
-            iterator,
-            loopValueName: loopValueName,
+            iterator: iterator as ArrayIterator,
+            loopValueName,
             indexName
         })
 
         const sf = interpreter.pushStack();
-        sf.setRegister(loopValueName, iterator.value);
+        if (loopValueName) {
+            sf.setRegister(loopValueName, iterator.value);
+        }
 
         if (indexName) {
-            sf.setRegister(indexName, iterator.index);
+            sf.setRegister(indexName, (iterator as ArrayIterator).index);
         }
     }
 }
@@ -110,7 +136,9 @@ export class EndForEach extends Operation {
         info.iterator.next();
 
         if (!info.iterator.done) {
-            this.closure.setRegister(info.loopValueName, info.iterator.value);
+            if (info.loopValueName) {
+                this.closure.setRegister(info.loopValueName, info.iterator.value);
+            }
             if (info.indexName) {
                 this.closure.setRegister(info.indexName, info.iterator.index);
             }

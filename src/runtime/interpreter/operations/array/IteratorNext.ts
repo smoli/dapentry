@@ -11,6 +11,20 @@ export class IteratorNext extends Operation {
         this._iterator = iterator;
     }
 
+    protected _getParam(param) {
+        let r = null;
+        if (param.isRegister) {
+            if (param.components) {
+                return this.closure.getRegisterWithComponents(param.name, param.components);
+            }
+            r = this.closure.getRegister(param.name);
+        } else {
+            r = param.value;
+        }
+
+        return r;
+    }
+
     get iterator(): ArrayIterator {
         return this._getParam(this._iterator);
     }

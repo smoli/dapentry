@@ -73,7 +73,7 @@ describe('Array', () => {
 
         await i.run();
 
-        expect(i.getRegister("r")).to.equal(2 * (1 + 2 + 3 + 4 + 5 + 6))
+        expect(i.getRegister("r")).to.equal(2 * ( 1 + 2 + 3 + 4 + 5 + 6 ))
 
     });
 
@@ -98,7 +98,7 @@ describe('Array', () => {
             a: [1, 2, 3, 4, 5, 6, 7]
         });
 
-        expect(i.getRegister("r")).to.equal(2 * (1 + 2 + 3 + 4 + 5 + 6))
+        expect(i.getRegister("r")).to.equal(2 * ( 1 + 2 + 3 + 4 + 5 + 6 ))
 
     });
 
@@ -125,6 +125,67 @@ describe('Array', () => {
 
     });
 
+    describe("Iterator as value", () => {
+
+        it("forEach can be used on a iterator directly", async () => {
+            const code = `
+            LOAD r1, 0
+            LOAD ar, [1, 2, 3]
+            ITER i, ar
+            
+            FOREACH i
+                ADD ^r1, i
+            ENDEACH            
+        `;
+
+            const i = new Interpreter();
+            i.parse(code);
+
+            await i.run();
+
+            expect(i.getRegister("r1")).to.equal(1 + 2 + 3);
+        })
+
+        it("iterator can be used as the value on \"right-hand side\"", async () => {
+            const code = `
+            LOAD ar, [1, 2, 3]
+            ITER i, ar
+            LOAD r1, i
+            NEXT i
+            LOAD r2, i
+            NEXT i
+            LOAD r3, i
+        `;
+            const i = new Interpreter();
+            i.parse(code);
+
+            await i.run();
+
+            expect(i.getRegister("r1")).to.equal(1)
+            expect(i.getRegister("r2")).to.equal(2)
+            expect(i.getRegister("r3")).to.equal(3)
+        });
+
+        it("iterator can be created directly on an array", async () => {
+            const code = `
+            ITER i, [1, 2, 3]
+            LOAD r1, i
+            NEXT i
+            LOAD r2, i
+            NEXT i
+            LOAD r3, i
+        `;
+            const i = new Interpreter();
+            i.parse(code);
+
+            await i.run();
+
+            expect(i.getRegister("r1")).to.equal(1)
+            expect(i.getRegister("r2")).to.equal(2)
+            expect(i.getRegister("r3")).to.equal(3)
+        });
+    })
+
     it("can be iterated over with foreach", async () => {
 
         const code = `
@@ -141,7 +202,7 @@ describe('Array', () => {
 
         await i.run();
 
-        expect(i.getRegister("r")).to.equal((1 + 2 + 3 + 4 + 5 + 6 + 7))
+        expect(i.getRegister("r")).to.equal(( 1 + 2 + 3 + 4 + 5 + 6 + 7 ))
         expect(i.getRegister("a")).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
         expect(i.getRegister("v")).to.be.undefined;
     });
@@ -164,7 +225,7 @@ describe('Array', () => {
         i.parse(code);
         await i.run();
 
-        expect(i.getRegister("r")).to.equal(3 * (1 + 2 + 3));
+        expect(i.getRegister("r")).to.equal(3 * ( 1 + 2 + 3 ));
     });
 
     it("iteration is provided the index as well", async () => {
@@ -183,8 +244,8 @@ describe('Array', () => {
         i.parse(code);
 
         await i.run();
-                     // actually 0 * 1 + 1 * 2 + 2 * 3 + 3 * 4 + 4 * 5 + 5 * 6 + 6 * 7
-        expect(i.getRegister("r")).to.equal((2 + 2 * 3 + 3 * 4 + 4 * 5 + 5 * 6 + 6 * 7))
+        // actually 0 * 1 + 1 * 2 + 2 * 3 + 3 * 4 + 4 * 5 + 5 * 6 + 6 * 7
+        expect(i.getRegister("r")).to.equal(( 2 + 2 * 3 + 3 * 4 + 4 * 5 + 5 * 6 + 6 * 7 ))
     });
 
 });

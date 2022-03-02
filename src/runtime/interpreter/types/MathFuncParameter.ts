@@ -1,5 +1,6 @@
 import {Parameter} from "../Parameter";
 import {Token, TokenTypes} from "../Parser";
+import {ArrayIterator} from "./ArrayIterator";
 
 
 export class MathFuncParameter extends Parameter {
@@ -13,9 +14,19 @@ export class MathFuncParameter extends Parameter {
     }
 
 
-
     finalized(closure): any {
-        const value = this._value.finalized(closure);
+        let value = null;
+
+        if (this._value instanceof Parameter && this._value.isRegister) {
+            value = closure.getRegister(this._value.name);
+
+            if (value instanceof ArrayIterator) {
+                value = value.array;
+            }
+        } else {
+            value = this._value.finalized(closure);
+        }
+
         if (!Array.isArray(value)) {
             return null
         }
@@ -23,16 +34,16 @@ export class MathFuncParameter extends Parameter {
         switch (this._name) {
 
             case "size":
-                    return value.length;
+                return value.length;
 
             case "max":
-                    return Math.max(...value);
+                return Math.max(...value);
 
             case "min":
-                    return Math.min(...value);
+                return Math.min(...value);
 
             case "avg":
-                    return value.reduce((a, b) => a + b) / value.length;
+                return value.reduce((a, b) => a + b) / value.length;
 
             case "median":
                 const s = [...value].sort((a, b) => a - b);

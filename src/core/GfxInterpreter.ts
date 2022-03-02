@@ -23,6 +23,7 @@ import {AppConfig} from "./AppConfig";
 import {GfxStrokeColor} from "../runtime/gfx/GfxStrokeColor";
 import {GfxFillOpacity} from "../runtime/gfx/GfxFillOpacity";
 import {GfxText} from "../runtime/gfx/GfxText";
+import {ArrayIterator} from "../runtime/interpreter/types/ArrayIterator";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -178,22 +179,53 @@ class GfxMake extends GfxOperation {
         this._interpreter = new GfxInterpreter(null);
     }
 
+    protected _getParam(param) {
+        let r = null;
+        if (param.isRegister) {
+            if (param.components) {
+                return this.closure.getRegisterWithComponents(param.name, param.components);
+            }
+            r = this.closure.getRegister(param.name);
+        } else {
+            r = param.value;
+        }
+
+        return r;
+    }
+
+
+    getArg(arg): any {
+        const v = this._getParam(arg);
+
+        if (Array.isArray(v)) {
+            return v.map(v => v instanceof Parameter ? this._getParam(v) : v)
+        }
+
+        return v;
+    }
 
     protected getScopeCode(): Array<string> {
         const code = this._entry.arguments.map((field, i) => {
             const arg = this._args && this._args[i];
             let v = field.default;
-            if (arg) {
-                v = arg.finalized(this.closure);
+            if (arg && arg.isRegister) {
+                v = this.getArg(arg)
+
+                if (v instanceof ArrayIterator) {
+                    v = v.array;
+                }
             }
 
             if (Array.isArray(v)) {
-                    return `LOAD ${field.name}, [${v.join(", ")}]`;
+                    return `ITER ${field.name}, [${v.join(", ")}]`;
             }
             return `LOAD ${field.name}, ${v}`;
         });
 
         code.push(...this._entry.fields.map(field => {
+            if (Array.isArray(field.default)) {
+                return `ITER ${field.name}, [${field.default.join(", ")}]`;
+            }
             return `LOAD ${field.name}, ${field.default}`;
         }))
 

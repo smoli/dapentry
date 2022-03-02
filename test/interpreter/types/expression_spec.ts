@@ -103,5 +103,18 @@ describe('Code can have expressions', () => {
         expect(i.getRegister("c")).to.equal(1 / 8);
     })
 
+    it("mathematical functions can be used on array iterators as well", async () => {
+
+        const code = `
+            LOAD a, [1, 2, 3, 4, 5, 6, 7, 8]
+            ITER i, a
+            LOAD c, 1 / max(i)
+        `
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(i.getRegister("c")).to.equal(1 / 8);
+    })
 
 });
