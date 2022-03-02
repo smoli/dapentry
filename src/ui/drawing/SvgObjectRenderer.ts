@@ -388,14 +388,31 @@ export class SvgObjectRenderer extends ObjectRenderer {
 
 
     private _renderLine(layer: d3.Selection<any, any, any, any>, line: GrLine, parent: Selection<any, any, any, any>, enableMouseEvents: boolean) {
-        const o = this.getObjectOrCreate(layer, line, "line", parent, enableMouseEvents);
+        const o = this.getObjectOrCreate(layer, line, "g", parent, enableMouseEvents);
 
-        const l = o.select(ToolClassSelectors.object);
+
+        const g = o.select(ToolClassSelectors.object);
+
+        let l = g.select(".lineActualLine");
+
+        if (l.empty()) {
+            l = g.append("line").classed("lineActualLine", true);
+        }
         l.attr("x1", line.x1);
         l.attr("y1", line.y1);
         l.attr("x2", line.x2);
         l.attr("y2", line.y2);
         this._createStyle(l, line);
+
+        let l2 = g.select(".lineSelectionHelper");
+        if (l2.empty()) {
+            l2 = g.append("line").classed("lineSelectionHelper", true);
+        }
+        l2.attr("x1", line.x1);
+        l2.attr("y1", line.y1);
+        l2.attr("x2", line.x2);
+        l2.attr("y2", line.y2);
+        l2.attr("style", `fill: none; stroke-opacity: 0.0001; stroke: ${line?.style?.strokeColor || 'coral'}; stroke-width: ${Math.max(10, line?.style?.strokeWidth || 0)}`);
 
 
         return l;
