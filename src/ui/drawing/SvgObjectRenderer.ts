@@ -414,7 +414,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         l2.attr("y2", line.y2);
         l2.attr("style", `fill: none; stroke-opacity: 0.0001; stroke: ${line?.style?.strokeColor || 'coral'}; stroke-width: ${Math.max(10, line?.style?.strokeWidth || 0)}`);
 
-
         return l;
     }
 
