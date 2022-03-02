@@ -13,7 +13,7 @@ export const statements = {
     "LINE": "Draw {1} from {3} to {4}",
     "LINEPP": "Draw {1} from {3} to {4}",
     "TEXT": "Draw {1} at {3} saying {4}",
-    "POLY": "Draw {1} with {3}",
+    "POLY": "Draw {1} with {3} closed {4}",
     "EXTPOLY": "Extend {1} with {2}",
     "QUAD": "Draw {1}",
     "MOVE": "Move {1} center by {2}",
