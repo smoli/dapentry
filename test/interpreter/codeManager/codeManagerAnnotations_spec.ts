@@ -11,8 +11,8 @@ describe('Code Manager - Annotations', () => {
         const code = `
                 LOAD r1, 20
                 LOAD r2, r1
-                LOAD lkjh, ( r1, 10 )
-                LOAD TESTtestTEST, [ r1, lkjh, 10, 10, 20, r1, 220, r2 ]
+                LOAD lkjh, (r1, 10)
+                LOAD TESTtestTEST, [r1, lkjh, 10, 10, 20, r1, 220, r2]
                 ADD r2, r2, r1
                 ITER iter, TESTtestTEST
             `;
@@ -22,8 +22,8 @@ describe('Code Manager - Annotations', () => {
         expect(m.annotatedCode).to.deep.equal([
             { originalLine: 0, code: "LOAD r1, 20", level: 0 },
             { originalLine: 1, code: "LOAD r2, r1", level: 0 },
-            { originalLine: 2, code: "LOAD lkjh, ( r1, 10 )", level: 0 },
-            { originalLine: 3, code: "LOAD TESTtestTEST, [ r1, lkjh, 10, 10, 20, r1, 220, r2 ]", level: 0 },
+            { originalLine: 2, code: "LOAD lkjh, (r1, 10)", level: 0 },
+            { originalLine: 3, code: "LOAD TESTtestTEST, [r1, lkjh, 10, 10, 20, r1, 220, r2]", level: 0 },
             { originalLine: 4, code: "ADD r2, r2, r1", level: 0 },
             { originalLine: 5, code: "ITER iter, TESTtestTEST", level: 0 }
         ]);
@@ -43,7 +43,7 @@ describe('Code Manager - Annotations', () => {
         const annotated = m.annotatedCode;
 
         expect(annotated).to.deep.equal([
-            { originalLine: 0, code: "RECT Rectangle1-Prev, $styles.default, ( 360, 500 ), 218, f1iter.value", level: 0 },
+            { originalLine: 0, code: "RECT Rectangle1-Prev, $styles.default, (360, 500), 218, f1iter.value", level: 0 },
             { originalLine: 2, code: "LOAD r1, 200", level: 0 }
         ]);
 
@@ -59,8 +59,8 @@ describe('Code Manager - Annotations', () => {
             const annotated = m.annotatedCode;
 
             expect(annotated).to.deep.equal([
-                { originalLine: 0, code: "CIRCLE Circle1, $styles.default, ( 224, 269 ), 74.43117626371358", level: 0 },
-                { originalLine: 1, code: "CIRCLE Circle2, $styles.default, ( 319, 493 ), 94.64142856064674", level: 0 },
+                { originalLine: 0, code: "CIRCLE Circle1, $styles.default, (224, 269), 74.43117626371358", level: 0 },
+                { originalLine: 1, code: "CIRCLE Circle2, $styles.default, (319, 493), 94.64142856064674", level: 0 },
                 { originalLine: 2, code: "MOVE Circle2@bottom, Circle1@top", level: 0 }
             ])
 
@@ -97,7 +97,7 @@ describe('Code Manager - Annotations', () => {
 
         expect(annotated).to.deep.equal([
             { originalLine: 0, code: "@EACH f1", level: 0 },
-            { originalLine: 9, code: "RECT Box1, $styles.default, ( 408.5, 395.5 ), 219, f1", level: 1 },
+            { originalLine: 9, code: "RECT Box1, $styles.default, (408.5, 395.5), 219, f1", level: 1 },
             { originalLine: 10, code: 'MOVE Box1, "bottom", Previous, "top"', level: 1 },
             { originalLine: 11, code: "LOAD r1, renault", level: 1 }
         ])

@@ -45,4 +45,20 @@ describe('at-access', () => {
         expect(i.getRegister("r3")).to.equal("At(5)")
         expect(i.getRegister("r4")).to.equal("At(4)")
     });
+
+    it("can use the iterator that acts as a value", async () => {
+        const code = `
+            ITER i, [7, 2, 3, 4, 5]
+            LOAD b, 2
+            LOAD r3, test@(b * i)
+            LOAD r3, test@(i * b)
+        `
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run({
+            test: new AtTester()
+        });
+
+        expect(i.getRegister("r3")).to.equal("At(14)")
+    });
 });

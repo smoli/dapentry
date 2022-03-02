@@ -46,8 +46,7 @@ export class Parser {
     public static constructCodeLine(tokens: Array<Token>): string {
         let sep = " "
 
-        const construct = (token, newSep = ", ") => {
-            let oldSep = sep;
+        const construct = (token) => {
 
             switch (token.type) {
                 case TokenTypes.OPCODE:
@@ -58,52 +57,40 @@ export class Parser {
                 case TokenTypes.NUMBER:
                 case TokenTypes.REGISTER:
                 case TokenTypes.OTHER:
-                    sep = newSep;
-                    return oldSep + token.value;
+                    return token.value;
 
                 case TokenTypes.STRING:
-                    sep = newSep;
-                    return oldSep + `"${token.value}"`;
+                    return `"${token.value}"`;
 
                 case TokenTypes.NONLOCALREGISTER:
-                    sep = newSep;
-                    return oldSep + "^" + token.value;
+                    return "^" + token.value;
 
                 case TokenTypes.REGISTERAT:
-                    sep = newSep;
                     if (token.value[1].type === TokenTypes.REGISTER) {
-                        return oldSep + token.value[0].value + "@(" + token.value[1].value + ")";
+                        return token.value[0].value + "@(" + token.value[1].value + ")";
+                    } else if (token.value[1].type === TokenTypes.EXPRESSION) {
+                        return token.value[0].value + "@" + construct(token.value[1]);
                     } else {
-                        return oldSep + token.value[0].value + "@" + token.value[1].value;
+                        return token.value[0].value + "@" + token.value[1].value;
                     }
 
                 case TokenTypes.POINT:
-                    sep = ""
-                    const p = oldSep + "( " + construct(token.value[0]) + construct(token.value[1]) + " )";
-                    sep = newSep;
-                    return p;
+                    return "(" + construct(token.value[0]) + ", " + construct(token.value[1]) + ")";
 
                 case TokenTypes.ARRAY:
-                    sep = ""
-                    const a = oldSep + "[ " + token.value.map(v => construct(v)).join("") + " ]";
-                    return a;
+                    return "[" + token.value.map(v => construct(v)).join(", ") + "]";
+
 
                 case TokenTypes.EXPRESSION:
-                    sep = ""
-                    const re = oldSep + "( " + construct(token.value[0], "")
-                        + " " + construct(token.value[1], "")
-                        + " " + construct(token.value[2], "") + " )"
-                    sep = newSep;
-                    return re;
+                    return "(" + construct(token.value[0])
+                        + " " + construct(token.value[1])
+                        + " " + construct(token.value[2]) + ")"
 
                 case TokenTypes.MATHFUNC:
-                    sep = "";
-                    const me = oldSep + token.value[0].value + "( " + construct(token.value[1], "") + " )"
-                    sep = newSep;
-                    return me;
+                    return token.value[0].value + "(" + construct(token.value[1]) + ")"
 
                 case TokenTypes.ANNOTATION:
-                    let r = " @" + token.value;
+                    let r = "@" + token.value;
                     if (token.args && token.args.length) {
                         r += " " + token.args.join(" ");
                     }
@@ -111,8 +98,19 @@ export class Parser {
                     return r;
             }
         }
+        const parts = tokens.filter(t => t.type !== TokenTypes.ANNOTATION).map(t => construct(t))
+        const annoParts = tokens.filter(t => t.type === TokenTypes.ANNOTATION).map(t => construct(t))
+        let op = null;
+        if (tokens[0].type === TokenTypes.OPCODE) {
+            op = parts.shift();
+        }
+        let r =  [op, parts.join(", ")].filter(a => !!a).join(" ");
 
-        return [...tokens.map(t => construct(t))].join("");
+        if (annoParts.length) {
+            r += " " + annoParts.join(" ")
+        }
+
+        return r;
     }
 }
 

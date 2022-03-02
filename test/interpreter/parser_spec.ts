@@ -194,7 +194,7 @@ describe('Parser', () => {
                 },
             ]
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( 1, r1 )");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, (1, r1)");
 
             tokens = [
                 T_OPCODE("LOAD"),
@@ -208,7 +208,7 @@ describe('Parser', () => {
                 },
             ]
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, [ 1, r1, r3 ]");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, [1, r1, r3]");
 
 
             tokens = [
@@ -219,7 +219,7 @@ describe('Parser', () => {
                 )
             ];
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( 2 + ( r1 * 2 ) )");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, (2 + (r1 * 2))");
 
             tokens = [
                 T_OPCODE("LOAD"),
@@ -230,9 +230,19 @@ describe('Parser', () => {
 
             ];
 
-            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ( ( 2 + r1 ) * 2 )");
+            expect(Parser.constructCodeLine(tokens)).to.equal("LOAD r1, ((2 + r1) * 2)");
         });
 
+        it("can parse what it constructs", () => {
+            const code = 'LOAD r1, r2@(a * b)'
+            const tokens = Parser.parseLine(code);
+            const code2 = Parser.constructCodeLine(tokens);
+            console.log(code2)
+            expect(Parser.parseLine(code2)).to.deep.equal(tokens);
+        });
+    });
+
+    describe("Parsing expressions", () => {
         it("parses expressions", () => {
 
             const code = `LOAD r1, (r1 + 2 * (34 * r3))`;
@@ -248,9 +258,6 @@ describe('Parser', () => {
                 )
             ])
         });
-    });
-
-    describe("Parsing expressions", () => {
         it("can parse a string as an expression", () => {
 
             const code = "max(r1) + 234 * 23";

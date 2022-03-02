@@ -455,7 +455,8 @@ export class AppController {
 
         while (i < objects.length) {
             const next = objects[i];
-            if (!this.state.isObjectSelected(next) && !( next instanceof GrCanvas )) {
+            // if (!this.state.isObjectSelected(next) && !( next instanceof GrCanvas )) {
+            if (!( next instanceof GrCanvas )) {
                 this.state.setReferenceObjectForTool(next);
                 return;
             }

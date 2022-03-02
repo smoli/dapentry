@@ -53,6 +53,7 @@ export class DrawLine extends Tool {
                 this._renderer.renderLine(RenderLayer.Interaction, this._line, false);
                 this._firstSnapInfo = snapInfo;
                 this.snapInfoUsed(snapInfo);
+                this._state.next(InteractionEvents.MouseMove); // Artificially progress state
                 break;
 
             case States.Drag:
