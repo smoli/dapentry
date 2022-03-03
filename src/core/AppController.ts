@@ -26,6 +26,8 @@ import {DeleteStatements} from "../actions/DeleteStatements";
 import {DeleteObjects} from "../actions/DeleteObjects";
 import {LibraryEntry} from "./Library";
 import {SaveDrawingToLibrary} from "../actions/SaveDrawingToLibrary";
+import {Login} from "../actions/Login";
+import {API} from "../api/API";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -523,5 +525,18 @@ export class AppController {
 
     public async saveDrawingToLibrary() {
         await this.execute(new SaveDrawingToLibrary());
+    }
+
+    public async login() {
+        if (this._state.store.state.auth.authenticated) {
+            return;
+        }
+
+        await this.execute(new Login());
+
+        if (this._state.store.state.auth.authenticated) {
+            API.setAuthInfo({ token: this._state.store.state.auth.token, user: this._state.store.state.auth.user })
+            await this._persistence.load(this.state);
+        }
     }
 }

@@ -1,18 +1,27 @@
 import {AppConfig} from "../core/AppConfig";
 import {LibraryEntry} from "../core/Library";
 import {AspectRatio} from "../geometry/GrCanvas";
+import {UserInfo} from "../state/modules/Authentication";
 
+
+export enum ResponseStatus {
+    OK = 200,
+    UNAUTHORISED = 401,
+    NOT_FOUND = 404,
+    INTERNAL_ERROR = 500
+}
 
 export type FetchFunc = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
 export interface APIResponse {
-    status: number,
+    status: ResponseStatus,
     data: any,
     apiReachable: boolean
 }
 
 export class API {
     private static _fetch: FetchFunc;
+    private static _authInfo: { token: string, user: UserInfo };
 
     static setFetch(value: FetchFunc) {
         API._fetch = value;
@@ -25,12 +34,23 @@ export class API {
         return API._fetch
     }
 
+
+    static setAuthInfo(auth: { token: string, user: UserInfo }) {
+        API._authInfo = auth;
+    }
+
+    protected static authHeader(): { Authorization: string } {
+        return {
+            Authorization: `Bearer ${API._authInfo?.token}`
+        }
+    }
+
     static async makeResponse(response: Response, getData: () => Promise<any>): Promise<APIResponse> {
 
-        if (response.status !== 200) {
+        if (response.status !== ResponseStatus.OK) {
             return {
                 apiReachable: response.status !== 500,
-                data: undefined,
+                data: await response.json(),
                 status: response.status
             }
         }
@@ -48,7 +68,8 @@ export class API {
 
         const response = await API.fetch(AppConfig.API.names + "/" + name, {
             headers: {
-                "Accept": "application/json"
+                "Accept": "application/json",
+                ...API.authHeader()
             }
         });
 
@@ -61,12 +82,14 @@ export class API {
     }
 
     static async postNewLibraryEntry(data) {
-        const response = await fetch(AppConfig.API.library, {
+        const response = await API.fetch(AppConfig.API.library, {
             method: "POST",
             mode: "cors",
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...API.authHeader()
+
             },
             body: JSON.stringify(data)
         });
@@ -123,17 +146,35 @@ export class API {
     }
 
     static async getLibraryEntries(): Promise<APIResponse> {
-        const response = await fetch(`${AppConfig.API.library}`, {
+        const response = await API.fetch(`${AppConfig.API.library}`, {
             method: "GET",
             mode: "cors",
             headers: {
-                Accept: "application/json"
+                Accept: "application/json",
+                ...API.authHeader()
             }
         });
 
         return API.makeResponse(response, async () => {
             const r = await response.json() as Array<any>;
             return r.map(r => API.convertAPILibraryEntry(r))
+        });
+    }
+
+    static async login(email: string, password: string) {
+        const response = await API.fetch(AppConfig.API.login, {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        return API.makeResponse(response, async () => {
+            const r = await response.json();
+            return { success: r.success, token: r.data.token }
         });
     }
 

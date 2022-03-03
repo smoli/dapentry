@@ -1,10 +1,7 @@
 import {State} from "./State";
 import {LibraryEntry} from "../core/Library";
 import {DataField} from "./modules/Data";
-import {AspectRatio} from "../geometry/GrCanvas";
-import {AppConfig} from "../core/AppConfig";
 import {API, APIResponse} from "../api/API";
-import {inArray} from "jquery";
 
 export class Persistence {
     private _state: State;
@@ -21,7 +18,9 @@ export class Persistence {
         state.setData(fields);
 
         const libraryEntries = await this.loadLibrary();
-
+        if(!libraryEntries) {
+            return;
+        }
         libraryEntries.forEach(e => state.addLibraryEntry(e));
     }
 
@@ -40,6 +39,9 @@ export class Persistence {
 
 
     async loadLibrary():Promise<Array<LibraryEntry>> {
+        if (!this._state.store.state.auth.authenticated) {
+            return;
+        }
         const response: APIResponse = await API.getLibraryEntries();
 
         // Todo: Error checking

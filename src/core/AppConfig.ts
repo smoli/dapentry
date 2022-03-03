@@ -115,7 +115,9 @@ export const AppConfig = {
     API: {
         baseUrl: "http://localhost:8000/api",
         library: "library",
-        names: "names"
+        names: "names",
+        login: "login",
+        logout: "logout"
     }
 }
 

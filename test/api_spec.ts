@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {API} from "../src/api/API";
+import {API, FetchFunc} from "../src/api/API";
 // @ts-ignore
 import {Response} from "node-fetch";
 import {mockFetch} from "./testHelpers/mock_fetch";

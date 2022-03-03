@@ -8,9 +8,15 @@ import {DataField, DataFieldValue} from "./modules/Data";
 import {AppConfig} from "../core/AppConfig";
 import {ModalDialogHandler} from "../ui/core/ModalDialogHandler";
 import {LibraryEntry} from "../core/Library";
+import {UserInfo} from "./modules/Authentication";
 
 
 const mutations = {
+
+    auth: {
+        authenticated: "auth/authenticated",
+        logout: "auth/logout"
+    },
 
     ui: {
         showModal: "ui/showModal",
@@ -127,6 +133,15 @@ export class State {
             return this._store.getters[type];
         }
     }
+
+    authenticated(token: string, user: UserInfo) {
+        this.commit(mutations.auth.authenticated, { token, user });
+    }
+
+    logout() {
+        this.commit(mutations.auth.logout);
+    }
+
 
     get objects(): Array<GrObject> {
         return this.get(getters.drawing.objects);
