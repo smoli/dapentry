@@ -21,6 +21,10 @@ export const libraryState = {
 
     mutations: {
 
+        clear(state: LibraryState) {
+            state.entries = [];
+        },
+
         add(state: LibraryState, entry: LibraryEntry) {
             state.entries.push(entry);
         },

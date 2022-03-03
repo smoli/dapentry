@@ -532,6 +532,7 @@ export class AppController {
             return;
         }
         this._state.logout();
+        this._state.clearLibrary();
         this._persistence.removeAuthToken();
 
     }

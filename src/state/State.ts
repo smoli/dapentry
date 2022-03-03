@@ -64,7 +64,8 @@ const mutations = {
     },
 
     library: {
-        add: "library/add"
+        add: "library/add",
+        clear: "library/clear"
     }
 }
 
@@ -317,6 +318,10 @@ export class State {
 
     getLibraryEntry(name: string):LibraryEntry {
         return this.get(getters.library.getEntry, name);
+    }
+
+    clearLibrary() {
+        this.commit(mutations.library.clear);
     }
 
 }
