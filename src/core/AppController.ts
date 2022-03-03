@@ -535,7 +535,7 @@ export class AppController {
         await this.execute(new Login());
 
         if (this._state.store.state.auth.authenticated) {
-            API.setAuthInfo({ token: this._state.store.state.auth.token, user: this._state.store.state.auth.user })
+            API.setAuthInfo(this._state.store.state.auth.token)
             await this._persistence.load(this.state);
         }
     }

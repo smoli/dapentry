@@ -2,6 +2,7 @@ import {AppConfig} from "../core/AppConfig";
 import {LibraryEntry} from "../core/Library";
 import {AspectRatio} from "../geometry/GrCanvas";
 import {UserInfo} from "../state/modules/Authentication";
+import {POI} from "../geometry/GrObject";
 
 
 export enum ResponseStatus {
@@ -13,15 +14,21 @@ export enum ResponseStatus {
 
 export type FetchFunc = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
-export interface APIResponse {
+export interface UserResultData {
+    name: string,
+    email: string,
+    verified: boolean
+}
+
+export interface APIResponse<T> {
     status: ResponseStatus,
-    data: any,
+    data: T,
     apiReachable: boolean
 }
 
 export class API {
     private static _fetch: FetchFunc;
-    private static _authInfo: { token: string, user: UserInfo };
+    private static _authInfo: string;
 
     static setFetch(value: FetchFunc) {
         API._fetch = value;
@@ -35,17 +42,36 @@ export class API {
     }
 
 
-    static setAuthInfo(auth: { token: string, user: UserInfo }) {
-        API._authInfo = auth;
+    static setAuthInfo(token: string) {
+        API._authInfo = token;
     }
 
     protected static authHeader(): { Authorization: string } {
         return {
-            Authorization: `Bearer ${API._authInfo?.token}`
+            Authorization: `Bearer ${API._authInfo}`
         }
     }
 
-    static async makeResponse(response: Response, getData: () => Promise<any>): Promise<APIResponse> {
+    protected static authenticatedRequest(method: string, contentType: string = "application/json"): any {
+        return {
+            method,
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                'Content-Type': 'application/json',
+                ...API.authHeader()
+            }
+        }
+    }
+    protected static authenticatedPOST(contentType: string = "application/json"): any {
+        return this.authenticatedRequest("POST", contentType);
+    }
+
+    protected static authenticatedGET(contentType: string = "application/json"): any {
+        return this.authenticatedRequest("GET", contentType);
+    }
+
+    static async makeResponse(response: Response, getData: () => Promise<any>): Promise<APIResponse<any>> {
 
         if (response.status !== ResponseStatus.OK) {
             return {
@@ -64,7 +90,7 @@ export class API {
         }
     }
 
-    static async doesNameExist(name: string): Promise<APIResponse> {
+    static async doesNameExist(name: string): Promise<APIResponse<any>> {
 
         const response = await API.fetch(AppConfig.API.names + "/" + name, {
             headers: {
@@ -105,7 +131,7 @@ export class API {
 
             try {
                 p = JSON.parse(v);
-            } catch(e) {
+            } catch (e) {
                 p = v;
             }
 
@@ -145,7 +171,7 @@ export class API {
         return res;
     }
 
-    static async getLibraryEntries(): Promise<APIResponse> {
+    static async getLibraryEntries(): Promise<APIResponse<any>> {
         const response = await API.fetch(`${AppConfig.API.library}`, {
             method: "GET",
             mode: "cors",
@@ -178,5 +204,16 @@ export class API {
         });
     }
 
+
+    static async getUser():Promise<APIResponse<UserResultData>> {
+        const response = await API.fetch(AppConfig.API.user, {
+            ...API.authenticatedGET()
+        });
+
+        return API.makeResponse(response, async () => {
+            const r = await response.json();
+            return { name: r.name, email: r.email, verified: r.email_verified_at }
+        })
+    }
 }
 

@@ -1,15 +1,21 @@
 import {State} from "./State";
 import {LibraryEntry} from "../core/Library";
 import {DataField} from "./modules/Data";
-import {API, APIResponse} from "../api/API";
+import {API, APIResponse, ResponseStatus} from "../api/API";
 
 export class Persistence {
     private _state: State;
 
-    async load(state:State):Promise<void> {
+    async load(state: State): Promise<void> {
         this._state = state;
         const code = await this.loadCode();
         // state.setCode(code);
+
+        if (this._state.store.state.auth.authenticated) {
+            await this.saveAuth(this._state.store.state.auth.token)
+        } else {
+            await this.loadAuthFromLocalStorage();
+        }
 
         const locale = await this.loadLocale();
         state.setLocale(locale);
@@ -18,31 +24,59 @@ export class Persistence {
         state.setData(fields);
 
         const libraryEntries = await this.loadLibrary();
-        if(!libraryEntries) {
+        if (!libraryEntries) {
             return;
         }
         libraryEntries.forEach(e => state.addLibraryEntry(e));
     }
 
-    async saveAll():Promise<void> {
+    protected async saveAuth(token: string) {
+        localStorage.setItem("authToken", token);
+        API.setAuthInfo(token)
+        const userResponse = await API.getUser();
+        if (userResponse.status !== ResponseStatus.OK) {
+            this._state.logout();
+            API.setAuthInfo(null)
+            return;
+        }
+    }
+
+    protected async loadAuthFromLocalStorage() {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+            return;
+        }
+
+        // This additionally acts as a check if the auth token is still valid
+        API.setAuthInfo(token)
+        const userResponse = await API.getUser();
+        if (userResponse.status !== ResponseStatus.OK) {
+            return;
+        }
+        await this.saveAuth(token);
+        this._state.authenticated(token, userResponse.data);
+    }
+
+    async saveAll(): Promise<void> {
         await this.saveLocale();
         await this.saveCode();
     }
 
-    async saveLocale():Promise<void> {
+    async saveLocale(): Promise<void> {
         localStorage.setItem("locale", this._state.locale);
     }
 
-    async saveCode():Promise<void> {
+    async saveCode(): Promise<void> {
         localStorage.setItem("code", JSON.stringify(this._state.store.state.code.code));
     }
 
 
-    async loadLibrary():Promise<Array<LibraryEntry>> {
+    async loadLibrary(): Promise<Array<LibraryEntry>> {
         if (!this._state.store.state.auth.authenticated) {
             return;
         }
-        const response: APIResponse = await API.getLibraryEntries();
+        const response: APIResponse<any> = await API.getLibraryEntries();
 
         // Todo: Error checking
         console.log(response.data);
@@ -51,11 +85,11 @@ export class Persistence {
     }
 
 
-    async loadLocale():Promise<string> {
+    async loadLocale(): Promise<string> {
         return localStorage.getItem("locale") || navigator.language.split("-")[0]
     }
 
-    async loadCode():Promise<Array<string>> {
+    async loadCode(): Promise<Array<string>> {
         const code = localStorage.getItem("code");
         if (code) {
             return JSON.parse(code);
@@ -69,9 +103,9 @@ export class Persistence {
         ];*/
     }
 
-    async loadData():Promise<Array<DataField>> {
+    async loadData(): Promise<Array<DataField>> {
         return [
-            { name: "f1", value: [10, 20, 30, 40]},
+            { name: "f1", value: [10, 20, 30, 40] },
             { name: "f2", value: 5 }
         ]
     }

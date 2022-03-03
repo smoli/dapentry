@@ -19,9 +19,13 @@ export class Login extends BaseAction {
                 const loginResult = await API.login(result.data.email, result.data.password);
 
                 if (loginResult.status === ResponseStatus.OK) {
+
+                    const userResult = await API.getUser();
+
                     this.state.authenticated(loginResult.data.token, {
                         name: result.data.email,
-                        email: result.data.email
+                        email: result.data.email,
+                        verified: userResult.data.verified
                     });
                 } else {
                     await showLogin("Unknown email or password")

@@ -7,7 +7,7 @@ import {GfxLine} from "../../runtime/gfx/GfxLine";
 import {GfxPolygon} from "../../runtime/gfx/GfxPolygon";
 
 
-export interface UserInfo { name: string, email: string }
+export interface UserInfo { name: string, email: string, verified: boolean }
 
 export interface AuthenticationState {
     authenticated: boolean,

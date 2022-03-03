@@ -5,18 +5,44 @@ import {ValidationResult} from "../core/ValidationResult";
 export default {
     template: `
       <div class="drawable-modal-confirm">
-      <h1>Login</h1>
-      <form>
-        <div class="drawable-form-validation-message">{{ handler.initialMessage }}</div>
-        <label>Email address *</label><input v-model="email"><br/>
-        <div class="drawable-form-validation-message">{{ validation.messageFor.email }}</div>
-        <label>Password *</label><input type="password" v-model="password"><br/>
-        <div class="drawable-form-validation-message">{{ validation.messageFor.password }}</div>
-      </form>
-      
+      <div v-if="!registerNewAccount">
+        <h1>Login</h1>
+        <form>
+          <fieldset>
+            <div class="drawable-form-validation-message">{{ handler.initialMessage }}</div>
+            <p><label for="login-email">Email address *</label><input id="login-email" type="email" v-model="email"></p>
+            <div class="drawable-form-validation-message">{{ validation.messageFor.email }}</div>
+            <p><label for="login-password">Password *</label><input id="login-password" type="password" v-model="password"></p>
+            <div class="drawable-form-validation-message">{{ validation.messageFor.password }}</div>
+          </fieldset>
+        </form>
+        <p>No account yet? <a class="drawable-action-link" @click="onDoRegister">Create a new one</a></p>
+      </div>
+
+      <div v-else>
+        <h1>Register a new account</h1>
+        <form>
+          <fieldset>
+            <div class="drawable-form-validation-message">{{ handler.initialMessage }}</div>
+            <p><label for="register-email">Email address *</label><input id="register-email" type="email" v-model="email"></p>
+            <div class="drawable-form-validation-message">{{ validation.messageFor.email }}</div>
+            <p><label for="register-name">Name *</label><input id="register-name" v-model="name"></p>
+            <div class="drawable-form-validation-message">{{ validation.messageFor.name }}</div>
+            <p><label for="register-password">Password *</label><input id="register-password" type="password" v-model="password"></p>
+            <div class="drawable-form-validation-message">{{ validation.messageFor.password }}</div>
+            <p><label for="register-pw-confirm">Confirm Password *</label><input id="register-pw-confirm" type="password" v-model="confirmPassword"></p>
+            <div class="drawable-form-validation-message">{{ validation.messageFor.confirmPassword }}</div>
+          </fieldset>
+        </form>
+        <p>Already have an account? <a class="drawable-action-link" @click="onDoLogin">Login</a></p>
+      </div>
+
       <div class="drawable-modal-footer">
-        <button @click="onLogin" class="drawable-ui-accept" :disabled="!validation.valid">Login</button>
-        <button @click="onCancel" class="drawable-ui-decline">Cance</button>
+        <button v-if="registerNewAccount" @click="onLogin" class="drawable-ui-accept" :disabled="!validation.valid">
+          Register
+        </button>
+        <button v-else @click="onLogin" class="drawable-ui-accept" :disabled="!validation.valid">Login</button>
+        <button @click="onCancel" class="drawable-ui-decline">Cancel</button>
       </div>
       </div>
     `,
@@ -29,8 +55,11 @@ export default {
         return {
             email: "",
             password: "",
+            confirmPassword: "",
+            name: "",
             validation: new ValidationResult(),
-            validationActive: false
+            validationActive: false,
+            registerNewAccount: false
         }
     },
 
@@ -62,6 +91,14 @@ export default {
         },
         onCancel() {
             this.handler.cancel();
+        },
+
+        onDoRegister() {
+            this.registerNewAccount = true;
+        },
+
+        onDoLogin() {
+            this.registerNewAccount = false;
         }
     }
 }
@@ -71,12 +108,12 @@ export class LoginDialogHandler extends ModalDialogHandler {
     private _initialMessage: string;
 
 
-    async show(initialMessage:string = null) {
+    async show(initialMessage: string = null) {
         this._initialMessage = initialMessage;
         return super.show();
     }
 
-    get initialMessage():string {
+    get initialMessage(): string {
         return this._initialMessage;
     }
 

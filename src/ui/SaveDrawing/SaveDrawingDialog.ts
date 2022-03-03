@@ -6,24 +6,29 @@ export default {
       <div class="drawable-modal-confirm">
       <h1>Save drawing to library</h1>
       <form>
-        <label>Name *</label><input v-model="name"><br/>
-        <div class="drawable-form-validation-message">{{ validation.messageFor.name }}</div>
+        <fieldset>
+          <legend>General</legend>
+          <p><label for="save-drawing-name">Name *</label><input pattern="[a-zA-Z][a-zA-Z0-9-_]+" id="save-drawing-name" v-model="name"></p>
+          <div class="drawable-form-validation-message">{{ validation.messageFor.name }}</div>
+          <p><label for="save-drawing-description">Description *</label><input id="save-drawing-description"
+                                                                               v-model="description"></p>
+          <div class="drawable-form-validation-message">{{ validation.messageFor.description }}</div>
+        </fieldset>
 
-        <label>Description *</label><input v-model="description"><br/>
-        <div class="drawable-form-validation-message">{{ validation.messageFor.description }}</div>
-
-        <section>
-          <h3>Published objects</h3>
-          <span>Guides are will always be included as unpublished.</span><br/>
+        <fieldset>
+          <legend>Published Objects</legend>
+          <desc>Guides will always be included as unpublished.</desc>
+          <ul>
+            <li class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
+              <input :id="'save-drawing-cbx' + i" type="checkbox" v-model="obj.use"/>
+              <label :for="'save-drawing-cbx' + i">{{ obj.object.uniqueName }}</label>
+            </li>
+          </ul><br/>
           <div class="drawable-form-validation-message">{{ validation.messageFor.publishedObjects }}</div>
-          <span class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
-              <input :id="'cbx' + i" type="checkbox" v-model="obj.use"/>
-              <label :for="'cbx' + i">{{ obj.object.uniqueName }}</label>
-            </span>
-        </section>
-        <section>
-          <h3>Arguments of the drawing</h3>
-          <span>Public args can be changed when reusing the drawing.</span>
+        </fieldset>
+        <fieldset>
+          <legend>Fields and Arguments</legend>
+          <desc>Public args can be changed when reusing the drawing.</desc>
           <table>
             <thead>
             <tr>
@@ -50,7 +55,7 @@ export default {
             </tr>
             </tbody>
           </table>
-        </section>
+        </fieldset>
 
       </form>
       <div class="drawable-modal-footer">
@@ -168,14 +173,13 @@ export class SaveDrawingHandler extends ModalDialogHandler {
         const res = new ValidationResult();
         const numberOfPublishedObjects = data.publishedObjects.filter(p => p.use).length;
         if (numberOfPublishedObjects === 0) {
-            res.error("publishedObjects", "At least one object must be published");
+            res.error("publishedObjects", "Please select at least one object");
         }
 
-
         if (data.name.length === 0) {
-            res.error("name", "Name cannot be empty");
+            res.error("name", "Please enter a name");
         } else if (!data.name.match(/^[a-zA-Z][a-zA-Z0-9-_]+$/)) {
-            res.error("name", "Name must start with a character and can only contain character, digits, - and _")
+            res.error("name", "Start with a character, then a-z, A-Z, 0-9, - or _")
         }
 
         const nameExists = await API.doesNameExist(data.name);
@@ -185,7 +189,7 @@ export class SaveDrawingHandler extends ModalDialogHandler {
         }
 
         if (data.description.length === 0) {
-            res.error("description", "Description cannot be empty");
+            res.error("description", "Please provide a description");
         }
 
         return res;
