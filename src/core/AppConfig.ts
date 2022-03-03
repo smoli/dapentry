@@ -117,6 +117,7 @@ export const AppConfig = {
         library: "library",
         names: "names",
         login: "login",
+        register: "register",
         logout: "logout",
         user: "user"
     }

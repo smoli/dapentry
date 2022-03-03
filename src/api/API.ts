@@ -3,6 +3,7 @@ import {LibraryEntry} from "../core/Library";
 import {AspectRatio} from "../geometry/GrCanvas";
 import {UserInfo} from "../state/modules/Authentication";
 import {POI} from "../geometry/GrObject";
+import App from "../../ui5stuff/controller/App.controller";
 
 
 export enum ResponseStatus {
@@ -13,6 +14,12 @@ export enum ResponseStatus {
 }
 
 export type FetchFunc = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+
+
+export interface RegisterResultData {
+    name: string,
+    email: string
+}
 
 export interface UserResultData {
     name: string,
@@ -52,6 +59,25 @@ export class API {
         }
     }
 
+    protected static unauthenticatedRequest(method: string, contentType: string = "application/json"): any {
+        return {
+            method,
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                'Content-Type': 'application/json'
+            }
+        }
+    }
+
+    protected static unauthenticatedPOST(contentType: string = "application/json"): any {
+        return API.unauthenticatedRequest("POST", contentType);
+    }
+
+    protected static unauthenticatedGET(contentType: string = "application/json"): any {
+        return API.unauthenticatedRequest("GET", contentType);
+    }
+
     protected static authenticatedRequest(method: string, contentType: string = "application/json"): any {
         return {
             method,
@@ -63,6 +89,7 @@ export class API {
             }
         }
     }
+
     protected static authenticatedPOST(contentType: string = "application/json"): any {
         return this.authenticatedRequest("POST", contentType);
     }
@@ -201,6 +228,23 @@ export class API {
         return API.makeResponse(response, async () => {
             const r = await response.json();
             return { success: r.success, token: r.data.token }
+        });
+    }
+
+    static async register(
+        name: string,
+        email: string,
+        password: string,
+        confirm_password: string): Promise<APIResponse<RegisterResultData>> {
+
+        const response = await API.fetch(AppConfig.API.register, {
+            ...API.unauthenticatedPOST(),
+            body: JSON.stringify({ name, email, password, confirm_password })
+        });
+
+        return API.makeResponse(response, async () => {
+            const r = await response.json();
+            return { email: r.email, name: r.name }
         });
     }
 

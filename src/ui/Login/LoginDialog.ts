@@ -9,10 +9,12 @@ export default {
         <h1>Login</h1>
         <form>
           <fieldset>
-            <div class="drawable-form-validation-message">{{ handler.initialMessage }}</div>
+            <div class="drawable-form-validation-message">{{ handler.initialErrorMessage }}</div>
+            <desc>{{ handler.initialInfoMessage }}</desc>
             <p><label for="login-email">Email address *</label><input id="login-email" type="email" v-model="email"></p>
             <div class="drawable-form-validation-message">{{ validation.messageFor.email }}</div>
-            <p><label for="login-password">Password *</label><input id="login-password" type="password" v-model="password"></p>
+            <p><label for="login-password">Password *</label><input id="login-password" type="password"
+                                                                    v-model="password"></p>
             <div class="drawable-form-validation-message">{{ validation.messageFor.password }}</div>
           </fieldset>
         </form>
@@ -23,14 +25,21 @@ export default {
         <h1>Register a new account</h1>
         <form>
           <fieldset>
+            <div class="drawable-form-validation-message">{{ handler.initialErrorMessage }}</div>
+            <desc>{{ handler.initialInfoMessage }}</desc>
+
             <div class="drawable-form-validation-message">{{ handler.initialMessage }}</div>
-            <p><label for="register-email">Email address *</label><input id="register-email" type="email" v-model="email"></p>
+            <p><label for="register-email">Email address *</label><input id="register-email" type="email"
+                                                                         v-model="email"></p>
             <div class="drawable-form-validation-message">{{ validation.messageFor.email }}</div>
             <p><label for="register-name">Name *</label><input id="register-name" v-model="name"></p>
             <div class="drawable-form-validation-message">{{ validation.messageFor.name }}</div>
-            <p><label for="register-password">Password *</label><input id="register-password" type="password" v-model="password"></p>
+            <p><label for="register-password">Password *</label><input id="register-password" type="password"
+                                                                       v-model="password"></p>
             <div class="drawable-form-validation-message">{{ validation.messageFor.password }}</div>
-            <p><label for="register-pw-confirm">Confirm Password *</label><input id="register-pw-confirm" type="password" v-model="confirmPassword"></p>
+            <p><label for="register-pw-confirm">Confirm Password *</label><input id="register-pw-confirm"
+                                                                                 type="password"
+                                                                                 v-model="confirmPassword"></p>
             <div class="drawable-form-validation-message">{{ validation.messageFor.confirmPassword }}</div>
           </fieldset>
         </form>
@@ -53,13 +62,13 @@ export default {
 
     data() {
         return {
-            email: "",
+            email: this.handler.email || "",
             password: "",
             confirmPassword: "",
-            name: "",
+            name: this.handler.name || "",
             validation: new ValidationResult(),
             validationActive: false,
-            registerNewAccount: false
+            registerNewAccount: this.handler.doRegisterNewAccount
         }
     },
 
@@ -69,6 +78,14 @@ export default {
         },
 
         async password() {
+            this.validation = await this.validate();
+        },
+
+        async name() {
+            this.validation = await this.validate();
+        },
+
+        async confirmPassword() {
             this.validation = await this.validate();
         }
     },
@@ -103,21 +120,53 @@ export default {
     }
 }
 
+export interface LoginDialogOptions {
+    infoMessage?: string,
+    errorMessage?: string,
+    registerNewAccount?: boolean,
+    name?:string,
+    email?:string
+}
+
 
 export class LoginDialogHandler extends ModalDialogHandler {
-    private _initialMessage: string;
+    private _options: LoginDialogOptions;
 
 
-    async show(initialMessage: string = null) {
-        this._initialMessage = initialMessage;
+    async show(options: LoginDialogOptions) {
+        this._options = options;
         return super.show();
     }
 
-    get initialMessage(): string {
-        return this._initialMessage;
+    get initialErrorMessage(): string {
+        return this._options.errorMessage;
+    }
+
+    get initialInfoMessage(): string {
+        return this._options.infoMessage;
+    }
+
+    get doRegisterNewAccount():boolean {
+        return this._options.registerNewAccount;
+    }
+
+    get name():string {
+        return this._options.name;
+    }
+
+    get email():string {
+        return this._options.email;
     }
 
     async login(data) {
+        const validation = await this.validate(data);
+
+        if (validation.valid) {
+            this.close(DialogCloseReason.OK, data);
+        }
+    }
+
+    async register(data) {
         const validation = await this.validate(data);
 
         if (validation.valid) {
@@ -129,14 +178,32 @@ export class LoginDialogHandler extends ModalDialogHandler {
         this.close(DialogCloseReason.CANCEL);
     }
 
-    async validate(data: { email: string, password: string }): Promise<ValidationResult> {
+    async validate(data: { email: string, password: string, registerNewAccount: boolean, name: string, confirmPassword: string }): Promise<ValidationResult> {
         const res = new ValidationResult();
         if (data.email.length < 1) {
             res.error("email", "Please provide your email address");
+        } else {
+            // Just the basics. The rest will be handled by email verification
+            const m = data.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+            if (!m) {
+                res.error("email", "Please enter a valid email address")
+            }
         }
 
         if (data.password.length < 1) {
             res.error("password", "Please provide your password");
+        }
+
+        if (data.registerNewAccount) {
+            if (data.confirmPassword.length < 1) {
+                res.error("confirmPassword", "Please confirm your password");
+            } else if (data.password !== data.confirmPassword) {
+                res.error("confirmPassword", "Confirmation does not match password");
+            }
+
+            if (data.name.length < 1) {
+                res.error("name", "Please enter your name");
+            }
         }
 
         return res;
