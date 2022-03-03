@@ -1,7 +1,5 @@
 <template>
   <span v-if="$store.state.auth.authenticated">
-    <span>Welcome, {{ $store.state.auth.user.email }}!</span>
-    <span v-if="!$store.state.auth.user.verified">Unverified</span>
     <button @click="onSave">Save current</button>
     <button v-for="entry in entries" @click="onInsertEntry(entry)">{{ entry.name }}</button>
   </span>

@@ -73,4 +73,44 @@
     }
   }
 
+  .drawable-profile-button {
+
+    button {
+      color: black;
+      padding: 0.2em 1em;
+      border: none;
+      margin-left: 1em;
+    }
+
+    button:hover {
+      background-color: @uiColor1;
+    }
+
+    .drawable-profile-popover {
+      position: absolute;
+      display: block;
+      background-color: @ciMainColor;
+      margin-right: 1em;
+      box-shadow: 1px 1px 4px 0px rgba(0, 0, 0, 0.1) ;
+
+      ul {
+        display: block;
+
+        li {
+          display: block;
+          padding: 0.5em 1em;
+          border-top: 1px solid darken(@ciMainColor, 20%);
+        }
+
+        li:hover {
+          background-color: @uiColor1;
+        }
+
+      }
+
+
+    }
+
+  }
+
 }

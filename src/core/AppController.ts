@@ -527,6 +527,15 @@ export class AppController {
         await this.execute(new SaveDrawingToLibrary());
     }
 
+    public async logout() {
+        if (!this._state.store.state.auth.authenticated) {
+            return;
+        }
+        this._state.logout();
+        this._persistence.removeAuthToken();
+
+    }
+
     public async login() {
         if (this._state.store.state.auth.authenticated) {
             return;

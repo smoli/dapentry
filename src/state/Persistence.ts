@@ -41,6 +41,10 @@ export class Persistence {
         }
     }
 
+    public removeAuthToken() {
+        localStorage.removeItem("authToken");
+    }
+
     protected async loadAuthFromLocalStorage() {
         const token = localStorage.getItem("authToken");
 

@@ -3,6 +3,7 @@
     <h1>{{ $t("ui.appName") }}<span>0.1&alpha;</span></h1>
     <aspect-ratio-switcher />
     <locale-switcher/>
+    <profile-button/>
   </section>
 </template>
 
@@ -12,10 +13,11 @@
 import {AspectRatio} from "../geometry/GrCanvas";
 import LocaleSwitcher from "./localeSwitcher.vue";
 import AspectRatioSwitcher from "./aspectRatioSwitcher.vue";
+import ProfileButton from "./Profile/ProfileButton.vue";
 
 export default {
   name: "drawable-header",
-  components: { AspectRatioSwitcher, LocaleSwitcher },
+  components: { ProfileButton, AspectRatioSwitcher, LocaleSwitcher },
   inject: ["controller"],
 
   data() {

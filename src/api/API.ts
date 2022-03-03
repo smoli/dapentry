@@ -256,6 +256,7 @@ export class API {
 
         return API.makeResponse(response, async () => {
             const r = await response.json();
+            console.log(r);
             return { name: r.name, email: r.email, verified: r.email_verified_at }
         })
     }
