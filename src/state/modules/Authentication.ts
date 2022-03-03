@@ -32,7 +32,7 @@ export const authenticationState = {
         authenticated(state: AuthenticationState, payload: { token: string, user: UserInfo }) {
             state.authenticated = true;
             state.token = payload.token;
-            state.user = payload.user;
+            state.user = {...payload.user};
 
         },
 
