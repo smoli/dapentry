@@ -2,8 +2,9 @@
 @headerHeight: 3em;
 
 
-body {
+html, body {
   overflow: hidden;
+  height: 100%;
 }
 
 .drawable-app-container {
@@ -12,29 +13,27 @@ body {
   height: 100%;
   width: 100%;
   flex-direction: column;
-  justify-content: center;
-  align-content: start;
+  //justify-content: center;
+  //align-content: start;
 
   .drawable-app-header {
     display: flex;
     justify-content: left;
     align-items: center;
     flex-direction: row;
-    height: @headerHeight;
+    flex: 0 0 @headerHeight;
   }
 
   .drawable-app-main {
-    flex-grow: 1000;
+    flex: 1;
     display: flex;
     flex-direction: row;
     overflow: hidden;
     align-content: start;
 
 
-
     .drawable-left-column {
-      flex-basis: 0;
-      flex-grow: 2;
+      flex: 0 0 20em;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -64,16 +63,15 @@ body {
     }
 
     .drawable-right-column {
-      flex-basis: 0;
-      flex-grow: 2;
+      flex: 0 0 20em;
+      overflow: auto;
     }
 
   }
 
   .drawable-app-footer {
     display: block;
-    max-height: @footerHeight;
-    min-height: @footerHeight;
+    flex: 0 0 @footerHeight;
   }
 }
 

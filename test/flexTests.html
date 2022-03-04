@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%; /* can also use viewport units (height: 100vh) */
+        }
+
+        .app {
+            display: flex; /* displays flex-items (children) inline */
+            flex-direction: column; /* stacks them vertically */
+            height: 100%; /* needs to take the parents height, alternative: body {display: flex} */
+        }
+
+        .main {
+            flex: 1; /* takes the remaining height of the "container" div */
+            overflow: hidden; /* to scroll just the "main" div */
+            display: flex;
+            flex-direction: row;
+        }
+
+        .right, .left {
+            flex: 0 0 5em;
+            overflow: auto;
+        }
+
+        .center {
+            overflow: auto;
+        }
+
+        .header {
+            background: #f88;
+            flex: 0 0 5em;
+        }
+        .footer {
+            background: lightblue;
+            flex: 0 0 5em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <div class="header">top</div>
+    <div class="main">
+        <div class="left">1st</div>
+        <div class="center">3rd<br>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br>
+        </div>
+        <div class="right">4th</div>
+
+    </div>
+    <div class="footer">bottom</div>
+</div>
+
+
+<script>
+    (() => {
+        const divs = document.getElementsByTagName("div");
+
+        const handle = function(event) {
+            this.innerHTML += "<span>Click</span><br/>";
+            event.stopPropagation();
+        }
+
+        for (const d of divs) {
+            d.onclick = handle.bind(d);
+        }
+    })()
+
+</script>
+
+</body>
+</html>
