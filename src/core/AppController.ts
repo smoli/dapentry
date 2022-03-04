@@ -534,7 +534,6 @@ export class AppController {
         this._state.logout();
         this._state.clearLibrary();
         this._persistence.removeAuthToken();
-
     }
 
     public async login() {

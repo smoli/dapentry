@@ -128,6 +128,7 @@ export default {
 
     objects(newObjectList) {
       this.drawingController.render(newObjectList);
+      this.controller.state.setDrawingPreview(this.drawingController.getSVGPreview());
     },
 
     selection(newSelection, oldSelection) {

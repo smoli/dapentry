@@ -175,8 +175,11 @@ export class API {
             return n;
         }
 
-        const res = {
+        const res:LibraryEntry = {
             ...data,
+            svgPreview: data.svg_preview,
+            previewVBWidth: data.preview_vb_width,
+            previewVBHeight: data.preview_vb_height,
             aspectRatio: AspectRatio[data.aspect],
             arguments: data.arguments.filter(a => !!a.public).map(arg => {
                 return {
@@ -193,7 +196,10 @@ export class API {
             })
         }
 
-        delete res.aspect;
+        delete res["aspect"];
+        delete res["svg_preview"];
+        delete res["preview_vb_width"];
+        delete res["preview_vb_height"];
 
         return res;
     }

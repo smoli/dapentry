@@ -13,7 +13,8 @@ export interface DrawingState {
     dimensions: DrawingDimensions,
     aspectRatio: AspectRatio,
     objects: Array<GrObject>,
-    selection: Array<GrObject>
+    selection: Array<GrObject>,
+    preview: string
 }
 
 export const drawingState = {
@@ -22,7 +23,8 @@ export const drawingState = {
             dimensions: { x: 0, y: 0, width: 100, height: 100 },
             aspectRatio: AspectRatio.ar1_1,
             objects: [],
-            selection: []
+            selection: [],
+            preview: ""
         }
     },
 
@@ -49,6 +51,11 @@ export const drawingState = {
     },
 
     mutations: {
+
+        setPreview(state: DrawingState, preview: string) {
+            state.preview = preview;
+            console.log(preview);
+        },
 
         setDimensions(state: DrawingState, newDimensions: DrawingDimensions) {
             state.dimensions = { ...state.dimensions, ...newDimensions };

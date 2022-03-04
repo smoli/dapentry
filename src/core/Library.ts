@@ -20,6 +20,10 @@ export interface LibraryEntry {
     lastUpdate: Date,
     version?: string,
     aspectRatio: AspectRatio,
+    svgPreview: string,
+    previewVBWidth: number,
+    previewVBHeight: number,
+    private: boolean,
     arguments: Array<LibraryEntryArgument>,
     fields: Array<LibraryEntryArgument>,
     code: string

@@ -190,6 +190,8 @@ export abstract class ObjectRenderer {
     public abstract clearInfo();
 
     public abstract pointerCoordsFromEvent(event:MouseEvent);
+
+    public abstract getSVGPreview():any;
 }
 
 

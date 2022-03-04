@@ -971,4 +971,21 @@ export class SvgObjectRenderer extends ObjectRenderer {
     pointerCoordsFromEvent(event: MouseEvent) {
         return d3.pointer(event, this._svg.node());
     }
+
+    public getSVGPreview():string {
+        const code = this._objectLayer.node().innerHTML
+            .replace(/<g class="boundingBox"><\/g>/g, "")
+            .replace(/<g class="transformationHandle"><\/g>/g, "");
+
+        return code;
+
+/*
+        return `<svg version="1.1"
+     baseProfile="full"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:ev="http://www.w3.org/2001/xml-events">${code}</svg>`
+*/
+    };
+
 }

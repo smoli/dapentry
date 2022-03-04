@@ -10,6 +10,10 @@ interface APILibraryEntryPOST {
     description: string,
     code: string,
     aspect: string,
+    svg_preview: string,
+    preview_vb_width: number,
+    preview_vb_height: number,
+    private: boolean,
     arguments: Array<{ name: string, description: string, default: string, public: true }>
 }
 
@@ -50,6 +54,10 @@ export class SaveDrawingToLibrary extends BaseAction {
             description: data.description,
             code: this.makeCode(data),
             aspect: this.aspectRatio,
+            svg_preview: data.svgPreview,
+            preview_vb_width: data.previewVBWidth,
+            preview_vb_height: data.previewVBHeight,
+            private: false,
             arguments: data.arguments.map(arg => {
                 return {
                     name: arg.field.name,

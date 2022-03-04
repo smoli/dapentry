@@ -36,6 +36,10 @@ export class DrawingController {
         this._setupTools();
     }
 
+    getSVGPreview():string {
+        return this._renderer.getSVGPreview();
+    }
+
     render(objects: Array<GrObject>) {
         this._renderer.clear(RenderLayer.Objects);
         objects.forEach(object => {

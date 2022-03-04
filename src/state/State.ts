@@ -50,7 +50,8 @@ const mutations = {
         deselectObject: "drawing/deselectObject",
         deselectAll: "drawing/deselectAll",
         isObjectSelected: "drawing/isObjectSelected",
-        setAspectRatio: "drawing/setAspectRatio"
+        setAspectRatio: "drawing/setAspectRatio",
+        setPreview: "drawing/setPreview"
     },
 
     data: {
@@ -221,6 +222,10 @@ export class State {
 
     setAspectRatio(ar: AspectRatio) {
         this.commit(mutations.drawing.setAspectRatio, ar);
+    }
+
+    setDrawingPreview(previewCode: string) {
+        this.commit(mutations.drawing.setPreview, previewCode);
     }
 
     setDrawingDimensions(width: number, height: number) {
