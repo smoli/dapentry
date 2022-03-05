@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import {LibraryEntry} from "../../core/Library";
-import Preview from "../drawing/Preview.vue";
+import Preview from "../drawing/Preview";
 
 export default {
   name: "LibraryList",

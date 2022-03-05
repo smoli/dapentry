@@ -1,6 +1,6 @@
 import {DialogCloseReason} from "../core/ModalFactory";
 import * as _ from "lodash";
-import Preview from "../drawing/Preview.vue"
+import Preview from "../drawing/Preview"
 
 export default {
     template: `
@@ -168,7 +168,7 @@ export default {
 import {ModalDialogHandler} from "../core/ModalDialogHandler";
 import {GrObject, ObjectType} from "../../geometry/GrObject";
 import {API} from "../../api/API";
-import preview from "../drawing/Preview.vue";
+import preview from "../drawing/Preview.js";
 
 
 class ValidationResult {

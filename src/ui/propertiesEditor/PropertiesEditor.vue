@@ -59,7 +59,6 @@
 import {GrObject, POI, POIPurpose} from "../../geometry/GrObject";
 import {DnDDataType, DnDInfo, serializeDNDInfo} from "../dnd/DnDInfo";
 import {Point2D} from "../../geometry/Point2D";
-import Preview from "../drawing/Preview.vue";
 
 function makeComputedProxy(access, defaultValue) {
   return {
@@ -74,7 +73,6 @@ function makeComputedProxy(access, defaultValue) {
 
 export default {
   name: "PropertiesEditor",
-  components: { Preview },
   inject: ["controller"],
 
   data() {
