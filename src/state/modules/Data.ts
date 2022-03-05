@@ -1,6 +1,7 @@
 import {ASSERT, UNREACHABLE} from "../../core/Assertions";
+import {types} from "util";
 
-export type DataFieldValue = number | string | Array<number>;
+export type DataFieldValue = number | string | Array<number> | Array<{ [key: string]: DataFieldValue }>;
 
 export enum DataFieldType {
     Number,
@@ -20,7 +21,7 @@ export interface DataState {
 }
 
 
-function getFieldTypeFromValue(value: DataFieldValue):DataFieldType {
+function getFieldTypeFromValue(value: DataFieldValue): DataFieldType {
 
     if (typeof value === "number") {
         return DataFieldType.Number;
@@ -40,6 +41,64 @@ function getFieldTypeFromValue(value: DataFieldValue):DataFieldType {
 
 }
 
+
+function checkType(value: DataFieldValue, type: DataFieldType) {
+    switch (type) {
+        case DataFieldType.Number:
+            return typeof value === "number"
+
+        case DataFieldType.List:
+            if (!Array.isArray(value)) {
+                return false;
+            }
+
+            const t1 = typeof value[0];
+            return !( value as Array<any> ).find(v => typeof v !== t1);
+
+
+        case DataFieldType.String:
+            return typeof value === "string"
+
+        case DataFieldType.Table:
+            if (!Array.isArray(value)) {
+                return false;
+            }
+
+            const v1 = value[0];
+            for (const v of value) {
+                for (const k1 of Object.keys(v1)) {
+                    if (!v.hasOwnProperty(k1)) {
+                        return false;
+                    }
+                }
+                for (const k2 of Object.keys(v)) {
+                    if (!v1.hasOwnProperty(k2)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+    }
+}
+
+function getNextColumnName(currentRow) {
+    const alpha = "abcdefghijklmnopqrstuvwxyz".split("");
+    let suffix = 1;
+
+    const maxI = Math.max(...Object.keys(currentRow).map(v => alpha.indexOf(v)));
+
+    if (maxI < alpha.length - 1) {
+        return alpha[maxI + 1];
+    }
+
+    while (currentRow.hasOwnProperty("z" + suffix)) {
+        suffix++;
+    }
+
+    return "z" + suffix;
+
+
+}
 
 export const dataState = {
 
@@ -86,15 +145,26 @@ export const dataState = {
             if (state.fields.find(f => f.name === payload.name)) {
                 UNREACHABLE(`Duplicate field ${payload.name}`);
             }
-            state.fields = [...state.fields, { name: payload.name, value: payload.value, type: getFieldTypeFromValue(payload.value) }];
+
+            const type = getFieldTypeFromValue(payload.value)
+
+            if (!checkType(payload.value, type)) {
+                throw  new Error("Data does not match type " + DataFieldType[type] + "\n" + JSON.stringify(payload.value));
+            }
+
+            state.fields = [...state.fields, {
+                name: payload.name,
+                value: payload.value,
+                type
+            }];
         },
 
         removeField(state: DataState, name: string) {
             state.fields = state.fields.filter(f => f.name !== name);
         },
 
-        renameField(state: DataState, payload: { oldName: string, newName: string} ) {
-            state.fields = state.fields.map(f => f.name === payload.oldName ? { ...f, name: payload.newName} : f)
+        renameField(state: DataState, payload: { oldName: string, newName: string }) {
+            state.fields = state.fields.map(f => f.name === payload.oldName ? { ...f, name: payload.newName } : f)
         },
 
         setFieldValue(state: DataState, payload: { name: string, value: DataFieldValue }) {
@@ -110,14 +180,35 @@ export const dataState = {
             state.fields = state.fields.map(f => {
                 if (f.name === payload.name) {
                     ASSERT(Array.isArray(f.value), "Can only set item value on array values");
-                    const value = (f.value as Array<any>).map((v, i) => i === payload.index ? payload.value : v)
+                    const value = ( f.value as Array<any> ).map((v, i) => i === payload.index ? payload.value : v)
                     return { name: f.name, value, type: DataFieldType.List }
                 }
                 return f;
             })
         },
 
-        addValueToField(state: DataState, payload: { name: string, value: (number | string ) }) {
+        setTableCellValue(state: DataState, payload: { name: string, index: number, column: string, value: DataFieldValue }) {
+            state.fields = state.fields.map(f => {
+                if (f.name === payload.name) {
+                    ASSERT(f.type === DataFieldType.Table, "Can only set value on table");
+                    ASSERT((f.value as Array<any>).length > 0, "Can only set value on non-empty table");
+
+                    if (!f.value[0].hasOwnProperty(payload.column)) {
+                        return f;
+                    }
+
+                    const value = ( f.value as Array<any> )
+                        .map((v, i) => i !== payload.index ? v : {
+                            ...v,
+                            [payload.column]: payload.value
+                        })
+                    return { name: f.name, value, type: DataFieldType.Table }
+                }
+                return f;
+            })
+        },
+
+        addValueToField(state: DataState, payload: { name: string, value: ( number | string ) }) {
             // @ts-ignore
             state.fields = state.fields.map(f => {
                 if (f.name !== payload.name) {
@@ -125,10 +216,118 @@ export const dataState = {
                 }
 
                 if (Array.isArray(f.value)) {
-                    return { name: f.name, value: [...f.value, payload.value ], type: DataFieldType.List}
+                    return { name: f.name, value: [...f.value, payload.value], type: DataFieldType.List }
                 }
 
-                return { name: f.name, value: [f.value, payload.value ], type: DataFieldType.List}
+                return { name: f.name, value: [f.value, payload.value], type: DataFieldType.List }
+            })
+        },
+
+        addColumnToField(state: DataState, payload: { name: string, value: DataFieldValue }) {
+            state.fields = state.fields.map(f => {
+                if (f.name !== payload.name) {
+                    return f;
+                }
+
+                switch (f.type) {
+                    case DataFieldType.Number:
+                        return { name: f.name, value: [{ a: f.value, b: payload.value }], type: DataFieldType.Table }
+
+                    case DataFieldType.List:
+                        return {
+                            name: f.name,
+                            value: ( f.value as Array<any> ).map(v => {
+                                return {
+                                    a: v,
+                                    b: payload.value
+                                }
+                            }),
+                            type: DataFieldType.Table
+                        }
+
+                    case DataFieldType.String:
+                        return f;
+
+                    case DataFieldType.Table:
+                        ASSERT(( f.value as Array<any> ).length > 0, "Table should not be empty")
+                        const v1 = f.value[0]
+                        const name = getNextColumnName(v1);
+
+                        return {
+                            name: f.name,
+                            value: ( f.value as Array<any> ).map(v => {
+                                return {
+                                    ...v,
+                                    [name]: payload.value
+                                }
+                            }),
+                            type: DataFieldType.Table
+                        }
+
+                }
+
+            })
+        },
+
+        renameTableColumn(state: DataState,
+                          payload: { name: string, oldColumn: string, newColumn: string }) {
+            state.fields = state.fields.map(f => {
+                if (f.name !== payload.name) {
+                    return f;
+                }
+
+                ASSERT(f.type === DataFieldType.Table, "Can only rename Columns of table fields");
+                ASSERT(( f.value as Array<any> ).length > 0, "Can only rename Columns of non-empty tables")
+
+                if (f.value[0].hasOwnProperty(payload.newColumn)) {
+                    return f;
+                }
+
+                return {
+                    name: f.name,
+                    value: ( f.value as Array<any> ).map(v => {
+                        v[payload.newColumn] = v[payload.oldColumn];
+                        delete v[payload.oldColumn];
+                        return v;
+                    }),
+                    type: DataFieldType.Table
+                }
+            })
+        },
+
+        removeTableColumn(state: DataState, payload: { name: string, column: string }) {
+            state.fields = state.fields.map(f => {
+                if (f.name !== payload.name) {
+                    return f;
+                }
+
+                ASSERT(f.type === DataFieldType.Table, "Can only rename Columns of table fields");
+                ASSERT(( f.value as Array<any> ).length > 0, "Can only rename Columns of non-empty tables")
+
+                if (!f.value[0].hasOwnProperty(payload.column)) {
+                    return f;
+                }
+
+                const colNames = Object.keys(f.value[0]);
+                if (colNames.length === 2) {
+                    const remaining = colNames.find(n => n !== payload.column);
+                    return {
+                        name: f.name,
+                        value: ( f.value as Array<any> ).map(v => {
+                            return v[remaining];
+                        }),
+                        type: DataFieldType.List
+                    }
+                }
+
+                return {
+                    name: f.name,
+                    value: ( f.value as Array<any> ).map(v => {
+                        delete v[payload.column];
+                        return v;
+                    }),
+                    type: DataFieldType.Table
+                }
             })
         }
     }

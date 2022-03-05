@@ -264,7 +264,7 @@ export class AppController {
 
 
     async setDataFieldValue(name: string, newValue: DataFieldValue) {
-        this.state.setDateFieldValue(name, newValue);
+        this.state.setDataFieldValue(name, newValue);
         await this.runCode();
         this.updateDrawing();
         await this._persistence?.saveCode();

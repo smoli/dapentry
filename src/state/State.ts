@@ -4,7 +4,7 @@ import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
 import {AspectRatio} from "../geometry/GrCanvas";
 import {I18n} from "vue-i18n";
-import {DataField, DataFieldValue} from "./modules/Data";
+import {DataField, DataFieldValue, DataState} from "./modules/Data";
 import {AppConfig} from "../core/AppConfig";
 import {ModalDialogHandler} from "../ui/core/ModalDialogHandler";
 import {LibraryEntry} from "../core/Library";
@@ -61,7 +61,12 @@ const mutations = {
         renameField: "data/renameField",
         setFieldValue: "data/setFieldValue",
         setListFieldValue: "data/setListFieldValue",
-        addValueToField: "data/addValueToField"
+        setTableCellValue: "data/setTableCellValue",
+        addValueToField: "data/addValueToField",
+        addColumnToField: "data/addColumnToField",
+        renameTableColumn: "data/renameTableColumn",
+        removeTableColumn: "data/removeTableColumn",
+
     },
 
     library: {
@@ -111,15 +116,15 @@ export class State {
         return this._store;
     }
 
-    get i18n():I18n {
-        return  this._i18n;
+    get i18n(): I18n {
+        return this._i18n;
     }
 
     setLocale(locale: string) {
         this._i18n.global.locale = locale;
     }
 
-    get locale():string {
+    get locale(): string {
         const locale = this._i18n.global.locale;
         return locale as string;
     }
@@ -149,7 +154,7 @@ export class State {
         return this.get(getters.drawing.objects);
     }
 
-    getObject(uniqueName: string):GrObject {
+    getObject(uniqueName: string): GrObject {
         return this.get(getters.drawing.object, uniqueName);
     }
 
@@ -288,8 +293,20 @@ export class State {
         this.commit(mutations.data.addField, { name, value });
     }
 
-    addValueToDataField(name: string, value: (number | string)) {
+    addValueToDataField(name: string, value: ( number | string )) {
         this.commit(mutations.data.addValueToField, { name, value });
+    }
+
+    addColumnToDataField(name: string, value: ( number | string )) {
+        this.commit(mutations.data.addColumnToField, { name, value });
+    }
+
+    renameTableColumn(name: string, oldColumn: string, newColumn: string) {
+        this.commit(mutations.data.renameTableColumn, { name, oldColumn, newColumn });
+    }
+
+    removeTableColumn(name: string, column: string) {
+        this.commit(mutations.data.removeTableColumn, { name, column });
     }
 
     removeDataField(name: string) {
@@ -298,15 +315,19 @@ export class State {
 
     renameDataField(oldName: string, newName: string) {
         this.commit(mutations.data.renameField, { oldName, newName });
-        this.commit(mutations.code.renameRegister, { oldName, newName});
+        this.commit(mutations.code.renameRegister, { oldName, newName });
     }
 
-    setDateFieldValue(name: string, value: DataFieldValue) {
+    setDataFieldValue(name: string, value: DataFieldValue) {
         this.commit(mutations.data.setFieldValue, { name, value });
     }
 
     setDataListFieldValue(name: string, index: number, value: DataFieldValue) {
         this.commit(mutations.data.setListFieldValue, { name, index, value });
+    }
+
+    setDataTableCellValue(name: string, index: number, column: string, value: DataFieldValue) {
+        this.commit(mutations.data.setTableCellValue, { name, index, column, value });
     }
 
     showModal(component: any, handler: ModalDialogHandler) {
@@ -321,7 +342,7 @@ export class State {
         this.commit(mutations.library.add, entry);
     }
 
-    getLibraryEntry(name: string):LibraryEntry {
+    getLibraryEntry(name: string): LibraryEntry {
         return this.get(getters.library.getEntry, name);
     }
 
