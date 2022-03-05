@@ -50,6 +50,20 @@ export class ArrayIterator extends Parameter {
         return this.atIndex(this._index);
     }
 
+    getComponentValue(components: Array<string>):any {
+        let v:any = this.value;
+
+        if (components[0] === "value") {
+            v = this;
+        }
+
+        for (const c of components) {
+            v = v[c];
+        }
+
+        return v;
+    }
+
     reset() {
         this._index = 0;
     }

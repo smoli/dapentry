@@ -1,11 +1,10 @@
-
 export class Parameter {
     private readonly _isRegister: boolean = false;
     private readonly _valueOrName: any = null;
     private readonly _components: Array<string> = null
     private readonly _isNonLocal: boolean;
 
-    constructor(isRegister:boolean, valueOrName:any, nonLocal: boolean = false) {
+    constructor(isRegister: boolean, valueOrName: any, nonLocal: boolean = false) {
         this._valueOrName = valueOrName;
         this._isRegister = isRegister;
         this._isNonLocal = false;
@@ -41,8 +40,12 @@ export class Parameter {
         }
         if (this.components) {
             if (this.components) {
-                for (const c of this.components) {
-                    r = r[c]
+                if (r.getComponentValue) {
+                    r = r.getComponentValue(this.components);
+                } else {
+                    for (const c of this.components) {
+                        r = r[c]
+                    }
                 }
             }
         }
@@ -68,4 +71,5 @@ export class Parameter {
     }
 }
 
-export class LabelParameter extends Parameter {}
+export class LabelParameter extends Parameter {
+}

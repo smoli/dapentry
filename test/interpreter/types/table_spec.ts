@@ -55,4 +55,24 @@ describe('Table', () => {
         expect(i.getRegister("y")).to.equal(( 2 + 3 + 4))
         expect(i.getRegister("z")).to.equal(( 23 + 4 + 5))
     });
+
+    it("iterator on a table can be used as the value on \"right-hand side\"", async () => {
+        const code = `
+            LOAD ar, [[1, 2], [2, 3], [3, 4]](x, y)
+            ITER i, ar
+            LOAD r1, i.x
+            NEXT i
+            LOAD r2, i.y
+            NEXT i
+            LOAD r3, i.x
+        `;
+        const i = new Interpreter();
+        i.parse(code);
+
+        await i.run();
+
+        expect(i.getRegister("r1")).to.equal(1)
+        expect(i.getRegister("r2")).to.equal(3)
+        expect(i.getRegister("r3")).to.equal(3)
+    });
 });
