@@ -2,13 +2,42 @@ import {ASSERT, UNREACHABLE} from "../../core/Assertions";
 
 export type DataFieldValue = number | string | Array<number>;
 
+export enum DataFieldType {
+    Number,
+    List,
+    String,
+    Table
+}
+
 export interface DataField {
     name: string,
     value: DataFieldValue
+    type: DataFieldType
 }
 
 export interface DataState {
     fields: Array<DataField>
+}
+
+
+function getFieldTypeFromValue(value: DataFieldValue):DataFieldType {
+
+    if (typeof value === "number") {
+        return DataFieldType.Number;
+    }
+
+    if (typeof value === "string") {
+        return DataFieldType.String;
+    }
+
+    if (Array.isArray(value)) {
+        if (value.length && typeof value[0] === "number") {
+            return DataFieldType.List;
+        }
+
+        return DataFieldType.Table;
+    }
+
 }
 
 
@@ -57,7 +86,7 @@ export const dataState = {
             if (state.fields.find(f => f.name === payload.name)) {
                 UNREACHABLE(`Duplicate field ${payload.name}`);
             }
-            state.fields = [...state.fields, { name: payload.name, value: payload.value }];
+            state.fields = [...state.fields, { name: payload.name, value: payload.value, type: getFieldTypeFromValue(payload.value) }];
         },
 
         removeField(state: DataState, name: string) {
@@ -71,7 +100,7 @@ export const dataState = {
         setFieldValue(state: DataState, payload: { name: string, value: DataFieldValue }) {
             state.fields = state.fields.map(f => {
                 if (f.name === payload.name) {
-                    return { name: f.name, value: payload.value }
+                    return { name: f.name, value: payload.value, type: f.type }
                 }
                 return f;
             })
@@ -82,7 +111,7 @@ export const dataState = {
                 if (f.name === payload.name) {
                     ASSERT(Array.isArray(f.value), "Can only set item value on array values");
                     const value = (f.value as Array<any>).map((v, i) => i === payload.index ? payload.value : v)
-                    return { name: f.name, value }
+                    return { name: f.name, value, type: DataFieldType.List }
                 }
                 return f;
             })
@@ -96,10 +125,10 @@ export const dataState = {
                 }
 
                 if (Array.isArray(f.value)) {
-                    return { name: f.name, value: [...f.value, payload.value ]}
+                    return { name: f.name, value: [...f.value, payload.value ], type: DataFieldType.List}
                 }
 
-                return { name: f.name, value: [f.value, payload.value ]}
+                return { name: f.name, value: [f.value, payload.value ], type: DataFieldType.List}
             })
         }
     }

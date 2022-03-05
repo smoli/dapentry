@@ -8,6 +8,7 @@ import {GrCircle} from "../../src/geometry/GrCircle";
 import exp = require("constants");
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import {T_NUMBER, T_OPCODE, T_REGISTER} from "../testHelpers/tokens";
+import {DataFieldType} from "../../src/state/modules/Data";
 
 
 class MockPersistence extends Persistence {
@@ -139,9 +140,9 @@ describe('State', () => {
             state.addDataField("f3", [10, 20, 30]);
 
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: 10},
-                {name: "f2", value: "Hello"},
-                {name: "f3", value: [10, 20, 30]}
+                {name: "f1", value: 10, type: DataFieldType.Number},
+                {name: "f2", value: "Hello", type: DataFieldType.String},
+                {name: "f3", value: [10, 20, 30], type: DataFieldType.List}
             ])
         });
 
@@ -155,14 +156,14 @@ describe('State', () => {
 
             state.removeDataField("f2");
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: 10},
-                {name: "f3", value: [10, 20, 30]}
+                {name: "f1", value: 10, type: DataFieldType.Number},
+                {name: "f3", value: [10, 20, 30], type: DataFieldType.List}
             ]);
 
             state.removeDataField("unknown");
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: 10},
-                {name: "f3", value: [10, 20, 30]}
+                {name: "f1", value: 10, type: DataFieldType.Number},
+                {name: "f3", value: [10, 20, 30], type: DataFieldType.List}
             ]);
         });
 
@@ -184,7 +185,7 @@ describe('State', () => {
             const state = new State(store, null);
 
             state.addDataField("f1", 10);
-            expect(state.getDataField("f1")).to.deep.equal({name: "f1", value: 10});
+            expect(state.getDataField("f1")).to.deep.equal({name: "f1", value: 10, type: DataFieldType.Number});
 
         });
 
@@ -194,17 +195,17 @@ describe('State', () => {
 
             state.addDataField("f1", 10);
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: 10}
+                {name: "f1", value: 10, type: DataFieldType.Number}
             ]);
 
             state.setDateFieldValue("f1", 20);
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: 20}
+                {name: "f1", value: 20, type: DataFieldType.Number}
             ]);
 
             state.setDateFieldValue("unknown", 20)
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: 20}
+                {name: "f1", value: 20, type: DataFieldType.Number}
             ]);
         });
 
@@ -225,12 +226,12 @@ describe('State', () => {
 
             state.addDataField("f3", [10, 20, 30]);
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f3", value: [10, 20, 30]}
+                {name: "f3", value: [10, 20, 30], type: DataFieldType.List}
             ]);
 
             state.setDataListFieldValue("f3", 1, 40);
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f3", value: [10, 40, 30]}
+                {name: "f3", value: [10, 40, 30], type: DataFieldType.List}
             ]);
         });
 
@@ -243,14 +244,14 @@ describe('State', () => {
 
             state.addValueToDataField("f3", 40);
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: 10},
-                {name: "f3", value: [10, 20, 30, 40]}
+                {name: "f1", value: 10, type: DataFieldType.Number},
+                {name: "f3", value: [10, 20, 30, 40], type: DataFieldType.List}
             ]);
 
             state.addValueToDataField("f1", 20);
             expect(state.store.state.data.fields).to.deep.equal([
-                {name: "f1", value: [10, 20]},
-                {name: "f3", value: [10, 20, 30, 40]}
+                {name: "f1", value: [10, 20], type: DataFieldType.List},
+                {name: "f3", value: [10, 20, 30, 40], type: DataFieldType.List}
             ]);
 
         });
@@ -271,7 +272,7 @@ describe('State', () => {
             state.renameDataField("f1", "f2");
 
             expect(state.store.state.data.fields).to.deep.equal([
-                { name: "f2", value: 10}
+                { name: "f2", value: 10, type: DataFieldType.Number}
             ]);
 
             expect(state.store.state.code.code.map(c => Parser.parseLine(c))).to.deep.equal([

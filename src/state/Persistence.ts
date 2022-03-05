@@ -1,6 +1,6 @@
 import {State} from "./State";
 import {LibraryEntry} from "../core/Library";
-import {DataField} from "./modules/Data";
+import {DataField, DataFieldType} from "./modules/Data";
 import {API, APIResponse, ResponseStatus} from "../api/API";
 
 export class Persistence {
@@ -174,8 +174,8 @@ FILL Polygon2, "#030303"`;
 
     async loadData(): Promise<Array<DataField>> {
         return [
-            { name: "f1", value: [10, 20, 30, 40] },
-            { name: "f2", value: 5 }
+            { name: "f1", value: [10, 20, 30, 40], type: DataFieldType.List },
+            { name: "f2", value: 5, type: DataFieldType.Number }
         ]
     }
 

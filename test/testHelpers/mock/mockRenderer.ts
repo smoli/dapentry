@@ -27,6 +27,10 @@ export class MockRenderer extends ObjectRenderer {
 
     }
 
+    getSVGPreview(): any {
+        return ""
+    }
+
     pointerCoordsFromEvent(event: MouseEvent) {
         return null;
     }

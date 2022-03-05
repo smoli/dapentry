@@ -38,6 +38,9 @@ describe("API", () => {
                 "aspect": "ar1_1",
                 "created_at": "2022-03-01T20:13:30.000000Z",
                 "updated_at": "2022-03-01T20:13:30.000000Z",
+                "svg_preview": "Hello",
+                "preview_vb_width": 123,
+                "preview_vb_height": 456,
                 "arguments": [
                     {
                         "id": 12,
@@ -72,6 +75,9 @@ describe("API", () => {
                 "aspectRatio": AspectRatio.ar1_1,
                 "created_at": "2022-03-01T20:13:30.000000Z",
                 "updated_at": "2022-03-01T20:13:30.000000Z",
+                "svgPreview": "Hello",
+                "previewVBWidth": 123,
+                "previewVBHeight": 456,
                 "arguments": [
                     {
                         "id": 12,

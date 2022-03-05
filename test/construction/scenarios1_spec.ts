@@ -6,7 +6,7 @@ import {GrObjectList} from "../../src/geometry/GrObjectList";
 
 describe('Scenarios 1', () => {
 
-    it('Stacking by looping and moving object on themselves', async () => {
+    xit('Stacking by looping and moving object on themselves', async () => {
 
         const code = `
             DO 3

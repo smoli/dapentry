@@ -19,12 +19,13 @@
     FUNCDECL: 7,
     POINT: 8,
     ARRAY: 9,
-    EXPRESSION: 10,
-    OPERATOR: 11,
-    ANNOTATION: 12,
-    NAME: 13,
-    MATHFUNC: 14,
-    OTHER: 15
+    TABLE: 10,
+    EXPRESSION: 11,
+    OPERATOR: 12,
+    ANNOTATION: 13,
+    NAME: 14,
+    MATHFUNC: 15,
+    OTHER: 16
   }
 
 }
@@ -101,7 +102,7 @@
 
 
   ArgumentOrTuple "Argument or Tuple"
-      = aot:(Label/Argument/Tuple/Array) {
+      = aot:(Label/Argument/Tuple/Table/Array) {
       return aot
       }
 
@@ -196,6 +197,12 @@
       = "("_ first:Argument args:(S Argument)* _ ")" {
       return { type: TokenTypes.POINT, value: [first, ...args.map(a => a[1])] }
       }
+
+  Table "Table"
+
+  	= "["_ first:Array rest:(S Array)* _ "](" firstName:Name restNames:(S Name)* _ ")" {
+    	return { type: TokenTypes.TABLE, value: [[firstName, ... restNames.map(a => a[1])], [first, ... rest.map(a => a[1])]] };
+    }
 
 
   Array "Array"

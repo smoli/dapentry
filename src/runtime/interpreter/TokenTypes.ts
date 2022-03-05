@@ -9,6 +9,7 @@ export enum TokenTypes {
     FUNCDECL,
     POINT,
     ARRAY,
+    TABLE,
     EXPRESSION,
     OPERATOR,
     ANNOTATION,

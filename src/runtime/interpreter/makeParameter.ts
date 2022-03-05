@@ -5,6 +5,7 @@ import {Point2Parameter} from "./types/Point2Parameter";
 import {ArrayParameter} from "./types/ArrayParameter";
 import {ExpressionParameter} from "./types/ExpressionParameter";
 import {MathFuncParameter} from "./types/MathFuncParameter";
+import {TableParameter} from "./types/TableParameter";
 
 export function makeParameter(token): Parameter {
     switch (token.type) {
@@ -30,6 +31,14 @@ export function makeParameter(token): Parameter {
         case TokenTypes.ARRAY:
             return new ArrayParameter(
                 (token.value as Array<any>).map(token => makeParameter(token))
+            )
+
+        case TokenTypes.TABLE:
+            // Todo: Type check here that value[0] is an Array of Arrays
+            //       and value[1] is an array of names
+            return new TableParameter(
+                (token.value[1] as Array<any>).map(token => makeParameter(token)),
+                token.value[0]
             )
 
         case TokenTypes.ANNOTATION:
