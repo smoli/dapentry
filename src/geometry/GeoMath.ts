@@ -1,4 +1,5 @@
 import {Point2D} from "./Point2D";
+import {ScaleMode} from "./GrObject";
 
 
 export function rad2deg(rad: number): number {
@@ -31,6 +32,21 @@ export function rotatePivot(p: Point2D, angle: number, pivot: Point2D): Point2D 
         x * c - y * s + pivot.x,
         x * s + y * c + pivot.y
     );
+}
+
+
+export function scaleToAPoint(oldPoint: Point2D, pivot: Point2D, newPoint: Point2D): { fx: number, fy: number } {
+
+    const oldDx = oldPoint.x - pivot.x;
+    const oldDy = oldPoint.y - pivot.y;
+
+    const newDx = newPoint.x - pivot.x;
+    const newDy = newPoint.y - pivot.y;
+
+    let fx = eq(oldDx, 0) ? 1 : newDx / oldDx;
+    let fy = eq(oldDy, 0) ? 1: newDy / oldDy;
+
+    return { fx, fy };
 }
 
 /**

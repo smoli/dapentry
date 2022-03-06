@@ -11,7 +11,7 @@ export class Persistence {
         // const code = await this.loadCode();
         // state.setCode(code);
 
-        // state.setCodeString(this.getDemoCode());
+         // state.setCodeString(this.getDemoCode());
 
         if (this._state.store.state.auth.authenticated) {
             await this.saveAuth(this._state.store.state.auth.token)

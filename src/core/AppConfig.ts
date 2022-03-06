@@ -91,6 +91,10 @@ export const AppConfig = {
                 AlongY: "MOVEY",
                 ToPoint: "MOVETO"
             },
+            Scale: {
+                FACTOR: "SCALE",
+                ToPoint: "SCALEP"
+            },
             Text: "TEXT",
             FillColor: "FILL",
             FillOpacity: "OPACITY",

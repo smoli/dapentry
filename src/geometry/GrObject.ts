@@ -343,6 +343,12 @@ export abstract class GrObject {
     public scale(fx: number, fy: number, pivot: Point2D = null) {
     }
 
+    public scaleToPoint(ownPoi: POI, pivot: Point2D = null, target: Point2D) {
+
+
+
+    }
+
     public get supportedScaleModes():ScaleModes {
         return [ScaleMode.NONUNIFORM, ScaleMode.UNIFORM];
     }

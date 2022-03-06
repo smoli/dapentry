@@ -4,7 +4,8 @@ import {ObjectRenderer} from "../core/ObjectRenderer";
 import {GrObject, POI, POIMap, POIPurpose, ScaleMode} from "../geometry/GrObject";
 import {state} from "../runtime/tools/StateMachine";
 import {Point2D} from "../geometry/Point2D";
-import {eq} from "../geometry/GeoMath";
+import {eq, scaleToAPoint} from "../geometry/GeoMath";
+import {AppConfig} from "../core/AppConfig";
 
 enum States {
     Wait = "MoveTool.Wait",
@@ -22,6 +23,7 @@ export class ScaleTool extends Tool {
     protected _scaleMode: ScaleMode = ScaleMode.NONUNIFORM;
     protected _selection: Array<GrObject> = [];
     protected _scalingPOI: POI = null;
+    protected _snapScalePoint: SnapInfo = null;
     protected _finalX: number;
     protected _finalY: number;
 
@@ -56,6 +58,7 @@ export class ScaleTool extends Tool {
                 this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), Number(poiId));
             })
 
+        this.enablePOISnapping([this._object])
         this._renderer.renderBoundingRepresentation(this._object);
     }
 
@@ -98,18 +101,11 @@ export class ScaleTool extends Tool {
         newPosition.x += dx;
         newPosition.y += dy;
 
-        const ol = this._target.mapPointToLocal(oldPosition);
-        const nl = this._target.mapPointToLocal(newPosition);
-        const pl = this._target.mapPointToLocal(this._pivot);
+        const oldLocal = this._target.mapPointToLocal(oldPosition);
+        const newLocal = this._target.mapPointToLocal(newPosition);
+        const pivotLocal = this._target.mapPointToLocal(this._pivot);
 
-        const oldDx = ol.x - pl.x;
-        const oldDy = ol.y - pl.y;
-
-        const newDx = nl.x - pl.x;
-        const newDy = nl.y - pl.y;
-
-        let fx = eq(oldDx, 0) ? 1 : newDx / oldDx;
-        let fy = eq(oldDy, 0) ? 1: newDy / oldDy;
+        let { fx, fy } = scaleToAPoint(oldLocal, pivotLocal, newLocal);
 
         if (this._scaleMode === ScaleMode.UNIFORM) {
             fx = fy = Math.min(fx, fy);
@@ -153,6 +149,7 @@ export class ScaleTool extends Tool {
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
+                    this._snapScalePoint = snapInfo;
                     this._scale(dx, dy);
                     this._renderer.render(this._target, true);
                     const poi: POIMap = this._target.pointsOfInterest(POIPurpose.SCALING);
@@ -168,6 +165,10 @@ export class ScaleTool extends Tool {
     }
 
     public get result(): any {
+        if (this._snapScalePoint?.object) {
+            return `${AppConfig.Runtime.Opcodes.Scale.ToPoint} ${this._object.uniqueName}, "${POI[this._scalingPOI]}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, "${POI[this._pivotPOI]}"`;
+        }
+
         if (this._scaleMode == ScaleMode.UNIFORM) {
             return `SCALE ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, "${POI[this._pivotPOI]}"`
         } else {

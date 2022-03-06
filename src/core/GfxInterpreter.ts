@@ -92,7 +92,11 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation(AppConfig.Runtime.Opcodes.Text, makeGfxOperation(GfxText, objCallback));
 
         this.addOperation("ROTATE", makeGfxOperation(GfxRotate, objCallback));
-        this.addOperation("SCALE", makeGfxOperation(GfxScale, objCallback));
+
+        Object.values(AppConfig.Runtime.Opcodes.Scale)
+            .forEach(opcode => {
+                this.addOperation(opcode, makeGfxOperation(GfxScale, objCallback));
+            })
 
         this.addOperation(AppConfig.Runtime.Opcodes.FillColor, makeGfxOperation(GfxFill, objCallback));
         this.addOperation(AppConfig.Runtime.Opcodes.FillOpacity, makeGfxOperation(GfxFillOpacity, objCallback));

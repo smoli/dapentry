@@ -79,7 +79,7 @@ export class MoveTool extends Tool {
                 object: undefined, poiId: -1, point: undefined
             });
 
-            this.enablePOISnapping([this._object]);
+            this.enablePOISnapping([]);
         }
     }
 

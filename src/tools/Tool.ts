@@ -4,6 +4,7 @@ import {InfoHandle, ObjectRenderer} from "../core/ObjectRenderer";
 import {GrObject, POI} from "../geometry/GrObject";
 import {Point2D} from "../geometry/Point2D";
 import {AppConfig} from "../core/AppConfig";
+import {GrObjectList} from "../geometry/GrObjectList";
 
 export interface SnapInfo {
     object: GrObject,
@@ -241,9 +242,9 @@ export abstract class Tool {
 
         let handle;
 
-        // const lObjToExclude = objectsToExclude.filter(o => ( o instanceof GrObjectList && o.objects.length < 2 ) || !( o instanceof GrObjectList ));
+        const lObjToExclude = objectsToExclude.filter(o => ( o instanceof GrObjectList && o.objects.length < 2 ) || !( o instanceof GrObjectList ));
 
-        const lObjToExclude = [];
+        // const lObjToExclude = [];
 
         if (this._target) {
             lObjToExclude.push(this._target);
