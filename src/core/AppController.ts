@@ -28,6 +28,7 @@ import {LibraryEntry} from "./Library";
 import {SaveDrawingToLibrary} from "../actions/SaveDrawingToLibrary";
 import {Login} from "../actions/Login";
 import {API} from "../api/API";
+import {AddColumnToDataField} from "../actions/AddColumnToDataField";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -277,8 +278,21 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
+    async setDataTableCellValue(name: string, index: number, column: string, value: DataFieldValue) {
+        this.state.setDataTableCellValue(name, index, column, value);
+        await this.runCode();
+        this.updateDrawing();
+        await this._persistence?.saveCode();
+    }
+
     async addValueToDataField(name: string, value: ( number | string )) {
         await this.execute(new AddValueToDataField(name, value));
+        await this.runCode();
+        this.updateDrawing();
+    }
+
+    async addColumnToDataField(name: string, value: ( number | string )) {
+        await this.execute(new AddColumnToDataField(name, value));
         await this.runCode();
         this.updateDrawing();
     }

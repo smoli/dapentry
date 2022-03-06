@@ -28,8 +28,17 @@ export class TableParameter extends Parameter {
         return this._getValue(this._rows[index], closure);
     }
 
-    get rows(): any {
-        return this._rows;
+    /**
+     * TODO: This will only be called on tables create by literal. It only works
+     * on non-register cell values.
+     */
+    get value(): any {
+        return this._rows.map(v => {
+            const row = {}
+            const r = v.value as Array<any>;
+            r.forEach((v, i) => row[this._columnNames[i]] = v.value);
+            return row;
+        });
     }
 
     finalized(closure): any {

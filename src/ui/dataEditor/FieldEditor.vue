@@ -19,7 +19,8 @@
     </td>
     <td>
       <slot></slot>
-      <button class="drawable-data-field-add-value drawable-ui-transparent" @click="onAddValue">+</button>
+      <button class="drawable-data-field-add-value drawable-ui-transparent" @click="onAddValue" title="Add a value">+</button>
+      <button class="drawable-ui-transparent drawable-data-field-add-column" @click="onAddColumn" title="Add a column">↩</button>
     </td>
   </tr>
 </template>
@@ -50,6 +51,10 @@ export default {
 
     onAddValue(event) {
       this.controller.addValueToDataField(this.field.name, 4);
+    },
+
+    onAddColumn(event) {
+      this.controller.addColumnToDataField(this.field.name, 4);
     },
 
     async onRemoveField() {

@@ -1,5 +1,4 @@
 import {ASSERT, UNREACHABLE} from "../../core/Assertions";
-import {types} from "util";
 
 export type DataFieldValue = number | string | Array<number> | Array<{ [key: string]: DataFieldValue }>;
 
@@ -110,11 +109,28 @@ export const dataState = {
 
     getters: {
         dataCode(state: DataState) {
+
+
             return state.fields.map(field => {
-                if (Array.isArray(field.value)) {
-                    return `ITER ${field.name}, [${field.value.join(", ")}]`;
+
+                switch (field.type) {
+                    case DataFieldType.Number:
+                        return `LOAD ${field.name}, ${field.value}`;
+                    case DataFieldType.List:
+                        return `ITER ${field.name}, [${(field.value as Array<any>).join(", ")}]`;
+
+                    case DataFieldType.String:
+                        return `LOAD ${field.name}, ${field.value}`;
+
+                    case DataFieldType.Table:
+                        ASSERT((field.value as Array<any>).length > 0, "Table must not be empty");
+                        const columns = Object.keys(field.value[0]);
+                        const values = (field.value as Array<any>).map(v => Object.values(v))
+
+                        return `ITER ${field.name}, [${values.map(v => `[${v.join(",")}]`).join(",")}](${columns.join(",")})`
+
+
                 }
-                return `LOAD ${field.name}, ${field.value}`;
             });
         },
 
@@ -215,11 +231,25 @@ export const dataState = {
                     return f;
                 }
 
-                if (Array.isArray(f.value)) {
-                    return { name: f.name, value: [...f.value, payload.value], type: DataFieldType.List }
+                switch (f.type) {
+                    case DataFieldType.Number:
+                        return { name: f.name, value: [f.value, payload.value], type: DataFieldType.List }
+
+                    case DataFieldType.List:
+                        return { name: f.name, value: [...(f.value as Array<any>), payload.value], type: DataFieldType.List }
+
+                    case DataFieldType.String:
+                        break;
+
+                    case DataFieldType.Table:
+                        const v1 = f.value[0];
+                        const row = {}
+                        Object.keys(v1).forEach(k => row[k] = payload.value);
+                        return { name: f.name, value: [...(f.value as Array<any>), row], type: DataFieldType.Table }
+
+
                 }
 
-                return { name: f.name, value: [f.value, payload.value], type: DataFieldType.List }
             })
         },
 

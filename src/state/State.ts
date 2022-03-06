@@ -326,7 +326,7 @@ export class State {
         this.commit(mutations.data.setListFieldValue, { name, index, value });
     }
 
-    setDataTableCellValue(name: string, index: number, column: string, value: DataFieldValue) {
+    public setDataTableCellValue(name: string, index: number, column: string, value: DataFieldValue) {
         this.commit(mutations.data.setTableCellValue, { name, index, column, value });
     }
 

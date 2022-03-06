@@ -32,11 +32,31 @@
 
   }
 
+  table.drawable-data-table-value {
+
+    display: inline-block;
+
+    tr {
+      border: none;
+    }
+    thead  th {
+      font-size: 0.5em;
+    }
+
+    tbody input {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+  }
 
   input {
     margin: 0.2em;
     border: none;
     padding: 0.1em 0.2em;
+    background-color: @uiColor1;
+  }
+  input:focus {
     background-color: @uiColor1;
   }
 

@@ -1,9 +1,9 @@
 <template>
   <section class="drawable-data-editor">
     <h2 v-if="!hideCaption">{{ $t("ui.dataEditor") }}</h2>
-<!--    <button v-if="!hideCaption" @click="onMaximize">Maxi</button>-->
+    <!--    <button v-if="!hideCaption" @click="onMaximize">Maxi</button>-->
     <table class="drawable-data-field-list">
-      <component v-for="field in fieldEditors" :is="field.type" :field="field.field" />
+      <component v-for="field in fieldEditors" :is="field.type" :field="field.field"/>
     </table>
     <button @click="onNewDataField" class="drawable-ui-transparent">+</button>
   </section>
@@ -12,9 +12,9 @@
 <script lang="ts">
 
 
-import {DataField} from "../../state/modules/Data";
-import {UNREACHABLE} from "../../core/Assertions";
+import {DataField, DataFieldType} from "../../state/modules/Data";
 import NumberEditor from "./NumberEditor.vue";
+import TableEditor from "./TableEditor.vue";
 import ListEditor from "./ListEditor.vue";
 
 interface FieldEditor {
@@ -22,30 +22,28 @@ interface FieldEditor {
   field: DataField
 }
 
-function createFields(fields: Array<DataField>):Array<FieldEditor> {
+function createFields(fields: Array<DataField>): Array<FieldEditor> {
 
   return fields.map(field => {
-      if (Array.isArray(field.value)) {
-
-        if (field.value.length) {
-          if (Array.isArray(field.value[0])) {
-            return { type: "TableEditor", field }
-          }
-        }
-
-        return { type: "ListEditor", field}
-      }
-
-
+    switch (field.type) {
+      case DataFieldType.Number:
         return { type: "NumberEditor", field }
-      
+
+      case DataFieldType.List:
+        return { type: "ListEditor", field }
+
+      case DataFieldType.String:
+        break;
+      case DataFieldType.Table:
+        return { type: "TableEditor", field }
+    }
   });
 }
 
 
 export default {
   name: "DataEditor",
-  components: { NumberEditor, ListEditor },
+  components: { NumberEditor, ListEditor, TableEditor },
   props: ["hideCaption"],
   inject: ["controller"],
 
@@ -61,8 +59,8 @@ export default {
     },
 
     async onMaximize() {
-        const de = this.controller.modalFactory.createDataEditorModal();
-        await de.show();
+      const de = this.controller.modalFactory.createDataEditorModal();
+      await de.show();
     }
   }
 }
