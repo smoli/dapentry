@@ -75,4 +75,19 @@ describe('Table', () => {
         expect(i.getRegister("r2")).to.equal(3)
         expect(i.getRegister("r3")).to.equal(3)
     });
+
+    it("iterator can be created on the table directly", async () => {
+        const code = `
+            LOAD r2, 12
+            ITER i, [[r2 * 2, 1], [2, 3], [3, 4]](x, y)
+            LOAD r1, i.x
+            NEXT i
+        `;
+
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(i.getRegister("r1")).to.equal(24)
+
+    })
 });

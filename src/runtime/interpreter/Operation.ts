@@ -34,7 +34,7 @@ export class Operation {
             }
             r = this.closure.getRegister(param.name);
         } else {
-            r = param.value;
+            r = param.finalized(this.closure);
         }
 
         if (r && r.finalized) {
