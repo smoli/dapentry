@@ -63,7 +63,7 @@ export default {
 
     onFieldNameChange(event) {
       this.controller.renameDataField(this.field.name, event.target.value);
-      this.$refs["fieldName"].blur();
+
     },
 
     onDragStart: function (event: DragEvent) {
