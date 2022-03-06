@@ -40,7 +40,7 @@ export class StyleManager {
             textAlignment: TextAlignement.center,
             verticalAlignment: TextAlignement.end,
             fontFamily: "Sans-serif",
-            fontSize: 25
+            fontSize: 50
         }
     }
 

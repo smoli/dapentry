@@ -22,6 +22,7 @@ import {GrCanvas} from "../../geometry/GrCanvas";
 import {AppConfig} from "../../core/AppConfig";
 import {GrText} from "../../geometry/GrText";
 import {TextAlignement} from "../../core/StyleManager";
+import {eq, rad2deg} from "../../geometry/GeoMath";
 
 enum ToolClasses {
     object = "grObject",
@@ -430,12 +431,27 @@ export class SvgObjectRenderer extends ObjectRenderer {
             .attr("y", text.y)
             .text(text.text);
         this._createTextStyle(t, text);
+        this._textTransform(t, text);
 
         return t;
     }
 
     renderText(layer: RenderLayer, text: GrText, enableMouseEvents: boolean) {
         return this._renderText(this.getLayer(layer), text, null, enableMouseEvents);
+    }
+
+    protected _textTransform(elem:  d3.Selection<any, any, any, any>, text: GrText) {
+        const a = -rad2deg(new Point2D(1, 0).angleTo(text.xAxis));
+
+        const comps = [];
+
+        if (!eq(a, 0)) {
+            comps.push(`rotate(${a} ${text.x} ${text.y})`);
+        }
+
+        if (comps.length) {
+            elem.attr("transform", comps.join(" "));
+        }
     }
 
     protected _createTextStyle(elem: d3.Selection<any, any, any, any>, text: GrText) {

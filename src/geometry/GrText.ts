@@ -1,8 +1,5 @@
 import {BoundingBox, GrObject, ObjectProperty, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
-import {TWO_PI} from "./GeoMath";
 import {Point2D} from "./Point2D";
-import {Line2D} from "./Line2D";
-import {Circle2D} from "./Circle2D";
 import {NOT_IMPLEMENTED} from "../core/Assertions";
 import {Style, TextAlignement} from "../core/StyleManager";
 
@@ -23,8 +20,8 @@ export class GrText extends GrObject {
     private readonly _text: string;
     private _width: number;
     private _height: number;
-    private _alignmentFactorH: number;
-    private _alignmentFactorV: number;
+    protected _alignmentFactorH: number;
+    protected _alignmentFactorV: number;
 
     constructor(name: string, x: number, y: number, text: string) {
         super(ObjectType.Text, name, x, y);
@@ -36,7 +33,14 @@ export class GrText extends GrObject {
 
 
     protected copy(): GrObject {
-        return new GrText(this.uniqueName, this.x, this.y, this._text);
+        const copy = new GrText(this.uniqueName, this.x, this.y, this._text);
+
+        copy._width = this._width;
+        copy._height = this._height;
+        copy._alignmentFactorV = this._alignmentFactorV;
+        copy._alignmentFactorH = this._alignmentFactorH;
+
+        return copy;
     }
 
     set style(value: Style) {
@@ -74,6 +78,12 @@ export class GrText extends GrObject {
                 break;
 
         }
+    }
+
+    protected updateTextBox() {
+        const dim = getTextBox(this._text, `${this._style.fontSize}px ${this._style.fontFamily}`);
+        this._width = dim.width;
+        this._height = dim.height;
     }
 
     get style():Style {
@@ -160,6 +170,10 @@ export class GrText extends GrObject {
         ]
     }
 
+    rotatePOI(poi: POI, value: number) {
+        super.rotatePOI(poi, value);
+    }
+
     pointsOfInterest(purpose: POIPurpose): POIMap {
         return {
             ...super.pointsOfInterest(purpose),
@@ -170,5 +184,9 @@ export class GrText extends GrObject {
         }
     }
 
+ /*   getOppositePoi(poi: POI): POI {
+        return POI.center;
+    }
+*/
 
 }

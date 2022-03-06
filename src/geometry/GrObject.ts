@@ -330,7 +330,7 @@ export abstract class GrObject {
      * poi is basically the point a user would grab in
      * order to rotate the object.
      *
-     * By default this will rotate around the center. Specific
+     * By default this will rotate around the opposite point. Specific
      * object implementations may decide otherwise.
      *
      * @param poi

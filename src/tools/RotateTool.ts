@@ -144,7 +144,6 @@ export class RotateTool extends Tool {
                     this._renderer.render(this._rotationObject, true);
 
                     const poi: POIMap = this._rotationObject.pointsOfInterest(POIPurpose.MANIPULATION);
-
                     Object.keys(poi)
                         .forEach(poiId => {
                             this._renderer.updateHandle(this._rotationObject, poiId, poi[poiId]);
