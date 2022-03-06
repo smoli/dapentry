@@ -80,6 +80,8 @@ export class Parser {
                 case TokenTypes.ARRAY:
                     return "[" + token.value.map(v => construct(v)).join(", ") + "]";
 
+                case TokenTypes.TABLE:
+                    return "[" + token.value[1].map(v => construct(v)).join(", ") + "](" + token.value[0].join(",") + ")";
 
                 case TokenTypes.EXPRESSION:
                     return "(" + construct(token.value[0])

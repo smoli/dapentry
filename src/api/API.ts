@@ -4,6 +4,7 @@ import {AspectRatio} from "../geometry/GrCanvas";
 import {UserInfo} from "../state/modules/Authentication";
 import {POI} from "../geometry/GrObject";
 import App from "../../ui5stuff/controller/App.controller";
+import {DataFieldType} from "../state/modules/Data";
 
 
 export enum ResponseStatus {
@@ -185,6 +186,7 @@ export class API {
                 return {
                     ...arg,
                     default: convert(arg.default),
+                    type: DataFieldType[arg.type]
 
                 }
             }),
@@ -192,6 +194,7 @@ export class API {
                 return {
                     ...arg,
                     default: convert(arg.default),
+                    type: DataFieldType[arg.type]
                 }
             })
         }

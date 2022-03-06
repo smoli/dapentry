@@ -2,6 +2,10 @@ import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrOb
 import {Point2D} from "./Point2D";
 import {AppConfig} from "../core/AppConfig";
 
+// IMPORTANT: NEVER CHANGE THE NAMES OF THESE!
+//            The names of this enum are used to store the
+//            aspect ratio of drawings in the library
+//            changing a name of this would invalidate stored data
 export enum AspectRatio {
     ar1_1,
     ar3_2,

@@ -3,6 +3,7 @@ import {DialogCloseReason} from "../ui/core/ModalFactory";
 import SaveDrawingDialog, {SaveDrawingHandler} from "../ui/SaveDrawing/SaveDrawingDialog";
 import {AspectRatio} from "../geometry/GrCanvas";
 import {API} from "../api/API";
+import {DataFieldType} from "../state/modules/Data";
 
 
 interface APILibraryEntryPOST {
@@ -63,7 +64,8 @@ export class SaveDrawingToLibrary extends BaseAction {
                     name: arg.field.name,
                     description: arg.description,
                     default: "" + convert(arg.field.value),
-                    public: arg.public
+                    public: arg.public,
+                    type: DataFieldType[arg.field.type]
                 }
             })
         }

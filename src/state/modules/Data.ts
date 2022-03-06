@@ -2,6 +2,10 @@ import {ASSERT, UNREACHABLE} from "../../core/Assertions";
 
 export type DataFieldValue = number | string | Array<number> | Array<{ [key: string]: DataFieldValue }>;
 
+// IMPORTANT: NEVER CHANGE THE NAMES OF THESE!
+//            The names of this enum are used to store the
+//            argument type of drawings in the library
+//            changing a name of this would invalidate stored data
 export enum DataFieldType {
     Number,
     List,

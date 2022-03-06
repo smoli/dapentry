@@ -1,9 +1,8 @@
 import {AspectRatio} from "../geometry/GrCanvas";
 import {State} from "../state/State";
+import {DataFieldType} from "../state/modules/Data";
 
-export enum LibraryEntryArgumentType {
-     Number = "number"
-}
+export type LibraryEntryArgumentType = DataFieldType;
 
 export interface LibraryEntryArgument {
     type: LibraryEntryArgumentType,

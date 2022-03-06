@@ -3,6 +3,7 @@ import {GrObject} from "../geometry/GrObject";
 import {AppConfig} from "../core/AppConfig";
 import {DrawRectangle} from "./DrawRectangle";
 import {getHeightForWidth} from "../geometry/GrCanvas";
+import {DataFieldType} from "../state/modules/Data";
 
 
 export class DrawLibraryInstance extends DrawRectangle {
@@ -35,8 +36,17 @@ export class DrawLibraryInstance extends DrawRectangle {
         this._libraryEntry.arguments.forEach(arg => {
             let v = arg.default;
 
-            if (Array.isArray(v)) {
-                v = JSON.stringify(v);
+            switch (arg.type as unknown as DataFieldType) {
+                case DataFieldType.List:
+                    v = JSON.stringify(v);
+                    break;
+
+                case DataFieldType.Table:
+                    const v1 = arg.default[0];
+                    v = "[" + arg.default.map(row => {
+                        return "[" + Object.values(row).join(",") + "]"
+                    }).join(",") + "](" + Object.keys(v1).join(",") + ")"
+
             }
 
             statement += ", " + v;

@@ -24,6 +24,7 @@ import {GfxStrokeColor} from "../runtime/gfx/GfxStrokeColor";
 import {GfxFillOpacity} from "../runtime/gfx/GfxFillOpacity";
 import {GfxText} from "../runtime/gfx/GfxText";
 import {ArrayIterator} from "../runtime/interpreter/types/ArrayIterator";
+import {DataFieldType} from "../state/modules/Data";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -204,6 +205,26 @@ class GfxMake extends GfxOperation {
         return v;
     }
 
+
+    protected makeFieldScopeCode(name: string, type: DataFieldType, value: any): string {
+        switch (type) {
+            case DataFieldType.Number:
+                return `LOAD ${name}, ${value}`;
+
+            case DataFieldType.List:
+                return `ITER ${name}, [${value.join(", ")}]`;
+
+            case DataFieldType.String:
+                return `LOAD ${name}, ${value}`;
+
+            case DataFieldType.Table:
+                const v1 = value[0];
+                return  `ITER ${name}, [${value.map(row => {
+                    return "[" + Object.values(row).join(",") + "]"
+                }).join(",")}](${Object.keys(v1).join(",")})`
+        }
+    }
+
     protected getScopeCode(): Array<string> {
         const code = this._entry.arguments.map((field, i) => {
             const arg = this._args && this._args[i];
@@ -215,18 +236,11 @@ class GfxMake extends GfxOperation {
                     v = v.array;
                 }
             }
-
-            if (Array.isArray(v)) {
-                    return `ITER ${field.name}, [${v.join(", ")}]`;
-            }
-            return `LOAD ${field.name}, ${v}`;
+            return this.makeFieldScopeCode(field.name, field.type, v);
         });
 
         code.push(...this._entry.fields.map(field => {
-            if (Array.isArray(field.default)) {
-                return `ITER ${field.name}, [${field.default.join(", ")}]`;
-            }
-            return `LOAD ${field.name}, ${field.default}`;
+            return this.makeFieldScopeCode(field.name, field.type, field.default);
         }))
 
         return code;

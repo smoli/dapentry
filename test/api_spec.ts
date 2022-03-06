@@ -5,6 +5,7 @@ import {API, FetchFunc} from "../src/api/API";
 import {Response} from "node-fetch";
 import {mockFetch} from "./testHelpers/mock_fetch";
 import {AspectRatio} from "../src/geometry/GrCanvas";
+import {DataFieldType} from "../src/state/modules/Data";
 
 
 describe("API", () => {
@@ -49,6 +50,7 @@ describe("API", () => {
                         "description": "How many spokes",
                         "default": "5",
                         "public": 1,
+                        "type": DataFieldType[DataFieldType.Number],
                         "created_at": "2022-03-01T20:13:30.000000Z",
                         "updated_at": "2022-03-01T20:13:30.000000Z"
                     },
@@ -59,6 +61,7 @@ describe("API", () => {
                         "description": "How long are the spokes",
                         "default": "0.50",
                         "public": 0,
+                        "type": DataFieldType[DataFieldType.Number],
                         "created_at": "2022-03-01T20:13:30.000000Z",
                         "updated_at": "2022-03-01T20:13:30.000000Z"
                     }
@@ -86,6 +89,7 @@ describe("API", () => {
                         "description": "How many spokes",
                         "default": 5,
                         "public": 1,
+                        "type": DataFieldType.Number,
                         "created_at": "2022-03-01T20:13:30.000000Z",
                         "updated_at": "2022-03-01T20:13:30.000000Z"
                     }
@@ -98,6 +102,7 @@ describe("API", () => {
                         "description": "How long are the spokes",
                         "default": 0.50,
                         "public": 0,
+                        "type": DataFieldType.Number,
                         "created_at": "2022-03-01T20:13:30.000000Z",
                         "updated_at": "2022-03-01T20:13:30.000000Z"
                     }
