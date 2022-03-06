@@ -22,6 +22,8 @@ export class GrText extends GrObject {
     private _height: number;
     protected _alignmentFactorH: number;
     protected _alignmentFactorV: number;
+    private _scaleX: number = 1;
+    private _scaleY: number = 1;
 
     constructor(name: string, x: number, y: number, text: string) {
         super(ObjectType.Text, name, x, y);
@@ -39,9 +41,13 @@ export class GrText extends GrObject {
         copy._height = this._height;
         copy._alignmentFactorV = this._alignmentFactorV;
         copy._alignmentFactorH = this._alignmentFactorH;
+        copy._scaleX = this._scaleX;
+        copy._scaleY = this._scaleY;
 
         return copy;
     }
+
+
 
     set style(value: Style) {
         this._style = value;
@@ -103,43 +109,43 @@ export class GrText extends GrObject {
     }
 
     get boundingBox(): BoundingBox {
-        return { ...super.boundingBox, w: this._width, h: this._height };
+        return { ...super.boundingBox, w: this._width * this._scaleX, h: this._height * this._scaleY };
     }
 
     get topLeft(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width, this._alignmentFactorV * this.height - this.height);
+        return this.makePoint(this._alignmentFactorH * this.width * this._scaleX, (this._alignmentFactorV * this.height - this.height) * this._scaleY);
     }
 
     get topRight(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width + this._width, this._alignmentFactorV * this.height - this.height);
+        return this.makePoint((this._alignmentFactorH * this.width + this._width) * this._scaleX, (this._alignmentFactorV * this.height - this.height) * this._scaleY);
     }
 
     get bottomLeft(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width, this._alignmentFactorV * this._height);
+        return this.makePoint(this._alignmentFactorH * this.width * this._scaleX, this._alignmentFactorV * this._height * this._scaleY);
     }
 
     get bottomRight(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width + this._width, this._alignmentFactorV * this._height);
+        return this.makePoint((this._alignmentFactorH * this.width + this._width) * this._scaleX, (this._alignmentFactorV * this._height) * this._scaleY);
     }
 
     get top(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width + this._width * 0.5, this._alignmentFactorV * this.height - this.height);
+        return this.makePoint((this._alignmentFactorH * this.width + this._width * 0.5) * this._scaleX, (this._alignmentFactorV * this.height - this.height) * this._scaleY);
     }
 
     get bottom(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width + this._width * 0.5, this._alignmentFactorV * this._height);
+        return this.makePoint((this._alignmentFactorH * this.width + this._width * 0.5) * this._scaleX, (this._alignmentFactorV * this._height) * this._scaleY);
     }
 
     get left(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width, this._alignmentFactorV * this._height - this.height * 0.5);
+        return this.makePoint((this._alignmentFactorH * this.width) * this._scaleX, (this._alignmentFactorV * this._height - this.height * 0.5) * this._scaleY);
     }
 
     get right(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width + this._width, this._alignmentFactorV * this._height - this._height * 0.5);
+        return this.makePoint((this._alignmentFactorH * this.width + this._width) * this._scaleX, (this._alignmentFactorV * this._height - this._height * 0.5) * this._scaleY);
     }
 
     get center(): Point2D {
-        return this.makePoint(this._alignmentFactorH * this.width + this._width * 0.5, this._alignmentFactorV * this._height - this._height * 0.5);
+        return this.makePoint((this._alignmentFactorH * this.width + this._width * 0.5) * this._scaleX, (this._alignmentFactorV * this._height - this._height * 0.5) * this._scaleY);
     }
 
     /**
@@ -151,7 +157,16 @@ export class GrText extends GrObject {
     }
 
     scale(fx: number, fy: number) {
-        // TODO: Adjust font size? Just by the factor?
+        this._scaleX *= fx;
+        this._scaleY *= fy;
+    }
+
+    get scaleX():number {
+        return this._scaleX;
+    }
+
+    get scaleY():number {
+        return this._scaleY;
     }
 
     projectPoint(point: Point2D): Point2D {
@@ -184,9 +199,25 @@ export class GrText extends GrObject {
         }
     }
 
- /*   getOppositePoi(poi: POI): POI {
+    getOppositePoi(poi: POI): POI {
+
         return POI.center;
+        switch (poi) {
+            case POI.topLeft:
+                return POI.bottomRight;
+
+            case POI.topRight:
+                return POI.bottomLeft;
+
+            case POI.bottomLeft:
+                return POI.topRight;
+
+            case POI.bottomRight:
+                return POI.topLeft;
+
+            default:
+                return super.getOppositePoi(poi);
+        }
     }
-*/
 
 }

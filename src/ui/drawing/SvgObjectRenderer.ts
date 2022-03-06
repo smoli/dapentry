@@ -427,8 +427,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const o = this.getObjectOrCreate(layer, text, "text", parent, enableMouseEvents);
 
         const t = o.select(ToolClassSelectors.object);
-        t.attr("x", text.x)
-            .attr("y", text.y)
+        t.attr("x", 0)
+            .attr("y", 0)
             .text(text.text);
         this._createTextStyle(t, text);
         this._textTransform(t, text);
@@ -444,14 +444,18 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const a = -rad2deg(new Point2D(1, 0).angleTo(text.xAxis));
 
         const comps = [];
+        comps.push(`translate(${text.x} ${text.y})`);
 
         if (!eq(a, 0)) {
-            comps.push(`rotate(${a} ${text.x} ${text.y})`);
+            comps.push(`rotate(${a})`);
         }
 
-        if (comps.length) {
-            elem.attr("transform", comps.join(" "));
+        if (text.scaleX !== 1.0 || text.scaleY !== 1.0) {
+            comps.push(`scale(${text.scaleX} ${text.scaleY})`)
         }
+
+
+        elem.attr("transform", comps.join(" "));
     }
 
     protected _createTextStyle(elem: d3.Selection<any, any, any, any>, text: GrText) {
