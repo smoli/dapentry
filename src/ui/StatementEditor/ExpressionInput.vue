@@ -10,6 +10,7 @@
 import GrowingInput from "./GrowingInput.vue";
 import {Parser} from "../../runtime/interpreter/Parser";
 import {deSerializeDNDInfo, DnDDataType, makeDnDHandlers} from "../dnd/DnDInfo";
+
 export default {
   name: "ExpressionInput",
   components: { GrowingInput },
@@ -18,6 +19,7 @@ export default {
 
   computed: {
       expressionString() {
+        console.log(this.content.token);
         return Parser.constructCodeLine([this.content.token]).trim();
       }
   },

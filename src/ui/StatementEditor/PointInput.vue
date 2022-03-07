@@ -4,39 +4,39 @@
       @dragover="onDragOver"
       @drop="onDrop"
     >
-  <GrowingInput :value="x" type="number" @change="onChangeX"/>
-  <GrowingInput :value="y" type="number" @change="onChangeY"/>
+    <ExpressionInput :content="x"/>
+    <ExpressionInput :content="y"/>
   </span>
 </template>
 
 <script lang="ts">
 import NumberInput from "./NumberInput.vue";
-import GrowingInput from "./GrowingInput.vue";
 import {deSerializeDNDInfo, DnDDataType, makeDnDHandlers} from "../dnd/DnDInfo";
+import ExpressionInput from "./ExpressionInput.vue";
 
 export default {
   name: "PointInput",
-  components: { GrowingInput, NumberInput },
+  components: { ExpressionInput, NumberInput },
   props: ["content"],
   inject: ["controller"],
 
   computed: {
       x() {
-        return this.content.token.value[0].value
+        return {
+          token: this.content.token.value[0],
+          statementIndex: this.content.statementIndex,
+          subIndexes: [...this.content.subIndexes, 0]
+        }
       },
       y() {
-        return this.content.token.value[1].value
+        return {
+          token: this.content.token.value[1],
+          statementIndex: this.content.statementIndex,
+          subIndexes: [...this.content.subIndexes, 1]
+        }
       }
   },
   methods: {
-    onChangeX(event) {
-      this.controller.updateStatement(this.content.statementIndex, [...this.content.subIndexes, 0], event.target.value);
-    },
-
-    onChangeY(event) {
-      this.controller.updateStatement(this.content.statementIndex, [...this.content.subIndexes, 1], event.target.value);
-    },
-
 
     ...makeDnDHandlers(function (event: DragEvent) {
       event.preventDefault();

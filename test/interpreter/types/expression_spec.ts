@@ -115,6 +115,40 @@ describe('Code can have expressions', () => {
         i.parse(code);
         await i.run();
         expect(i.getRegister("c")).to.equal(1 / 8);
-    })
+    });
+
+    it("mathematical functions can be used on table columns", async () => {
+        const code = `
+            LOAD t, [[1, 2], [2, 3], [3, 4]](x, y)
+            LOAD m, max(t.x)
+        `
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(i.getRegister("m")).to.equal(3);
+    });
+
+    it("size can be used on the table itself", async () => {
+        const code = `
+            LOAD t, [[1, 2], [2, 3], [3, 4]](x, y)
+            LOAD s, size(t)
+        `
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(i.getRegister("s")).to.equal(3);
+    });
+
+    it("mathematical functions can be used on an iterator that points to a table", async () => {
+        const code = `
+            LOAD t, [[1, 2], [2, 3], [3, 4]](x, y)
+            ITER i, t
+            LOAD m, max(i.y)
+        `
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+        expect(i.getRegister("m")).to.equal(4);
+    });
 
 });

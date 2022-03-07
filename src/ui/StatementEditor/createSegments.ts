@@ -23,9 +23,9 @@ export function createSegmentInfoForToken(token, statementIndex, indexes: Array<
         case TokenTypes.ARRAY:
             return { type: "ArrayInput", token, statementIndex, subIndexes: indexes };
 
+        case TokenTypes.REGISTER:
         case TokenTypes.REGISTERAT:
             // return { type: "AtRegisterInput", token, statementIndex, subIndexes: indexes };
-        case TokenTypes.REGISTER:
             // return { type: "SimpleInput", token, statementIndex, subIndexes: indexes };
         case TokenTypes.NUMBER:
             // return { type: "NumberInput", token, statementIndex, subIndexes: indexes };
