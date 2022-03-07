@@ -1,7 +1,16 @@
 import {Parameter} from "../Parameter";
-import {Token, TokenTypes} from "../Parser";
 import {ArrayIterator} from "./ArrayIterator";
+import {InterpreterError} from "../errors/InterpreterError";
 
+
+export class UnknownFuntionError extends InterpreterError {
+    public funcName: string;
+
+    constructor(funcName: string) {
+        super("Unknown function " + funcName);
+        this.funcName = funcName;
+    }
+}
 
 export class MathFuncParameter extends Parameter {
     private _name: string;
@@ -63,6 +72,9 @@ export class MathFuncParameter extends Parameter {
                 }
 
                 return r
+
+            default:
+                throw new UnknownFuntionError(this._name);
         }
     }
 

@@ -10,6 +10,7 @@ import {
 } from "../../src/runtime/interpreter/errors/UnknownRegisterError";
 import exp = require("constants");
 import {UnknownOpCodeError} from "../../src/runtime/interpreter/errors/UnknownOpCodeError";
+import {UnknownFuntionError} from "../../src/runtime/interpreter/types/MathFuncParameter";
 
 describe('Interpreter', () => {
 
@@ -264,10 +265,29 @@ describe('Interpreter', () => {
                 i.parse(code);
             } catch (e) {
                 expect(e).to.be.instanceof(UnknownOpCodeError);
-                expect((e as UnknownOpCodeError ).opcode).to.equal("DIVIDE");
-                expect((e as UnknownRegisterError ).pc).to.equal(1);
+                expect(( e as UnknownOpCodeError ).opcode).to.equal("DIVIDE");
+                expect(( e as UnknownRegisterError ).pc).to.equal(1);
             }
             await i.run();
+        })
+
+
+        it("recognizes unknown functions", async () => {
+
+            const code = `
+                LOAD r2, [1, 2, 3, 4, 5]
+                LOAD r2, maximum(r2)
+                `;
+            const i = new Interpreter();
+            i.parse(code);
+            try {
+                await i.run();
+            } catch (e) {
+                expect(i.errors.length).to.equal(1);
+                expect(i.errors[0]).to.be.instanceof(UnknownFuntionError);
+                expect(( i.errors[0] as UnknownFuntionError).funcName).to.equal("maximum");
+                expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(1);
+            }
         })
 
 
