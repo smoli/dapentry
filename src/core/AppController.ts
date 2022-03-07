@@ -434,11 +434,22 @@ export class AppController {
         }
     }
 
-    public makeSelectedObjectsGuides() {
+    public async makeSelectedObjectsGuides() {
+        let rerun = false;
         this._state.selection.forEach(o => {
+            if (o.type === ObjectType.Composite) {
+                return;
+            }
+
             this._interpreter.markObjectAsGuide(o);
             o.markAsGuide();
+            if (o.type === ObjectType.List) {
+                rerun = true;
+            }
         });
+        if (rerun) {
+            await this.runCode()
+        }
         this.updateDrawing();
     }
 
