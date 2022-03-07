@@ -3,12 +3,28 @@ import {ArrayIterator} from "./ArrayIterator";
 import {InterpreterError} from "../errors/InterpreterError";
 
 
-export class UnknownFuntionError extends InterpreterError {
+export class UnknownFunctionError extends InterpreterError {
     public funcName: string;
 
     constructor(funcName: string) {
         super("Unknown function " + funcName);
         this.funcName = funcName;
+    }
+}
+
+export class InvalidFunctionParameterError extends InterpreterError {
+    public funcName: string;
+    public parameterName: string;
+    public expectedType: string;
+    public actualType: string;
+
+    constructor(funcName: string, parameterName: string, expectedType: string, actualType: string) {
+        super("Invalid function parameter " + parameterName + " for " + funcName);
+
+        this.funcName = funcName;
+        this.parameterName = parameterName;
+        this.expectedType = expectedType;
+        this.actualType = actualType;
     }
 }
 
@@ -37,7 +53,16 @@ export class MathFuncParameter extends Parameter {
         }
 
         if (!Array.isArray(value)) {
-            return null
+            let vName:string;
+
+            if (this._value instanceof Parameter && this._value.isRegister) {
+                vName = this._value.name;
+            } else {
+                vName = JSON.stringify(value);
+            }
+
+            throw new InvalidFunctionParameterError(this._name, vName, "Array", typeof value)
+
         }
 
         if (this._value.components) {
@@ -74,7 +99,7 @@ export class MathFuncParameter extends Parameter {
                 return r
 
             default:
-                throw new UnknownFuntionError(this._name);
+                throw new UnknownFunctionError(this._name);
         }
     }
 
