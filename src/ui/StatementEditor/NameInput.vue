@@ -1,5 +1,5 @@
 <template>
-  <GrowingInput :value="content.token.value" @change="onChange"
+   <GrowingInput :value="content.token.value" @change="onChange"
                 @drop="onDrop"
                 @dragover="onDragOver"
                 @dragenter="onDragEnter"

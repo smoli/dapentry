@@ -1,6 +1,9 @@
 <template>
+  E
   <GrowingInput :value="expressionString"
+                :validation-message="validationMessage"
                 @change="onChange"
+                @cancel="onCancel"
                 @dragenter="onDragEnter"
                 @dragover="onDragOver"
                 @drop="onDrop"/>
@@ -10,6 +13,7 @@
 import GrowingInput from "./GrowingInput.vue";
 import {Parser} from "../../runtime/interpreter/Parser";
 import {deSerializeDNDInfo, DnDDataType, makeDnDHandlers} from "../dnd/DnDInfo";
+import {UnknownRegisterError} from "../../runtime/interpreter/errors/UnknownRegisterError";
 
 export default {
   name: "ExpressionInput",
@@ -17,22 +21,47 @@ export default {
   props: ["content"],
   inject: ["controller"],
 
+  data() {
+    return {
+      validationMessage: null
+    }
+  },
+
+
   computed: {
-      expressionString() {
-        console.log(this.content.token);
-        return Parser.constructCodeLine([this.content.token]).trim();
-      }
+    expressionString() {
+      console.log(this.content.token);
+      return Parser.constructCodeLine([this.content.token]).trim();
+    }
   },
 
   methods: {
-    onChange(event) {
+    onCancel() {
+      this.validationMessage = null;
+    },
+
+    async onChange(event) {
       try {
         Parser.parseExpression(event.target.value);
       } catch (e) {
+        this.validationMessage = "Invalid Syntax"
         return
       }
+      this.validationMessage = null;
 
-      this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, event.target.value);
+      const errors = await this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, event.target.value);
+
+      if (errors.length) {
+        this.validationMessage = errors.map(e => {
+          switch (e.name) {
+            case "UnknownRegisterError":
+              return e.registerName + " unknown";
+
+              case "UnknownRegisterComponentError":
+                return e.registerName + "." + e.componentName + " unknown"
+          }
+        }).join(". ")
+      }
     },
 
     ...makeDnDHandlers(function (event: DragEvent) {

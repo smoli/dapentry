@@ -29,6 +29,7 @@ import {SaveDrawingToLibrary} from "../actions/SaveDrawingToLibrary";
 import {Login} from "../actions/Login";
 import {API} from "../api/API";
 import {AddColumnToDataField} from "../actions/AddColumnToDataField";
+import {InterpreterError} from "../runtime/interpreter/errors/InterpreterError";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -81,7 +82,7 @@ export const applicationDefaults: ApplicationOptions = {
     libraryAvailable: true
 }
 
-const toolsThatAllowSelection:Array<ToolNames> = [
+const toolsThatAllowSelection: Array<ToolNames> = [
     ToolNames.Select, ToolNames.Move, ToolNames.Rotate, ToolNames.Scale
 ];
 
@@ -162,27 +163,37 @@ export class AppController {
     }
 
     protected async runCode(): Promise<any> {
-        this._interpreter.clearObjects(this._canvas);
-        this._performance.reset();
-        this._performance.now("start");
-        this._interpreter.parse(this.state.fullCode);
-        this._performance.now("parsed");
+        try {
+            this._interpreter.clearObjects(this._canvas);
+            this._performance.reset();
+            this._performance.now("start");
+            this._interpreter.parse(this.state.fullCode);
+            this._performance.now("parsed");
 
-        const codeSelection = this._state.store.state.code.selectedLines;
-        if (codeSelection.length) {
-            const index = Math.max(...codeSelection);
-            this._interpreter.pauseAfter(index + this._state.dataCodeLength);
-        } else {
-            this._interpreter.clearPauseAfter();
+            const codeSelection = this._state.store.state.code.selectedLines;
+            if (codeSelection.length) {
+                const index = Math.max(...codeSelection);
+                this._interpreter.pauseAfter(index + this._state.dataCodeLength);
+            } else {
+                this._interpreter.clearPauseAfter();
+            }
+
+            await this._interpreter.run({
+                [AppConfig.Runtime.styleRegisterName]: this._styleManager.styles,
+                "$lastObject": null,
+                [this._canvas.name]: this._canvas
+            });
+            this.updateSelection();
+        } catch (e) {
+            console.info("Errors during execution");
+
+            if (!( e instanceof InterpreterError )) {
+                throw e;
+            }
+
+        } finally {
+            this._performance.now("computed");
         }
-
-        await this._interpreter.run({
-            [AppConfig.Runtime.styleRegisterName]: this._styleManager.styles,
-            "$lastObject": null,
-            [this._canvas.name]: this._canvas
-        });
-        this._performance.now("computed");
-        this.updateSelection();
     }
 
     /**
@@ -353,11 +364,20 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
-    async updateStatement(statementIndex: number, tokenIndexes: Array<number>, newValue: string) {
+    async updateStatement(statementIndex: number, tokenIndexes: Array<number>, newValue: string): Promise<Array<InterpreterError>> {
+        const oldStatement = this._state.store.state.code.code[statementIndex];
+
         await this.execute(new UpdateStatement(statementIndex, tokenIndexes, newValue));
         await this.runCode();
-        this.updateDrawing();
-        await this._persistence?.saveCode();
+
+        if (this._interpreter.errors.length === 0) {
+            this.updateDrawing();
+            await this._persistence?.saveCode();
+        } else {
+            this.state.replaceStatement(statementIndex, oldStatement);
+        }
+
+        return this._interpreter.errors;
     }
 
     async loopStatements(statementIndexes: Array<number>) {

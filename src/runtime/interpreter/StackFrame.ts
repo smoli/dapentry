@@ -1,5 +1,6 @@
 import {RegisterStore} from "./RegisterStore";
 import {Operation} from "./Operation";
+import {UnknownRegisterError} from "./errors/UnknownRegisterError";
 
 export class StackFrame {
 
@@ -26,10 +27,14 @@ export class StackFrame {
             if (this._parent) {
                 ret = this._parent.getRegister(baseName)
             } else {
-                throw new Error(`Unknown register "${baseName}"`);
+                throw new UnknownRegisterError(baseName);
             }
         } else {
+            if (!this._registers.hasRegister(baseName)) {
+                throw new UnknownRegisterError(baseName);
+            }
             ret = this._registers.getRegister(baseName);
+
             if (typeof ret === "object" && "getValue" in ret) {
                 ret = ret.getValue(this);
             }

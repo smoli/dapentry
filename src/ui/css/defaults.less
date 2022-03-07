@@ -185,7 +185,6 @@ form {
 
       input:invalid {
         border-bottom-color: @declineColor;
-
       }
 
       label {
@@ -197,6 +196,13 @@ form {
 
   }
 
+}
 
+.drawable-input-validation-message {
+  position: absolute;
+  background-color: @declineColor;
+  padding: 0.2em 0.5em;
+  color: white;
+  z-index: 100000000000;
 
 }

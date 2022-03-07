@@ -52,13 +52,19 @@
 
   input {
     margin: 0.2em;
-    border: none;
+    border: 1px solid@uiColor1;
     padding: 0.1em 0.2em;
     background-color: @uiColor1;
   }
   input:focus {
     background-color: @uiColor1;
   }
+
+  input:invalid {
+    border: 1px solid @declineColor !important;
+  }
+
+
 
   button {
     width: 1.7em;

@@ -13,7 +13,8 @@ export default {
               <legend>General</legend>
               <p><label for="save-drawing-name">Name *</label><input pattern="[a-zA-Z][a-zA-Z0-9-_]+"
                                                                      id="save-drawing-name"
-                                                                     v-model="name"></p>
+                                                                     v-model="name"
+                                                                     required></p>
               <div class="drawable-form-validation-message">{{ validation.messageFor.name }}</div>
               <p><label for="save-drawing-description">Description *</label><input id="save-drawing-description"
                                                                                    v-model="description"></p>

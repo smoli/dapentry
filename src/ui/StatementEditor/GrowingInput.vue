@@ -1,13 +1,17 @@
 <template>
+  <span>
   <input ref="input"
          @blur="$emit('onblur')"
-         :value="value"
+         :value="validatedValue === null ? value : validatedValue"
          @keydown="onKeyDown"
          @keyup="onKeyUp"
          @mousedown="onMouseDown"
          @change="onChange"
          :type="type"
          :disabled="disabled"/>
+  <span v-if="validationMessage" class="drawable-input-validation-message">{{ validationMessage }}</span>
+  </span>
+
 </template>
 
 <script lang="ts">/**
@@ -49,12 +53,14 @@ function getFontSize(el = document.body) {
 
 export default {
   name: "GrowingInput",
-  props: ["value", "type", "disabled", "autofocus", "min", "max", "draggable"],
+  props: ["value", "type", "disabled", "autofocus", "min", "max", "draggable", "validationMessage"],
+  emits: ["cancel"],
 
   data() {
 
     return {
       originalValue: this.value,
+      validatedValue: null,
       offset: this.type === "number" ? 20 : 0
     }
   },
@@ -63,7 +69,6 @@ export default {
     const inp = this.$refs["input"];
     this.updateWidth(inp.value);
   },
-
 
 
   mounted() {
@@ -96,12 +101,14 @@ export default {
       const inp = this.$refs["input"];
 
       if (event.key === "Escape") {
+        this.validatedValue = null;
         inp.value = this.originalValue;
         this.updateWidth(inp.value);
         inp.blur();
+        this.$emit("cancel");
       }
 
-      if (event.key === "Enter") {
+      if (event.key === "Enter" && !this.validationMessage) {
         inp.blur();
       }
 
@@ -109,6 +116,7 @@ export default {
     },
 
     onChange() {
+      this.validatedValue = this.$refs["input"].value;
       this.originalValue = this.$refs["input"].value;
     },
 
