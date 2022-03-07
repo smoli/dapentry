@@ -96,7 +96,7 @@ export class AppController {
     private _poiAvailable: boolean;
     private _modalFactory: ModalFactory;
     private _defaultDrawingHeight: number;
-    private _guides: { [key: string]: boolean } = {};
+
 
     constructor(state: State,
                 interpreter: GfxInterpreter,
@@ -183,7 +183,6 @@ export class AppController {
         });
         this._performance.now("computed");
         this.updateSelection();
-        this.updateGuides();
     }
 
     /**
@@ -201,14 +200,6 @@ export class AppController {
 
         this.state.deselectAll();
         newSelection.forEach(o => this.state.selectObject(o));
-    }
-
-    protected updateGuides() {
-        this._interpreter.objects.forEach(o => {
-            if (this._guides[o.uniqueName]) {
-                o.markAsGuide();
-            }
-        })
     }
 
     protected updateDrawing() {
@@ -445,7 +436,7 @@ export class AppController {
 
     public makeSelectedObjectsGuides() {
         this._state.selection.forEach(o => {
-            this._guides[o.uniqueName] = true;
+            this._interpreter.markObjectAsGuide(o);
             o.markAsGuide();
         });
         this.updateDrawing();

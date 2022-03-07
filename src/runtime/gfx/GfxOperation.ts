@@ -26,7 +26,10 @@ export class GfxOperation extends Operation {
     }
 
     set target(value) {
-        if (this.target) {
+        // If an object with the same name already exists, make a GrObjectList
+        // containing all objects of the same name.
+        // Except for Guid-Objects
+        if (this.target && !this.target.isGuide) {
             if (!(this.target as any instanceof GrObjectList)) {
                 const oldValue = this.target;
                 this._setParam(this._target, new GrObjectList(this.targetName));

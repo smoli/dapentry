@@ -52,6 +52,7 @@ export class GfxInterpreter extends Interpreter {
     private _lastObjectTouched: GrObject;
     private _objects: { [key: string]: GrObject };
     private readonly _library: Library;
+    private _guides: { [key: string]: boolean } = {};
 
 
     constructor(library: Library = null) {
@@ -59,9 +60,11 @@ export class GfxInterpreter extends Interpreter {
 
         this._library = library;
 
-        let objCallback = this.objectCallBack.bind(this);
+        let objCallback:(GrObject) => void;
         if (AppConfig.Runtime.grObjectsGlobal) {
             objCallback = this.objectCallBackGlobal.bind(this);
+        } else {
+            objCallback = this.objectCallBack.bind(this)
         }
 
         Object.values(AppConfig.Runtime.Opcodes.Circle)
@@ -127,6 +130,10 @@ export class GfxInterpreter extends Interpreter {
             return;
         }
 
+        if (this._guides[object.uniqueName]) {
+            object.markAsGuide();
+        }
+
         this._objects[object.uniqueName] = object;
         this._lastObjectTouched = object;
     }
@@ -134,6 +141,10 @@ export class GfxInterpreter extends Interpreter {
     protected objectCallBackGlobal(object: GrObject) {
         if (object.uniqueName.startsWith("$")) {
             return;
+        }
+
+        if (this._guides[object.uniqueName]) {
+            object.markAsGuide();
         }
 
         this._objects[object.uniqueName] = object;
@@ -147,6 +158,10 @@ export class GfxInterpreter extends Interpreter {
         if (canvas) {
             this._objects[canvas.uniqueName] = canvas;
         }
+    }
+
+    markObjectAsGuide(object: GrObject) {
+        this._guides[object.uniqueName] = true;
     }
 
     get objects(): Array<GrObject> {
