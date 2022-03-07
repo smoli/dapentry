@@ -1,3 +1,8 @@
+/// <reference path="./errors/UnknownRegisterError.ts" />
+
+
+import {UnknownRegisterComponentError, UnknownRegisterError} from "./errors/UnknownRegisterError";
+
 export class Parameter {
     private readonly _isRegister: boolean = false;
     private readonly _valueOrName: any = null;
@@ -34,6 +39,9 @@ export class Parameter {
     finalized(closure): any {
         let r;
         if (this._isRegister) {
+            if (!closure.hasRegister(this._valueOrName)) {
+                throw new UnknownRegisterError(this._valueOrName);
+            }
             r = closure.getRegister(this._valueOrName)
         } else {
             r = this._valueOrName;
@@ -44,6 +52,9 @@ export class Parameter {
                     r = r.getComponentValue(this.components);
                 } else {
                     for (const c of this.components) {
+                        if (!r.hasOwnProperty(c)) {
+                            throw new UnknownRegisterComponentError(this._valueOrName, c);
+                        }
                         r = r[c]
                     }
                 }

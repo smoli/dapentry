@@ -11,6 +11,8 @@ import {AtParameter} from "./types/AtParameter";
 import {FuncDecl} from "./operations/FuncDecl";
 import {MathFuncParameter} from "./types/MathFuncParameter";
 import {makeParameter} from "./makeParameter";
+import {InterpreterError} from "./errors/InterpreterError";
+import {UnknownOpCodeError} from "./errors/UnknownOpCodeError";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -67,6 +69,7 @@ export class Interpreter {
     private _pauseAfter: number = Number.MAX_SAFE_INTEGER;
     private _pauseAtAfterIterations: number;
     private _currentHaltIterations: number;
+    private _errors: Array<InterpreterError> = [];
 
     constructor() {
         this._operationFactory = defaultOperationFactory();
@@ -132,7 +135,7 @@ export class Interpreter {
         this._paused = false;
         this._currentFrame = this._globals;
         this._currentHaltIterations = Number.MAX_SAFE_INTEGER;
-
+        this._errors = [];
     }
 
     private _prepareLabels(): { [key: string]: number } {
@@ -338,6 +341,8 @@ export class Interpreter {
                 }
             }
         } catch (e) {
+            e.pc = this.pc;
+            this._errors.push(e);
             this._currentInstruction = null;
             this._executed = true;
             throw e;
@@ -347,6 +352,10 @@ export class Interpreter {
                 this._executed = true;
             }
         }
+    }
+
+    get errors(): Array<InterpreterError> {
+        return this._errors;
     }
 
 
@@ -398,7 +407,14 @@ export class Interpreter {
         if (!opcode) {
             return null;
         }
-        return this._operationFactory.create(opcode, ...parts);
+
+        try {
+            return this._operationFactory.create(opcode, ...parts);
+        } catch (e) {
+            e.pc = index;
+            this._errors.push(e);
+            throw e;
+        }
     }
 
 

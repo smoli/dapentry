@@ -72,11 +72,6 @@ export default {
 </svg>` },
     ];
 
-/*
-    console.log(Object.keys(ToolNames).length / 2)
-    ASSERT(tools.length === Object.keys(ToolNames).length / 2, "Not all tools have a representation in the toolbar!")
-*/
-
     return {
       tools: tools.filter(t => this.$store.state.tool.available.indexOf(t.name) !== -1)
     }

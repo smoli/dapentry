@@ -32,6 +32,7 @@ import {EndForEach, ForEach} from "./operations/array/ForEach";
 import {Do, EndDo} from "./operations/Do";
 import {FuncDecl} from "./operations/FuncDecl";
 import {AppConfig} from "../../core/AppConfig";
+import {UnknownOpCodeError} from "./errors/UnknownOpCodeError";
 
 export class OperationFactory {
 
@@ -49,7 +50,7 @@ export class OperationFactory {
         const Cls:(typeof Operation) = this._opClasses[opcode];
 
         if (!Cls) {
-            throw  new Error(`Unknown opcode "${opcode}"`)
+            throw new UnknownOpCodeError(opcode);
         }
 
         return new Cls(opcode, ...params);

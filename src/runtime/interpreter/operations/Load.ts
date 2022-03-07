@@ -24,9 +24,6 @@ export class Load extends Operation {
         return value.finalized(this._closure);
     }
 
-    set value(value: any) {
-        this._setParam(this._value, this._finalizeValue(value));
-    }
 
     async execute(interpreter): Promise<any> {
         this.target = this._value;
