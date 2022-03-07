@@ -85,7 +85,11 @@ export default {
 
   methods: {
     onSwitchTool(toolName) {
+      if (this.$store.state.tool.current === toolName) {
+        this.controller.switchTool(null);
+      } else {
         this.controller.switchTool(toolName);
+      }
     }
   }
 
