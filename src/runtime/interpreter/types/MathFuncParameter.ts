@@ -31,6 +31,12 @@ export class MathFuncParameter extends Parameter {
             return null
         }
 
+        if (this._value.components) {
+            for(const comp of this._value.components) {
+                value = value.map(v => v[comp]);
+            }
+        }
+
         switch (this._name) {
 
             case "size":
