@@ -31,7 +31,7 @@ export default {
   <line x1="0" y1="100" x2="100" y2="0" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" />
 </svg>` },
       { buttonContent: "P", name: ToolNames.Polygon, buttonContentSVG: ` <svg viewbox="-10 -10 120 120">
-  <path d="M0 100 l0 -50 l40 -50 l40 0 l0 100Z" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" />
+  <path d="M0 100 l0 -50 l50 -50 l50 0 l0 100Z" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" />
 </svg>` },
       { buttonContent: "W", name: ToolNames.Text, buttonContentSVG: `<svg viewbox="-10 -10 120 120">
   <text x="50" y="95" style="fill:rgb(0,0,0);font-size: 140; font-family: serif; text-anchor:middle">T</text>
