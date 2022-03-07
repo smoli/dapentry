@@ -34,9 +34,47 @@ body {
       h2 {
         margin: 0;
       }
+
       p {
         display: block;
       }
     }
+  }
+}
+
+a.drawable-next, a.drawable-previous {
+  margin: 1em;
+  display: inline-block;
+  background: @highlightColor;
+  padding: 1em 2em;
+  text-decoration: none;
+  color: white;
+  border: 1px solid white;
+  box-shadow: 0 0 0 4px @highlightColor;
+
+  h1 {
+    margin: 0 0 0.5em;
+    padding: 0;
+    font-size: 1.5em;
+  }
+}
+
+a.drawable-next {
+  h1 {
+    text-align: right;
+  }
+
+  h1:after {
+    content: " >>";
+  }
+}
+
+a.drawable-previous {
+  h1 {
+    text-align: left;
+  }
+
+  h1:before {
+    content: "<< ";
   }
 }

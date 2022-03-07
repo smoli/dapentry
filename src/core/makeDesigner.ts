@@ -41,7 +41,8 @@ export interface LayoutOptions {
  */
 export function makeDesigner(containerId: string,
                              layout: LayoutOptions = {},
-                             appOptions: ApplicationOptions = applicationDefaults): AppController {
+                             appOptions: ApplicationOptions = applicationDefaults,
+                             initialCode: string = ""): AppController {
 
     const appStore = createAppStore();
     const app = createApp(Drawable, layout);
@@ -78,6 +79,10 @@ export function makeDesigner(containerId: string,
         }).then();
         return false;
     }*/
+
+    if (initialCode) {
+        appController.setCode(initialCode);
+    }
 
     return appController;
 

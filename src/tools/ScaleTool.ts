@@ -58,7 +58,6 @@ export class ScaleTool extends Tool {
                 this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), Number(poiId));
             })
 
-        this.enablePOISnapping([this._object])
         this._renderer.renderBoundingRepresentation(this._object);
     }
 
@@ -76,6 +75,7 @@ export class ScaleTool extends Tool {
             this._op = this._target.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy.sub(this._target.center);
             this._finalX = 1;
             this._finalY = 1;
+            this.enablePOISnapping([this._object])
         }
     }
 

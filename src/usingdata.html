@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>An introduction to dapentry</title>
+    <title>Using data in your drawings   </title>
     <link rel="stylesheet" href="ui/css/icons/fa/css/all.css">
     <link rel="stylesheet" href="ui/css/drawable.less">
     <link rel="stylesheet" href="ui/css/introduction.less">
@@ -20,7 +20,6 @@
     </style>
 </head>
 <body>
-
 <section class="drawable-intro-intro">
     <h1>How to use dapentry</h1>
 </section>
@@ -141,29 +140,86 @@
         <div class="drawable-app-container" id="intro-snapping" tabindex="1"></div>
     </section>
 
+    <section class="drawable-intro-howto">
+
+        <div class="drawable-app-container" id="intro-object-snapping" tabindex="1"></div>
+        <div>
+            <h2>Object snapping</h2>
+            <p>
+                hit c to and draw a circle
+            </p>
+        </div>
+    </section>
+
+    <section class="drawable-intro-howto">
+
+        <div class="drawable-app-container" id="intro-object-statements" tabindex="1"></div>
+        <div>
+            <h2>Editing statements</h2>
+            <p>
+                hit c to and draw a circle
+            </p>
+        </div>
+    </section>
+
+
+    <section class="drawable-intro-howto">
+
+        <div class="drawable-app-container" id="intro-object-data-editor" tabindex="1"></div>
+        <div>
+            <h2>The data editor</h2>
+            <p>
+                hit c to and draw a circle
+            </p>
+        </div>
+    </section>
+
+
+    <section class="drawable-intro-howto">
+
+        <div class="drawable-app-container" id="intro-object-data-looping" tabindex="1"></div>
+        <div>
+            <h2>Looping</h2>
+            <p>
+                hit c to and draw a circle
+            </p>
+        </div>
+    </section>
+
+
+    <section class="drawable-intro-howto">
+
+        <div class="drawable-app-container" id="intro-object-data-iterating" tabindex="1"></div>
+        <div>
+            <h2>Iterating over data lists</h2>
+            <p>
+                hit c to and draw a circle
+            </p>
+        </div>
+    </section>
+
+
 </section>
 
-<a  class="drawable-next" id="next"><h1>Next</h1> Use data in your drawings to make them dynamic</a>
+<a  class="drawable-previous" id="previous"><h1>Previous</h1> Use data in your drawings to make them dynamic</a>
+<a  class="drawable-next" id="next"><h1>Next</h1> Creating a simple bar chart</a>
 
-<script>
-    (() => {
-        document.getElementById("next").href="./usingdata.html"
-    })()
-</script>
 
 <script type="module" src="introduction/introduction.ts"></script>
 
 <svg
-     id="svgDefinitions"
-     xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink">
+        id="svgDefinitions"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
         <radialGradient id="handleGradient" cx="30%" cy="30%" r="78.2842712474619%">
             <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1.00"/>
             <stop offset="65%" style="stop-color:rgb(213,211,211);stop-opacity:1.00"/>
         </radialGradient>
     </defs>
+
 </svg>
+
 
 </body>
 </html>
