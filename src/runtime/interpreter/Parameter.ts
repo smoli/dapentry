@@ -2,6 +2,7 @@
 
 
 import {UnknownRegisterComponentError, UnknownRegisterError} from "./errors/UnknownRegisterError";
+import {StackFrame} from "./StackFrame";
 
 export class Parameter {
     private readonly _isRegister: boolean = false;
@@ -36,12 +37,9 @@ export class Parameter {
         return this._isRegister
     }
 
-    finalized(closure): any {
+    finalized(closure: StackFrame): any {
         let r;
         if (this._isRegister) {
-            if (!closure.hasRegister(this._valueOrName)) {
-                throw new UnknownRegisterError(this._valueOrName);
-            }
             r = closure.getRegister(this._valueOrName)
         } else {
             r = this._valueOrName;
