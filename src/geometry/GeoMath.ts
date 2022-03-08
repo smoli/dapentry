@@ -49,6 +49,10 @@ export function scaleToAPoint(oldPoint: Point2D, pivot: Point2D, newPoint: Point
     return { fx, fy };
 }
 
+export function  makeScaleFactorsUniform(fx:number, fy:number): number {
+    return Math.max(fx, fy);
+}
+
 /**
  * Epsilon: Used for equality testing. Everything that's less distant than EPSILON is
  * considered equal

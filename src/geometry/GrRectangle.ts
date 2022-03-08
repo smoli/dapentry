@@ -87,6 +87,20 @@ export class GrRectangle extends GrObject {
         this._height *= Math.abs(fy);
     }
 
+    getScaleResetInfo(): any {
+        return {
+            width: this._width,
+            height: this._height,
+            center: this.center.copy
+        }
+    }
+
+    resetScaling(info: { width: number, height: number, center: Point2D }) {
+        this._width = info.width;
+        this._height = info.height;
+        this._center = info.center.copy;
+    }
+
     pointsOfInterest(purpose: POIPurpose): POIMap {
         return {
             ...super.pointsOfInterest(purpose),

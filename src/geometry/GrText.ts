@@ -161,6 +161,18 @@ export class GrText extends GrObject {
         this._scaleY *= fy;
     }
 
+    getScaleResetInfo(): any {
+        return {
+            x: this._scaleX,
+            y: this._scaleY
+        }
+    }
+
+    resetScaling(info: {  x: number, y: number }) {
+        this._scaleX = info.x;
+        this._scaleY = info.y;
+    }
+
     get scaleX():number {
         return this._scaleX;
     }

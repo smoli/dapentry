@@ -4,7 +4,7 @@ import {ObjectRenderer} from "../core/ObjectRenderer";
 import {GrObject, POI, POIMap, POIPurpose, ScaleMode} from "../geometry/GrObject";
 import {state} from "../runtime/tools/StateMachine";
 import {Point2D} from "../geometry/Point2D";
-import {eq, scaleToAPoint} from "../geometry/GeoMath";
+import {makeScaleFactorsUniform, scaleToAPoint} from "../geometry/GeoMath";
 import {AppConfig} from "../core/AppConfig";
 
 enum States {
@@ -30,6 +30,7 @@ export class ScaleTool extends Tool {
     private _op: Point2D;
     private _pivot: Point2D;
     private _pivotPOI: POI;
+    private _scaleResetInfo: any;
 
     constructor(renderer: ObjectRenderer) {
         super(renderer);
@@ -66,7 +67,7 @@ export class ScaleTool extends Tool {
         if (eventData.interactionEvent === InteractionEvents.MouseDown && poiId !== POI.center) {
             this._state.next(Events.HandleDown);
             this._target = object.createProxy();
-
+            this._scaleResetInfo = this._target.getScaleResetInfo();
             this._scaleMode = this._target.supportedScaleModes[0];
 
             this._scalingPOI = poiId;
@@ -108,13 +109,16 @@ export class ScaleTool extends Tool {
         let { fx, fy } = scaleToAPoint(oldLocal, pivotLocal, newLocal);
 
         if (this._scaleMode === ScaleMode.UNIFORM) {
-            fx = fy = Math.min(fx, fy);
+            fx = makeScaleFactorsUniform(fx, fy);
+            this._finalX *= Math.abs(fx);
+            this._finalY = this._finalX;
+        } else {
+            this._finalX *= Math.abs(fx);
+            this._finalY *= Math.abs(fy);
         }
 
-        this._target.scale(Math.abs(fx), Math.abs(fy), this._pivot);
-
-        this._finalX *= Math.abs(fx);
-        this._finalY *= Math.abs(fy);
+        this._target.resetScaling(this._scaleResetInfo);
+        this._target.scale(Math.abs(this._finalX), Math.abs(this._finalY), this._pivot);
     }
 
     protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
@@ -127,7 +131,6 @@ export class ScaleTool extends Tool {
 
         let dx;
         let dy;
-
 
 
         if (this._object && this._scalingPOI !== null) {
@@ -145,10 +148,12 @@ export class ScaleTool extends Tool {
 
             case States.Done:
                 this._scale(dx, dy);
+                this._scaleMode = snapInfo.event.shift ? ScaleMode.UNIFORM : ScaleMode.NONUNIFORM;
                 return true;
 
             case States.Handle:
                 if (interactionEvent === InteractionEvents.MouseMove) {
+                    this._scaleMode = snapInfo.event.shift ? ScaleMode.UNIFORM : ScaleMode.NONUNIFORM;
                     this._snapScalePoint = snapInfo;
                     this._scale(dx, dy);
                     this._renderer.render(this._target, true);
@@ -166,13 +171,17 @@ export class ScaleTool extends Tool {
 
     public get result(): any {
         if (this._snapScalePoint?.object) {
-            return `${AppConfig.Runtime.Opcodes.Scale.ToPoint} ${this._object.uniqueName}, "${POI[this._scalingPOI]}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, "${POI[this._pivotPOI]}"`;
+            if (this._scaleMode == ScaleMode.UNIFORM) {
+                return `${AppConfig.Runtime.Opcodes.Scale.ToPointUniform} ${this._object.uniqueName}, "${POI[this._scalingPOI]}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, "${POI[this._pivotPOI]}"`;
+            } else {
+                return `${AppConfig.Runtime.Opcodes.Scale.ToPoint} ${this._object.uniqueName}, "${POI[this._scalingPOI]}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, "${POI[this._pivotPOI]}"`;
+            }
         }
 
         if (this._scaleMode == ScaleMode.UNIFORM) {
-            return `SCALE ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, "${POI[this._pivotPOI]}"`
+            return `${AppConfig.Runtime.Opcodes.Scale.FactorUniform} ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, "${POI[this._pivotPOI]}"`
         } else {
-            return `SCALE ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, ${this.makeCodeForNumber(Math.abs(this._finalY))}, "${POI[this._pivotPOI]}"`
+            return `${AppConfig.Runtime.Opcodes.Scale.Factor} ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, ${this.makeCodeForNumber(Math.abs(this._finalY))}, "${POI[this._pivotPOI]}"`
         }
     }
 }

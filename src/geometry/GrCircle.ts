@@ -51,6 +51,14 @@ export class GrCircle extends GrObject {
 
     }
 
+    getScaleResetInfo(): any {
+        return this._radius;
+    }
+
+    resetScaling(radius: number) {
+        this._radius = radius;
+    }
+
     scale(fx: number, fy: number) {
         if (fx === 1)
             this._radius *= fy;

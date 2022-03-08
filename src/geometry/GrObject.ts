@@ -340,6 +340,14 @@ export abstract class GrObject {
         this.rotateByDeg(value, this.pointsOfInterest(POIPurpose.MANIPULATION)[this.getOppositePoi(poi)]);
     }
 
+    public getScaleResetInfo(): any {
+        return null;
+    }
+
+    public resetScaling(scaleResetInfo: any) {
+
+    }
+
     public scale(fx: number, fy: number, pivot: Point2D = null) {
     }
 

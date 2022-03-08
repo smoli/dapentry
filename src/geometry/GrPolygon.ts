@@ -182,7 +182,7 @@ export class GrPolygonBase extends GrObject {
     scale(fx: number, fy: number, pivot: Point2D = null) {
         const pl = this.mapPointToLocal(pivot);
 
-        this.points.forEach(p => {
+        for (const p of this._points) {
             const cl = this.mapPointToLocal(p);
             // Compute translation for point in local coordinates
             const dxl = (pl.x - cl.x) * (1 - fx);
@@ -192,9 +192,21 @@ export class GrPolygonBase extends GrObject {
             const dg = this.mapVectorToGlobal(new Point2D(dxl, dyl));
 
             p.add(dg);
-        });
+        }
 
         this.computeCenterAndBB();
+    }
+
+    getScaleResetInfo(): any {
+        return {
+            center: this._center.copy,
+            points: this._points.map(p => p.copy)
+        }
+    }
+
+    resetScaling(info: { center: Point2D, points: Array<Point2D> }) {
+        this._center = info.center;
+        this._points = info.points.map(p => p.copy);
     }
 }
 

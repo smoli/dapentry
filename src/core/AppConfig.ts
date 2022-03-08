@@ -92,8 +92,10 @@ export const AppConfig = {
                 ToPoint: "MOVETO"
             },
             Scale: {
-                FACTOR: "SCALE",
-                ToPoint: "SCALEP"
+                Factor: "SCALE",
+                FactorUniform: "SCALEU",
+                ToPoint: "SCALEP",
+                ToPointUniform: "SCALEPU"
             },
             Text: "TEXT",
             FillColor: "FILL",

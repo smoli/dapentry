@@ -161,6 +161,20 @@ export class GrLine extends GrObject {
         this.updateCenter();
     }
 
+    getScaleResetInfo(): any {
+        return {
+            start: this._start.copy,
+            end: this._end.copy,
+            center: this._center.copy
+        }
+    }
+
+    resetScaling(info: {  start: Point2D, end: Point2D, center: Point2D }) {
+        this._start = info.start.copy;
+        this._end = info.end.copy;
+        this._center = info.center.copy;
+    }
+
     getPointAtPercentage(pct: number): Point2D {
         return this.start.copy.add(this.end.copy.sub(this.start).scale(pct));
     }
