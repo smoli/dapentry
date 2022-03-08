@@ -1,5 +1,5 @@
 <template>
-  <section class="drawable-steplist-container">
+  <section ref="scrollContainer" class="drawable-steplist-container">
     <h2 @click="toggleDisplay">{{ $t("ui.stepEditor") }}
       <button @click="onLoopSelection"
               :disabled="noLinesSelected"
@@ -9,7 +9,7 @@
     </h2>
 
     <div v-if="!showCode">
-      <div v-for="(line, index) of annotatedCode" v-bind:data-step="index"
+      <div  ref="steps" v-for="(line, index) of annotatedCode" v-bind:data-step="index"
            class="drawable-steplist-step" :class="{ selected: line.selected }"
            :style="{ 'margin-left': line.level + 'em' }"
            @click="onStepClicked">{{ line.text }}
@@ -45,6 +45,28 @@ export default {
     return {
       selectedFirst: null,
       showCode: false
+    }
+  },
+
+  updated() {
+    const steps = this.$refs["steps"];
+    if (steps?.length) {
+      let index = steps.length - 1
+      if (this.$store.state.code.selectedLines.length) {
+        index = Math.max(...this.$store.state.code.selectedLines)
+      }
+
+      if (!steps[index]) return;
+
+      const stepRect = steps[index].getBoundingClientRect();
+      const parRect = this.$refs["scrollContainer"].getBoundingClientRect();
+
+      if (stepRect.bottom < parRect.top) {
+        steps[index].scrollIntoView(true);
+      }
+      if (stepRect.top > parRect.bottom) {
+        steps[index].scrollIntoView(false);
+      }
     }
   },
 
