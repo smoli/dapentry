@@ -204,7 +204,7 @@ describe('Array', () => {
 
         expect(i.getRegister("r")).to.equal(( 1 + 2 + 3 + 4 + 5 + 6 + 7 ))
         expect(i.getRegister("a")).to.deep.equal([1, 2, 3, 4, 5, 6, 7])
-        expect(i.getRegister("v")).to.be.undefined;
+        expect(i.hasRegister("v")).to.be.false;
     });
 
     it("foreach can be nested", async () => {

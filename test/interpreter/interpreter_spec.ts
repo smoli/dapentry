@@ -10,7 +10,10 @@ import {
 } from "../../src/runtime/interpreter/errors/UnknownRegisterError";
 import exp = require("constants");
 import {UnknownOpCodeError} from "../../src/runtime/interpreter/errors/UnknownOpCodeError";
-import {InvalidFunctionParameterError, UnknownFunctionError} from "../../src/runtime/interpreter/types/MathFuncParameter";
+import {
+    InvalidFunctionParameterError,
+    UnknownFunctionError
+} from "../../src/runtime/interpreter/types/MathFuncParameter";
 
 describe('Interpreter', () => {
 
@@ -228,11 +231,12 @@ describe('Interpreter', () => {
             try {
                 await i.run();
             } catch (e) {
-                expect(i.errors.length).to.equal(1)
-                expect(i.errors[0]).to.be.instanceof(UnknownRegisterError);
-                expect(( i.errors[0] as UnknownRegisterError ).registerName).to.equal("r2");
-                expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(0);
+                expect(e).is.ok;
             }
+            expect(i.errors.length).to.equal(1)
+            expect(i.errors[0]).to.be.instanceof(UnknownRegisterError);
+            expect(( i.errors[0] as UnknownRegisterError ).registerName).to.equal("r2");
+            expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(0);
         });
 
         it("recognizes unknown register components", async () => {
@@ -246,12 +250,13 @@ describe('Interpreter', () => {
             try {
                 await i.run();
             } catch (e) {
-                expect(i.errors.length).to.equal(1);
-                expect(i.errors[0]).to.be.instanceof(UnknownRegisterComponentError);
-                expect(( i.errors[0] as UnknownRegisterComponentError ).registerName).to.equal("r2");
-                expect(( i.errors[0] as UnknownRegisterComponentError ).componentName).to.equal("x");
-                expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(1);
+                expect(e).is.ok;
             }
+            expect(i.errors.length).to.equal(1);
+            expect(i.errors[0]).to.be.instanceof(UnknownRegisterComponentError);
+            expect(( i.errors[0] as UnknownRegisterComponentError ).registerName).to.equal("r2");
+            expect(( i.errors[0] as UnknownRegisterComponentError ).componentName).to.equal("x");
+            expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(1);
         })
 
         it("recognizes unknown opcodes", async () => {
@@ -261,14 +266,18 @@ describe('Interpreter', () => {
                 DIVIDE r2, 3
                 `;
             const i = new Interpreter();
+            let exceptionRaised = false;
             try {
                 i.parse(code);
             } catch (e) {
+                exceptionRaised = true;
                 expect(e).to.be.instanceof(UnknownOpCodeError);
                 expect(( e as UnknownOpCodeError ).opcode).to.equal("DIVIDE");
                 expect(( e as UnknownRegisterError ).pc).to.equal(1);
             }
             await i.run();
+
+            expect(exceptionRaised).to.be.true;
         })
 
 
@@ -283,11 +292,12 @@ describe('Interpreter', () => {
             try {
                 await i.run();
             } catch (e) {
-                expect(i.errors.length).to.equal(1);
-                expect(i.errors[0]).to.be.instanceof(UnknownFunctionError);
-                expect(( i.errors[0] as UnknownFunctionError).funcName).to.equal("maximum");
-                expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(1);
+                expect(e).to.be.ok;
             }
+            expect(i.errors.length).to.equal(1);
+            expect(i.errors[0]).to.be.instanceof(UnknownFunctionError);
+            expect(( i.errors[0] as UnknownFunctionError ).funcName).to.equal("maximum");
+            expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(1);
         })
 
         it("recognizes wrong function parameter types", async () => {
@@ -301,14 +311,15 @@ describe('Interpreter', () => {
             try {
                 await i.run();
             } catch (e) {
-                expect(i.errors.length).to.equal(1);
-                expect(i.errors[0]).to.be.instanceof(InvalidFunctionParameterError);
-                expect(( i.errors[0] as InvalidFunctionParameterError).funcName).to.equal("max");
-                expect(( i.errors[0] as InvalidFunctionParameterError).parameterName).to.equal("r2");
-                expect(( i.errors[0] as InvalidFunctionParameterError).expectedType).to.equal("Array");
-                expect(( i.errors[0] as InvalidFunctionParameterError).actualType).to.equal("number");
-                expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(1);
+                expect(e).to.be.ok;
             }
+            expect(i.errors.length).to.equal(1);
+            expect(i.errors[0]).to.be.instanceof(InvalidFunctionParameterError);
+            expect(( i.errors[0] as InvalidFunctionParameterError ).funcName).to.equal("max");
+            expect(( i.errors[0] as InvalidFunctionParameterError ).parameterName).to.equal("r2");
+            expect(( i.errors[0] as InvalidFunctionParameterError ).expectedType).to.equal("Array");
+            expect(( i.errors[0] as InvalidFunctionParameterError ).actualType).to.equal("number");
+            expect(( i.errors[0] as UnknownRegisterError ).pc).to.equal(1);
         })
 
 

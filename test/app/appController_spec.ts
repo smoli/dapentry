@@ -1,6 +1,6 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {AppController} from "../../src/core/AppController";
+import {AppController, applicationDefaults} from "../../src/core/AppController";
 import {State} from "../../src/state/State";
 import {createAppStore} from "../../src/state/AppStore";
 import {GfxInterpreter} from "../../src/core/GfxInterpreter";
@@ -8,6 +8,7 @@ import {T_ARRAY, T_NUMBER, T_OPCODE, T_POINT, T_REGISTER} from "../testHelpers/t
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import {ObjectType} from "../../src/geometry/GrObject";
 import exp = require("constants");
+import {makeMockModalFactory} from "../testHelpers/mock_controller";
 
 
 describe('App controller', () => {
@@ -184,7 +185,7 @@ describe('App controller', () => {
 
             await controller.nextStep();
             // Program is not run yet.
-            expect(inter.getRegister("r1")).to.be.undefined
+            expect(inter.hasRegister("r1")).to.be.false
         });
 
         it('will update the selection when performing a step', async () => {
@@ -315,7 +316,7 @@ describe('App controller', () => {
 
         const state = new State(createAppStore(), null);
         const inter = new GfxInterpreter();
-        const controller = new AppController(state, inter);
+        const controller = new AppController(state, inter, applicationDefaults, makeMockModalFactory());
 
         const code = `
         CIRCLECR Circle1,$styles.default,(347.43, 295.68),113.45

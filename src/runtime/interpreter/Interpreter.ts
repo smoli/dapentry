@@ -13,6 +13,7 @@ import {MathFuncParameter} from "./types/MathFuncParameter";
 import {makeParameter} from "./makeParameter";
 import {InterpreterError} from "./errors/InterpreterError";
 import {UnknownOpCodeError} from "./errors/UnknownOpCodeError";
+import {UnknownRegisterError} from "./errors/UnknownRegisterError";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -21,6 +22,9 @@ class GlobalStackFrame extends StackFrame {
     }
 
     getRegister(name: string): any {
+        if (!this._data.hasOwnProperty(name)) {
+            throw new UnknownRegisterError(name);
+        }
         return this._data[name]
     }
 
@@ -123,6 +127,10 @@ export class Interpreter {
 
     public getRegister(name: string): any {
         return this._currentFrame.getRegister(name);
+    }
+
+    public hasRegister(name: string): boolean {
+        return this._currentFrame.hasRegister(name, true);
     }
 
     private _resetExecution() {

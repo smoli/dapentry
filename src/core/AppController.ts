@@ -102,10 +102,12 @@ export class AppController {
 
     constructor(state: State,
                 interpreter: GfxInterpreter,
-                options: ApplicationOptions = {}) {
+                options: ApplicationOptions = {},
+                modalFactory?: ModalFactory) {
         this._state = state;
         this._interpreter = interpreter;
         this._startupOptions = options;
+        this._modalFactory = modalFactory;
 
         this.processOptions({
             ...applicationDefaults,

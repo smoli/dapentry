@@ -26,7 +26,7 @@ export class Operation {
     }
 
 
-    protected _getParam(param) {
+    protected _getParam(param:Parameter):any {
         let r = null;
         if (param.isRegister) {
             if (param.components) {
@@ -42,6 +42,14 @@ export class Operation {
         }
 
         return r;
+    }
+
+    protected _paramExists(param:Parameter):boolean {
+        if (!param.isRegister) {
+            return true;
+        }
+
+        return this.closure.hasRegister(param.name, true);
     }
 
     protected _setParam(param: Parameter, value: any) {
