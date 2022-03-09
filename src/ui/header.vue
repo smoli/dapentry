@@ -1,6 +1,7 @@
 <template>
   <section class="drawable-app-header">
     <h1>{{ $t("ui.appName") }}<span>0.1&alpha;</span></h1>
+    <button @click="onNewDrawing">New drawing</button>
     <aspect-ratio-switcher />
     <locale-switcher/>
     <profile-button/>
@@ -35,6 +36,10 @@ export default {
   methods: {
     setAspectRatio(value: AspectRatio) {
       this.controller.setAspectRatio(value);
+    },
+
+    onNewDrawing() {
+      this.controller.clearAll();
     }
   }
 }

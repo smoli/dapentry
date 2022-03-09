@@ -17,7 +17,7 @@ import {DataFieldValue} from "../state/modules/Data";
 import {AddValueToDataField} from "../actions/AddValueToDataField";
 import {AddNewDataField} from "../actions/AddNewDataField";
 import {RemoveDataField} from "../actions/RemoveDataField";
-import {ModalFactory} from "../ui/core/ModalFactory";
+import {DialogCloseReason, ModalFactory} from "../ui/core/ModalFactory";
 import {LoopStatements} from "../actions/LoopStatements";
 import {RenameDataField} from "../actions/RenameDataField";
 import {BatchAction} from "../actions/BatchAction";
@@ -140,14 +140,25 @@ export class AppController {
         this._state.setObjectsOnDrawing([this._canvas]);
     }
 
-    clearAll() {
+    async clearAll() {
+        const dialog = this.modalFactory.createConfirmationModal();
+
+        // TODO: Provide a save option
+        const result = await dialog.show({
+            text: "Create a new drawing? This will remove all current content"
+        })
+
+        if (result.reason !== DialogCloseReason.YES) {
+            return;
+        }
+
         this.state.resetAll();
         this._interpreter.resetGuides();
 
         this.processOptions({
             ...applicationDefaults,
             ...this._startupOptions
-        })
+        });
     }
 
     public async setAspectRatio(ar: AspectRatio) {

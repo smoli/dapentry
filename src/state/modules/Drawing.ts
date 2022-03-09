@@ -19,7 +19,7 @@ export interface DrawingState {
 
 function getDefaultState():DrawingState {
     return {
-        dimensions: { x: 0, y: 0, width: 100, height: 100 },
+        dimensions: { x: 0, y: 0, width: 1000, height: 1000 },
         aspectRatio: AspectRatio.ar1_1,
         objects: [],
         selection: [],
