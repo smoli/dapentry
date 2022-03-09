@@ -54,7 +54,7 @@ function getFontSize(el = document.body) {
 export default {
   name: "GrowingInput",
   props: ["value", "type", "disabled", "autofocus", "min", "max", "draggable", "validationMessage"],
-  emits: ["cancel"],
+  emits: ["cancel", "change"],
 
   data() {
 
@@ -115,9 +115,10 @@ export default {
       this.updateWidth(inp.value);
     },
 
-    onChange() {
+    onChange(event) {
       this.validatedValue = this.$refs["input"].value;
       this.originalValue = this.$refs["input"].value;
+      this.$emit("change", event);
     },
 
     onMouseDown(event: MouseEvent) {
