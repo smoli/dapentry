@@ -56,7 +56,10 @@ export class StackFrame {
         return this._getRegisterBaseValue(name);
     }
 
-    public hasRegister(name: string):boolean {
+    public hasRegister(name: string, deep:boolean = false):boolean {
+        if (deep && this._parent) {
+            return this._registers.hasRegister(name) || this._parent.hasRegister(name, deep);
+        }
         return this._registers.hasRegister(name);
     }
 
