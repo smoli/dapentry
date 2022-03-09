@@ -203,6 +203,14 @@ export class AppController {
      */
     protected updateSelection() {
         const curr = this.state.selection;
+
+        if (curr.length === 0) {
+            if (this._interpreter.lastObjectTouched) {
+                this.state.selectObject(this._interpreter.lastObjectTouched);
+            }
+            return;
+        }
+
         const objects = this._interpreter.objects;
 
         const newSelection = curr.map(old => {
@@ -474,11 +482,12 @@ export class AppController {
     }
 
     public switchTool(newTool: ToolNames, ...params: Array<any>) {
-        this._state.switchTool(newTool, ...params);
-    }
+        if (!toolsThatAllowSelection.find(t => t === newTool)) {
+            // It's a draw tool
+            this.state.deselectAll();
+        }
 
-    protected switchToDrawTool(newTool: ToolNames) {
-        this.switchTool(newTool);
+        this._state.switchTool(newTool, ...params);
     }
 
     public switchToInsertLibraryEntryTool(entry: LibraryEntry) {
@@ -527,17 +536,17 @@ export class AppController {
         } else if (event.code === AppConfig.Keys.AbortToolKeyCode) {
             this._state.switchTool(null);
         } else if (event.key === AppConfig.Keys.DrawCircleKey) {
-            this.switchToDrawTool(ToolNames.Circle);
+            this.switchTool(ToolNames.Circle);
         } else if (event.key === AppConfig.Keys.DrawRectKey) {
-            this.switchToDrawTool(ToolNames.Rectangle);
+            this.switchTool(ToolNames.Rectangle);
         } else if (event.key === AppConfig.Keys.DrawLineKey) {
-            this.switchToDrawTool(ToolNames.Line);
+            this.switchTool(ToolNames.Line);
         } else if (event.key === AppConfig.Keys.DrawTextKey) {
-            this.switchToDrawTool(ToolNames.Text);
+            this.switchTool(ToolNames.Text);
         } else if (event.key === AppConfig.Keys.DrawPolygonKey) {
-            this.switchToDrawTool(ToolNames.Polygon);
+            this.switchTool(ToolNames.Polygon);
         } else if (event.key === AppConfig.Keys.DrawQuadricKey) {
-            this.switchToDrawTool(ToolNames.Quadric);
+            this.switchTool(ToolNames.Quadric);
         } else if (event.key === AppConfig.Keys.MoveKey) {
             this._state.switchTool(ToolNames.Move);
         } else if (event.key === AppConfig.Keys.RotateKey) {
