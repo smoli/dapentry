@@ -99,16 +99,20 @@ function getNextColumnName(currentRow) {
     }
 
     return "z" + suffix;
+}
 
 
+
+function getDefaultState():DataState {
+    return {
+        fields: []
+    }
 }
 
 export const dataState = {
 
     state(): DataState {
-        return {
-            fields: []
-        }
+        return getDefaultState();
     },
 
     getters: {
@@ -157,6 +161,11 @@ export const dataState = {
     },
 
     mutations: {
+
+        reset(state: DataState) {
+            Object.assign(state, getDefaultState());
+        },
+
         setData(state: DataState, fields: Array<DataField>) {
             state.fields = fields;
         },

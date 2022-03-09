@@ -17,15 +17,19 @@ export interface DrawingState {
     preview: string
 }
 
+function getDefaultState():DrawingState {
+    return {
+        dimensions: { x: 0, y: 0, width: 100, height: 100 },
+        aspectRatio: AspectRatio.ar1_1,
+        objects: [],
+        selection: [],
+        preview: ""
+    }
+}
+
 export const drawingState = {
     state(): DrawingState {
-        return {
-            dimensions: { x: 0, y: 0, width: 100, height: 100 },
-            aspectRatio: AspectRatio.ar1_1,
-            objects: [],
-            selection: [],
-            preview: ""
-        }
+        return getDefaultState();
     },
 
     getters: {
@@ -51,6 +55,10 @@ export const drawingState = {
     },
 
     mutations: {
+
+        reset(state: DrawingState) {
+            Object.assign(state, getDefaultState());
+        },
 
         setPreview(state: DrawingState, preview: string) {
             state.preview = preview;

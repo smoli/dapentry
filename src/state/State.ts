@@ -24,6 +24,7 @@ const mutations = {
     },
 
     tool: {
+        reset: "tool/reset",
         setAvailable: "tool/setAvailable",
         switch: "tool/switch",
         setReferenceObject: "tool/setReferenceObject",
@@ -32,6 +33,7 @@ const mutations = {
     },
 
     code: {
+        reset: "code/reset",
         set: "code/setCode",
         add: "code/add",
         insert: "code/insert",
@@ -44,6 +46,7 @@ const mutations = {
     },
 
     drawing: {
+        reset: "drawing/reset",
         dimensions: "drawing/setDimensions",
         setObjects: "drawing/setObjects",
         selectObject: "drawing/selectObject",
@@ -55,6 +58,7 @@ const mutations = {
     },
 
     data: {
+        reset: "data/reset",
         setData: "data/setData",
         addField: "data/addField",
         removeField: "data/removeField",
@@ -350,4 +354,11 @@ export class State {
         this.commit(mutations.library.clear);
     }
 
+
+    resetAll() {
+        this.commit(mutations.drawing.reset);
+        this.commit(mutations.code.reset);
+        this.commit(mutations.tool.reset);
+        this.commit(mutations.data.reset);
+    }
 }

@@ -97,6 +97,7 @@ export class AppController {
     private _poiAvailable: boolean;
     private _modalFactory: ModalFactory;
     private _defaultDrawingHeight: number;
+    private _startupOptions: ApplicationOptions;
 
 
     constructor(state: State,
@@ -104,6 +105,7 @@ export class AppController {
                 options: ApplicationOptions = {}) {
         this._state = state;
         this._interpreter = interpreter;
+        this._startupOptions = options;
 
         this.processOptions({
             ...applicationDefaults,
@@ -136,6 +138,16 @@ export class AppController {
 
     init() {
         this._state.setObjectsOnDrawing([this._canvas]);
+    }
+
+    clearAll() {
+        this.state.resetAll();
+        this._interpreter.resetGuides();
+
+        this.processOptions({
+            ...applicationDefaults,
+            ...this._startupOptions
+        })
     }
 
     public async setAspectRatio(ar: AspectRatio) {

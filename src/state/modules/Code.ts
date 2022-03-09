@@ -1,10 +1,6 @@
 import {AnnotatedCodeLine, CodeManager, CreationInfo} from "../../runtime/CodeManager";
 import {ASSERT} from "../../core/Assertions";
 import {AppConfig} from "../../core/AppConfig";
-import {GfxCircle} from "../../runtime/gfx/GfxCircle";
-import {GfxRect} from "../../runtime/gfx/GfxRect";
-import {GfxLine} from "../../runtime/gfx/GfxLine";
-import {GfxPolygon} from "../../runtime/gfx/GfxPolygon";
 
 
 export interface CodeState {
@@ -36,14 +32,19 @@ creationStatements[AppConfig.Runtime.Opcodes.Quad.Create] = 1;
 creationStatements[AppConfig.Runtime.Opcodes.Bezier.Create] = 1;
 creationStatements["LOAD"] = 1;
 
+
+function getDefaultState():CodeState {
+    return {
+        codeManager: new CodeManager(creationStatements),
+        code: [],
+        selectedLines: []
+    }
+}
+
 export const codeState = {
 
     state(): CodeState {
-        return {
-            codeManager: new CodeManager(creationStatements),
-            code: [],
-            selectedLines: []
-        }
+        return getDefaultState();
     },
 
     getters: {
@@ -61,6 +62,10 @@ export const codeState = {
     },
 
     mutations: {
+        reset(state: CodeState) {
+            Object.assign(state, getDefaultState());
+        },
+
         setCode(state: CodeState, code: Array<string> = []) {
             state.codeManager.clear();
             state.codeManager.addStatements(code);

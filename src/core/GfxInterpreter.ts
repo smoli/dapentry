@@ -164,6 +164,10 @@ export class GfxInterpreter extends Interpreter {
         this._guides[object.uniqueName] = true;
     }
 
+    resetGuides() {
+        this._guides = {};
+    }
+
     get objects(): Array<GrObject> {
         return Object.values(this._objects);
     }

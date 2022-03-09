@@ -310,4 +310,46 @@ describe('App controller', () => {
             expect(state.codeSelection).to.deep.equal([3]);
         })
     });
+
+    it("can clear everything to start anew", async () => {
+
+        const state = new State(createAppStore(), null);
+        const inter = new GfxInterpreter();
+        const controller = new AppController(state, inter);
+
+        const code = `
+        CIRCLECR Circle1,$styles.default,(347.43, 295.68),113.45
+        CIRCLECR Circle2,$styles.default,(603.86, 340.09),183.95
+        CIRCLECR Circle3,$styles.default,(285.83, 636.63),259.96
+        CIRCLECR Circle4,$styles.default,(725.63, 682.47),120.58
+        CIRCLECR Circle5,$styles.default,(887.50, 242.68),174.92
+        CIRCLECR Circle6,$styles.default,(419.06, 161.02),109.57
+        CIRCLECR Circle7,$styles.default,(126.82, 178.21),184.46
+        CIRCLECR Circle8,$styles.default,(631.08, 888.76),96.95
+        RECTPP Rectangle1,$styles.default,Circle3@center,Circle2@center`
+
+        await controller.setCode(code);
+
+        let objs = state.store.state.drawing.objects.filter(o => o.type !== ObjectType.Canvas);
+        expect(objs.length).to.equal(9);
+
+        const name = objs[3].uniqueName;
+
+        await controller.handleObjectSelection(objs[3]);
+        expect(state.store.state.drawing.selection.length).to.equal(1);
+
+        await controller.makeSelectedObjectsGuides();
+        expect(objs[3].isGuide).to.be.true;
+
+        await controller.clearAll();
+        objs = state.store.state.drawing.objects.filter(o => o.type !== ObjectType.Canvas);
+        expect(objs.length).to.equal(0);
+        expect(state.store.state.code.code.length).to.equal(0);
+
+        await controller.setCode(code);
+        objs = state.store.state.drawing.objects.filter(o => o.type !== ObjectType.Canvas);
+        expect(objs.length).to.equal(9);
+        expect(objs.find(o => o.uniqueName === name).isGuide).to.be.false;
+
+    })
 });

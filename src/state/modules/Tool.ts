@@ -10,20 +10,28 @@ export interface ToolState {
     preview: string
 }
 
+
+function getDefaultState():ToolState {
+    return {
+        current: null,
+        currentParams: null,
+        referenceObject: null,
+        keyPress: null,
+        available: [],
+        preview: null
+
+    }
+}
+
 export const toolState = {
     state():ToolState {
-        return {
-            current: null,
-            currentParams: null,
-            referenceObject: null,
-            keyPress: null,
-            available: [],
-            preview: null
-
-        }
+        return getDefaultState();
     },
 
     mutations: {
+        reset(state: ToolState) {
+            Object.assign(state, getDefaultState());
+        },
         setAvailable(state: ToolState, tools: Array<ToolNames>) {
             state.available = tools;
         },
