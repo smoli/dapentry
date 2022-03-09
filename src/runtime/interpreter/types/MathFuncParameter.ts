@@ -9,6 +9,7 @@ export class UnknownFunctionError extends InterpreterError {
     constructor(funcName: string) {
         super("Unknown function " + funcName);
         this.funcName = funcName;
+        this.name = "UnknownFunctionError";
     }
 }
 
@@ -25,6 +26,7 @@ export class InvalidFunctionParameterError extends InterpreterError {
         this.parameterName = parameterName;
         this.expectedType = expectedType;
         this.actualType = actualType;
+        this.name = "InvalidFunctionParameterError";
     }
 }
 

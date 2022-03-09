@@ -1,5 +1,4 @@
 <template>
-  E
   <GrowingInput :value="expressionString"
                 :validation-message="validationMessage"
                 @change="onChange"
@@ -55,10 +54,13 @@ export default {
         this.validationMessage = errors.map(e => {
           switch (e.name) {
             case "UnknownRegisterError":
-              return e.registerName + " unknown";
+              return `Register ${e.registerName} unknown`;
 
               case "UnknownRegisterComponentError":
-                return e.registerName + "." + e.componentName + " unknown"
+                return `Register ${e.registerName}.${e.componentName} unknown`
+
+            case "UnknownFunctionError":
+              return `Function ${e.funcName} unknown`;
           }
         }).join(". ")
       }
