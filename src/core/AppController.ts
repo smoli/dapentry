@@ -618,4 +618,10 @@ export class AppController {
             await this._persistence.load(this.state);
         }
     }
+
+    public toggleLibrary() {
+        if (this._startupOptions.libraryAvailable) {
+            this._state.toggleLibrary();
+        }
+    }
 }

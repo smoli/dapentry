@@ -9,6 +9,7 @@ import {AppConfig} from "../core/AppConfig";
 import {ModalDialogHandler} from "../ui/core/ModalDialogHandler";
 import {LibraryEntry} from "../core/Library";
 import {UserInfo} from "./modules/Authentication";
+import {LayoutOptions} from "../core/makeDesigner";
 
 
 const mutations = {
@@ -21,6 +22,8 @@ const mutations = {
     ui: {
         showModal: "ui/showModal",
         hideModal: "ui/hideModal",
+        setLayout: "ui/setLayout",
+        toggleLibrary: "ui/toggleLibrary"
     },
 
     tool: {
@@ -360,5 +363,13 @@ export class State {
         this.commit(mutations.code.reset);
         this.commit(mutations.tool.reset);
         this.commit(mutations.data.reset);
+    }
+
+    setLayout(layout: LayoutOptions) {
+        this.commit(mutations.ui.setLayout, layout);
+    }
+
+    toggleLibrary() {
+        this.commit(mutations.ui.toggleLibrary);
     }
 }

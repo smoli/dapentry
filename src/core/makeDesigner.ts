@@ -27,7 +27,12 @@ export interface LayoutOptions {
     hideDrawing?: boolean,
     hideToolHint?: boolean,
     hideRightColumn?: boolean,
-    hideFooter?: boolean
+    hideFooter?: boolean,
+    hideLibrary?: boolean
+}
+
+export const layoutDefaults:LayoutOptions = {
+    hideLibrary: true
 }
 
 /**
@@ -45,11 +50,12 @@ export function makeDesigner(containerId: string,
                              initialCode: string = ""): AppController {
 
     const appStore = createAppStore();
-    const app = createApp(Drawable, layout);
+    const app = createApp(Drawable);
     app.use(appStore);
     app.use(i18n);
 
     const state = new State(appStore, i18n);
+    state.setLayout({...layoutDefaults, ...layout })
     let library = null;
 
     if (appOptions.libraryAvailable) {

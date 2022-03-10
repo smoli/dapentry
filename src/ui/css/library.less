@@ -1,0 +1,55 @@
+@import "defaults";
+
+
+.drawable-library-container {
+  padding: 0 1em;
+  display: block;
+  overflow: auto;
+
+  button.drawable-library-preview {
+    background-color: @uiColor1;
+    color: @uiColor3;
+    margin-left: 1em;
+  }
+  button.drawable-library-preview:hover {
+    background-color: @uiColor2;
+    color: @uiColor3;
+  }
+
+  ul.drawable-library-entry-list {
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+
+    li:nth-child(1) {
+      padding-top: 0;
+      border-top: none;
+    }
+
+    li {
+      display: flex;
+      margin-left: 0;
+      border-top: 1px solid @uiColor1;
+      padding: 0.75em 0;
+
+      button {
+        height: max-content;
+        width: max-content;
+      }
+
+      .drawable-library-entry-info {
+        margin-left: 0.5em;
+
+        h3 {
+          font-size: 1em;
+          margin: 0;
+        }
+
+        p {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+}

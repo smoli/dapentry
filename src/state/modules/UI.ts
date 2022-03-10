@@ -1,9 +1,11 @@
 import {shallowRef} from "vue";
 import {ModalDialogHandler} from "../../ui/core/ModalDialogHandler";
+import {layoutDefaults, LayoutOptions} from "../../core/makeDesigner";
 
 
 export interface UIState {
     modalComponent: Array<{ component: any, handler: ModalDialogHandler }>,
+    layout: LayoutOptions
 
 }
 
@@ -12,7 +14,8 @@ export const uiState = {
 
     state(): UIState {
         return {
-            modalComponent: []
+            modalComponent: [],
+            layout: layoutDefaults
         }
     },
 
@@ -24,6 +27,15 @@ export const uiState = {
 
         hideModal(state: UIState) {
             state.modalComponent.pop();
+        },
+
+        setLayout(state: UIState, layout: LayoutOptions) {
+            Object.assign(state.layout, layout);
+        },
+
+        toggleLibrary(state: UIState) {
+            const current = !!state.layout.hideLibrary;
+            state.layout.hideLibrary = !current;
         }
     }
 }

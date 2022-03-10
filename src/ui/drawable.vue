@@ -1,24 +1,24 @@
 <template>
   <Modal v-if="$store.state.ui.modalComponent.length !== 0"></Modal>
-  <drawable-header v-if="!hideHeader"></drawable-header>
+  <drawable-header v-if="!$store.state.ui.layout.hideHeader"></drawable-header>
   <section class="drawable-app-main">
-    <div class="drawable-left-column" v-if="!hideLeftColumn">
-      <DataEditor v-if="!hideDataEditor"></DataEditor>
-      <StepList v-if="!hideStepList"></StepList>
+    <div class="drawable-left-column" v-if="!$store.state.ui.layout.hideLeftColumn">
+        <LibraryList v-if="!$store.state.ui.layout.hideLibrary"></LibraryList>
+        <DataEditor v-if="!$store.state.ui.layout.hideDataEditor && $store.state.ui.layout.hideLibrary"></DataEditor>
+        <StepList v-if="!$store.state.ui.layout.hideStepList && $store.state.ui.layout.hideLibrary"></StepList>
+      </div>
+    <div class="drawable-main-column" v-if="!$store.state.ui.layout.hideMainColumn">
+      <tool-bar v-if="!$store.state.ui.layout.hideToolbar"></tool-bar>
+      <statement-editor v-if="!$store.state.ui.layout.hideStatementEditor"></statement-editor>
+      <Drawing v-if="!$store.state.ui.layout.hideDrawing"></Drawing>
+      <ToolHint v-if="!$store.state.ui.layout.hideToolHint"></ToolHint>
     </div>
-    <div class="drawable-main-column" v-if="!hideMainColumn">
-      <tool-bar v-if="!hideToolbar"></tool-bar>
-      <statement-editor v-if="!hideStatementEditor"></statement-editor>
-      <Drawing v-if="!hideDrawing"></Drawing>
-      <ToolHint v-if="!hideToolHint"></ToolHint>
-    </div>
-    <div class="drawable-right-column" v-if="!hideRightColumn">
+    <div class="drawable-right-column" v-if="!$store.state.ui.layout.hideRightColumn">
       <PropertiesEditor></PropertiesEditor>
     </div>
   </section>
-  <section class="drawable-app-footer" v-if="!hideFooter">
-    <LibraryList></LibraryList>
-
+  <section class="drawable-app-footer" v-if="!$store.state.ui.layout.hideFooter">
+      <button @click="onToggleLibrary">Library</button>
   </section>
 </template>
 
@@ -38,26 +38,29 @@ import LibraryList from "./library/LibraryList.vue";
 
 export default {
   name: "Drawable",
-  components: { LibraryList, ToolHint, Modal, ToolBar, StatementEditor, DrawableHeader, PropertiesEditor, StepList, DataEditor, Drawing },
+  components: {
+    LibraryList,
+    ToolHint,
+    Modal,
+    ToolBar,
+    StatementEditor,
+    DrawableHeader,
+    PropertiesEditor,
+    StepList,
+    DataEditor,
+    Drawing
+  },
   inject: ["controller"],
-  props: [
-    "hideHeader",
-    "hideLeftColumn",
-    "hideDataEditor",
-    "hideStepList",
-    "hideToolbar",
-    "hideMainColumn",
-    "hideStatementPreview",
-    "hideStatementEditor",
-    "hideDrawing",
-    "hideToolHint",
-    "hideRightColumn",
-    "hideFooter"],
+  props: [],
 
   data() {
     return { message: "Welcome to drawable... the thing that does that thing with stuff and so ..." }
   },
 
-  methods: {}
+  methods: {
+    onToggleLibrary() {
+      this.controller.toggleLibrary();
+    }
+  }
 }
 </script>
