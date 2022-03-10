@@ -36,6 +36,36 @@ export const uiState = {
         toggleLibrary(state: UIState) {
             const current = !!state.layout.hideLibrary;
             state.layout.hideLibrary = !current;
+        },
+
+        toggleToolbar(state: UIState) {
+            const current = !!state.layout.hideToolbar;
+            state.layout.hideToolbar = !current;
+        },
+
+        toggleLeftPanel(state: UIState) {
+            const current = !!state.layout.hideLeftColumn;
+            state.layout.hideLeftColumn = !current;
+        },
+
+        toggleRightPanel(state: UIState) {
+            const current = !!state.layout.hideRightColumn;
+            state.layout.hideRightColumn = !current;
+        },
+
+        toggleHeader(state: UIState) {
+            const current = !!state.layout.hideHeader;
+            state.layout.hideHeader = !current;
+        },
+
+        toggleToolHints(state: UIState) {
+            const current = !!state.layout.hideToolHint;
+            state.layout.hideToolHint = !current;
+        },
+
+        toggleFooter(state: UIState) {
+            const current = !!state.layout.hideFooter;
+            state.layout.hideFooter = !current;
         }
     }
 }

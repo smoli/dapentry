@@ -23,7 +23,13 @@ const mutations = {
         showModal: "ui/showModal",
         hideModal: "ui/hideModal",
         setLayout: "ui/setLayout",
-        toggleLibrary: "ui/toggleLibrary"
+        toggleLibrary: "ui/toggleLibrary",
+        toggleToolbar: "ui/toggleToolbar",
+        toggleLeftPanel: "ui/toggleLeftPanel",
+        toggleRightPanel: "ui/toggleRightPanel",
+        toggleHeader: "ui/toggleHeader",
+        toggleToolHints: "ui/toggleToolHints",
+        toggleFooter: "ui/toggleFooter"
     },
 
     tool: {
@@ -372,4 +378,34 @@ export class State {
     toggleLibrary() {
         this.commit(mutations.ui.toggleLibrary);
     }
+
+    toggleToolbar() {
+        this.commit(mutations.ui.toggleToolbar);
+    }
+
+    public toggleLeftPanel() {
+        this.commit(mutations.ui.toggleLeftPanel);
+
+    }
+
+    public toggleRightPanel() {
+        this.commit(mutations.ui.toggleRightPanel);
+
+    }
+
+    public toggleHeader() {
+        this.commit(mutations.ui.toggleHeader);
+
+    }
+
+    public toggleToolHints() {
+        this.commit(mutations.ui.toggleToolHints);
+
+    }
+    public toggleFooter() {
+        this.commit(mutations.ui.toggleFooter);
+
+    }
+
+
 }

@@ -1,4 +1,4 @@
-export const  Icons = {
+export const Icons = {
 
     CircleTool: `<svg viewbox="-10 -10 120 120">
   <circle cx="50" cy="50" r="50" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" />

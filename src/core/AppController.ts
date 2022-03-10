@@ -624,4 +624,30 @@ export class AppController {
             this._state.toggleLibrary();
         }
     }
+
+    public toggleToolbar() {
+        this._state.toggleToolbar();
+    }
+
+    public toggleLeftPanel() {
+        this._state.toggleLeftPanel();
+    }
+
+    public toggleRightPanel() {
+        this._state.toggleRightPanel();
+    }
+
+    public toggleHeader() {
+        this._state.toggleHeader();
+    }
+
+    public toggleToolHints() {
+        this._state.toggleToolHints();
+    }
+
+    public toggleFooter() {
+        this._state.toggleFooter();
+    }
+
+
 }

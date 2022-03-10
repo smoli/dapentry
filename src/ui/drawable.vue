@@ -18,6 +18,7 @@
     </div>
   </section>
   <section class="drawable-app-footer" v-if="!$store.state.ui.layout.hideFooter">
+    <LayoutSwitcher/>
   </section>
 </template>
 
@@ -33,11 +34,14 @@ import ToolBar from "./ToolBar.vue";
 import Modal from "./core/Modal.vue";
 import ToolHint from "./ToolHint.vue";
 import LibraryList from "./library/LibraryList.vue";
+import {Icons} from "./css/icons/icons";
+import LayoutSwitcher from "./LayoutSwitcher.vue";
 
 
 export default {
   name: "Drawable",
   components: {
+    LayoutSwitcher,
     LibraryList,
     ToolHint,
     Modal,
@@ -53,7 +57,11 @@ export default {
   props: [],
 
   data() {
-    return { message: "Welcome to drawable... the thing that does that thing with stuff and so ..." }
+    let icons;
+    return {
+      message: "Welcome to drawable... the thing that does that thing with stuff and so ...",
+      UILayout: Icons.UILayout
+    }
   },
 
   methods: {
