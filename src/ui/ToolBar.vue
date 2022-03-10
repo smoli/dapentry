@@ -1,10 +1,10 @@
 <template>
   <div class="drawable-toolbar">
     <div>
-      <button v-for="tool in tools"
+      <button v-for="tool in tools" :title="tool.tooltip"
               :class="{ 'drawable-tool-active': $store.state.tool.current === tool.name }"
               @click="onSwitchTool(tool.name)">
-        <image v-if="tool.buttonContentSVG" v-html="tool.buttonContentSVG"/>
+        <image v-if="tool.buttonContentSVG" v-html="tool.buttonContentSVG" />
         <span v-else>{{tool.buttonContent }}</span>
       </button>
     </div>
@@ -22,14 +22,14 @@ export default {
 
   data() {
     const tools = [
-      { buttonContent: "C", name: ToolNames.Circle, buttonContentSVG: Icons.CircleTool },
-      { buttonContent: "R", name: ToolNames.Rectangle, buttonContentSVG: Icons.RectangleTool },
-      { buttonContent: "L", name: ToolNames.Line, buttonContentSVG: Icons.LineTool },
-      { buttonContent: "P", name: ToolNames.Polygon, buttonContentSVG: Icons.PolygonTool },
-      { buttonContent: "W", name: ToolNames.Text, buttonContentSVG: Icons.TextTool },
-      { buttonContent: "G", name: ToolNames.Move, buttonContentSVG: Icons.MoveTool },
-      { buttonContent: "T", name: ToolNames.Rotate, buttonContentSVG: Icons.RotateTool },
-      { buttonContent: "S", name: ToolNames.Scale, buttonContentSVG: Icons.ScaleTool },
+      { buttonContent: "C", name: ToolNames.Circle, buttonContentSVG: Icons.CircleTool, tooltip: "Draw a circle" },
+      { buttonContent: "R", name: ToolNames.Rectangle, buttonContentSVG: Icons.RectangleTool, tooltip: "Draw a rectangle" },
+      { buttonContent: "L", name: ToolNames.Line, buttonContentSVG: Icons.LineTool, tooltip: "Draw a line" },
+      { buttonContent: "P", name: ToolNames.Polygon, buttonContentSVG: Icons.PolygonTool, tooltip: "Draw a polygon" },
+      { buttonContent: "W", name: ToolNames.Text, buttonContentSVG: Icons.TextTool, tooltip: "Draw text" },
+      { buttonContent: "G", name: ToolNames.Move, buttonContentSVG: Icons.MoveTool, tooltip: "Move" },
+      { buttonContent: "T", name: ToolNames.Rotate, buttonContentSVG: Icons.RotateTool, tooltip: "Rotate" },
+      { buttonContent: "S", name: ToolNames.Scale, buttonContentSVG: Icons.ScaleTool, tooltip: "Scale" },
     ];
 
     return {
