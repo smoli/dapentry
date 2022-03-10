@@ -1,48 +1,49 @@
 <template>
-  <svg id="r1" viewBox="-15 -15 1807.7777777777778 1030" height="4em" class="drawable-layout-switcher">
+
+  <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1777 1000" height="4em" class="drawable-layout-switcher">
     <g>
       <g id="App">
-        <path class="grObject" d="M 0 0 L 1777.7777777777778 0 L 1777.7777777777778 1000 L 0 1000 Z"
-              style="fill: black; fill-opacity: 0.1; stroke: #e3e3e3; stroke-width: 50"/>
+        <path
+            class="grObject" d="M 0 0 L 1777.7777777777778 0 L 1777.7777777777778 1000 L 0 1000 Z"
+              style="fill: #828282; fill-opacity: 0.1; stroke: coral; stroke-width: 0"></path>
       </g>
       <g id="Header">
-        <path  @click="onToggleHeader"
-            class="grObject" d="M 0 0 L 1777.777777777778 0 L 1777.777777777778 123.41 L 0 123.41 Z"
-              style="fill: black; fill-opacity: 0.1; stroke: #e3e3e3; stroke-width: 50"/>
+        <path @click="onToggleHeader"
+            class="grObject" d="M 0 0 L 1777.7777777777778 0 L 1777.7777777777778 200 L 0 200 Z"
+              style="fill: #ffd642; fill-opacity: 1; stroke: coral; stroke-width: 0"></path>
+      </g>
+      <g id="Footer">
+        <path @click="onToggleFooter"
+              class="grObject" d="M 0 800 L 1777.7777777777778 800 L 1777.7777777777778 1000 L 0 1000 Z"
+              style="fill: #4a4a4a; fill-opacity: 1; stroke: coral; stroke-width: 0"></path>
       </g>
       <g id="Left">
-        <path  @click="onToggleLeftPanel"
-            class="grObject" d="M 0 123.41000000000003 L 404.3 123.41000000000003 L 404.3 877 L 0 877 Z"
-              style="fill: black; fill-opacity: 0.1; stroke: #e3e3e3; stroke-width: 50"/>
-
+        <path @click="onToggleLeftPanel"
+              class="grObject"
+              d="M 2.842170943040401e-14 200 L 266.66666666666674 200 L 266.66666666666674 800 L 2.842170943040401e-14 800 Z"
+              style="fill: #b5b5b5; fill-opacity: 0.2; stroke: coral; stroke-width: 0"></path>
       </g>
       <g id="Right">
-        <path class="grObject"  @click="onToggleRightPanel"
-              d="M 1373.4777777777776 123.41000000000003 L 1777.7777777777778 123.41000000000003 L 1777.7777777777778 877 L 1373.4777777777776 877 Z"
-              style="fill: black; fill-opacity: 0.1; stroke: #e3e3e3; stroke-width: 50"/>
-
+        <path @click="onToggleRightPanel"
+              class="grObject"
+              d="M 1511.1111111111113 200 L 1777.7777777777778 200 L 1777.7777777777778 800 L 1511.1111111111113 800 Z"
+              style="fill: #b5b5b5; fill-opacity: 0.2; stroke: coral; stroke-width: 0"></path>
       </g>
       <g id="Toolbar">
-        <path class="grObject" @click="onToggleToolbar"
-              d="M 642.9688888888891 123.41000000000001 L 1134.808888888889 123.41000000000001 L 1134.808888888889 277.836624 L 642.9688888888891 277.836624 Z"
-              style="fill: black; fill-opacity: 0.1; stroke: #e3e3e3; stroke-width: 50"/>
+        <path @click="onToggleToolbar"
+              class="grObject"
+              d="M 515.5555555555555 200 L 1262.2222222222222 200 L 1262.2222222222222 380 L 515.5555555555555 380 Z"
+              style="fill: #ffd642; fill-opacity: 1; stroke: coral; stroke-width: 0"></path>
       </g>
       <g id="Hint">
-        <path class="grObject"  @click="onToggleToolHints"
-              d="M 559.5438888888889 718 L 1218.233888888889 718 L 1218.233888888889 877 L 559.5438888888889 877 Z"
-              style="fill: black; fill-opacity: 0.1; stroke: #e3e3e3; stroke-width: 50"/>
-
-      </g>
-
-      <g id="Header">
-        <path  @click="onToggleFooter"
-               class="grObject" d="M 0 877 L 1777.777777777778 877 L 1777.777777777778 1000 L 0 1000 Z"
-               style="fill: black; fill-opacity: 0.1; stroke: #e3e3e3; stroke-width: 50"/>
+        <path @click="onToggleToolHints"
+              class="grObject"
+              d="M 515.5555555555555 620 L 1262.2222222222222 620 L 1262.2222222222222 800 L 515.5555555555555 800 Z"
+              style="fill: #b5b5b5; fill-opacity: 0.2; stroke: coral; stroke-width: 0"></path>
       </g>
     </g>
-    <g/>
-    <g style="pointer-events: none;"/>
-    <g/>
   </svg>
 </template>
 
