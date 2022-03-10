@@ -73,7 +73,7 @@ export class ScaleTool extends Tool {
             this._scalingPOI = poiId;
             this._pivotPOI = object.getOppositePoi(this._scalingPOI);
             this._pivot = this._target.pointsOfInterest(POIPurpose.SCALING)[this._pivotPOI];
-            this._op = this._target.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy.sub(this._target.center);
+            this._op = this._target.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy;
             this._finalX = 1;
             this._finalY = 1;
             this.enablePOISnapping([this._object])
@@ -102,7 +102,7 @@ export class ScaleTool extends Tool {
         newPosition.x += dx;
         newPosition.y += dy;
 
-        const oldLocal = this._target.mapPointToLocal(oldPosition);
+        const oldLocal = this._target.mapPointToLocal(this._op);
         const newLocal = this._target.mapPointToLocal(newPosition);
         const pivotLocal = this._target.mapPointToLocal(this._pivot);
 
@@ -110,15 +110,15 @@ export class ScaleTool extends Tool {
 
         if (this._scaleMode === ScaleMode.UNIFORM) {
             fx = makeScaleFactorsUniform(fx, fy);
-            this._finalX *= Math.abs(fx);
+            this._finalX = fx;
             this._finalY = this._finalX;
         } else {
-            this._finalX *= Math.abs(fx);
-            this._finalY *= Math.abs(fy);
+            this._finalX = fx;
+            this._finalY = fy;
         }
 
         this._target.resetScaling(this._scaleResetInfo);
-        this._target.scale(Math.abs(this._finalX), Math.abs(this._finalY), this._pivot);
+        this._target.scale(this._finalX, this._finalY, this._pivot);
     }
 
     protected _update(interactionEvent: InteractionEvents, snapInfo: SnapInfo = null): boolean {
@@ -179,9 +179,9 @@ export class ScaleTool extends Tool {
         }
 
         if (this._scaleMode == ScaleMode.UNIFORM) {
-            return `${AppConfig.Runtime.Opcodes.Scale.FactorUniform} ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, "${POI[this._pivotPOI]}"`
+            return `${AppConfig.Runtime.Opcodes.Scale.FactorUniform} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, "${POI[this._pivotPOI]}"`
         } else {
-            return `${AppConfig.Runtime.Opcodes.Scale.Factor} ${this._object.name}, ${this.makeCodeForNumber(Math.abs(this._finalX))}, ${this.makeCodeForNumber(Math.abs(this._finalY))}, "${POI[this._pivotPOI]}"`
+            return `${AppConfig.Runtime.Opcodes.Scale.Factor} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, ${this.makeCodeForNumber(this._finalY)}, "${POI[this._pivotPOI]}"`
         }
     }
 }
