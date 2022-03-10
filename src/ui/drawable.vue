@@ -3,9 +3,8 @@
   <drawable-header v-if="!$store.state.ui.layout.hideHeader"></drawable-header>
   <section class="drawable-app-main">
     <div class="drawable-left-column" v-if="!$store.state.ui.layout.hideLeftColumn">
-        <LibraryList v-if="!$store.state.ui.layout.hideLibrary"></LibraryList>
-        <DataEditor v-if="!$store.state.ui.layout.hideDataEditor && $store.state.ui.layout.hideLibrary"></DataEditor>
-        <StepList v-if="!$store.state.ui.layout.hideStepList && $store.state.ui.layout.hideLibrary"></StepList>
+        <DataEditor v-if="!$store.state.ui.layout.hideDataEditor"></DataEditor>
+        <StepList v-if="!$store.state.ui.layout.hideStepList"></StepList>
       </div>
     <div class="drawable-main-column" v-if="!$store.state.ui.layout.hideMainColumn">
       <tool-bar v-if="!$store.state.ui.layout.hideToolbar"></tool-bar>
@@ -15,10 +14,10 @@
     </div>
     <div class="drawable-right-column" v-if="!$store.state.ui.layout.hideRightColumn">
       <PropertiesEditor></PropertiesEditor>
+      <LibraryList v-if="!$store.state.ui.layout.hideLibrary"></LibraryList>
     </div>
   </section>
   <section class="drawable-app-footer" v-if="!$store.state.ui.layout.hideFooter">
-      <button @click="onToggleLibrary">Library</button>
   </section>
 </template>
 

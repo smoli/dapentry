@@ -31,9 +31,7 @@ export interface LayoutOptions {
     hideLibrary?: boolean
 }
 
-export const layoutDefaults:LayoutOptions = {
-    hideLibrary: true
-}
+export const layoutDefaults:LayoutOptions = {};
 
 /**
  * Create a new instance of the drawable designer. This is fully self contained. You can
