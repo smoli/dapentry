@@ -440,7 +440,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return this._renderText(this.getLayer(layer), text, null, enableMouseEvents);
     }
 
-    protected _textTransform(elem:  d3.Selection<any, any, any, any>, text: GrText) {
+    protected _textTransform(elem: d3.Selection<any, any, any, any>, text: GrText) {
         const a = -rad2deg(new Point2D(1, 0).angleTo(text.xAxis));
 
         const comps = [];
@@ -992,20 +992,36 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return d3.pointer(event, this._svg.node());
     }
 
-    public getSVGPreview():string {
-        const code = this._objectLayer.node().innerHTML
-            .replace(/<g class="boundingBox"><\/g>/g, "")
-            .replace(/<g class="transformationHandle"><\/g>/g, "");
+    public getSVGPreview(): string {
 
-        return code;
+        const node = this._objectLayer.node().cloneNode(true);
 
-/*
-        return `<svg version="1.1"
-     baseProfile="full"
-     xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink"
-     xmlns:ev="http://www.w3.org/2001/xml-events">${code}</svg>`
-*/
+
+        const cleanUp = node => {
+            if (node.childElementCount === 0) {
+                return;
+            }
+
+            const rem = [];
+            for (let i = 0; i < node.childElementCount; i++) {
+                const child = node.childNodes[i];
+                const classes = child.classList;
+
+                if (classes?.contains(ToolClasses.boundingBox)) {
+                    rem.push(child);
+                } else if (classes?.contains(ToolClasses.handle)) {
+                    rem.push(child);
+                }
+            }
+            rem.forEach(child => node.removeChild(child));
+
+            for (let i = 0; i < node.childElementCount; i++) {
+                cleanUp(node.childNodes[i]);
+            }
+        }
+
+        cleanUp(node);
+        return node.outerHTML;
     };
 
 }

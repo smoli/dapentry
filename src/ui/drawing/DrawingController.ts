@@ -72,7 +72,6 @@ export class DrawingController {
     }
 
     protected _onToolPreview(resultPreview) {
-        // TODO: Pass Preview to the UI
         this._appController.state.setToolPreview(resultPreview);
     }
 

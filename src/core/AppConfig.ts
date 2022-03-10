@@ -1,4 +1,7 @@
 export const AppConfig = {
+    dapentry: {
+        version: "0.1"
+    },
 
     Keys: {
         DrawCircleKey: "c",

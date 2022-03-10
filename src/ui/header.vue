@@ -1,6 +1,7 @@
 <template>
   <section class="drawable-app-header">
     <h1>{{ $t("ui.appName") }}<span>0.1&alpha;</span></h1>
+    <svg-saver />
     <button @click="onSave">Save drawing</button>
     <button @click="onNewDrawing">New drawing</button>
     <aspect-ratio-switcher />
@@ -16,10 +17,11 @@ import {AspectRatio} from "../geometry/GrCanvas";
 import LocaleSwitcher from "./localeSwitcher.vue";
 import AspectRatioSwitcher from "./aspectRatioSwitcher.vue";
 import ProfileButton from "./Profile/ProfileButton.vue";
+import SvgSaver from "./SVGSaver.vue";
 
 export default {
   name: "drawable-header",
-  components: { ProfileButton, AspectRatioSwitcher, LocaleSwitcher },
+  components: { SvgSaver, ProfileButton, AspectRatioSwitcher, LocaleSwitcher },
   inject: ["controller"],
 
   data() {
