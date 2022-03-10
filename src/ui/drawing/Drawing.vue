@@ -1,6 +1,5 @@
 <template>
   <section class="drawable-drawing-container">
-
     <svg v-bind:id="id" v-bind:viewBox="viewBox"></svg>
   </section>
 </template>
@@ -22,7 +21,7 @@ function updateSizing(svg, vbWidth, vbHeight) {
   const h = container.clientHeight;
   const w = container.clientWidth;
   const containerAr = w / h;
-  const vbAr = vbWidth / vbHeight; // Allways >= 1
+  const vbAr = vbWidth / vbHeight; // Always >= 1
 
   if (vbAr < containerAr) {
     // Limited by height
