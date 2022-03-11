@@ -6,23 +6,28 @@
               class="drawable-ui-transparent"
       >Loop
       </button>
+      <ToggleButton transparent="true" :active="filter" @change="filter = !filter">Filter</ToggleButton>
     </h2>
 
     <div v-if="!showCode">
-      <div  ref="steps" v-for="(line, index) of annotatedCode" v-bind:data-step="index"
-           class="drawable-steplist-step" :class="{ selected: line.selected }"
+      <div ref="steps" v-for="(line, index) of annotatedCode" v-bind:data-step="index"
+           class="drawable-steplist-step"
+           :class="{ selected: line.selected, filteredOut: line.filteredOut}"
            :style="{ 'margin-left': line.level + 'em' }"
-           @click="onStepClicked">{{ line.text }}
-        <button @click="onDeleteStep(line, $event)"
+           @click="onStepClicked">
+        <span v-if="!line.filteredOut">{{ line.text }}</span>
+        <button v-if="!line.filteredOut" @click="onDeleteStep(line, $event)"
                 class="drawable-steplist-step-delete drawable-ui-transparent">
           x
         </button>
-        <i :title="$t('ui.stepList.pauseExplanation')" v-if="line.originalLine === lastSelectedLine"
+        <i :title="$t('ui.stepList.pauseExplanation')"
+           v-if="line.originalLine === lastSelectedLine && !line.filteredOut"
            class="drawable-steplist-step-pause fa-solid fa-circle-pause"></i>
       </div>
     </div>
     <div v-if="showCode">
-      <textarea rows="35" cols="37" style="font-family: monospace; font-size: 10pt" disabled="disable">{{ code }}</textarea>
+      <textarea rows="35" cols="37" style="font-family: monospace; font-size: 10pt"
+                disabled="disable">{{ code }}</textarea>
     </div>
 
   </section>
@@ -35,16 +40,19 @@ import {AnnotatedCodeLine} from "../../runtime/CodeManager";
 import {ASSERT} from "../../core/Assertions";
 import {rangeSelect} from "../core/rangeSelect";
 import {constructText} from "../core/ConstructText";
+import ToggleButton from "../core/ToggleButton.vue";
 
 
 export default {
   name: "StepList",
+  components: { ToggleButton },
   inject: ["controller"],
 
   data() {
     return {
       selectedFirst: null,
-      showCode: false
+      showCode: false,
+      filter: false
     }
   },
 
@@ -74,11 +82,16 @@ export default {
     annotatedCode(): Array<AnnotatedCodeLine> {
 
       const selection = this.$store.state.code.selectedLines;
+      let visibleIndexes = null;
+      if (this.filter) {
+        visibleIndexes = this.getLineIndexesForSelectedObjects();
+      }
 
       return this.$store.getters['code/annotated'].map(anno => {
         const tokens = Parser.parseLine(anno.code);
         return {
           ...anno,
+          filteredOut: this.filter ? visibleIndexes.indexOf(anno.originalLine) === -1 : false,
           text: constructText(tokens, this.$t),
           selected: selection.indexOf(anno.originalLine) !== -1
         }
@@ -93,12 +106,28 @@ export default {
       return this.$store.state.code.selectedLines.length === 0;
     },
 
-    code():string {
-        return this.$store.state.code.code.join("\n");
+    code(): string {
+      return this.$store.state.code.code.join("\n");
     }
   },
 
   methods: {
+    getLineIndexesForSelectedObjects() {
+      let ret = [];
+      if (this.filter && this.$store.state.drawing.selection.length) {
+
+        const cm = this.$store.state.code.codeManager;
+        for (const o of this.$store.state.drawing.selection) {
+          const indexes = cm.getStatementIndexesWithParticipation(o.uniqueName, true);
+          if (indexes) {
+            ret.push(...indexes);
+          }
+        }
+      }
+      return ret;
+    },
+
+
     onStepClicked(event: MouseEvent) {
       const code = this.annotatedCode;
       const stepDiv: HTMLElement = event.target as HTMLElement;
@@ -145,6 +174,11 @@ export default {
         return;
       }
       this.showCode = !this.showCode;
+    },
+
+    onClickFilter(event) {
+      event.stopPropagation();
+      this.filter = !this.filter;
     }
   }
 

@@ -117,6 +117,17 @@ button.drawable-ui-transparent:active {
 }
 
 
+.drawable-ui-toggle-button-active:hover {
+  background-color: darken(@highlightColor, 10%) !important;
+}
+.drawable-ui-toggle-button-active {
+  background-color: @highlightColor !important;
+  border-radius: @uiElementBorderRadius;
+  border: 1px solid darken(@highlightColor, @buttonBorderDarkening) !important;
+  color: white !important;
+}
+
+
 a.drawable-action-link {
   color: @highlightColor;
   text-decoration: underline;
@@ -168,8 +179,8 @@ form {
     }
 
     > p {
-    padding: 0 !important;
-    margin: 0 0 1.5em 0 !important;
+      padding: 0 !important;
+      margin: 0 0 1.5em 0 !important;
 
       input {
         float: right;

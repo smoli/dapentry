@@ -7,9 +7,20 @@
   overflow: auto;
 
 
-  button {
+  label, button {
     font-size: 80%;
+    font-weight: normal;
+    letter-spacing: normal;
   }
+
+  label {
+    float: right;
+  }
+  input[type="checkbox"] {
+    float: right;
+  }
+
+
 
   .drawable-steplist-step {
     position: relative;
@@ -19,6 +30,10 @@
     padding: 1em;
     border-radius: @uiElementBorderRadius;
     transition: background-color 0.15s;
+  }
+
+  .drawable-steplist-step.filteredOut {
+    padding: 0.1em;
   }
 
   .drawable-steplist-step.selected, .drawable-steplist-step.selected:hover {
