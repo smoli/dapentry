@@ -9,7 +9,7 @@ import {AppConfig} from "../core/AppConfig";
 import {ModalDialogHandler} from "../ui/core/ModalDialogHandler";
 import {LibraryEntry} from "../core/Library";
 import {UserInfo} from "./modules/Authentication";
-import {LayoutOptions} from "../core/makeDesigner";
+import {LayoutOptions} from "../core/layoutOptions";
 
 
 const mutations = {
@@ -328,6 +328,10 @@ export class State {
 
     renameDataField(oldName: string, newName: string) {
         this.commit(mutations.data.renameField, { oldName, newName });
+        this.commit(mutations.code.renameRegister, { oldName, newName });
+    }
+
+    renameRegister(oldName: string, newName: string) {
         this.commit(mutations.code.renameRegister, { oldName, newName });
     }
 

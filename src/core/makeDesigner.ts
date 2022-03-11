@@ -7,6 +7,7 @@ import Drawable from "../ui/drawable.vue";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {State} from "../state/State";
 import {Library} from "./Library";
+import {layoutDefaults, LayoutOptions} from "./layoutOptions";
 
 const navigatorLanguage = navigator.language ? navigator.language.split("-")[0] : "en"
 const i18n = createI18n({
@@ -14,24 +15,6 @@ const i18n = createI18n({
     fallbackLocale: "en",
     messages: i18nMessages
 });
-
-export interface LayoutOptions {
-    hideHeader?: boolean,
-    hideToolbar?: boolean,
-    hideLeftColumn?: boolean,
-    hideDataEditor?: boolean,
-    hideStepList?: boolean,
-    hideMainColumn?: boolean,
-    hideStatementPreview?: boolean,
-    hideStatementEditor?: boolean,
-    hideDrawing?: boolean,
-    hideToolHint?: boolean,
-    hideRightColumn?: boolean,
-    hideFooter?: boolean,
-    hideLibrary?: boolean
-}
-
-export const layoutDefaults:LayoutOptions = {};
 
 /**
  * Create a new instance of the drawable designer. This is fully self contained. You can
@@ -41,6 +24,7 @@ export const layoutDefaults:LayoutOptions = {};
  * @param containerId       ID of the container element. provide *without* the `#`
  * @param layout            Define what ui elements are displayed
  * @param appOptions        Define what features the designer supports
+ * @param initialCode
  */
 export function makeDesigner(containerId: string,
                              layout: LayoutOptions = {},

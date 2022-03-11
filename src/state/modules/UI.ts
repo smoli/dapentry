@@ -1,6 +1,6 @@
 import {shallowRef} from "vue";
 import {ModalDialogHandler} from "../../ui/core/ModalDialogHandler";
-import {layoutDefaults, LayoutOptions} from "../../core/makeDesigner";
+import {layoutDefaults, LayoutOptions} from "../../core/layoutOptions";
 
 
 export interface UIState {

@@ -4,7 +4,6 @@ import {State} from "../../src/state/State";
 import {createAppStore} from "../../src/state/AppStore";
 import {MockController} from "../testHelpers/mock_controller";
 import {UpdateStatement} from "../../src/actions/UpdateStatement";
-import {createDeflateRaw} from "zlib";
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import {T_NUMBER, T_OPCODE, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
 
@@ -53,6 +52,34 @@ describe('Update statement', () => {
             [T_OPCODE("LOAD"), T_REGISTER("r1"), T_NUMBER(10)],
             [T_OPCODE("LOAD"), T_REGISTER("r2"), T_REGISTERAT("r1", T_REGISTER("f1"))]
         ]);
+
+
+    });
+
+    it("can rename a register", async () => {
+        const state = new State(createAppStore(), null);
+        const action = new UpdateStatement(0, [1], "f1");
+        action.controller = new MockController(state);
+
+        const code = `
+                LOAD r1, 10
+                LOAD r2, r1@5
+            `
+
+        state.setCodeString(code);
+        await action.execute(null);
+
+        expect(Parser.parseLine(state.store.state.code.code[0])).to.deep.equal([
+                T_OPCODE("LOAD"),
+                T_REGISTER("f1"),
+                T_NUMBER(10)
+            ]);
+
+        expect(Parser.parseLine(state.store.state.code.code[1])).to.deep.equal([
+                T_OPCODE("LOAD"),
+                T_REGISTER("r2"),
+                T_REGISTERAT("f1", 5)
+            ]);
 
 
     });

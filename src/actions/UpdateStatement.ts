@@ -38,18 +38,18 @@ export class UpdateStatement extends BaseAction {
         return newStatements;
     }
 
-    protected checkIsArray(value:any):boolean {
-        return ( typeof value.forEach === "function");
+    protected checkIsArray(value: any): boolean {
+        return ( typeof value.forEach === "function" );
     }
 
     _execute() {
         const statement = this.codeManager.code[this._statementIndex];
         const tokens = Parser.parseLine(statement);
-        let token:any = { value: tokens };
+        let token: any = { value: tokens };
 
-            for (let i of this._tokenIndexes) {
-                token = token.value[i];
-            }
+        for (let i of this._tokenIndexes) {
+            token = token.value[i];
+        }
 
         let newStatements: string[] = [];
 
@@ -66,10 +66,16 @@ export class UpdateStatement extends BaseAction {
         } else { // Maybe a register name from data
             const field = this.state.getDataField(this._newValue);
             if (!field) {
-                // TODO:  This is most likely an expression. Check it?
-                token.type = TokenTypes.OTHER;      // the value will be reparsed
-                token.value = this._newValue;
-                newStatements.push(Parser.constructCodeLine(tokens));
+                // TODO:  This is an expression or a register. Check it?
+
+                if (this.codeManager.getCreatedRegisterForStatement(this._statementIndex) === token.value) {
+                    // We're renaming a created register
+                    this.state.renameRegister(token.value, this._newValue);
+                } else {
+                    token.type = TokenTypes.OTHER;      // the value will be reparsed
+                    token.value = this._newValue;
+                    newStatements.push(Parser.constructCodeLine(tokens));
+                }
             } else {
                 const dataValue = field.value;
                 if (this.checkIsArray(dataValue)

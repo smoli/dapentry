@@ -24,12 +24,12 @@
 
 <script lang="ts">
 
-import Drawing from "./drawing/Drawing";
-import DataEditor from "./dataEditor/DataEditor";
-import StepList from "./stepList/StepList";
+import Drawing from "./drawing/Drawing.vue";
+import DataEditor from "./dataEditor/DataEditor.vue";
+import StepList from "./stepList/StepList.vue";
 import PropertiesEditor from "./propertiesEditor/PropertiesEditor.vue";
 import DrawableHeader from "./header.vue";
-import StatementEditor from "./StatementEditor/StatementEditor";
+import StatementEditor from "./StatementEditor/StatementEditor.vue";
 import ToolBar from "./ToolBar.vue";
 import Modal from "./core/Modal.vue";
 import ToolHint from "./ToolHint.vue";
@@ -60,7 +60,6 @@ export default {
     let icons;
     return {
       message: "Welcome to drawable... the thing that does that thing with stuff and so ...",
-      UILayout: Icons.UILayout
     }
   },
 
