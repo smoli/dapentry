@@ -58,10 +58,10 @@ export default {
               return `${e.registerName} already in use.`
 
             case "UnknownRegisterError":
-              return `Register ${e.registerName} unknown`;
+              return `${e.registerName} unknown`;
 
               case "UnknownRegisterComponentError":
-                return `Register ${e.registerName}.${e.componentName} unknown`
+                return `${e.registerName}.${e.componentName} unknown`
 
             case "UnknownFunctionError":
               return `Function ${e.funcName} unknown`;

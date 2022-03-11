@@ -299,11 +299,16 @@ export class AppController {
     }
 
 
-    async setDataFieldValue(name: string, newValue: DataFieldValue) {
+    async setDataFieldValue(name: string, newValue: DataFieldValue): Promise<Array<Error>> {
         this.state.setDataFieldValue(name, newValue);
         await this.runCode();
-        this.updateDrawing();
-        await this._persistence?.saveCode();
+
+        if (this._interpreter.errors.length === 0) {
+            this.updateDrawing();
+            await this._persistence?.saveCode();
+        } else {
+            return this._interpreter.errors;
+        }
     }
 
     async setDataListFieldValue(name: string, index: number, value: DataFieldValue) {
