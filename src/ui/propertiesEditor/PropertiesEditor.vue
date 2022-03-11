@@ -3,54 +3,73 @@
     <div v-if="selectionCount === 1">
       <div class="drawable-properties-style">
         <h2>Style
-          <span>of {{objectName }}</span>
+          <span>of {{ objectName }}</span>
         </h2>
         <div>
           <input type="color" v-model="fillColor"
                  @change="onFillColorChange">
           <label>{{ $t("ui.styleEditor.fillColor") }} {{ fillColor }}</label>
-        </div>
+          <div class="drawable-properties-used-color-list">
+            <button v-for="c of usedFillColors" @click="onFillColorChange(c)">
+              <div :style="{
+              background: c,
+              width: `1.5em`,
+              height: `1.5em`
+              }"></div>
+            </button>
+            </div>
+          </div>
 
-        <div>
-          <input type="range" v-model="fillOpacity"
-                 min="0" max="1" step="0.01"
-                 @change="onOpacityChange">
-          <label>{{ $t("ui.styleEditor.fillOpacity") }} {{ fillOpacity }}</label>
-        </div>
+          <div>
+            <input type="range" v-model="fillOpacity"
+                   min="0" max="1" step="0.01"
+                   @change="onOpacityChange">
+            <label>{{ $t("ui.styleEditor.fillOpacity") }} {{ fillOpacity }}</label>
+          </div>
 
-        <div>
-          <input v-model="strokeColor" type="color"
-                 @change="onStrokeColorChange">
-          <label>{{ $t("ui.styleEditor.stroke") }} {{ strokeColor }}</label>
-        </div>
+          <div>
+            <input v-model="strokeColor" type="color"
+                   @change="onStrokeColorChange">
+            <label>{{ $t("ui.styleEditor.stroke") }} {{ strokeColor }}</label>
+            <div class="drawable-properties-used-color-list">
+              <button v-for="c of usedStrokeColors" @click="onStrokeColorChange(c)">
+                <div :style="{
+              background: c,
+              width: `1.5em`,
+              height: `1.5em`
+              }"></div>
+              </button>
+            </div>
 
-        <div>
-          <input v-model="strokeWidth" type="range"
-                 min="0" max="100"
-                 @change="onStrokeWidthChange">
-          <label>{{ $t("ui.styleEditor.strokeWidth") }} {{ strokeWidth }}</label>
-        </div>
+          </div>
 
-        <div>
+          <div>
+            <input v-model="strokeWidth" type="range"
+                   min="0" max="100"
+                   @change="onStrokeWidthChange">
+            <label>{{ $t("ui.styleEditor.strokeWidth") }} {{ strokeWidth }}</label>
+          </div>
 
-          <h2>Properties
-          <span>of {{objectName }}</span>
-          </h2>
-          <div v-for="prop of publishedProperties">
+          <div>
+
+            <h2>Properties
+              <span>of {{ objectName }}</span>
+            </h2>
+            <div v-for="prop of publishedProperties">
             <span draggable="true"
                   @dragstart="onDragPropStart(prop.id, $event)"
                   class="drawable-properties-prop-name">{{ prop.name }}</span> = {{ prop.value.toFixed(2) }}
-          </div>
+            </div>
 
-          <div v-for="poi of publishedPoints">
+            <div v-for="poi of publishedPoints">
             <span draggable="true"
                   class="drawable-properties-prop-name"
                   @dragstart="onDragPointStart(poi, $event)">{{ poi.name }}</span> = {{ poi.value.x.toFixed(2) }},
-            {{ poi.value.y.toFixed(2) }}
+              {{ poi.value.y.toFixed(2) }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </section>
 </template>
 
@@ -81,8 +100,10 @@ export default {
         fillOpacity: null,
         fillColor: null,
         strokeColor: null,
-        strokeWidth: null
-      }
+        strokeWidth: null,
+      },
+      usedFillColors: [],
+      usedStrokeColors: []
     }
   },
 
@@ -141,6 +162,14 @@ export default {
   },
   methods: {
     onFillColorChange(event) {
+
+      if (typeof event === "string") {
+        this.controller.setFillColorForSelection(event);
+        return
+      }
+      if (this.usedFillColors.indexOf(event.target.value) === -1) {
+        this.usedFillColors.push(event.target.value)
+      }
       this.controller.setFillColorForSelection(event.target.value);
     },
 
@@ -149,6 +178,13 @@ export default {
     },
 
     onStrokeColorChange(event) {
+      if (typeof event === "string") {
+        this.controller.setStrokeColorForSelection(event);
+        return
+      }
+      if (this.usedStrokeColors.indexOf(event.target.value) === -1) {
+        this.usedStrokeColors.push(event.target.value)
+      }
       this.controller.setStrokeColorForSelection(event.target.value);
     },
 
@@ -156,7 +192,7 @@ export default {
       this.controller.setStrokeWidthForSelection(event.target.value);
     },
 
-    onDragPropStart(propId: string, event:DragEvent) {
+    onDragPropStart(propId: string, event: DragEvent) {
       const info: DnDInfo = {
         value1: this.objectName + "@" + propId,
         type: DnDDataType.Register
