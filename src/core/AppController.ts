@@ -1,7 +1,7 @@
 import {AppConfig} from "./AppConfig";
 import {ToolNames} from "../tools/ToolNames";
 import {State} from "../state/State";
-import {BaseAction} from "../actions/BaseAction";
+import {ActionResult, BaseAction} from "../actions/BaseAction";
 import {AddStatement} from "../actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {AspectRatio, GrCanvas} from "../geometry/GrCanvas";
@@ -252,7 +252,7 @@ export class AppController {
 
     protected async execute(action: BaseAction) {
         action.controller = this;
-        await action.execute(null);
+        return await action.execute(null);
     }
 
     protected async executeBatch(...actions: Array<BaseAction>) {
@@ -397,10 +397,15 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
-    async updateStatement(statementIndex: number, tokenIndexes: Array<number>, newValue: string): Promise<Array<InterpreterError>> {
+    async updateStatement(statementIndex: number, tokenIndexes: Array<number>, newValue: string): Promise<Array<Error>> {
         const oldStatement = this._state.store.state.code.code[statementIndex];
 
-        await this.execute(new UpdateStatement(statementIndex, tokenIndexes, newValue));
+        const result = await this.execute(new UpdateStatement(statementIndex, tokenIndexes, newValue));
+
+        if (result?.errors?.length) {
+            return result.errors;
+        }
+
         await this.runCode();
 
         if (this._interpreter.errors.length === 0) {

@@ -1,9 +1,11 @@
 import {AppController} from "../core/AppController";
 import {State} from "../state/State";
 import {NOT_IMPLEMENTED, UNREACHABLE} from "../core/Assertions";
+import {InterpreterError} from "../runtime/interpreter/errors/InterpreterError";
 
 export interface ActionResult {
-    data: any
+    data?: any,
+    errors?: Array<Error>
 }
 
 export abstract class BaseAction {
@@ -35,7 +37,11 @@ export abstract class BaseAction {
 
         const result = await this._execute(data);
 
-        return { data: result };
+        if (result) {
+            return { ...result };
+        }
+
+        return {}
     }
 
 
@@ -50,7 +56,8 @@ export abstract class BaseAction {
         }
     }
 
-    protected _execute(data: any): any {
+    protected async _execute(data: any): (Promise<(ActionResult | void)>) {
         NOT_IMPLEMENTED()
+        return null;
     }
 }

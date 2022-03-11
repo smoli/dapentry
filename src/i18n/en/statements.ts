@@ -1,3 +1,10 @@
+/**
+ * Satementeditor interprets parameters as follows
+ *  {i}     Create an appropriate editor for token i
+ *  [i]     Display token i's value as plain text
+ *
+ */
+
 
 export const statements = {
     "CIRCLE": "Draw {1} center at {3} with radius {4}",
@@ -16,20 +23,20 @@ export const statements = {
     "POLY": "Draw {1} with {3} closed {4}",
     "EXTPOLY": "Extend {1} with {2}",
     "QUAD": "Draw {1}",
-    "MOVE": "Move {1} center by {2}",
-    "MOVEBY": "Move {1} center by {2}",
-    "MOVETO": "Move {1} to {2}",
-    "MOVEX": "Move {1} along x by {2}",
-    "MOVEY": "Move {1} along y by {2}",
-    "FILL": "Fill {1} with {2} and an opacity of {3}",
-    "STROKE": "Make {1} stroke {2} wide",
-    "ROTATE": "Rotate {1} by {2}",
-    "APPEND": "Append {2} to {1}",
-    "SCALE": "Scale {1} by {2} and {3} around {4}",
-    "SCALEU": "Scale {1} uniformly by {2} around {3}",
-    "SCALEP": "Scale {1} around it's {4} so it's {2} meets {3}",
-    "SCALEPU": "Scale {1} uniformly around it's {4} so it's {2} meets {3}",
-    "DO_NONE": "Repeat {1} times",
+    "MOVE": "Move [1] center by {2}",
+    "MOVEBY": "Move [1] center by {2}",
+    "MOVETO": "Move [1] to {2}",
+    "MOVEX": "Move [1] along x by {2}",
+    "MOVEY": "Move [1] along y by {2}",
+    "FILL": "Fill [1] with {2} and an opacity of {3}",
+    "STROKE": "Make [1] stroke {2} wide",
+    "ROTATE": "Rotate [1] by {2}",
+    "APPEND": "Append {2} to [1]",
+    "SCALE": "Scale [1] by {2} and {3} around {4}",
+    "SCALEU": "Scale [1] uniformly by {2} around {3}",
+    "SCALEP": "Scale [1] around it's {4} so it's {2} meets {3}",
+    "SCALEPU": "Scale [1] uniformly around it's {4} so it's {2} meets {3}",
+    "DO_NONE": "Repeat [1] times",
     "DO_VALUE": "Repeat {2} times",
     "DO_VALUE_INDEX": "Repeat {3} times",
     "FOREACH": "For each value of {1}",

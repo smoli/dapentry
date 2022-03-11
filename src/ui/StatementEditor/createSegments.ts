@@ -1,4 +1,4 @@
-import {Token, TokenTypes} from "../../runtime/interpreter/Parser";
+import {Parser, Token, TokenTypes} from "../../runtime/interpreter/Parser";
 import {UNREACHABLE} from "../../core/Assertions";
 import {LibraryEntry} from "../../core/Library";
 
@@ -56,6 +56,10 @@ export function createSegmentsForMakeOp(tokens: Array<Token>, entry: LibraryEntr
     return segments;
 }
 
+export function createTextSegmentForToken(token: Token) {
+    return { type: "static", value: Parser.constructCodeLine([token])};
+}
+
 export function createSegments(tokens: Array<Token>, textTemplate: string, statementIndex: number): Array<SegmentInfo> {
     if (!tokens || !tokens.length) {
         return []
@@ -63,7 +67,7 @@ export function createSegments(tokens: Array<Token>, textTemplate: string, state
 
     const t = textTemplate;
 
-    const matches = t.match(/([\w\s]+|\{\d+\})/g);
+    const matches = t.match(/([\w\s]+|\{\d+\}|\[\d+\])/g);
 
     const segments = [];
 
@@ -74,6 +78,12 @@ export function createSegments(tokens: Array<Token>, textTemplate: string, state
             const token = tokens[index];
             if (token) {
                 segments.push(createSegmentInfoForToken(token, statementIndex, [index]))
+            }
+        } else if (m[0] == "[") {
+            const index = Number(m.match(/(\d+)/)[0]);
+            const token = tokens[index];
+            if (token) {
+                segments.push(createTextSegmentForToken(token));
             }
         } else {
             segments.push({ type: "Static", value: m });

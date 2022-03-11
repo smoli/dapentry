@@ -4,9 +4,6 @@
     <span v-if="hint">
       {{ $t(hint) }}
     </span>
-    <span v-else>
-      HINT
-    </span>
   </samp>
 
 </template>

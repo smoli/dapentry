@@ -1,4 +1,4 @@
-import {BaseAction} from "./BaseAction";
+import {ActionResult, BaseAction} from "./BaseAction";
 import LoginDialog, {LoginDialogHandler, LoginDialogOptions} from "../ui/Login/LoginDialog";
 import {DialogCloseReason} from "../ui/core/ModalFactory";
 import {API, ResponseStatus} from "../api/API";
@@ -52,7 +52,7 @@ export class Login extends BaseAction {
         }
     }
 
-    protected async _execute(data: any) {
+    protected async _execute(data: any):Promise<ActionResult> {
         const handler = LoginDialogHandler;
         const component = LoginDialog;
 
@@ -60,5 +60,6 @@ export class Login extends BaseAction {
 
 
         await this.showLogin();
+        return {}
     }
 }

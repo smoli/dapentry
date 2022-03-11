@@ -1,4 +1,4 @@
-import {BaseAction} from "./BaseAction";
+import {ActionResult, BaseAction} from "./BaseAction";
 import {CodeManager} from "../runtime/CodeManager";
 import {ASSERT} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
@@ -15,7 +15,7 @@ export class LoopStatements extends BaseAction {
         return this.state.store.state.code.codeManager;
     }
 
-    async _execute() {
+    async _execute(): Promise<ActionResult> {
         const from = Math.min(...this._indexes);
         const to = Math.max(...this._indexes);
 

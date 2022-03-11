@@ -53,6 +53,10 @@ export default {
       if (errors.length) {
         this.validationMessage = errors.map(e => {
           switch (e.name) {
+
+            case "DuplicateRegisterError":
+              return `${e.registerName} already in use.`
+
             case "UnknownRegisterError":
               return `Register ${e.registerName} unknown`;
 

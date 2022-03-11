@@ -1,7 +1,8 @@
-import {BaseAction} from "./BaseAction";
+import {ActionResult, BaseAction} from "./BaseAction";
 import {Parser, TokenTypes} from "../runtime/interpreter/Parser";
 import {CodeManager} from "../runtime/CodeManager";
 import {AppConfig} from "../core/AppConfig";
+import {DuplicateRegisterError} from "../runtime/interpreter/errors/DuplicateRegisterError";
 
 export class UpdateStatement extends BaseAction {
     private readonly _newValue: string;
@@ -42,7 +43,7 @@ export class UpdateStatement extends BaseAction {
         return ( typeof value.forEach === "function" );
     }
 
-    _execute() {
+    async _execute(): Promise<ActionResult> {
         const statement = this.codeManager.code[this._statementIndex];
         const tokens = Parser.parseLine(statement);
         let token: any = { value: tokens };
@@ -69,8 +70,14 @@ export class UpdateStatement extends BaseAction {
                 // TODO:  This is an expression or a register. Check it?
 
                 if (this.codeManager.getCreatedRegisterForStatement(this._statementIndex) === token.value) {
-                    // We're renaming a created register
-                    this.state.renameRegister(token.value, this._newValue);
+                    if (this.codeManager.registerExists(this._newValue)) {
+                        return { errors: [new DuplicateRegisterError(this._newValue) ]};
+                    } else {
+                        // We're renaming a created register
+                        this.state.renameRegister(token.value, this._newValue);
+                    }
+
+
                 } else {
                     token.type = TokenTypes.OTHER;      // the value will be reparsed
                     token.value = this._newValue;
@@ -101,7 +108,7 @@ export class UpdateStatement extends BaseAction {
             this.state.replaceStatement(this._statementIndex, ...newStatements);
         }
 
-
+        return {};
     }
 
 }
