@@ -4,7 +4,6 @@ import {State} from "../../src/state/State";
 import {createAppStore} from "../../src/state/AppStore";
 import {MockController} from "../testHelpers/mock_controller";
 import {RenameDataField} from "../../src/actions/RenameDataField";
-import App from "../../ui5stuff/controller/App.controller";
 import {AppConfig} from "../../src/core/AppConfig";
 import {DataFieldType} from "../../src/state/modules/Data";
 

@@ -1,9 +1,7 @@
 import {AppConfig} from "../core/AppConfig";
 import {LibraryEntry} from "../core/Library";
 import {AspectRatio} from "../geometry/GrCanvas";
-import {UserInfo} from "../state/modules/Authentication";
-import {POI} from "../geometry/GrObject";
-import App from "../../ui5stuff/controller/App.controller";
+
 import {DataFieldType} from "../state/modules/Data";
 
 

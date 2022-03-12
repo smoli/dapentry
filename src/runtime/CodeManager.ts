@@ -3,7 +3,7 @@ import {StateMachine} from "./tools/StateMachine";
 import {Stack} from "./tools/Stack";
 import {ASSERT} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
-import App from "../../ui5stuff/controller/App.controller";
+
 
 
 export type TokenList = Array<Token>;
