@@ -118,7 +118,7 @@ export default {
 
         const cm = this.$store.state.code.codeManager;
         for (const o of this.$store.state.drawing.selection) {
-          const indexes = cm.getStatementIndexesWithParticipation(o.uniqueName, true);
+          const indexes = cm.getStatementIndexesWithParticipation(o.uniqueName);
           if (indexes) {
             ret.push(...indexes);
           }
