@@ -36,7 +36,7 @@ export const statements = {
     "SCALEU": "Scale [1] uniformly by {2} around {3}",
     "SCALEP": "Scale [1] around it's {4} so it's {2} meets {3}",
     "SCALEPU": "Scale [1] uniformly around it's {4} so it's {2} meets {3}",
-    "DO_NONE": "Repeat [1] times",
+    "DO_NONE": "Repeat {1} times",
     "DO_VALUE": "Repeat {2} times",
     "DO_VALUE_INDEX": "Repeat {3} times",
     "FOREACH": "For each value of {1}",
