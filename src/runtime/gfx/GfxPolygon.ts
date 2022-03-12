@@ -24,13 +24,14 @@ export class GfxPolygon extends GfxObject {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        let poly: GrPolygon = this.target as GrPolygon;
+        let poly: GrPolygon;
 
-        if (!poly) {
+        if (!this.targetExists) {
             poly = GrPolygon.create(this.targetName, this.points, this.closed)
             poly.style = this.style;
             this.target = poly;
         } else {
+            poly = this.target as GrPolygon;
             for (const p of this.points) {
                 poly.addPoint(p);
             }
