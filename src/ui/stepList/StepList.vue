@@ -14,7 +14,7 @@
            class="drawable-steplist-step"
            :class="{ selected: line.selected, filteredOut: line.filteredOut}"
            :style="{ 'margin-left': line.level + 'em' }"
-           @click="onStepClicked">
+           @click="onStepClicked(line, $event)">
         <span v-if="!line.filteredOut">{{ line.text }}</span>
         <button v-if="!line.filteredOut" @click="onDeleteStep(line, $event)"
                 class="drawable-steplist-step-delete drawable-ui-transparent">
@@ -128,11 +128,11 @@ export default {
     },
 
 
-    onStepClicked(event: MouseEvent) {
+    onStepClicked(line, event: MouseEvent) {
       const code = this.annotatedCode;
-      const stepDiv: HTMLElement = event.target as HTMLElement;
-      const index = Number(stepDiv.getAttribute("data-step"));
-      const step = code[index];
+      // const stepDiv: HTMLElement = event.target as HTMLElement;
+      // const index = Number(stepDiv.getAttribute("data-step"));
+      const step = line;
 
       ASSERT(!!step, "There is no step!")
 
@@ -149,8 +149,8 @@ export default {
           ( this.controller as AppController ).clearStatementSelection();
           this.selectedFirst = null;
         } else {
-          ( this.controller as AppController ).selectStatement(this.annotatedCode[index].originalLine)
-          this.selectedFirst = this.annotatedCode[index].originalLine;
+          ( this.controller as AppController ).selectStatement(step.originalLine)
+          this.selectedFirst = step.originalLine;
         }
       }
     },
