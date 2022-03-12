@@ -40,7 +40,7 @@ export class LoadFromLibrary extends BaseAction {
         ASSERT(!!entry, "Could not find entry " + this._entryName);
 
         if (entry) {
-            this.state.resetAll();
+            this.controller.resetAll();
             this.load(entry);
         }
 

@@ -155,6 +155,10 @@ export class AppController {
             return;
         }
 
+        this.resetAll();
+    }
+
+    public resetAll() {
         this.state.resetAll();
         this._interpreter.resetGuides();
 
