@@ -25,15 +25,14 @@ interface FieldEditor {
 function createFields(fields: Array<DataField>): Array<FieldEditor> {
 
   return fields.map(field => {
+
     switch (field.type) {
       case DataFieldType.Number:
+      case DataFieldType.String:
         return { type: "NumberEditor", field }
 
       case DataFieldType.List:
         return { type: "ListEditor", field }
-
-      case DataFieldType.String:
-        break;
       case DataFieldType.Table:
         return { type: "TableEditor", field }
     }

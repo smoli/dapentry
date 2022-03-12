@@ -182,7 +182,9 @@ export class API {
             aspectRatio: AspectRatio[data.aspect],
             arguments: data.arguments.filter(a => !!a.public).map(arg => {
                 return {
-                    ...arg,
+                    id: arg.id,
+                    name: arg.name,
+                    description: arg.description,
                     default: convert(arg.default),
                     type: DataFieldType[arg.type]
 
@@ -190,9 +192,20 @@ export class API {
             }),
             fields: data.arguments.filter(a => !a.public).map(arg => {
                 return {
-                    ...arg,
+                    id: arg.id,
+                    name: arg.name,
+                    description: arg.description,
                     default: convert(arg.default),
                     type: DataFieldType[arg.type]
+                }
+            }),
+
+            objects: data.objects.map(o => {
+                return {
+                    id: o.id,
+                    name: o.name,
+                    published: o.published === 1,
+                    isGuide: o.guide === 1
                 }
             })
         }

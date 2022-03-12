@@ -21,7 +21,7 @@
           <div class="drawable-library-entry-info">
             <h3>{{ entry.name }}</h3>
             <p>{{ entry.description}}</p>
-            <button>Edit</button>
+            <button @click="onEditEntry(entry)">Edit</button>
           </div>
         </li>
       </ul>
@@ -58,6 +58,10 @@ export default {
 
     onLogin() {
       this.controller.login();
+    },
+
+    onEditEntry(entry:LibraryEntry) {
+      this.controller.loadDrawingFromLibrary(entry.name)
     }
   }
 }

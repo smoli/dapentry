@@ -1,236 +1,236 @@
-{
-  function flatten(stuff) {
-    return stuff.map(a => a.filter(a => a != null)).map(a => a[0]) ;
-  }
-  function flattenExp(exp) {
-  	if (exp.value.length === 1) {
-    	return exp.value[0]
-    }
-    return exp;
-  }
-  const TokenTypes = {
-  	OPCODE: 0,
-    REGISTER: 1,
-    NONLOCALREGISTER: 2,
-    REGISTERPROP: 3,
-    NUMBER: 4,
-    STRING: 5,
-    LABEL: 6,
-    FUNCDECL: 7,
-    POINT: 8,
-    ARRAY: 9,
-    TABLE: 10,
-    EXPRESSION: 11,
-    OPERATOR: 12,
-    ANNOTATION: 13,
-    NAME: 14,
-    MATHFUNC: 15,
-    OTHER: 16
-  }
-
-}
-
-  Expression "Expression"
-      = exp:FuncDecl { return exp }
-      / exp:Label { return [exp] }
-      / exp:(Operation/Comment/Annotations) _ anno:(Annotations)? _ Comment? {
-      const r = []
-      if (exp) r.push(...exp);
-      if (anno) r.push(...anno);
-      return r.filter(x => !!x);
+    {
+      function flatten(stuff) {
+        return stuff.map(a => a.filter(a => a != null)).map(a => a[0]) ;
       }
-
-
-  FuncDecl "Function declaration"
-  	= label:Label _ arg1:ArgumentOrTuple args:(S ArgumentOrTuple)* {
-    	label.type = TokenTypes.FUNCDECL;
-    	return [label, arg1, ...args.map(a => a[1])]
-    }
-
-
-  Eval
-    = head:Term tail:(_ OP1 _ Term)* {
-      const r = [head]
-      if (tail.length)
-          r.push(tail[0][1], tail[0][3])
-
-      return flattenExp({ type: TokenTypes.EXPRESSION, value: r.filter(x => !!x) })
-    }
-
-  OP1
-   = ("+" / "-") {
-   	return { type: TokenTypes.OPERATOR, value: text() }
-   }
-
-
-  Term
-    = head:Factor tail:(_ OP2 _ Factor)* {
-      const r = [head]
-      if (tail.length)
-          r.push(tail[0][1], tail[0][3])
-
-      return flattenExp({ type: TokenTypes.EXPRESSION, value: r.filter(x => !!x) })
-    }
-
-
-
-  OP2
-   = ("*" / "/") {
-   	return { type: TokenTypes.OPERATOR, value: text() }
-   }
-
-  Factor
-    = "(" _ expr:Eval _ ")"  { return expr }
-    / MathFunc
-    / RegPropAccess
-    / Number
-    / Register
-
-
-
-
-
-
-  Operation "Operation"
-  =  exp:Opcode _ arg1:ArgumentOrTuple args:(S ArgumentOrTuple)* {
-      		return [exp, arg1, ...args.map(a => a[1])]
-      }
-     / exp:Opcode _ arg:ArgumentOrTuple
-  	 / exp:Opcode { return [exp]; }
-
-
-
-
-  ArgumentOrTuple "Argument or Tuple"
-      = aot:(Label/Argument/Tuple/Table/Array) {
-      return aot
-      }
-
-  MathFunc "MathFunc"
-  	= name:FuncName "(" _ exp:Eval _ ")" {
-    	return { type: TokenTypes.MATHFUNC, value: [name, exp] }
-    }
-
-  Argument "Argument"
-      = arg:(Eval/String) {
-      return arg
-      }
-
-
-	RegPropAccess "RegisterPropertyAccess"
-    = head:Register "@" tail:(PropRegister/PropName/Number) {
-    	return { type: TokenTypes.REGISTERPROP, value: [head, tail]}
-    }
-
- FuncName "PropName"
-  = Name { return { type: TokenTypes.NAME, value: text() } }
-
-
-  PropName "PropName"
-  = Name { return { type: TokenTypes.NAME, value: text() } }
-
-  PropRegister "PropRegister"
-  = "(" reg:Eval ")" { return reg }
-
-   Register "Register"
-      = nonlocal:"^"? reg:Name {
-      return {
-        type: nonlocal? TokenTypes.NONLOCALREGISTER : TokenTypes.REGISTER,
-            value: [...reg].join("")
-            }
-      }
-
-  Name "Name"
-  = [$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]* { return text() }
-
-
-  Annotations "Annotations"
-  = first:Annotation rest:(_ Annotation)* {
-  	return [first, ...flatten(rest)]
-  }
-
-  Annotation "Annotation"
-  = "@" anno:([a-zA-Z0-9-.]+) _ args:AnnotationArgs? {
-  	let argList = []
-
-  	return {
-    	type: TokenTypes.ANNOTATION,
-        value: anno.join(""),
-        args: args
-      };
-  }
-
-  AnnotationArgs "AnnotationArgs"
-  = rest:(_ AnnotationArg)* {
-  	return rest.map(r => r[1])
-  }
-
-
-  AnnotationArg "AnnotationArg"
-  = a:[a-zA-Z0-9-.]+ {
-  	return a.join("")
-  }
-
-
-  Comment "Comment"
-  = "#" .* {
-    return null
-    }
-
-  Number "Number"
-      = sign:("+"/"-")? num:[0-9]+ dot:("." tail:[0-9]+)? {
-        /*let n = num.join("");
-        if (dot) n += "." + dot[1].join("");
-        if (sign) n = sign + n;*/
-        return { type: TokenTypes.NUMBER, value: Number(text()) }
-      }
-
-  String "String"
-   =  '"' string:StringChars* '"' {
-     return { type: TokenTypes.STRING, value: string.join("") }
-     }
-
-  StringChars
-  = [^'"'\n]
-
-  Tuple "Tuple"
-      = "("_ first:Argument args:(S Argument)* _ ")" {
-      return { type: TokenTypes.POINT, value: [first, ...args.map(a => a[1])] }
-      }
-
-  Table "Table"
-
-  	= "["_ first:Array rest:(S Array)* _ "](" firstName:Name restNames:(S Name)* _ ")" {
-    	return { type: TokenTypes.TABLE, value: [[firstName, ... restNames.map(a => a[1])], [first, ... rest.map(a => a[1])]] };
-    }
-
-
-  Array "Array"
-      = "["_ first:ArgumentOrTuple args:(S ArgumentOrTuple)* _ "]" {
-      		return { type: TokenTypes.ARRAY, value: [first, ...args.map(a => a[1])] }
-      	}
-
-	  / "[" _ "]" {
-      		return { type: TokenTypes.ARRAY, value: [] }
-      }
-
-  Opcode "Opcode"
-      = [A-Z][A-Z0-9]+ {
-      	return { type: TokenTypes.OPCODE, value: text() }
-      }
-
-  Label "Label"
-      = label:([A-Z0-9]+)":" {
-      return {
-        type: TokenTypes.LABEL,
-            value: label.join("")
+      function flattenExp(exp) {
+        if (exp.value.length === 1) {
+            return exp.value[0]
         }
+        return exp;
+      }
+      const TokenTypes = {
+        OPCODE: 0,
+        REGISTER: 1,
+        NONLOCALREGISTER: 2,
+        REGISTERPROP: 3,
+        NUMBER: 4,
+        STRING: 5,
+        LABEL: 6,
+        FUNCDECL: 7,
+        POINT: 8,
+        ARRAY: 9,
+        TABLE: 10,
+        EXPRESSION: 11,
+        OPERATOR: 12,
+        ANNOTATION: 13,
+        NAME: 14,
+        MATHFUNC: 15,
+        OTHER: 16
       }
 
-  S "separator"
-   = _ "," _ { return null }
-
-  _ "whitespace"
-    = [	 ]* {
-    return null
     }
+
+      Expression "Expression"
+          = exp:FuncDecl { return exp }
+          / exp:Label { return [exp] }
+          / exp:(Operation/Comment/Annotations) _ anno:(Annotations)? _ Comment? {
+          const r = []
+          if (exp) r.push(...exp);
+          if (anno) r.push(...anno);
+          return r.filter(x => !!x);
+          }
+
+
+      FuncDecl "Function declaration"
+        = label:Label _ arg1:ArgumentOrTuple args:(S ArgumentOrTuple)* {
+            label.type = TokenTypes.FUNCDECL;
+            return [label, arg1, ...args.map(a => a[1])]
+        }
+
+
+      Eval
+        = head:Term tail:(_ OP1 _ Term)* {
+          const r = [head]
+          if (tail.length)
+              r.push(tail[0][1], tail[0][3])
+
+          return flattenExp({ type: TokenTypes.EXPRESSION, value: r.filter(x => !!x) })
+        }
+
+      OP1
+       = ("+" / "-") {
+        return { type: TokenTypes.OPERATOR, value: text() }
+       }
+
+
+      Term
+        = head:Factor tail:(_ OP2 _ Factor)* {
+          const r = [head]
+          if (tail.length)
+              r.push(tail[0][1], tail[0][3])
+
+          return flattenExp({ type: TokenTypes.EXPRESSION, value: r.filter(x => !!x) })
+        }
+
+
+
+      OP2
+       = ("*" / "/") {
+        return { type: TokenTypes.OPERATOR, value: text() }
+       }
+
+      Factor
+        = "(" _ expr:Eval _ ")"  { return expr }
+        / MathFunc
+        / RegPropAccess
+        / Number
+        / Register
+
+
+
+
+
+
+      Operation "Operation"
+      =  exp:Opcode _ arg1:ArgumentOrTuple args:(S ArgumentOrTuple)* {
+                return [exp, arg1, ...args.map(a => a[1])]
+          }
+         / exp:Opcode _ arg:ArgumentOrTuple
+         / exp:Opcode { return [exp]; }
+
+
+
+
+      ArgumentOrTuple "Argument or Tuple"
+          = aot:(Label/Argument/Tuple/Table/Array) {
+          return aot
+          }
+
+      MathFunc "MathFunc"
+        = name:FuncName "(" _ exp:Eval _ ")" {
+            return { type: TokenTypes.MATHFUNC, value: [name, exp] }
+        }
+
+      Argument "Argument"
+          = arg:(Eval/String) {
+          return arg
+          }
+
+
+        RegPropAccess "RegisterPropertyAccess"
+        = head:Register "@" tail:(PropRegister/PropName/Number) {
+            return { type: TokenTypes.REGISTERPROP, value: [head, tail]}
+        }
+
+     FuncName "PropName"
+      = Name { return { type: TokenTypes.NAME, value: text() } }
+
+
+      PropName "PropName"
+      = Name { return { type: TokenTypes.NAME, value: text() } }
+
+      PropRegister "PropRegister"
+      = "(" reg:Eval ")" { return reg }
+
+       Register "Register"
+          = nonlocal:"^"? reg:Name {
+          return {
+            type: nonlocal? TokenTypes.NONLOCALREGISTER : TokenTypes.REGISTER,
+                value: [...reg].join("")
+                }
+          }
+
+      Name "Name"
+      = [$a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]* { return text() }
+
+
+      Annotations "Annotations"
+      = first:Annotation rest:(_ Annotation)* {
+        return [first, ...flatten(rest)]
+      }
+
+      Annotation "Annotation"
+      = "@" anno:([a-zA-Z0-9-.]+) _ args:AnnotationArgs? {
+        let argList = []
+
+        return {
+            type: TokenTypes.ANNOTATION,
+            value: anno.join(""),
+            args: args
+          };
+      }
+
+      AnnotationArgs "AnnotationArgs"
+      = rest:(_ AnnotationArg)* {
+        return rest.map(r => r[1])
+      }
+
+
+      AnnotationArg "AnnotationArg"
+      = a:[a-zA-Z0-9-.]+ {
+        return a.join("")
+      }
+
+
+      Comment "Comment"
+      = "#" .* {
+        return null
+        }
+
+      Number "Number"
+          = sign:("+"/"-")? num:[0-9]+ dot:("." tail:[0-9]+)? {
+            /*let n = num.join("");
+            if (dot) n += "." + dot[1].join("");
+            if (sign) n = sign + n;*/
+            return { type: TokenTypes.NUMBER, value: Number(text()) }
+          }
+
+      String "String"
+       =  '"' string:StringChars* '"' {
+         return { type: TokenTypes.STRING, value: string.join("") }
+         }
+
+      StringChars
+      = [^'"'\n]
+
+      Tuple "Tuple"
+          = "("_ first:Argument args:(S Argument)* _ ")" {
+          return { type: TokenTypes.POINT, value: [first, ...args.map(a => a[1])] }
+          }
+
+      Table "Table"
+
+        = "["_ first:Array rest:(S Array)* _ "](" firstName:Name restNames:(S Name)* _ ")" {
+            return { type: TokenTypes.TABLE, value: [[firstName, ... restNames.map(a => a[1])], [first, ... rest.map(a => a[1])]] };
+        }
+
+
+      Array "Array"
+          = "["_ first:ArgumentOrTuple args:(S ArgumentOrTuple)* _ "]" {
+                return { type: TokenTypes.ARRAY, value: [first, ...args.map(a => a[1])] }
+            }
+
+          / "[" _ "]" {
+                return { type: TokenTypes.ARRAY, value: [] }
+          }
+
+      Opcode "Opcode"
+          = [A-Z][A-Z0-9]+ {
+            return { type: TokenTypes.OPCODE, value: text() }
+          }
+
+      Label "Label"
+          = label:([A-Z0-9]+)":" {
+          return {
+            type: TokenTypes.LABEL,
+                value: label.join("")
+            }
+          }
+
+      S "separator"
+       = _ "," _ { return null }
+
+      _ "whitespace"
+        = [	 ]* {
+        return null
+        }

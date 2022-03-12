@@ -8,7 +8,15 @@ export interface LibraryEntryArgument {
     type: LibraryEntryArgumentType,
     name: string,
     default: any,
-    description: string
+    description: string,
+    id: string
+}
+
+export interface LibraryEntryObject {
+    name: string,
+    published: boolean,
+    isGuide: boolean,
+    id: string
 }
 
 export interface LibraryEntry {
@@ -25,7 +33,8 @@ export interface LibraryEntry {
     private: boolean,
     arguments: Array<LibraryEntryArgument>,
     fields: Array<LibraryEntryArgument>,
-    code: string
+    code: string,
+    objects: Array<LibraryEntryObject>
 }
 
 

@@ -65,7 +65,6 @@ export class DrawingController {
     }
 
     setView(width: number, height: number, bezelSize: number) {
-        debugger;
         this._width = width;
         this._height = height;
         this._bezelSize = bezelSize;

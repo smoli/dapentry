@@ -160,8 +160,8 @@ export class GfxInterpreter extends Interpreter {
         }
     }
 
-    markObjectAsGuide(object: GrObject) {
-        this._guides[object.uniqueName] = true;
+    markObjectAsGuide(objectName: string) {
+        this._guides[objectName] = true;
     }
 
     resetGuides() {
@@ -186,6 +186,7 @@ class GfxMake extends GfxOperation {
     private _width: Parameter;
     private _position: Point2Parameter;
     private readonly _args: Array<Parameter>;
+    private static readonly compoName: string = "compo";
 
 
     constructor(opcode, target: Parameter, entryID: Parameter, styles: Parameter, width: Parameter, position: Point2Parameter, ...args: Array<Parameter>) {
@@ -275,8 +276,19 @@ class GfxMake extends GfxOperation {
         }
 
         // We do this everytime, because the arguments may contain code...
-        const code = this.getScopeCode().join("\n") + "\n" + this._entry.code;
+
+        let code = this.getScopeCode().join("\n") + "\n"
+            + `COMPOSITE ${GfxMake.compoName}\n`
+            + this._entry.code;
+
+        this._entry.objects.forEach(o => {
+            if (o.published) {
+                code += `\nAPP ${GfxMake.compoName}.objects,${o.name}`;
+            }
+        })
+
         console.log(code);
+
         this._interpreter.parse(code);
         // We do this everytime, because when we're in a loop and width points to a register
         // the value of width might change between iterations.
@@ -297,7 +309,7 @@ class GfxMake extends GfxOperation {
             [this._canvas.uniqueName]: this._canvas
         });
 
-        const resultObject: GrCompositeObject = this._interpreter.getRegister("o") as GrCompositeObject;
+        const resultObject: GrCompositeObject = this._interpreter.getRegister(GfxMake.compoName) as GrCompositeObject;
 
         resultObject.updateName(this._target.name);
         resultObject.width = this._width.finalized(this.closure);

@@ -65,6 +65,26 @@ describe("API", () => {
                         "created_at": "2022-03-01T20:13:30.000000Z",
                         "updated_at": "2022-03-01T20:13:30.000000Z"
                     }
+                ],
+                "objects": [
+                    {
+                        "id": 3,
+                        "entry_id": 6,
+                        "name": "Line1",
+                        "published": 0,
+                        "guide": 1,
+                        "created_at": "2022-03-12T20:37:33.000000Z",
+                        "updated_at": "2022-03-12T20:37:33.000000Z"
+                    },
+                    {
+                        "id": 4,
+                        "entry_id": 6,
+                        "name": "Polygon1",
+                        "published": 1,
+                        "guide": 0,
+                        "created_at": "2022-03-12T20:37:33.000000Z",
+                        "updated_at": "2022-03-12T20:37:33.000000Z"
+                    }
                 ]
             }
 
@@ -84,27 +104,32 @@ describe("API", () => {
                 "arguments": [
                     {
                         "id": 12,
-                        "entry_id": 9,
                         "name": "spokes",
                         "description": "How many spokes",
                         "default": 5,
-                        "public": 1,
-                        "type": DataFieldType.Number,
-                        "created_at": "2022-03-01T20:13:30.000000Z",
-                        "updated_at": "2022-03-01T20:13:30.000000Z"
+                        "type": DataFieldType.Number
                     }
                     ],
                 "fields": [
                     {
                         "id": 13,
-                        "entry_id": 9,
                         "name": "spokeRatio",
                         "description": "How long are the spokes",
                         "default": 0.50,
-                        "public": 0,
-                        "type": DataFieldType.Number,
-                        "created_at": "2022-03-01T20:13:30.000000Z",
-                        "updated_at": "2022-03-01T20:13:30.000000Z"
+                        "type": DataFieldType.Number
+                    }
+                ],
+                objects: [
+                    {
+                        id: 3,
+                        name: "Line1",
+                        published: false,
+                        isGuide: true
+                    }, {
+                        id: 4,
+                        name: "Polygon1",
+                        published: true,
+                        isGuide: false
                     }
                 ]
             })

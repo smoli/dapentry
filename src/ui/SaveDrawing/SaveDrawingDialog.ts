@@ -26,8 +26,8 @@ export default {
               <desc>Guides will always be included as unpublished.</desc>
               <ul>
                 <li class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
-                  <input :id="'save-drawing-cbx' + i" type="checkbox" v-model="obj.use"/>
-                  <label :for="'save-drawing-cbx' + i">{{ obj.object.uniqueName }}</label>
+                  <input :id="'save-drawing-cbx' + i" type="checkbox" v-model="obj.use" :disabled="obj.isGuide"/>
+                  <label :for="'save-drawing-cbx' + i">{{ obj.object.uniqueName }} <i v-if="obj.isGuide">(guide)</i></label>
                 </li>
               </ul>
               <br/>
@@ -112,10 +112,11 @@ export default {
                 }
             }),
             publishedObjects: this.$store.state.drawing.objects
-                .filter(object => object.type !== ObjectType.Canvas && !object.isGuide)
+                .filter(object => object.type !== ObjectType.Canvas)
                 .map(object => {
                     return {
-                        use: true,
+                        isGuide: object.isGuide,
+                        use: !object.isGuide,
                         object
                     }
                 }),

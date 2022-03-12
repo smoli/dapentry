@@ -15,18 +15,20 @@ interface APILibraryEntryPOST {
     preview_vb_width: number,
     preview_vb_height: number,
     private: boolean,
-    arguments: Array<{ name: string, description: string, default: string, public: true }>
+    arguments: Array<{ name: string, description: string, default: string, public: true }>,
+    objects: Array<{ name: string, published: boolean, guide: boolean }>
 }
 
 
 export class SaveDrawingToLibrary extends BaseAction {
 
 
-    protected get aspectRatio():string {
+    protected get aspectRatio(): string {
         return AspectRatio[this.controller.state.store.state.drawing.aspectRatio];
     }
 
-    protected makeCode(data):string {
+    protected makeCode(data): string {
+/*
         const code = [
             "COMPOSITE o",
             ...this.controller.state.store.state.code.code];
@@ -34,10 +36,13 @@ export class SaveDrawingToLibrary extends BaseAction {
         data.publishedObjects
             .filter(obj => obj.use)
             .forEach(obj => {
-            code.push("APP o.objects, " + obj.object.uniqueName);
-        });
+                code.push("APP o.objects, " + obj.object.uniqueName);
+            });
+*/
 
-        return code.join("\n");
+        // return code.join("\n");
+
+        return this.controller.state.store.state.code.code.join("\n");
     }
 
 
@@ -66,6 +71,13 @@ export class SaveDrawingToLibrary extends BaseAction {
                     default: "" + convert(arg.field.value),
                     public: arg.public,
                     type: DataFieldType[arg.field.type]
+                }
+            }),
+            objects: data.publishedObjects.map(obj => {
+                return {
+                    name: obj.object.uniqueName,
+                    published: obj.use && !obj.object.isGuide,
+                    guide: obj.object.isGuide
                 }
             })
         }

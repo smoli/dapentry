@@ -57,6 +57,8 @@ export const AppConfig = {
         forbiddenDataFieldNames: [],
 
         Opcodes: {
+            Append: "APP",
+            Composite: "COMPOSITE",
             Circle: {
                 Legacy: "CIRCLE",
                 CenterRadius: "CIRCLECR",

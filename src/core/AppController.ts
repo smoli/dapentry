@@ -1,7 +1,7 @@
 import {AppConfig} from "./AppConfig";
 import {ToolNames} from "../tools/ToolNames";
 import {State} from "../state/State";
-import {ActionResult, BaseAction} from "../actions/BaseAction";
+import {BaseAction} from "../actions/BaseAction";
 import {AddStatement} from "../actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
 import {AspectRatio, GrCanvas} from "../geometry/GrCanvas";
@@ -30,6 +30,7 @@ import {Login} from "../actions/Login";
 import {API} from "../api/API";
 import {AddColumnToDataField} from "../actions/AddColumnToDataField";
 import {InterpreterError} from "../runtime/interpreter/errors/InterpreterError";
+import {LoadFromLibrary} from "../actions/LoadFromLibrary";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -83,7 +84,7 @@ export const applicationDefaults: ApplicationOptions = {
 }
 
 const toolsThatAllowSelection: Array<ToolNames> = [
-    ToolNames.Select, ToolNames.Move, ToolNames.Rotate, ToolNames.Scale
+    ToolNames.Select, ToolNames.Move, ToolNames.Rotate, ToolNames.Scale, ToolNames.Polygon
 ];
 
 
@@ -497,6 +498,10 @@ export class AppController {
         }
     }
 
+    public markObjectAsGuide(name: string) {
+        this._interpreter.markObjectAsGuide(name);
+    }
+
     public async makeSelectedObjectsGuides() {
         let rerun = false;
         this._state.selection.forEach(o => {
@@ -504,7 +509,7 @@ export class AppController {
                 return;
             }
 
-            this._interpreter.markObjectAsGuide(o);
+            this._interpreter.markObjectAsGuide(o.uniqueName);
             o.markAsGuide();
             if (o.type === ObjectType.List) {
                 rerun = true;
@@ -605,6 +610,14 @@ export class AppController {
 
     public async saveDrawingToLibrary() {
         await this.execute(new SaveDrawingToLibrary());
+    }
+
+    public async loadDrawingFromLibrary(entryName: string) {
+        await this.clearStatementSelection();
+        await this.state.deselectAll();
+        await this.execute(new LoadFromLibrary(entryName));
+        await this.runCode();
+        this.updateDrawing();
     }
 
     public async logout() {
