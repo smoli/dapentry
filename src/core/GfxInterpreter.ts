@@ -160,8 +160,12 @@ export class GfxInterpreter extends Interpreter {
         }
     }
 
-    markObjectAsGuide(objectName: string) {
-        this._guides[objectName] = true;
+    markObjectAsGuide(objectName: string, mark: boolean = true) {
+        if (!mark) {
+            this._guides[objectName] = false;
+        } else {
+            this._guides[objectName] = true;
+        }
     }
 
     resetGuides() {

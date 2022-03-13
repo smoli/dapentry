@@ -513,8 +513,8 @@ export class AppController {
                 return;
             }
 
-            this._interpreter.markObjectAsGuide(o.uniqueName);
-            o.markAsGuide();
+            o.markAsGuide(!o.isGuide);
+            this._interpreter.markObjectAsGuide(o.uniqueName, o.isGuide);
             if (o.type === ObjectType.List) {
                 rerun = true;
             }

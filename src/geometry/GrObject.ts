@@ -164,8 +164,8 @@ export abstract class GrObject {
         return this._isGuide;
     }
 
-    public markAsGuide() {
-        this._isGuide = true;
+    public markAsGuide(value: boolean = true) {
+        this._isGuide = value;
     }
 
     /**
