@@ -151,6 +151,24 @@ export class API {
         })
     }
 
+    static async updateLibraryEntry(data) {
+        const response = await API.fetch(AppConfig.API.library + "/" + data.id, {
+            method: "PUT",
+            mode: "cors",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                ...API.authHeader()
+
+            },
+            body: JSON.stringify(data)
+        });
+
+        return API.makeResponse(response, async () => {
+            return null;
+        })
+    }
+
     static convertAPILibraryEntry(data: any): LibraryEntry {
         const convert = v => {
             let p;

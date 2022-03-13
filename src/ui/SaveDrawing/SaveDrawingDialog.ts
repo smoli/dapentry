@@ -27,7 +27,8 @@ export default {
               <ul>
                 <li class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
                   <input :id="'save-drawing-cbx' + i" type="checkbox" v-model="obj.use" :disabled="obj.isGuide"/>
-                  <label :for="'save-drawing-cbx' + i">{{ obj.object.uniqueName }} <i v-if="obj.isGuide">(guide)</i></label>
+                  <label :for="'save-drawing-cbx' + i">{{ obj.object.uniqueName }} <i
+                      v-if="obj.isGuide">(guide)</i></label>
                 </li>
               </ul>
               <br/>
@@ -54,7 +55,8 @@ export default {
                     {{ arg.field.name }}
                   </td>
                   <td>
-                    <input value="" :placeholder="'What does ' + arg.field.name + ' do ...'" v-model="arg.field.description"/>
+                    <input value="" :placeholder="'What does ' + arg.field.name + ' do ...'"
+                           v-model="arg.field.description"/>
                   </td>
                   <td>
                     <span>{{ arg.field.value }}</span>
@@ -69,8 +71,8 @@ export default {
           <form>
             <fieldset>
               <legend>Preview</legend>
-              <Preview :svg-code="svgPreview" 
-                       :width="previewWidth" :height="previewHeight" 
+              <Preview :svg-code="svgPreview"
+                       :width="previewWidth" :height="previewHeight"
                        :vb-width="previewVBWidth" :vb-height="previewVBHeight"/>
               <i>ALPHA Version: <br/>
                 This is the contents of your drawing board right <br/>
@@ -81,8 +83,12 @@ export default {
         </div>
       </div>
       <div class="drawable-modal-footer">
-        <button v-if="id === -1" @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Save as new drawing</button>
-        <button v-if="id !== -1" @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Update drawing</button>
+        <button v-if="id === -1" @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Save as new
+          drawing
+        </button>
+        <button v-if="id !== -1" @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Update
+          drawing {{ id }}
+        </button>
         <button @click="onNo" class="drawable-ui-decline">Cancel</button>
       </div>
       </div>
@@ -203,7 +209,7 @@ export class SaveDrawingHandler extends ModalDialogHandler {
         this.close(DialogCloseReason.NO);
     }
 
-    async validate(data: { name: string, description: string, publishedObjects: Array<{ use: boolean, object: GrObject }> }): Promise<ValidationResult> {
+    async validate(data: {id: number, name: string, description: string, publishedObjects: Array<{ use: boolean, object: GrObject }> }): Promise<ValidationResult> {
         const res = new ValidationResult();
         const numberOfPublishedObjects = data.publishedObjects.filter(p => p.use).length;
         if (numberOfPublishedObjects === 0) {
@@ -216,10 +222,12 @@ export class SaveDrawingHandler extends ModalDialogHandler {
             res.error("name", "Start with a character, then a-z, A-Z, 0-9, - or _")
         }
 
-        const nameExists = await API.doesNameExist(data.name);
+        if (data.id === -1) {
+            const nameExists = await API.doesNameExist(data.name);
 
-        if (nameExists.data) {
-            res.error("name", `${data.name} already exists`);
+            if (nameExists.data) {
+                res.error("name", `${data.name} already exists`);
+            }
         }
 
         if (data.description.length === 0) {

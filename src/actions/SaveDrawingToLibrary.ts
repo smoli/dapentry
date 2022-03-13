@@ -7,6 +7,7 @@ import {DataFieldType} from "../state/modules/Data";
 
 
 interface APILibraryEntryPOST {
+    id: number,
     name: string,
     description: string,
     code: string,
@@ -15,8 +16,8 @@ interface APILibraryEntryPOST {
     preview_vb_width: number,
     preview_vb_height: number,
     private: boolean,
-    arguments: Array<{ name: string, description: string, default: string, public: true }>,
-    objects: Array<{ name: string, published: boolean, guide: boolean }>
+    arguments: Array<{ id: number, name: string, description: string, default: string, public: true }>,
+    objects: Array<{ id: number, name: string, published: boolean, guide: boolean }>
 }
 
 
@@ -56,6 +57,7 @@ export class SaveDrawingToLibrary extends BaseAction {
         }
 
         return {
+            id: data.id,
             name: data.name,
             description: data.description,
             code: this.makeCode(data),
@@ -67,9 +69,9 @@ export class SaveDrawingToLibrary extends BaseAction {
             arguments: data.arguments.map(arg => {
                 return {
                     name: arg.field.name,
-                    description: arg.description,
+                    description: arg.field.description,
                     default: "" + convert(arg.field.value),
-                    public: arg.public,
+                    public: arg.field.published,
                     type: DataFieldType[arg.field.type]
                 }
             }),
@@ -96,6 +98,11 @@ export class SaveDrawingToLibrary extends BaseAction {
             return;
         }
 
-        return API.postNewLibraryEntry(this.makePostData(data));
+        if (data.id) {
+            return API.updateLibraryEntry(this.makePostData(data));
+        } else {
+            return API.postNewLibraryEntry(this.makePostData(data));
+        }
+
     }
 }
