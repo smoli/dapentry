@@ -18,7 +18,8 @@ export interface DrawingState {
     preview: string,
     name: string,
     description: string,
-    id: number
+    id: number,
+    createdBy: number
 }
 
 function getDefaultState():DrawingState {
@@ -30,7 +31,8 @@ function getDefaultState():DrawingState {
         preview: "",
         name: null,
         description: null,
-        id: -1
+        id: -1,
+        createdBy: -1
     }
 }
 
@@ -78,6 +80,10 @@ export const drawingState = {
 
         setId(state: DrawingState, id: number) {
             state.id = id;
+        },
+
+        setCreatedBy(state: DrawingState, userId: number) {
+            state.createdBy = userId;
         },
 
         setPreview(state: DrawingState, preview: string) {

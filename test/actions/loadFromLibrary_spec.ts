@@ -24,6 +24,7 @@ describe('Load from library action', () => {
             "svgPreview": "Hello",
             "previewVBWidth": 123,
             "previewVBHeight": 456,
+            "createdBy": 1,
             "private": false,
             "lastUpdate": new Date(),
             "arguments": [
