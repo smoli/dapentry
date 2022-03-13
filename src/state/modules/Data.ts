@@ -16,7 +16,9 @@ export enum DataFieldType {
 export interface DataField {
     name: string,
     value: DataFieldValue
-    type: DataFieldType
+    type: DataFieldType,
+    description: string,
+    published: boolean
 }
 
 export interface DataState {
@@ -102,8 +104,7 @@ function getNextColumnName(currentRow) {
 }
 
 
-
-function getDefaultState():DataState {
+function getDefaultState(): DataState {
     return {
         fields: []
     }
@@ -125,15 +126,15 @@ export const dataState = {
                     case DataFieldType.Number:
                         return `LOAD ${field.name}, ${field.value}`;
                     case DataFieldType.List:
-                        return `ITER ${field.name}, [${(field.value as Array<any>).join(", ")}]`;
+                        return `ITER ${field.name}, [${( field.value as Array<any> ).join(", ")}]`;
 
                     case DataFieldType.String:
                         return `LOAD ${field.name}, ${field.value}`;
 
                     case DataFieldType.Table:
-                        ASSERT((field.value as Array<any>).length > 0, "Table must not be empty");
+                        ASSERT(( field.value as Array<any> ).length > 0, "Table must not be empty");
                         const columns = Object.keys(field.value[0]);
-                        const values = (field.value as Array<any>).map(v => Object.values(v))
+                        const values = ( field.value as Array<any> ).map(v => Object.values(v))
 
                         return `ITER ${field.name}, [${values.map(v => `[${v.join(",")}]`).join(",")}](${columns.join(",")})`
 
@@ -170,7 +171,7 @@ export const dataState = {
             state.fields = fields;
         },
 
-        addField(state: DataState, payload: { name: string, value: DataFieldValue }) {
+        addField(state: DataState, payload: { name: string, value: DataFieldValue, description: string, published: boolean }) {
             if (state.fields.find(f => f.name === payload.name)) {
                 UNREACHABLE(`Duplicate field ${payload.name}`);
             }
@@ -184,6 +185,8 @@ export const dataState = {
             state.fields = [...state.fields, {
                 name: payload.name,
                 value: payload.value,
+                description: payload.description,
+                published: payload.published,
                 type
             }];
         },
@@ -199,7 +202,13 @@ export const dataState = {
         setFieldValue(state: DataState, payload: { name: string, value: DataFieldValue }) {
             state.fields = state.fields.map(f => {
                 if (f.name === payload.name) {
-                    return { name: f.name, value: payload.value, type: f.type }
+                    return {
+                        name: f.name,
+                        value: payload.value,
+                        type: f.type,
+                        description: f.description,
+                        published: f.published,
+                    }
                 }
                 return f;
             })
@@ -210,7 +219,13 @@ export const dataState = {
                 if (f.name === payload.name) {
                     ASSERT(Array.isArray(f.value), "Can only set item value on array values");
                     const value = ( f.value as Array<any> ).map((v, i) => i === payload.index ? payload.value : v)
-                    return { name: f.name, value, type: DataFieldType.List }
+                    return {
+                        name: f.name,
+                        value, type:
+                        DataFieldType.List,
+                        description: f.description,
+                        published: f.published
+                    }
                 }
                 return f;
             })
@@ -220,7 +235,7 @@ export const dataState = {
             state.fields = state.fields.map(f => {
                 if (f.name === payload.name) {
                     ASSERT(f.type === DataFieldType.Table, "Can only set value on table");
-                    ASSERT((f.value as Array<any>).length > 0, "Can only set value on non-empty table");
+                    ASSERT(( f.value as Array<any> ).length > 0, "Can only set value on non-empty table");
 
                     if (!f.value[0].hasOwnProperty(payload.column)) {
                         return f;
@@ -231,7 +246,13 @@ export const dataState = {
                             ...v,
                             [payload.column]: payload.value
                         })
-                    return { name: f.name, value, type: DataFieldType.Table }
+                    return {
+                        name: f.name,
+                        value,
+                        type: DataFieldType.Table,
+                        description: f.description,
+                        published: f.published
+                    }
                 }
                 return f;
             })
@@ -246,10 +267,22 @@ export const dataState = {
 
                 switch (f.type) {
                     case DataFieldType.Number:
-                        return { name: f.name, value: [f.value, payload.value], type: DataFieldType.List }
+                        return {
+                            name: f.name,
+                            value: [f.value, payload.value],
+                            type: DataFieldType.List,
+                            description: null,
+                            published: true
+                        }
 
                     case DataFieldType.List:
-                        return { name: f.name, value: [...(f.value as Array<any>), payload.value], type: DataFieldType.List }
+                        return {
+                            name: f.name,
+                            value: [...( f.value as Array<any> ), payload.value],
+                            type: DataFieldType.List,
+                            description: null,
+                            published: true
+                        }
 
                     case DataFieldType.String:
                         break;
@@ -258,7 +291,13 @@ export const dataState = {
                         const v1 = f.value[0];
                         const row = {}
                         Object.keys(v1).forEach(k => row[k] = payload.value);
-                        return { name: f.name, value: [...(f.value as Array<any>), row], type: DataFieldType.Table }
+                        return {
+                            name: f.name,
+                            value: [...( f.value as Array<any> ), row],
+                            type: DataFieldType.Table,
+                            description: null,
+                            published: true
+                        }
 
 
                 }
@@ -274,7 +313,13 @@ export const dataState = {
 
                 switch (f.type) {
                     case DataFieldType.Number:
-                        return { name: f.name, value: [{ a: f.value, b: payload.value }], type: DataFieldType.Table }
+                        return {
+                            name: f.name,
+                            value: [{ a: f.value, b: payload.value }],
+                            type: DataFieldType.Table,
+                            description: f.description,
+                            published: f.published
+                        }
 
                     case DataFieldType.List:
                         return {
@@ -285,7 +330,9 @@ export const dataState = {
                                     b: payload.value
                                 }
                             }),
-                            type: DataFieldType.Table
+                            type: DataFieldType.Table,
+                            description: f.description,
+                            published: f.published
                         }
 
                     case DataFieldType.String:
@@ -304,7 +351,9 @@ export const dataState = {
                                     [name]: payload.value
                                 }
                             }),
-                            type: DataFieldType.Table
+                            type: DataFieldType.Table,
+                            description: f.description,
+                            published: f.published
                         }
 
                 }
@@ -333,7 +382,9 @@ export const dataState = {
                         delete v[payload.oldColumn];
                         return v;
                     }),
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: f.description,
+                    published: f.published
                 }
             })
         },
@@ -356,6 +407,8 @@ export const dataState = {
                     const remaining = colNames.find(n => n !== payload.column);
                     return {
                         name: f.name,
+                        description: f.description,
+                        published: f.published,
                         value: ( f.value as Array<any> ).map(v => {
                             return v[remaining];
                         }),
@@ -365,6 +418,8 @@ export const dataState = {
 
                 return {
                     name: f.name,
+                    description: f.description,
+                    published: f.published,
                     value: ( f.value as Array<any> ).map(v => {
                         delete v[payload.column];
                         return v;

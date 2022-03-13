@@ -174,8 +174,8 @@ FILL Polygon2, "#030303"`;
 
     async loadData(): Promise<Array<DataField>> {
         return [
-            { name: "f1", value: [10, 20, 30, 40], type: DataFieldType.List },
-            { name: "f2", value: 5, type: DataFieldType.Number }
+            { name: "f1", value: [10, 20, 30, 40], type: DataFieldType.List, description: "xsdfg", published: true },
+            { name: "f2", value: 5, type: DataFieldType.Number, description: "wer", published: true }
         ]
     }
 

@@ -35,9 +35,21 @@ describe('Data State', () => {
         state.addDataField("f3", [10, 20, 30]);
 
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: 10, type: DataFieldType.Number },
-            { name: "f2", value: "Hello", type: DataFieldType.String },
-            { name: "f3", value: [10, 20, 30], type: DataFieldType.List }
+            {
+                name: "f1", value: 10, type: DataFieldType.Number,
+                description: null,
+                published: true
+            },
+            {
+                name: "f2", value: "Hello", type: DataFieldType.String,
+                description: null,
+                published: true
+            },
+            {
+                name: "f3", value: [10, 20, 30], type: DataFieldType.List,
+                description: null,
+                published: true
+            }
         ])
     });
 
@@ -51,14 +63,36 @@ describe('Data State', () => {
 
         state.removeDataField("f2");
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: 10, type: DataFieldType.Number },
-            { name: "f3", value: [10, 20, 30], type: DataFieldType.List }
+            {
+                name: "f1", value: 10,
+                type: DataFieldType.Number,
+                description: null,
+                published: true
+            },
+            {
+                name: "f3", value: [10, 20, 30],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            }
         ]);
 
         state.removeDataField("unknown");
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: 10, type: DataFieldType.Number },
-            { name: "f3", value: [10, 20, 30], type: DataFieldType.List }
+            {
+                name: "f1",
+                value: 10,
+                type: DataFieldType.Number,
+                description: null,
+                published: true
+            },
+            {
+                name: "f3",
+                value: [10, 20, 30],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            }
         ]);
     });
 
@@ -80,7 +114,12 @@ describe('Data State', () => {
         const state = new State(store, null);
 
         state.addDataField("f1", 10);
-        expect(state.getDataField("f1")).to.deep.equal({ name: "f1", value: 10, type: DataFieldType.Number });
+        expect(state.getDataField("f1")).to.deep.equal({
+            name: "f1", value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
 
     });
 
@@ -90,17 +129,32 @@ describe('Data State', () => {
 
         state.addDataField("f1", 10);
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: 10, type: DataFieldType.Number }
+            {
+                name: "f1", value: 10,
+                type: DataFieldType.Number,
+                description: null,
+                published: true
+            }
         ]);
 
         state.setDataFieldValue("f1", 20);
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: 20, type: DataFieldType.Number }
+            {
+                name: "f1", value: 20,
+                type: DataFieldType.Number,
+                description: null,
+                published: true
+            }
         ]);
 
         state.setDataFieldValue("unknown", 20)
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: 20, type: DataFieldType.Number }
+            {
+                name: "f1", value: 20,
+                type: DataFieldType.Number,
+                description: null,
+                published: true
+            }
         ]);
     });
 
@@ -121,12 +175,22 @@ describe('Data State', () => {
 
         state.addDataField("f3", [10, 20, 30]);
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f3", value: [10, 20, 30], type: DataFieldType.List }
+            {
+                name: "f3", value: [10, 20, 30],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            }
         ]);
 
         state.setDataListFieldValue("f3", 1, 40);
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f3", value: [10, 40, 30], type: DataFieldType.List }
+            {
+                name: "f3", value: [10, 40, 30],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            }
         ]);
     });
 
@@ -136,27 +200,78 @@ describe('Data State', () => {
 
         state.addDataField("f1", 10);
         state.addDataField("f3", [10, 20, 30]);
-        state.addDataField("f5", [{ a: 1, b: 2 }, { a: 2, b: 3}]);
+        state.addDataField("f5", [{ a: 1, b: 2 }, { a: 2, b: 3 }]);
 
         state.addValueToDataField("f3", 40);
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: 10, type: DataFieldType.Number },
-            { name: "f3", value: [10, 20, 30, 40], type: DataFieldType.List },
-            { name: "f5", value: [{ a: 1, b: 2 }, { a: 2, b: 3}], type: DataFieldType.Table }
+            {
+                name: "f1", value: 10,
+                type: DataFieldType.Number,
+                description: null,
+                published: true
+            },
+            {
+                name: "f3", value: [10, 20, 30, 40],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            },
+            {
+                name: "f5", value: [{ a: 1, b: 2 }, { a: 2, b: 3 }],
+                type: DataFieldType.Table,
+                description: null,
+                published: true
+            }
         ]);
 
         state.addValueToDataField("f1", 20);
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: [10, 20], type: DataFieldType.List },
-            { name: "f3", value: [10, 20, 30, 40], type: DataFieldType.List },
-            { name: "f5", value: [{ a: 1, b: 2 }, { a: 2, b: 3}], type: DataFieldType.Table }
+            {
+                name: "f1",
+                value: [10, 20],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            },
+            {
+                name: "f3",
+                value: [10, 20, 30, 40],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            },
+            {
+                name: "f5",
+                value: [{ a: 1, b: 2 }, { a: 2, b: 3 }],
+                type: DataFieldType.Table,
+                description: null,
+                published: true
+            }
         ]);
 
         state.addValueToDataField("f5", 10);
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f1", value: [10, 20], type: DataFieldType.List },
-            { name: "f3", value: [10, 20, 30, 40], type: DataFieldType.List },
-            { name: "f5", value: [{ a: 1, b: 2 }, { a: 2, b: 3}, {a: 10, b: 10 }], type: DataFieldType.Table }
+            {
+                name: "f1",
+                value: [10, 20],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            },
+            {
+                name: "f3",
+                value: [10, 20, 30, 40],
+                type: DataFieldType.List,
+                description: null,
+                published: true
+            },
+            {
+                name: "f5",
+                value: [{ a: 1, b: 2 }, { a: 2, b: 3 }, { a: 10, b: 10 }],
+                type: DataFieldType.Table,
+                description: null,
+                published: true
+            }
         ]);
 
     });
@@ -174,7 +289,13 @@ describe('Data State', () => {
             state.addColumnToDataField("f1", 20);
 
             expect(state.store.state.data.fields).to.deep.equal([
-                { name: "f1", value: [{ a: 10, b: 20 }], type: DataFieldType.Table }
+                {
+                    name: "f1",
+                    value: [{ a: 10, b: 20 }],
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
+                }
             ]);
         })
 
@@ -196,7 +317,9 @@ describe('Data State', () => {
                         { a: 4, b: 20 },
                         { a: 5, b: 20 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }
             ]);
         });
@@ -220,7 +343,9 @@ describe('Data State', () => {
                         { a: 2, b: 3, c: 20 },
                         { a: 3, b: 4, c: 20 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }, {
                     name: "f2",
                     value: [
@@ -228,7 +353,9 @@ describe('Data State', () => {
                         { c: 3, d: 5 },
                         { c: 4, d: 5 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 },
                 {
                     name: "f3",
@@ -237,7 +364,9 @@ describe('Data State', () => {
                         { z: 3, z1: 7 },
                         { z: 4, z1: 7 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }
             ]);
 
@@ -258,7 +387,9 @@ describe('Data State', () => {
                         { x: 2, b: 3 },
                         { x: 3, b: 4 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }]);
         });
 
@@ -277,7 +408,9 @@ describe('Data State', () => {
                         { a: 2, b: 3 },
                         { a: 3, b: 4 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }]);
         });
 
@@ -296,7 +429,9 @@ describe('Data State', () => {
                         { a: 2, b: 3 },
                         { a: 3, b: 4 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }]);
         });
 
@@ -311,7 +446,9 @@ describe('Data State', () => {
                 {
                     name: "f1",
                     value: [1, 2, 3],
-                    type: DataFieldType.List
+                    type: DataFieldType.List,
+                    description: null,
+                    published: true
                 }]);
         });
 
@@ -343,7 +480,9 @@ describe('Data State', () => {
                         { a: 23, b: 3 },
                         { a: 3, b: 4 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }]);
         });
 
@@ -361,7 +500,9 @@ describe('Data State', () => {
                         { a: 2, b: 3 },
                         { a: 3, b: 4 }
                     ],
-                    type: DataFieldType.Table
+                    type: DataFieldType.Table,
+                    description: null,
+                    published: true
                 }]);
         });
     });
@@ -382,7 +523,12 @@ describe('Data State', () => {
         state.renameDataField("f1", "f2");
 
         expect(state.store.state.data.fields).to.deep.equal([
-            { name: "f2", value: 10, type: DataFieldType.Number }
+            {
+                name: "f2", value: 10,
+                type: DataFieldType.Number,
+                description: null,
+                published: true
+            }
         ]);
 
         expect(state.store.state.code.code.map(c => Parser.parseLine(c))).to.deep.equal([

@@ -48,13 +48,13 @@ export default {
                 <tbody>
                 <tr v-for="arg of arguments">
                   <td>
-                    <input v-model="arg.public" type="checkbox"/>
+                    <input v-model="arg.field.published" type="checkbox"/>
                   </td>
                   <td>
                     {{ arg.field.name }}
                   </td>
                   <td>
-                    <input value="" :placeholder="'What does ' + arg.field.name + ' do ...'" v-model="arg.description"/>
+                    <input value="" :placeholder="'What does ' + arg.field.name + ' do ...'" v-model="arg.field.description"/>
                   </td>
                   <td>
                     <span>{{ arg.field.value }}</span>
@@ -81,7 +81,8 @@ export default {
         </div>
       </div>
       <div class="drawable-modal-footer">
-        <button @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Save Drawing</button>
+        <button v-if="id === -1" @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Save as new drawing</button>
+        <button v-if="id !== -1" @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Update drawing</button>
         <button @click="onNo" class="drawable-ui-decline">Cancel</button>
       </div>
       </div>
@@ -98,17 +99,16 @@ export default {
         const previewHeight = this.$store.state.drawing.dimensions.height * previewWidth / this.$store.state.drawing.dimensions.width
 
         return {
-            name: "",
-            description: "",
+            id: this.$store.state.drawing.id,
+            name: this.$store.state.drawing.name,
+            description: this.$store.state.drawing.description,
             previewWidth,
             previewHeight,
             previewVBWidth: this.$store.state.drawing.dimensions.width,
             previewVBHeight: this.$store.state.drawing.dimensions.height,
             arguments: this.$store.state.data.fields.map(field => {
                 return {
-                    description: "",
-                    field,
-                    public: false
+                    field
                 }
             }),
             publishedObjects: this.$store.state.drawing.objects

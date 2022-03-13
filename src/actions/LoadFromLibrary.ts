@@ -16,10 +16,10 @@ export class LoadFromLibrary extends BaseAction {
 
     protected load(entry:LibraryEntry) {
         entry.arguments.forEach(arg => {
-            this.state.addDataField(arg.name, arg.default);
+            this.state.addDataField(arg.name, arg.default, arg.description, true);
         });
         entry.fields.forEach(field => {
-            this.state.addDataField(field.name, field.default);
+            this.state.addDataField(field.name, field.default, field.description, false);
         });
 
         const code = entry.code.split("\n");
@@ -30,6 +30,10 @@ export class LoadFromLibrary extends BaseAction {
                 this.controller.markObjectAsGuide(o.name);
             }
         });
+
+        this.state.setDrawingId(entry.id);
+        this.state.setDrawingNameAndDescription(entry.name, entry.description);
+
 
     }
 

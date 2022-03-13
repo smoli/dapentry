@@ -1,5 +1,6 @@
 import {GrObject} from "../../geometry/GrObject";
 import {AspectRatio} from "../../geometry/GrCanvas";
+import {strict} from "assert";
 
 
 interface DrawingDimensions {
@@ -14,7 +15,10 @@ export interface DrawingState {
     aspectRatio: AspectRatio,
     objects: Array<GrObject>,
     selection: Array<GrObject>,
-    preview: string
+    preview: string,
+    name: string,
+    description: string,
+    id: number
 }
 
 function getDefaultState():DrawingState {
@@ -23,7 +27,10 @@ function getDefaultState():DrawingState {
         aspectRatio: AspectRatio.ar1_1,
         objects: [],
         selection: [],
-        preview: ""
+        preview: "",
+        name: null,
+        description: null,
+        id: -1
     }
 }
 
@@ -33,6 +40,10 @@ export const drawingState = {
     },
 
     getters: {
+        alreadyStoredOnBackend(state: DrawingState): boolean {
+            return state.id !== -1;
+        },
+
         dimensions(state): DrawingDimensions {
             return state.dimensions;
         },
@@ -58,6 +69,15 @@ export const drawingState = {
 
         reset(state: DrawingState) {
             Object.assign(state, getDefaultState());
+        },
+
+        setNameAndDescription(state: DrawingState, payload: { name: string, description: string} ) {
+            state.name = payload.name;
+            state.description = payload.description;
+        },
+
+        setId(state: DrawingState, id: number) {
+            state.id = id;
         },
 
         setPreview(state: DrawingState, preview: string) {

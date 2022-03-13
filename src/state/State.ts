@@ -10,6 +10,7 @@ import {ModalDialogHandler} from "../ui/core/ModalDialogHandler";
 import {LibraryEntry} from "../core/Library";
 import {UserInfo} from "./modules/Authentication";
 import {LayoutOptions} from "../core/layoutOptions";
+import {ASSERT} from "../core/Assertions";
 
 
 const mutations = {
@@ -63,7 +64,9 @@ const mutations = {
         deselectAll: "drawing/deselectAll",
         isObjectSelected: "drawing/isObjectSelected",
         setAspectRatio: "drawing/setAspectRatio",
-        setPreview: "drawing/setPreview"
+        setPreview: "drawing/setPreview",
+        setNameAndDescription: "drawing/setNameAndDescription",
+        setId: "drawing/setId"
     },
 
     data: {
@@ -246,6 +249,15 @@ export class State {
         this.commit(mutations.drawing.setPreview, previewCode);
     }
 
+    setDrawingNameAndDescription(name: string, description: string) {
+        this.commit(mutations.drawing.setNameAndDescription, { name, description })
+    }
+
+    setDrawingId(id: number) {
+        ASSERT(id !== -1, "-1 is not a valid backend id");
+        this.commit(mutations.drawing.setId, id);
+    }
+
     setDrawingDimensions(width: number, height: number) {
         this.commit(mutations.drawing.dimensions, { width, height });
     }
@@ -302,8 +314,8 @@ export class State {
         this.commit(mutations.data.setData, fields);
     }
 
-    addDataField(name: string, value: DataFieldValue) {
-        this.commit(mutations.data.addField, { name, value });
+    addDataField(name: string, value: DataFieldValue,description: string = null, published: boolean = true) {
+        this.commit(mutations.data.addField, { name, value, description, published });
     }
 
     addValueToDataField(name: string, value: ( number | string )) {

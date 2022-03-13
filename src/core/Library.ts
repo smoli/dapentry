@@ -9,18 +9,18 @@ export interface LibraryEntryArgument {
     name: string,
     default: any,
     description: string,
-    id: string
+    id: number
 }
 
 export interface LibraryEntryObject {
     name: string,
     published: boolean,
     isGuide: boolean,
-    id: string
+    id: number
 }
 
 export interface LibraryEntry {
-    id: string,
+    id: number,
     name: string,
     description: string,
     author?: string,

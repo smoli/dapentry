@@ -33,7 +33,13 @@ describe('Rename data field', () => {
             "ENDDO"
         ]);
         expect(state.getDataField("r1")).to.not.be.ok;
-        expect(state.getDataField("r2")).to.deep.equal({ name: "r2", value: 10, type: DataFieldType.Number });
+        expect(state.getDataField("r2")).to.deep.equal({
+            name: "r2",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
 
     });
 
@@ -62,7 +68,13 @@ describe('Rename data field', () => {
             "ADD r1, 2",
             "ENDDO"
         ]);
-        expect(state.getDataField("r1")).to.deep.equal({ name: "r1", value: 10, type: DataFieldType.Number });
+        expect(state.getDataField("r1")).to.deep.equal({
+            name: "r1",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
 
     });
 
@@ -91,8 +103,20 @@ describe('Rename data field', () => {
             "ENDDO"
         ]);
 
-        expect(state.getDataField("r1")).to.deep.equal({ name: "r1", value: 10, type: DataFieldType.Number });
-        expect(state.getDataField("r2")).to.deep.equal({ name: "r2", value: 20, type: DataFieldType.Number });
+        expect(state.getDataField("r1")).to.deep.equal({
+            name: "r1",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
+        expect(state.getDataField("r2")).to.deep.equal({
+            name: "r2",
+            value: 20,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
     });
 
     it("will not rename if the name is invalid", () => {
@@ -120,7 +144,13 @@ describe('Rename data field', () => {
             "ENDDO"
         ]);
 
-        expect(state.getDataField("r1")).to.deep.equal({ name: "r1", value: 10, type: DataFieldType.Number });
+        expect(state.getDataField("r1")).to.deep.equal({
+            name: "r1",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
 
         action = new RenameDataField("r1", "$lsadkjfh");
         action.controller = controller;
@@ -133,7 +163,13 @@ describe('Rename data field', () => {
             "ENDDO"
         ]);
 
-        expect(state.getDataField("r1")).to.deep.equal({ name: "r1", value: 10, type: DataFieldType.Number });
+        expect(state.getDataField("r1")).to.deep.equal({
+            name: "r1",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
 
 
         action = new RenameDataField("r1", AppConfig.Runtime.styleRegisterName);
@@ -147,7 +183,13 @@ describe('Rename data field', () => {
             "ENDDO"
         ]);
 
-        expect(state.getDataField("r1")).to.deep.equal({ name: "r1", value: 10, type: DataFieldType.Number });
+        expect(state.getDataField("r1")).to.deep.equal({
+            name: "r1",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
 
         action = new RenameDataField("r1", AppConfig.Runtime.canvasObjectName);
         action.controller = controller;
@@ -160,7 +202,13 @@ describe('Rename data field', () => {
             "ENDDO"
         ]);
 
-        expect(state.getDataField("r1")).to.deep.equal({ name: "r1", value: 10, type: DataFieldType.Number });
+        expect(state.getDataField("r1")).to.deep.equal({
+            name: "r1",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
     })
 
 
