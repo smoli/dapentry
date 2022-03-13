@@ -23,7 +23,8 @@ export interface RegisterResultData {
 export interface UserResultData {
     name: string,
     email: string,
-    verified: boolean
+    verified: boolean,
+    id: number
 }
 
 export interface APIResponse<T> {
@@ -295,7 +296,7 @@ export class API {
         return API.makeResponse(response, async () => {
             const r = await response.json();
             console.log(r);
-            return { name: r.name, email: r.email, verified: r.email_verified_at }
+            return { id: r.id, name: r.name, email: r.email, verified: r.email_verified_at }
         })
     }
 }

@@ -34,7 +34,8 @@ export interface LibraryEntry {
     arguments: Array<LibraryEntryArgument>,
     fields: Array<LibraryEntryArgument>,
     code: string,
-    objects: Array<LibraryEntryObject>
+    objects: Array<LibraryEntryObject>,
+    createdBy: number
 }
 
 

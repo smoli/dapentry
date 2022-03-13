@@ -98,7 +98,7 @@ export class SaveDrawingToLibrary extends BaseAction {
             return;
         }
 
-        if (data.id) {
+        if (data.hasOwnProperty("id") && data.id !== -1) {
             return API.updateLibraryEntry(this.makePostData(data));
         } else {
             return API.postNewLibraryEntry(this.makePostData(data));

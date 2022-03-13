@@ -32,6 +32,7 @@ export class LoadFromLibrary extends BaseAction {
         });
 
         this.state.setDrawingId(entry.id);
+        this.state.setDrawingCreatedBy(entry.createdBy)
         this.state.setDrawingNameAndDescription(entry.name, entry.description);
 
 

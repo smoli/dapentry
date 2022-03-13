@@ -8,6 +8,7 @@ export default {
       <h1>Save drawing to library</h1>
       <div>
         <div class="drawable-save-drawing-form">
+          <span>{{ message }}</span>
           <form>
             <fieldset>
               <legend>General</legend>
@@ -104,7 +105,7 @@ export default {
         const previewWidth = 300;
         const previewHeight = this.$store.state.drawing.dimensions.height * previewWidth / this.$store.state.drawing.dimensions.width
 
-        return {
+        const data = {
             id: this.$store.state.drawing.id,
             name: this.$store.state.drawing.name,
             description: this.$store.state.drawing.description,
@@ -128,8 +129,22 @@ export default {
                 }),
             validation: new ValidationResult(),
             validationActive: false,
-            svgPreview: this.$store.state.drawing.preview
+            svgPreview: this.$store.state.drawing.preview,
+            message: null
+        };
+
+
+        const user = this.$store.state.auth.user;
+        const drawingBy = this.$store.state.drawing.createdBy;
+
+        if (drawingBy !== -1 && drawingBy !== user.id) {
+            data.id = -1;
+            data.name += "_copy";
+            data.message = "This drawing was created by another user. You can save your changes as a new one."
         }
+
+
+        return data;
     },
 
     watch: {

@@ -66,7 +66,8 @@ const mutations = {
         setAspectRatio: "drawing/setAspectRatio",
         setPreview: "drawing/setPreview",
         setNameAndDescription: "drawing/setNameAndDescription",
-        setId: "drawing/setId"
+        setId: "drawing/setId",
+        setCreatedBy: "drawing/setCreatedBy"
     },
 
     data: {
@@ -256,6 +257,10 @@ export class State {
     setDrawingId(id: number) {
         ASSERT(id !== -1, "-1 is not a valid backend id");
         this.commit(mutations.drawing.setId, id);
+    }
+
+    setDrawingCreatedBy(id: number) {
+        this.commit(mutations.drawing.setCreatedBy, id);
     }
 
     setDrawingDimensions(width: number, height: number) {

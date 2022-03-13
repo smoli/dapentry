@@ -7,7 +7,7 @@ import {GfxLine} from "../../runtime/gfx/GfxLine";
 import {GfxPolygon} from "../../runtime/gfx/GfxPolygon";
 
 
-export interface UserInfo { name: string, email: string, verified: boolean }
+export interface UserInfo { id: number, name: string, email: string, verified: boolean }
 
 export interface AuthenticationState {
     authenticated: boolean,
@@ -21,7 +21,7 @@ export const authenticationState = {
         return {
             authenticated: false,
             token: null,
-            user: null
+            user: null,
         }
     },
 
