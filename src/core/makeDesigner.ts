@@ -37,7 +37,6 @@ export function makeDesigner(containerId: string,
     app.use(i18n);
 
     const state = new State(appStore, i18n);
-    state.setLayout({...layoutDefaults, ...layout })
     let library = null;
 
     if (appOptions.libraryAvailable) {
@@ -48,9 +47,13 @@ export function makeDesigner(containerId: string,
     const appController = new AppController(state, interpreter, appOptions);
 
     app.provide("controller", appController);
+    console.log("Mounting ", containerId)
     app.mount("#" + containerId);
     appController.init();
 
+    console.log(Object.assign(Object.assign({}, layoutDefaults), layout));
+
+    state.setLayout(Object.assign(Object.assign({}, layoutDefaults), layout))
     const mount = document.getElementById(containerId);
 
     if (mount.hasAttribute("tabindex")) {
@@ -58,21 +61,9 @@ export function makeDesigner(containerId: string,
         mount.onmouseenter = () => mount.focus();
     }
 
-   /* window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
-        const dialog = appController.modalFactory.createInfoModal();
-        dialog.show({
-            text: errorMsg + "\n" + url + ":" + lineNumber,
-            caption: "Internal error"
-
-        }).then();
-        return false;
-    }*/
-
     if (initialCode) {
         appController.setCode(initialCode);
     }
-
     return appController;
-
 }
 

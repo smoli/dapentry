@@ -56,11 +56,16 @@ export default {
   inject: ["controller"],
   props: [],
 
-  data() {
-    let icons;
-    return {
-      message: "Welcome to drawable... the thing that does that thing with stuff and so ...",
-    }
+  computed: {
+      hideToolbar() {
+        return this.$store.state.ui.layout.hideToolbar;
+      }
+  },
+
+  watch: {
+      hideToolbar() {
+        console.log(this.$store.state.ui.count, "Hide toolbar is now", this.$store.state.ui.layout.hideToolbar)
+      }
   },
 
   methods: {

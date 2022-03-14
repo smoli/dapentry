@@ -4,18 +4,22 @@ import {layoutDefaults, LayoutOptions} from "../../core/layoutOptions";
 
 
 export interface UIState {
+    count: number,
     modalComponent: Array<{ component: any, handler: ModalDialogHandler }>,
     layout: LayoutOptions
 
 }
+
+let c = 0;
 
 
 export const uiState = {
 
     state(): UIState {
         return {
+            count: c ++,
             modalComponent: [],
-            layout: layoutDefaults
+            layout: {...layoutDefaults}
         }
     },
 
@@ -30,7 +34,8 @@ export const uiState = {
         },
 
         setLayout(state: UIState, layout: LayoutOptions) {
-            Object.assign(state.layout, layout);
+            console.log("LAYOUT " + state.count, layout);
+            Object.assign(state.layout, { ... layout });
         },
 
         toggleLibrary(state: UIState) {
