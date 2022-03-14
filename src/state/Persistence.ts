@@ -13,6 +13,9 @@ export class Persistence {
 
          // state.setCodeString(this.getDemoCode());
 
+
+        this.restoreLayout();
+
         if (this._state.store.state.auth.authenticated) {
             await this.saveAuth(this._state.store.state.auth.token)
         } else {
@@ -30,6 +33,17 @@ export class Persistence {
             return;
         }
         libraryEntries.forEach(e => state.addLibraryEntry(e));
+    }
+
+    public saveLayout() {
+        localStorage.setItem("layout", JSON.stringify(this._state.store.state.ui.layout));
+    }
+
+    protected restoreLayout() {
+        const layout = localStorage.getItem("layout");
+        if (layout) {
+            this._state.setLayout(JSON.parse(layout));
+        }
     }
 
     protected async saveAuth(token: string) {

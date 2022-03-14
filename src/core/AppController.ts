@@ -649,31 +649,38 @@ export class AppController {
     public toggleLibrary() {
         if (this._startupOptions.libraryAvailable) {
             this._state.toggleLibrary();
+            this._persistence.saveLayout();
         }
     }
 
     public toggleToolbar() {
         this._state.toggleToolbar();
+        this._persistence.saveLayout();
     }
 
     public toggleLeftPanel() {
         this._state.toggleLeftPanel();
+        this._persistence.saveLayout();
     }
 
     public toggleRightPanel() {
         this._state.toggleRightPanel();
+        this._persistence.saveLayout();
     }
 
     public toggleHeader() {
         this._state.toggleHeader();
+        this._persistence.saveLayout();
     }
 
     public toggleToolHints() {
         this._state.toggleToolHints();
+        this._persistence.saveLayout();
     }
 
     public toggleFooter() {
         this._state.toggleFooter();
+        this._persistence.saveLayout();
     }
 
 
