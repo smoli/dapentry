@@ -38,7 +38,7 @@ export class StyleManager {
             fillOpacity: 1,
             strokeWidth: 0,
             textAlignment: TextAlignement.center,
-            verticalAlignment: TextAlignement.end,
+            verticalAlignment: TextAlignement.center,
             fontFamily: "Sans-serif",
             fontSize: 50
         }

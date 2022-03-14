@@ -193,7 +193,25 @@ export class GrText extends GrObject {
 
     get publishedProperties(): Array<ObjectProperty> {
         return [
-            ...super.publishedProperties
+            ...super.publishedProperties,
+            {
+                name: "Width",
+                id: "witdh",
+                value: this._width
+            },
+            {
+                name: "Height",
+                id: "heigh",
+                value: this._height
+            },{
+                name: "Aspect Ratio",
+                id: "aspectratio",
+                value: this._width / this._height
+            },{
+                name: "Aspect Ratio2",
+                id: "aspectratio2",
+                value: this._height / this._width
+            }
         ]
     }
 

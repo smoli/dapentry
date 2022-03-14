@@ -444,7 +444,7 @@ export class SvgObjectRenderer extends ObjectRenderer {
         const a = -rad2deg(new Point2D(1, 0).angleTo(text.xAxis));
 
         const comps = [];
-        comps.push(`translate(${text.x} ${text.y})`);
+        comps.push(`translate(${text.center.x} ${text.center.y})`);
 
         if (!eq(a, 0)) {
             comps.push(`rotate(${a})`);
@@ -453,7 +453,6 @@ export class SvgObjectRenderer extends ObjectRenderer {
         if (text.scaleX !== 1.0 || text.scaleY !== 1.0) {
             comps.push(`scale(${text.scaleX} ${text.scaleY})`)
         }
-
 
         elem.attr("transform", comps.join(" "));
     }
@@ -489,6 +488,8 @@ export class SvgObjectRenderer extends ObjectRenderer {
                 break;
 
         }
+
+        valign = "central"
 
         elem.attr("style", `fill: ${text.style.fillColor}; fill-opacity: ${text.style.fillOpacity};` +
             `stroke: ${text.style.strokeColor}; stroke-width: ${text.style.strokeWidth};` +
