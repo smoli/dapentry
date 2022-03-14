@@ -6,7 +6,7 @@
           <span>of {{ objectName }}</span>
         </h2>
         <div>
-          <input type="color" v-model="fillColor"
+          <input type="color" :value="fillColor"
                  @change="onFillColorChange">
           <label>{{ $t("ui.styleEditor.fillColor") }} {{ fillColor }}</label>
           <div class="drawable-properties-used-color-list">
@@ -28,7 +28,7 @@
           </div>
 
           <div>
-            <input v-model="strokeColor" type="color"
+            <input :value="strokeColor" type="color"
                    @change="onStrokeColorChange">
             <label>{{ $t("ui.styleEditor.stroke") }} {{ strokeColor }}</label>
             <div class="drawable-properties-used-color-list">

@@ -23,8 +23,8 @@ export class StyleManager {
 
     public constructor() {
         this._styles["default"] = {
-            fillColor: "coral",
-            strokeColor: "coral",
+            fillColor: "#FF7F50",
+            strokeColor: "#FF7F50",
             fillOpacity: 0.2,
             strokeWidth: 2,
             textAlignment: TextAlignement.center,
@@ -33,8 +33,8 @@ export class StyleManager {
         }
 
         this._styles["textDefault"] = {
-            fillColor: "coral",
-            strokeColor: "coral",
+            fillColor: "#FF7F50",
+            strokeColor: "#FF7F50",
             fillOpacity: 1,
             strokeWidth: 0,
             textAlignment: TextAlignement.center,
