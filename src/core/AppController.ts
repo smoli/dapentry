@@ -390,6 +390,7 @@ export class AppController {
 
     async deleteStatements(index: number) {
         this.state.clearCodeSelection();
+        this.state.deselectAll();
         await this._execute(new DeleteStatements(index));
         await this._runCode();
         this._updateDrawing();
