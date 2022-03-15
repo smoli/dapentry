@@ -31,6 +31,8 @@ import {API} from "../api/API";
 import {AddColumnToDataField} from "../actions/AddColumnToDataField";
 import {InterpreterError} from "../runtime/interpreter/errors/InterpreterError";
 import {LoadFromLibrary} from "../actions/LoadFromLibrary";
+import {InteractionEventKind, InteractionEvents} from "./InteractionEvents";
+import {logInteraction} from "./InteractionLogger";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -110,7 +112,7 @@ export class AppController {
         this._startupOptions = options;
         this._modalFactory = modalFactory;
 
-        this.processOptions({
+        this._processOptions({
             ...applicationDefaults,
             ...options
         })
@@ -118,7 +120,7 @@ export class AppController {
         this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
     }
 
-    protected processOptions(options: ApplicationOptions) {
+    protected _processOptions(options: ApplicationOptions) {
         this._canvas = GrCanvas.create(options.aspectRatio, options.drawingHeight);
 
         const tools = [...options.availableTools];
@@ -162,7 +164,7 @@ export class AppController {
         this.state.resetAll();
         this._interpreter.resetGuides();
 
-        this.processOptions({
+        this._processOptions({
             ...applicationDefaults,
             ...this._startupOptions
         });
@@ -173,8 +175,8 @@ export class AppController {
         this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
         this._state.setAspectRatio(ar);
 
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
     }
 
     get state(): State {
@@ -188,11 +190,11 @@ export class AppController {
     public async load(persistence: Persistence): Promise<any> {
         this._persistence = persistence;
         await persistence.load(this.state);
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
     }
 
-    protected async runCode(): Promise<any> {
+    protected async _runCode(): Promise<any> {
         try {
             this._interpreter.clearObjects(this._canvas);
             this._performance.reset();
@@ -213,7 +215,7 @@ export class AppController {
                 "$lastObject": null,
                 [this._canvas.name]: this._canvas
             });
-            this.updateSelection();
+            this._updateSelection();
         } catch (e) {
             console.info("Errors during execution");
 
@@ -231,7 +233,7 @@ export class AppController {
      * as instances changed and maybe some objects are gone.
      * @protected
      */
-    protected updateSelection() {
+    protected _updateSelection() {
         const curr = this.state.selection;
 
         if (curr.length === 0) {
@@ -251,16 +253,16 @@ export class AppController {
         newSelection.forEach(o => this.state.selectObject(o));
     }
 
-    protected updateDrawing() {
+    protected _updateDrawing() {
         this._state.setObjectsOnDrawing(this._interpreter.objects);
     }
 
-    protected async execute(action: BaseAction) {
+    protected async _execute(action: BaseAction) {
         action.controller = this;
         return await action.execute(null);
     }
 
-    protected async executeBatch(...actions: Array<BaseAction>) {
+    protected async _executeBatch(...actions: Array<BaseAction>) {
         actions.forEach(a => a.controller = this);
         const batch = new BatchAction(...actions);
         await batch.execute(null);
@@ -285,7 +287,7 @@ export class AppController {
 
             this._state.setCodeSelection([this._interpreter.pc - this.state.dataCodeLength]);
         }
-        this.updateDrawing();
+        this._updateDrawing();
     }
 
     async setLocale(locale: string) {
@@ -294,22 +296,22 @@ export class AppController {
     }
 
     async addNewDataField(value: DataFieldValue) {
-        await this.execute(new AddNewDataField(value));
+        await this._execute(new AddNewDataField(value));
     }
 
     async removeDataField(name: string) {
-        await this.execute(new RemoveDataField(name));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new RemoveDataField(name));
+        await this._runCode();
+        this._updateDrawing();
     }
 
 
     async setDataFieldValue(name: string, newValue: DataFieldValue): Promise<Array<Error>> {
         this.state.setDataFieldValue(name, newValue);
-        await this.runCode();
+        await this._runCode();
 
         if (this._interpreter.errors.length === 0) {
-            this.updateDrawing();
+            this._updateDrawing();
             await this._persistence?.saveCode();
         } else {
             return this._interpreter.errors;
@@ -318,34 +320,34 @@ export class AppController {
 
     async setDataListFieldValue(name: string, index: number, value: DataFieldValue) {
         this.state.setDataListFieldValue(name, index, value);
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
     async setDataTableCellValue(name: string, index: number, column: string, value: DataFieldValue) {
         this.state.setDataTableCellValue(name, index, column, value);
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
     async addValueToDataField(name: string, value: ( number | string )) {
-        await this.execute(new AddValueToDataField(name, value));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new AddValueToDataField(name, value));
+        await this._runCode();
+        this._updateDrawing();
     }
 
     async addColumnToDataField(name: string, value: ( number | string )) {
-        await this.execute(new AddColumnToDataField(name, value));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new AddColumnToDataField(name, value));
+        await this._runCode();
+        this._updateDrawing();
     }
 
     async renameDataField(oldName: string, newName: string) {
-        await this.execute(new RenameDataField(oldName, newName));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new RenameDataField(oldName, newName));
+        await this._runCode();
+        this._updateDrawing();
     }
 
     async addStatement(code: string) {
@@ -354,16 +356,16 @@ export class AppController {
         }
         if (this.state.codeSelection?.length) {
             const newIndex = Math.max(...this.state.codeSelection) + 1;
-            await this.executeBatch(
+            await this._executeBatch(
                 new AddStatement([code]),
                 new AddStatementToSelection(newIndex)
             );
         } else {
-            await this.execute(new AddStatement([code]));
+            await this._execute(new AddStatement([code]));
         }
 
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
@@ -371,26 +373,26 @@ export class AppController {
         if (code.length === 0) {
             return;
         }
-        await this.execute(new AddStatement(code));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new AddStatement(code));
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
     async setCode(code: string) {
-        await this.execute(new AddStatement(code.split("\n")
+        await this._execute(new AddStatement(code.split("\n")
             .map(c => c.trim())
             .filter(c => c.length !== 0)));
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
     async deleteStatements(index: number) {
         this.state.clearCodeSelection();
-        await this.execute(new DeleteStatements(index));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new DeleteStatements(index));
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
@@ -401,25 +403,25 @@ export class AppController {
         this.state.clearCodeSelection();
         const toDelete = [...this.state.selection];
         this.state.deselectAll();
-        await this.execute(new DeleteObjects(toDelete));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new DeleteObjects(toDelete));
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
     async updateStatement(statementIndex: number, tokenIndexes: Array<number>, newValue: string): Promise<Array<Error>> {
         const oldStatement = this._state.store.state.code.code[statementIndex];
 
-        const result = await this.execute(new UpdateStatement(statementIndex, tokenIndexes, newValue));
+        const result = await this._execute(new UpdateStatement(statementIndex, tokenIndexes, newValue));
 
         if (result?.errors?.length) {
             return result.errors;
         }
 
-        await this.runCode();
+        await this._runCode();
 
         if (this._interpreter.errors.length === 0) {
-            this.updateDrawing();
+            this._updateDrawing();
             await this._persistence?.saveCode();
         } else {
             this.state.replaceStatement(statementIndex, oldStatement);
@@ -429,52 +431,52 @@ export class AppController {
     }
 
     async loopStatements(statementIndexes: Array<number>) {
-        await this.execute(new LoopStatements(statementIndexes));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new LoopStatements(statementIndexes));
+        await this._runCode();
+        this._updateDrawing();
         await this._persistence?.saveCode();
     }
 
     async clearStatementSelection() {
         this._state.clearCodeSelection();
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
     }
 
     async selectStatement(index: number) {
         this._state.setCodeSelection([index]);
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
     }
 
     async selectStatements(indexes: Array<number>) {
         this._state.setCodeSelection(indexes);
-        await this.runCode();
-        this.updateDrawing();
+        await this._runCode();
+        this._updateDrawing();
     }
 
     public async setFillColorForSelection(value: string) {
-        await this.execute(new SetFillColor(this.state.selection, value));
-        await this.runCode();
-        this.updateDrawing()
+        await this._execute(new SetFillColor(this.state.selection, value));
+        await this._runCode();
+        this._updateDrawing()
     }
 
     public async setFillOpacityForSelection(value: number) {
-        await this.execute(new SetFillOpacity(this.state.selection, value));
-        await this.runCode();
-        this.updateDrawing()
+        await this._execute(new SetFillOpacity(this.state.selection, value));
+        await this._runCode();
+        this._updateDrawing()
     }
 
     public async setStrokeColorForSelection(value: string) {
-        await this.execute(new SetStrokeColor(this.state.selection, value));
-        await this.runCode();
-        this.updateDrawing()
+        await this._execute(new SetStrokeColor(this.state.selection, value));
+        await this._runCode();
+        this._updateDrawing()
     }
 
     public async setStrokeWidthForSelection(value: number) {
-        await this.execute(new SetStrokeWidth(this.state.selection, value));
-        await this.runCode();
-        this.updateDrawing()
+        await this._execute(new SetStrokeWidth(this.state.selection, value));
+        await this._runCode();
+        this._updateDrawing()
     }
 
     public handleObjectSelection(object: GrObject) {
@@ -520,9 +522,9 @@ export class AppController {
             }
         });
         if (rerun) {
-            await this.runCode()
+            await this._runCode()
         }
-        this.updateDrawing();
+        this._updateDrawing();
     }
 
     public switchTool(newTool: ToolNames, ...params: Array<any>) {
@@ -538,7 +540,7 @@ export class AppController {
         this.switchTool(ToolNames.Instance, entry);
     }
 
-    protected selectReferenceObjectForTool() {
+    protected _selectReferenceObjectForTool() {
         const current = this.state.referenceObjectForTool;
         const objects = this.state.objects;
         let i = current ? objects.indexOf(current) : -1;
@@ -557,11 +559,30 @@ export class AppController {
         this.state.setReferenceObjectForTool(null);
     }
 
-    protected passKeyPressToTool(event: KeyboardEvent) {
+    protected _passKeyPressToTool(event: KeyboardEvent) {
         this._state.passKeyPressToTool(event);
     }
 
+
     public async handleKeyEvent(event: KeyboardEvent) {
+
+        logInteraction(InteractionEvents.Key, {
+            alt: false,
+            button: 0,
+            buttons: 0,
+            ctrl: false,
+            dx: 0,
+            dy: 0,
+            interactionEvent: undefined,
+            key: event.key,
+            keyCode:event.keyCode,
+            kind: InteractionEventKind.key,
+            shift: false,
+            x: 0,
+            y: 0
+        });
+
+
         if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
             return;
         }
@@ -576,7 +597,7 @@ export class AppController {
             await this.deleteSelectedObjects();
         } else if (event.code === AppConfig.Keys.ObjectSnapCode) {
             event.preventDefault();
-            this.selectReferenceObjectForTool();
+            this._selectReferenceObjectForTool();
         } else if (event.code === AppConfig.Keys.AbortToolKeyCode) {
             this._state.switchTool(null);
         } else if (event.key === AppConfig.Keys.DrawCircleKey) {
@@ -600,7 +621,7 @@ export class AppController {
         } else if (event.key === AppConfig.Keys.MarkAsGuideKey) {
             this.makeSelectedObjectsGuides();
         } else {
-            this.passKeyPressToTool(event);
+            this._passKeyPressToTool(event);
         }
 
     }
@@ -613,15 +634,15 @@ export class AppController {
     }
 
     public async saveDrawingToLibrary() {
-        await this.execute(new SaveDrawingToLibrary());
+        await this._execute(new SaveDrawingToLibrary());
     }
 
     public async loadDrawingFromLibrary(entryName: string) {
         await this.clearStatementSelection();
         await this.state.deselectAll();
-        await this.execute(new LoadFromLibrary(entryName));
-        await this.runCode();
-        this.updateDrawing();
+        await this._execute(new LoadFromLibrary(entryName));
+        await this._runCode();
+        this._updateDrawing();
     }
 
     public async logout() {
@@ -638,7 +659,7 @@ export class AppController {
             return;
         }
 
-        await this.execute(new Login());
+        await this._execute(new Login());
 
         if (this._state.store.state.auth.authenticated) {
             API.setAuthInfo(this._state.store.state.auth.token)

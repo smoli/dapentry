@@ -2,6 +2,7 @@ import {Tool} from "../tools/Tool";
 import {ObjectRenderer} from "./ObjectRenderer";
 import {InteractionEventData, InteractionEventKind, InteractionEvents} from "./InteractionEvents";
 import {GrObject} from "../geometry/GrObject";
+import {logInteraction} from "./InteractionLogger";
 
 export type SwitchEvent = (number | string);
 export type SwitchCallback = (event:SwitchEvent, tool:Tool) => void;
@@ -161,6 +162,8 @@ export class ToolManager {
             if (eventData) {
                 eventData.selection = [...this._selection];
             }
+
+            logInteraction(interactionEvent, eventData);
 
             this._currentTool.update(interactionEvent, eventData);
 

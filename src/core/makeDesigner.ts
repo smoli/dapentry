@@ -8,6 +8,8 @@ import {GfxInterpreter} from "./GfxInterpreter";
 import {State} from "../state/State";
 import {Library} from "./Library";
 import {layoutDefaults, LayoutOptions} from "./layoutOptions";
+import {logInteraction} from "./InteractionLogger";
+import {InteractionEvents} from "./InteractionEvents";
 
 const navigatorLanguage = navigator.language ? navigator.language.split("-")[0] : "en"
 const i18n = createI18n({
@@ -31,6 +33,34 @@ export function makeDesigner(containerId: string,
                              appOptions: ApplicationOptions = applicationDefaults,
                              initialCode: string = ""): AppController {
 
+
+    const logHandler = {
+        get(target, propkey) {
+            if (propkey !== "state" && propkey[0] !== "_") {
+
+                logInteraction(InteractionEvents.App, {
+                    alt: false,
+                    button: 0,
+                    buttons: 0,
+                    ctrl: false,
+                    dx: 0,
+                    dy: 0,
+                    interactionEvent: undefined,
+                    key: "",
+                    keyCode: 0,
+                    kind: undefined,
+                    shift: false,
+                    x: 0,
+                    y: 0,
+                    method: propkey
+                });
+            }
+
+            return target[propkey];
+        }
+    }
+
+
     const appStore = createAppStore();
     const app = createApp(Drawable);
     app.use(appStore);
@@ -44,7 +74,7 @@ export function makeDesigner(containerId: string,
     }
 
     const interpreter = new GfxInterpreter(library);
-    const appController = new AppController(state, interpreter, appOptions);
+    const appController = new Proxy(new AppController(state, interpreter, appOptions), logHandler);
 
     app.provide("controller", appController);
     console.log("Mounting ", containerId)

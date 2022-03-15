@@ -3,7 +3,8 @@ import {GrObject} from "../geometry/GrObject";
 export enum InteractionEventKind {
     none,
     pointer,
-    key
+    key,
+    App
 }
 export enum InteractionEvents {
     Click,
@@ -16,6 +17,7 @@ export enum InteractionEvents {
     Selection,
     ReferenceObject,
     Key,
+    App,
     Cancel
 }
 
@@ -35,4 +37,5 @@ export interface InteractionEventData {
     keyCode: number,
     selection?: Array<GrObject>,
     object?: GrObject
+    method?: string
 }
