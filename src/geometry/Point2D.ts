@@ -68,7 +68,7 @@ export class Point2D {
     }
 
     get length(): number {
-        return Math.sqrt(this.x ** 2 + this.y ** 2);
+        return Math.hypot(this.x, this.y);
     }
 
     /**
@@ -77,6 +77,7 @@ export class Point2D {
      */
     angleTo(v2: Point2D): number {
         return Math.atan2(this.y, this.x) - Math.atan2(v2.y, v2.x);
+        // return Math.atan2(this.y - v2.y, this.x - v2.x);
     }
 
     distanceToPoint(p: Point2D): number {

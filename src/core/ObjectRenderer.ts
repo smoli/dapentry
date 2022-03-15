@@ -182,8 +182,10 @@ export abstract class ObjectRenderer {
      * @returns A handle that can be used to manipulate the rendered info object
      */
     public abstract renderInfoText(position: Point2D, text: string):InfoHandle;
+    public abstract renderInfoLine(p1: Point2D, p2: Point2D): InfoHandle;
 
     public abstract updateInfoText(handle:InfoHandle, text: string, position?: Point2D);
+    public abstract updateInfoLine(handle: InfoHandle, p1: Point2D, p2: Point2D);
 
     public abstract removeInfo(handle:InfoHandle);
 

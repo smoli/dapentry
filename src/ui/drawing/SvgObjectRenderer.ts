@@ -933,6 +933,36 @@ export class SvgObjectRenderer extends ObjectRenderer {
         return "__svg_rndr_info_" + ( infoHandle++ );
     }
 
+    public renderInfoLine(p1: Point2D, p2: Point2D): InfoHandle {
+        const handle = this.makeInfoHandle();
+
+        this._infoLayer.select("#" + handle).remove();
+        this._infoLayer.append("line")
+            .attr("x1", p1.x)
+            .attr("y1", p1.y)
+            .attr("x2", p2.x)
+            .attr("y2", p2.y)
+            .attr("id", handle)
+            .style("fill", "none")
+            .style("stroke", "blue")
+            .style("stroke-width", "2");
+
+        return handle;
+    }
+
+    public updateInfoLine(handle: InfoHandle, p1: Point2D, p2: Point2D) {
+        const i = this._infoLayer.select("#" + handle);
+
+        if (i.empty()) {
+            return;
+        }
+
+        i.attr("x1", p1.x)
+         .attr("y1", p1.y)
+         .attr("x2", p2.x)
+         .attr("y2", p2.y);
+    }
+
     public renderInfoText(position: Point2D, text: string): InfoHandle {
         const handle = this.makeInfoHandle();
 

@@ -76,10 +76,7 @@ export class RotateTool extends Tool {
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             const poi = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[poiId];
             this._rotationPoi = Number(poiId);
-            this._pivotPoi = this._object.getOppositePoi(this._rotationPoi);
-            if (!this._pivotPoi) {
-                this._pivotPoi = POI.center;
-            }
+            this._pivotPoi = POI.center;
             this._pivotPoint = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._pivotPoi];
 
             this._rotationObject = this._object.createProxy();
@@ -156,7 +153,7 @@ export class RotateTool extends Tool {
         return false;
     }
 
-    public get result(): any {
+    getResult(): any {
         if (this._pivotPoint) {
             return `ROTATE ${this._object.name}, ${this.makeCodeForNumber(this._finalAngle)}, ${this._object.name}@${POI[this._pivotPoi]}`
         } else {
