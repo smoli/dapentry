@@ -565,6 +565,12 @@ export class AppController {
     }
 
 
+    protected async _cancelTool() {
+        this._state.switchTool(null);
+        await this._runCode();
+        this._updateDrawing();
+    }
+
     public async handleKeyEvent(event: KeyboardEvent) {
 
         logInteraction(InteractionEvents.Key, {
@@ -600,7 +606,7 @@ export class AppController {
             event.preventDefault();
             this._selectReferenceObjectForTool();
         } else if (event.code === AppConfig.Keys.AbortToolKeyCode) {
-            this._state.switchTool(null);
+            await this._cancelTool();
         } else if (event.key === AppConfig.Keys.DrawCircleKey) {
             this.switchTool(ToolNames.Circle);
         } else if (event.key === AppConfig.Keys.DrawRectKey) {
