@@ -7,29 +7,30 @@ body {
   overflow: auto !important;
 }
 
+
 .drawable-intro-content {
   .drawable-intro-howto {
 
     display: flex;
-    flex-direction: row;
     align-items: start;
-    margin-top: 5em;
+    margin: 0;
+    padding: 5em 0;
+
 
     .drawable-app-container {
       border: 1px solid @ciMainColor;
       border-top-width: 1em;
       outline: none;
-
-      width: 30em;
+      flex: 0 0 30em;
       height: 20em;
-      margin-right: 4em;
-      margin-left: 4em;
+      margin: 0 6em;
     }
 
 
     .drawable-intro-howto-descr {
       display: block;
-      max-width: 30em;
+      flex: 1 1 30em;
+      max-width: 40em;
 
       h2 {
         margin: 0;
@@ -40,17 +41,49 @@ body {
       }
     }
   }
+
+  .drawable-intro-howto:nth-child(odd) {
+    box-shadow: 1em 0.2em 1em -0.5em rgba(0, 0, 0, 0.2);
+    margin-top: 5em;
+    transition: box-shadow 0.2s;
+  }
+
+  .drawable-intro-howto:nth-child(even) {
+    box-shadow: -1em 0.2em 1em -0.5em rgba(0, 0, 0, 0.2);
+    margin-top: 5em;
+    transition: box-shadow 0.2s;
+  }
+
+  .drawable-intro-howto:nth-child(odd):hover {
+    box-shadow: 1.5em 0.2em 1em -0.5em rgba(0, 0, 0, 0.3);
+  }
+
+  .drawable-intro-howto:nth-child(even):hover {
+    box-shadow: -1.5em 0.2em 1em -0.5em rgba(0, 0, 0, 0.3);
+  }
+
+  .drawable-intro-howto:nth-child(even) .drawable-intro-howto-descr {
+    margin-left: 0em;
+    padding-right: 2em;
+
+  }
+
+  .drawable-intro-howto:nth-child(odd) .drawable-intro-howto-descr {
+    margin-right: 0em;
+    padding-left: 2em;
+  }
+
 }
 
 a.drawable-next, a.drawable-previous {
   margin: 1em;
   display: inline-block;
-  background: @highlightColor;
+  background: @uiColor1;
   padding: 1em 2em;
   text-decoration: none;
-  color: white;
-  border: 1px solid white;
-  box-shadow: 0 0 0 4px @highlightColor;
+  color: black;
+  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s;
 
   h1 {
     margin: 0 0 0.5em;
@@ -58,6 +91,12 @@ a.drawable-next, a.drawable-previous {
     font-size: 1.5em;
   }
 }
+
+a.drawable-next:hover, a.drawable-previous:hover {
+  box-shadow: 0 0em 1em 0 rgba(0, 0, 0, 0.3);
+  background-color: white;
+}
+
 
 a.drawable-next {
   h1 {

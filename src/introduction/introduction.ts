@@ -14,7 +14,7 @@ const strippedLayout: LayoutOptions = {
     hideToolHint: true
 };
 
-const wide: ApplicationOptions = { aspectRatio: AspectRatio.ar3_2, drawingHeight: 600, availableTools: [] }
+const wide: ApplicationOptions = { aspectRatio: AspectRatio.ar3_2, drawingHeight: 400, availableTools: [] }
 const primitives = [ToolNames.Circle, ToolNames.Rectangle, ToolNames.Line];
 const transformations = [ToolNames.Move, ToolNames.Rotate, ToolNames.Scale];
 
