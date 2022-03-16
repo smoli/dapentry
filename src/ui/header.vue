@@ -13,11 +13,11 @@
 <script lang="ts">
 
 
-import {AspectRatio} from "../geometry/GrCanvas";
 import LocaleSwitcher from "./localeSwitcher.vue";
 import AspectRatioSwitcher from "./aspectRatioSwitcher.vue";
 import ProfileButton from "./Profile/ProfileButton.vue";
 import SvgSaver from "./SVGSaver.vue";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 export default {
   name: "drawable-header",

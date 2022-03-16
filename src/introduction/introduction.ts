@@ -1,8 +1,8 @@
 import {ApplicationOptions} from "../core/AppController";
-import {AspectRatio} from "../geometry/GrCanvas";
 import {makeDesigner} from "../core/makeDesigner";
 import {ToolNames} from "../tools/ToolNames";
 import {LayoutOptions} from "../core/layoutOptions";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 const strippedLayout: LayoutOptions = {
     hideFooter: true,

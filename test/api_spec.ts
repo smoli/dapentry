@@ -4,8 +4,8 @@ import {API, FetchFunc} from "../src/api/API";
 // @ts-ignore
 import {Response} from "node-fetch";
 import {mockFetch} from "./testHelpers/mock_fetch";
-import {AspectRatio} from "../src/geometry/GrCanvas";
 import {DataFieldType} from "../src/state/modules/Data";
+import {AspectRatio} from "../src/geometry/AspectRatio";
 
 
 describe("API", () => {

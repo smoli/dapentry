@@ -1,3 +1,5 @@
+import {AspectRatio} from "../geometry/AspectRatio";
+
 export const AppConfig = {
     dapentry: {
         version: "0.1"
@@ -41,11 +43,15 @@ export const AppConfig = {
         MaxDecimals: 2
     },
 
+    Drawing: {
+        InitialAspectRatio: AspectRatio.ar4_3,
+        Height: 1000,
+    },
+
     SVG: {
         rendererId: "drawable-drawing",
         canvasBezelSize: 15,
         transformationHandleSize: 10
-
     },
     Runtime: {
         grObjectsGlobal: true,

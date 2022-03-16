@@ -10,7 +10,8 @@ import {AppConfig} from "../core/AppConfig";
 enum States {
     Wait = "MoveTool.Wait",
     Done = "MoveTool.Done",
-    Handle = "MoveTool.Handle"
+    Handle = "MoveTool.Handle",
+    Cancel = "MoveTool.Cancel"
 }
 
 enum Events {
@@ -34,6 +35,9 @@ export class MoveTool extends Tool {
 
         this._state.add(state(States.Wait), Events.HandleDown, state(States.Handle));
         this._state.add(state(States.Handle), InteractionEvents.MouseUp, state(States.Done));
+
+        this._state.add(state(States.Handle), InteractionEvents.Cancel, state(States.Cancel));
+
         this._state.start(state(States.Wait));
     }
 
@@ -120,6 +124,13 @@ export class MoveTool extends Tool {
 
 
         switch (this._state.state.id as States) {
+
+            case States.Cancel:
+                if (this._object) {
+                    this._renderer.render(this._object, true);
+                }
+                break;
+
             case States.Wait:
                 this._movingPOI = this._movingObject = null;
 

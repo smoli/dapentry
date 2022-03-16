@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {AspectRatio} from "../geometry/GrCanvas";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 const ratios = [
   { ar: AspectRatio.ar1_1, label: "1:1" },

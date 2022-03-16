@@ -1,6 +1,6 @@
-import {AspectRatio} from "../geometry/GrCanvas";
 import {State} from "../state/State";
 import {DataFieldType} from "../state/modules/Data";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 export type LibraryEntryArgumentType = DataFieldType;
 

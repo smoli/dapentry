@@ -3,10 +3,10 @@ import {State} from "../../src/state/State";
 import {createAppStore} from "../../src/state/AppStore";
 import {MockController} from "../testHelpers/mock_controller";
 import {LoadFromLibrary} from "../../src/actions/LoadFromLibrary";
-import {AspectRatio} from "../../src/geometry/GrCanvas";
 import {DataFieldType} from "../../src/state/modules/Data";
 import {expect} from "chai";
 import {GfxInterpreter} from "../../src/core/GfxInterpreter";
+import {AspectRatio} from "../../src/geometry/AspectRatio";
 
 describe('Load from library action', () => {
 

@@ -2,7 +2,6 @@ import {CommitOptions, Store} from "vuex";
 import {AppStore} from "./AppStore";
 import {ToolNames} from "../tools/ToolNames";
 import {GrObject} from "../geometry/GrObject";
-import {AspectRatio} from "../geometry/GrCanvas";
 import {I18n} from "vue-i18n";
 import {DataField, DataFieldValue, DataState} from "./modules/Data";
 import {AppConfig} from "../core/AppConfig";
@@ -11,6 +10,7 @@ import {LibraryEntry} from "../core/Library";
 import {UserInfo} from "./modules/Authentication";
 import {LayoutOptions} from "../core/layoutOptions";
 import {ASSERT} from "../core/Assertions";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 
 const mutations = {

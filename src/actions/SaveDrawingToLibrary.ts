@@ -1,9 +1,9 @@
 import {BaseAction} from "./BaseAction";
 import {DialogCloseReason} from "../ui/core/ModalFactory";
 import SaveDrawingDialog, {SaveDrawingHandler} from "../ui/SaveDrawing/SaveDrawingDialog";
-import {AspectRatio} from "../geometry/GrCanvas";
 import {API} from "../api/API";
 import {DataFieldType} from "../state/modules/Data";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 
 interface APILibraryEntryPOST {

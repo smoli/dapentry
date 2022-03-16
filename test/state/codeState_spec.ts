@@ -1,9 +1,9 @@
 import {describe, it} from "mocha";
 import {createAppStore} from "../../src/state/AppStore";
 import {State} from "../../src/state/State";
-import {AspectRatio} from "../../src/geometry/GrCanvas";
 import {expect} from "chai";
 import {Persistence} from "../../src/state/Persistence";
+import {AspectRatio} from "../../src/geometry/AspectRatio";
 
 
 describe('Code state', () => {

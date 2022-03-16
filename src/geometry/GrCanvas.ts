@@ -1,18 +1,8 @@
 import {BoundingBox, GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {Point2D} from "./Point2D";
 import {AppConfig} from "../core/AppConfig";
+import {AspectRatio} from "./AspectRatio";
 
-// IMPORTANT: NEVER CHANGE THE NAMES OF THESE!
-//            The names of this enum are used to store the
-//            aspect ratio of drawings in the library
-//            changing a name of this would invalidate stored data
-export enum AspectRatio {
-    ar1_1,
-    ar3_2,
-    ar4_3,
-    ar16_10,
-    ar16_9
-}
 
 export function getWidthForHeight(height: number, ar: AspectRatio) {
     switch (ar) {

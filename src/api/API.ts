@@ -1,8 +1,8 @@
 import {AppConfig} from "../core/AppConfig";
 import {LibraryEntry} from "../core/Library";
-import {AspectRatio} from "../geometry/GrCanvas";
 
 import {DataFieldType} from "../state/modules/Data";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 
 export enum ResponseStatus {

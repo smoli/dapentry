@@ -1,6 +1,6 @@
 import {GrObject} from "../../geometry/GrObject";
-import {AspectRatio} from "../../geometry/GrCanvas";
-import {strict} from "assert";
+import {AspectRatio} from "../../geometry/AspectRatio";
+import {AppConfig} from "../../core/AppConfig";
 
 
 interface DrawingDimensions {
@@ -25,7 +25,7 @@ export interface DrawingState {
 function getDefaultState():DrawingState {
     return {
         dimensions: { x: 0, y: 0, width: 1000, height: 1000 },
-        aspectRatio: AspectRatio.ar1_1,
+        aspectRatio: AppConfig.Drawing.InitialAspectRatio,
         objects: [],
         selection: [],
         preview: "",

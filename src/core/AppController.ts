@@ -4,7 +4,7 @@ import {State} from "../state/State";
 import {BaseAction} from "../actions/BaseAction";
 import {AddStatement} from "../actions/AddStatement";
 import {GfxInterpreter} from "./GfxInterpreter";
-import {AspectRatio, GrCanvas} from "../geometry/GrCanvas";
+import {GrCanvas} from "../geometry/GrCanvas";
 import {StyleManager} from "./StyleManager";
 import {GrObject, ObjectType} from "../geometry/GrObject";
 import {SetFillColor} from "../actions/SetFillColor";
@@ -33,6 +33,7 @@ import {InterpreterError} from "../runtime/interpreter/errors/InterpreterError";
 import {LoadFromLibrary} from "../actions/LoadFromLibrary";
 import {InteractionEventKind, InteractionEvents} from "./InteractionEvents";
 import {logInteraction} from "./InteractionLogger";
+import {AspectRatio} from "../geometry/AspectRatio";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -78,8 +79,8 @@ export interface ApplicationOptions {
 }
 
 export const applicationDefaults: ApplicationOptions = {
-    aspectRatio: AspectRatio.ar1_1,
-    drawingHeight: 1000,
+    aspectRatio: AppConfig.Drawing.InitialAspectRatio,
+    drawingHeight: AppConfig.Drawing.Height,
     availableTools: Object.values(ToolNames) as Array<ToolNames>,
     poiAvailable: true,
     libraryAvailable: true
