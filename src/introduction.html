@@ -21,7 +21,12 @@
 </head>
 <body>
 
-<div id="left"></div>
+
+<header>
+    <h1>
+        dapentry
+    </h1>
+</header>
 
 <section class="drawable-intro-intro">
     <h1>An Introduction to dapentry</h1>
@@ -32,15 +37,8 @@
     <section class="drawable-intro-teaser">
         <p>
             dapentry allows you to create rich, data driven visualisations without writing
-            code. This example ...
-
-        </p>
-        <p>
-            <img src="assets/TeaserPlaceholder.png"/>
-        </p>
-        <p>
-            On the following pages, we'll introduce all tools available that will enable you to create similar
-            visualisations.
+            code. On the following pages, we'll introduce the tools available that will enable you to create
+            visualisations yourself.
         </p>
 
     </section>
@@ -140,25 +138,35 @@
                 </p>
             </section>
         </div>
-            <div class="drawable-app-container" id="intro-snapping" tabindex="1"></div>
+        <div class="drawable-app-container" id="intro-snapping" tabindex="1"></div>
     </section>
 
 </section>
 
-<a  class="drawable-next" id="next"><h1>Next</h1> Use data in your drawings to make them dynamic</a>
+<div class="drawable-page-navigator">
+    <span></span>
+    <a class="drawable-next" id="next"><h1>Next</h1>Using data</a>
+</div>
+
+
+<footer id="drawable-footer">
+    <span>dapentry &copy; 2021-2022, Stephan Smola</span>
+    <span> made with &hearts; in Saarbrücken<br/>using TypeScript and Vue</span>
+    <a>Imprint</a>
+</footer>
 
 <script>
     (() => {
-        document.getElementById("next").href="./introduction/usingdata.html"
+        document.getElementById("next").href = "./introduction/usingdata.html"
     })()
 </script>
 
 <script type="module" src="introduction/introduction.ts"></script>
 
 <svg
-     id="svgDefinitions"
-     xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink">
+        id="svgDefinitions"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
         <radialGradient id="handleGradient" cx="30%" cy="30%" r="78.2842712474619%">
             <stop offset="0%" style="stop-color:rgb(255,255,255);stop-opacity:1.00"/>

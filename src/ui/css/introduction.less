@@ -4,9 +4,43 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: auto !important;
+  overflow: auto;
 }
 
+
+header {
+  background-color: @ciMainColor;
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid darken(@ciMainColor, 2%);
+  box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3em;
+}
+
+footer {
+  display: flex;
+  background-color: @uiColor3;
+  text-align: left;
+  box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.1);
+  color: @uiColor1;
+  margin: 10em 0 0;
+  padding: 2em;
+  box-sizing: border-box;
+  width: 100%;
+
+  * {
+    flex: 1 1 10em;
+  }
+
+  *:nth-child(2) {
+    text-align: center;
+  }
+
+  *:nth-child(3) {
+    text-align: right;
+  }
+}
 
 .drawable-intro-content {
   .drawable-intro-howto {
@@ -15,6 +49,7 @@ body {
     align-items: start;
     margin: 0;
     padding: 5em 0;
+    background-color: @uiColor1;
 
 
     .drawable-app-container {
@@ -43,23 +78,25 @@ body {
   }
 
   .drawable-intro-howto:nth-child(odd) {
-    box-shadow: 1em 0.2em 1em -0.5em rgba(0, 0, 0, 0.2);
+    background: linear-gradient(90deg, white 0%, white 50%, @uiColor1 100%);
+    box-shadow: 1em 0.2em 1em -1em rgba(0, 0, 0, 0.2);
     margin-top: 5em;
     transition: box-shadow 0.2s;
   }
 
   .drawable-intro-howto:nth-child(even) {
-    box-shadow: -1em 0.2em 1em -0.5em rgba(0, 0, 0, 0.2);
+    background: linear-gradient(90deg, @uiColor1 0%, white 50%, white 100%);
+    box-shadow: -1em 0.2em 1em -1em rgba(0, 0, 0, 0.2);
     margin-top: 5em;
     transition: box-shadow 0.2s;
   }
 
   .drawable-intro-howto:nth-child(odd):hover {
-    box-shadow: 1.5em 0.2em 1em -0.5em rgba(0, 0, 0, 0.3);
+    box-shadow: 2em 0.2em 1em -1em rgba(0, 0, 0, 0.3);
   }
 
   .drawable-intro-howto:nth-child(even):hover {
-    box-shadow: -1.5em 0.2em 1em -0.5em rgba(0, 0, 0, 0.3);
+    box-shadow: -2em 0.2em 1em -1em rgba(0, 0, 0, 0.3);
   }
 
   .drawable-intro-howto:nth-child(even) .drawable-intro-howto-descr {
@@ -78,11 +115,9 @@ body {
 a.drawable-next, a.drawable-previous {
   margin: 1em;
   display: inline-block;
-  background: @uiColor1;
   padding: 1em 2em;
   text-decoration: none;
   color: black;
-  box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.2s;
 
   h1 {
@@ -92,9 +127,42 @@ a.drawable-next, a.drawable-previous {
   }
 }
 
-a.drawable-next:hover, a.drawable-previous:hover {
-  box-shadow: 0 0em 1em 0 rgba(0, 0, 0, 0.3);
-  background-color: white;
+.drawable-page-navigator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3em;
+
+  * {
+    flex: 0 0 15em;
+    display: block;
+    margin: 2em 5em;
+  }
+}
+
+
+a.drawable-next, a.drawable-previous {
+  border-top: 0.2em solid white;
+  border-bottom: 0.2em solid white;
+  transition: box-shadow 0.2s, border-bottom-color 0.2s;
+}
+a.drawable-next {
+  box-shadow: 0.5em 0 1em -0.3em rgba(0, 0, 0, 0.2);
+  text-align: right;
+}
+
+a.drawable-previous {
+  box-shadow: -0.5em 0 1em -0.3em rgba(0, 0, 0, 0.2);
+}
+
+a.drawable-next:hover {
+  box-shadow: 1em 0 1em -0.5em rgba(0, 0, 0, 0.3);
+  border-bottom: 0.2em solid @ciMainColor;
+}
+
+a.drawable-previous:hover {
+  box-shadow: -1em 0 1em -0.5em rgba(0, 0, 0, 0.3);
+  border-bottom: 0.2em solid @ciMainColor;
 }
 
 
