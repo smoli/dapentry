@@ -1,4 +1,5 @@
 import {AspectRatio} from "../geometry/AspectRatio";
+import {ToolNames} from "../tools/ToolNames";
 
 export const AppConfig = {
     dapentry: {
@@ -125,8 +126,16 @@ export const AppConfig = {
         fieldNamePrefix: "f"
     },
 
-    UICore: {
-        appModelName: "appModel"
+    UI: {
+        appModelName: "appModel",
+        cursorForTool: {
+            [ToolNames.Circle]: "crosshair",
+            [ToolNames.Rectangle]: "crosshair",
+            [ToolNames.Line]: "crosshair",
+            [ToolNames.Polygon]: "crosshair",
+            [ToolNames.Quadric]: "crosshair",
+            [ToolNames.Instance]: "crosshair"
+        }
     },
 
     API: {

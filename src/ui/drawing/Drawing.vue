@@ -1,6 +1,11 @@
 <template>
   <section class="drawable-drawing-container">
-    <svg v-bind:id="id" v-bind:viewBox="viewBox"></svg>
+    <svg v-bind:id="id" v-bind:viewBox="viewBox"
+        :style="{
+          cursor: mouseCursor
+        }"
+
+    ></svg>
   </section>
 </template>
 
@@ -79,6 +84,12 @@ export default {
     currentTool() {
       return this.$store.state.tool.current;
     },
+
+    mouseCursor() {
+      return AppConfig.UI.cursorForTool[this.$store.state.tool.current];
+
+    },
+
     currentToolName() {
       return ToolNames[this.$store.state.tool.current];
     },
