@@ -72,6 +72,7 @@ export default {
       obs.observe(parent);
     }
 
+    this.drawingController.setView(dims.width, dims.height, this.viewBoxParameters.bezelSize);
   },
 
   computed: {
