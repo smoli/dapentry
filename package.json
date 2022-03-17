@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "parcel ./src/index.html --no-hmr --no-cache",
-    "start-intro": "parcel ./src/introduction.html src/introduction/usingdata.html --no-hmr --no-cache --port 2345",
+    "start-intro": "parcel src/introduction/introduction.pug --no-hmr --no-cache --port 2345",
     "test": "mocha -r ts-node/register -r node-fetch --recursive test/**/*.ts",
     "coverage": "nyc npm run test",
     "build:docs": "npx typedoc --entryPointStrategy expand ./src --out ./doc/reference"
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@parcel/transformer-less": "^2.2.1",
+    "@parcel/transformer-pug": "^2.3.2",
     "@parcel/transformer-vue": "^2.2.1",
     "@types/chai": "^4.3.0",
     "@types/d3": "^7.1.0",

@@ -43,6 +43,15 @@ footer {
 }
 
 .drawable-intro-content {
+
+  .drawable-intro-howto:nth-child(odd) {
+    flex-direction: row;
+  }
+
+  .drawable-intro-howto:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
   .drawable-intro-howto {
 
     display: flex;
@@ -74,6 +83,10 @@ footer {
       p {
         display: block;
       }
+
+      ul {
+        display: inline-block;
+      }
     }
   }
 
@@ -91,21 +104,21 @@ footer {
     transition: box-shadow 0.2s;
   }
 
-  .drawable-intro-howto:nth-child(odd):hover {
-    box-shadow: 2em 0.2em 1em -1em rgba(0, 0, 0, 0.3);
-  }
-
   .drawable-intro-howto:nth-child(even):hover {
     box-shadow: -2em 0.2em 1em -1em rgba(0, 0, 0, 0.3);
   }
 
-  .drawable-intro-howto:nth-child(even) .drawable-intro-howto-descr {
+  .drawable-intro-howto:nth-child(odd):hover {
+    box-shadow: 2em 0.2em 1em -1em rgba(0, 0, 0, 0.3);
+  }
+
+  .drawable-intro-howto:nth-child(odd) .drawable-intro-howto-descr {
     margin-left: 0em;
     padding-right: 2em;
 
   }
 
-  .drawable-intro-howto:nth-child(odd) .drawable-intro-howto-descr {
+  .drawable-intro-howto:nth-child(even) .drawable-intro-howto-descr {
     margin-right: 0em;
     padding-left: 2em;
   }

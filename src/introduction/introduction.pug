@@ -1,0 +1,33 @@
+html
+    head
+        include includes/introHeader
+    body
+        header
+            h1 dapentry
+
+        section(class="drawable-intro-content")
+
+            section(class="drawable-intro-teaser")
+                p.
+                    dapentry allows you to create rich, data driven visualisations without writing
+                    code. On the following pages, we'll introduce the tools available that will enable you to create
+                    visualisations yourself.
+
+            include includes/steps/drawingShapes
+
+            include includes/steps/usingHotKeys
+
+            include includes/steps/transformations
+
+            include includes/steps/snapping
+
+
+        div(class="drawable-page-navigator")
+            span
+            a(class="drawable-next")
+                h1 Next
+                | Using data
+
+        include includes/introFooter
+
+        script(type="module" src="./introduction.ts")
