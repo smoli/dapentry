@@ -160,7 +160,7 @@ export class GrPolygonBase extends GrObject {
         return r;
     }
 
-    getOppositePoi(poi: POI): POI {
+    getPivotFor(poi: POI): POI {
         switch (poi) {
             case POI.topLeft:
                 return POI.bottomRight;
@@ -175,7 +175,7 @@ export class GrPolygonBase extends GrObject {
                 return POI.topLeft;
 
             default:
-                return super.getOppositePoi(poi);
+                return super.getPivotFor(poi);
         }
     }
 

@@ -106,7 +106,7 @@ export class GrLine extends GrObject {
         }
     }
 
-    getOppositePoi(poi: POI): POI {
+    getPivotFor(poi: POI): POI {
         switch (poi) {
             case POI.start:
                 return POI.end;
@@ -114,7 +114,7 @@ export class GrLine extends GrObject {
                 return POI.start
 
             default:
-                return super.getOppositePoi(poi);
+                return super.getPivotFor(poi);
         }
     }
 

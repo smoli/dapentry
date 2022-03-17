@@ -1,4 +1,4 @@
-import {BoundingBox, GrObject, ObjectProperty, ObjectType} from "./GrObject";
+import {BoundingBox, GrObject, ObjectProperty, ObjectType, POI, POIPurpose} from "./GrObject";
 import {TWO_PI} from "./GeoMath";
 import {Point2D} from "./Point2D";
 import {Line2D} from "./Line2D";
@@ -112,6 +112,14 @@ export class GrCircle extends GrObject {
             },
             ...super.publishedProperties
         ]
+    }
+
+    getPivotFor(poi: POI, forPurpose?: POIPurpose): POI {
+        if (forPurpose === POIPurpose.SCALING) {
+            return POI.center;
+        }
+
+        return super.getPivotFor(poi, forPurpose);
     }
 
 }

@@ -111,7 +111,7 @@ export class GrRectangle extends GrObject {
         };
     }
 
-    getOppositePoi(poi: POI): POI {
+    getPivotFor(poi: POI): POI {
         switch (poi) {
             case POI.topLeft:
                 return POI.bottomRight;
@@ -126,7 +126,7 @@ export class GrRectangle extends GrObject {
                 return POI.topLeft;
 
             default:
-                return super.getOppositePoi(poi);
+                return super.getPivotFor(poi);
         }
     }
 

@@ -71,7 +71,7 @@ export class ScaleTool extends Tool {
             this._scaleMode = this._target.supportedScaleModes[0];
 
             this._scalingPOI = poiId;
-            this._pivotPOI = object.getOppositePoi(this._scalingPOI);
+            this._pivotPOI = object.getPivotFor(this._scalingPOI, POIPurpose.SCALING);
             this._pivot = this._target.pointsOfInterest(POIPurpose.SCALING)[this._pivotPOI];
             this._op = this._target.pointsOfInterest(POIPurpose.SCALING)[this._scalingPOI].copy;
             this._finalX = 1;
@@ -169,7 +169,7 @@ export class ScaleTool extends Tool {
         return false;
     }
 
-    public get result(): any {
+    getResult(): any {
         if (this._snapScalePoint?.object) {
             if (this._scaleMode == ScaleMode.UNIFORM) {
                 return `${AppConfig.Runtime.Opcodes.Scale.ToPointUniform} ${this._object.uniqueName}, "${POI[this._scalingPOI]}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, "${POI[this._pivotPOI]}"`;
@@ -180,7 +180,7 @@ export class ScaleTool extends Tool {
 
         if (this._scaleMode == ScaleMode.UNIFORM) {
             return `${AppConfig.Runtime.Opcodes.Scale.FactorUniform} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, "${POI[this._pivotPOI]}"`
-        } else {
+        } else if (this._finalX !== undefined && this._finalY !== undefined) {
             return `${AppConfig.Runtime.Opcodes.Scale.Factor} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, ${this.makeCodeForNumber(this._finalY)}, "${POI[this._pivotPOI]}"`
         }
     }

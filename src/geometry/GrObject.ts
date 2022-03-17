@@ -46,6 +46,7 @@ export enum POI {
 export enum POIPurpose {
     MANIPULATION,
     SCALING,
+    ROTATING,
     SNAPPING
 }
 
@@ -337,7 +338,7 @@ export abstract class GrObject {
      * @param value
      */
     public rotatePOI(poi: POI, value: number) {
-        this.rotateByDeg(value, this.pointsOfInterest(POIPurpose.MANIPULATION)[this.getOppositePoi(poi)]);
+        this.rotateByDeg(value, this.pointsOfInterest(POIPurpose.MANIPULATION)[this.getPivotFor(poi, POIPurpose.ROTATING)]);
     }
 
     public getScaleResetInfo(): any {
@@ -428,7 +429,12 @@ export abstract class GrObject {
         }
     }
 
-    public getOppositePoi(poi: POI): POI {
+    public getPivotFor(poi: POI, forPurpose?: POIPurpose): POI {
+        if (forPurpose === POIPurpose.ROTATING) {
+            return POI.center;
+        }
+
+
         switch (poi) {
             case POI.center:
                 return null;

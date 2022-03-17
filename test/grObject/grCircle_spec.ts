@@ -2,8 +2,7 @@ import {describe, it} from "mocha";
 import {expect} from "chai"
 import {GrCircle} from "../../src/geometry/GrCircle";
 import {eq, eqp} from "../../src/geometry/GeoMath";
-
-
+import {POI, POIPurpose} from "../../src/geometry/GrObject";
 
 
 describe('GrCircle', () => {
@@ -55,8 +54,36 @@ describe('GrCircle', () => {
         p = c.getPointAtPercentage(0);
         expect(eq(p.x, 110)).to.be.ok
         expect(eq(p.y, 10)).to.be.ok
+    });
 
+    it("can be scaled", () => {
+        let c = new GrCircle(null, 0, 0, 100);
+        let p;
 
+        p = c.pointsOfInterest(POIPurpose.MANIPULATION)[POI.top];
+        expect(p).to.deep.equal({ x: 0, y: -100 });
+
+        c.scale(0.5, 1);
+
+        p = c.pointsOfInterest(POIPurpose.MANIPULATION)[POI.top];
+        expect(p).to.deep.equal({ x: 0, y: -50 });
+
+    });
+
+    it("can map points to local", () => {
+        let c = new GrCircle(null, 100, 100, 100);
+        let p;
+
+        p = c.pointsOfInterest(POIPurpose.MANIPULATION)[POI.top];
+        expect(p).to.deep.equal({ x: 100, y: 0 });
+
+        let p2 = c.mapPointToLocal(p);
+        expect(p2).to.deep.equal({ x: 0, y: -100 });
+
+        c.rotateByDeg(90);
+        p2 = c.mapPointToLocal(p);
+        expect(eq(p2.x, -100)).to.be.ok
+        expect(eq(p2.y, 0)).to.be.ok
     })
 
 });

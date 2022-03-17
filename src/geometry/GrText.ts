@@ -229,7 +229,7 @@ export class GrText extends GrObject {
         }
     }
 
-    getOppositePoi(poi: POI): POI {
+    getPivotFor(poi: POI): POI {
 
         return POI.center;
         switch (poi) {
@@ -246,7 +246,7 @@ export class GrText extends GrObject {
                 return POI.topLeft;
 
             default:
-                return super.getOppositePoi(poi);
+                return super.getPivotFor(poi);
         }
     }
 
