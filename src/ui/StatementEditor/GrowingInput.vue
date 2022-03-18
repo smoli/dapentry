@@ -30,10 +30,27 @@ import {AppConfig} from "../../core/AppConfig";
 
 function getTextWidth(text, font) {
   // re-use canvas object for better performance
+
   // @ts-ignore
-  const canvas = getTextWidth.canvas || ( getTextWidth.canvas = document.createElement("canvas") );
+  if (!getTextWidth.canvas) {
+  // @ts-ignore
+    const c = getTextWidth.canvas = document.createElement("canvas")
+
+    // c.style.position = "absolute";
+    // c.style.top = "100px";
+    // c.style.left = "100px";
+    // c.style.zIndex = "10000000";
+    //
+    // document.body.appendChild(c);
+
+  }
+
+  // @ts-ignore
+  const canvas = getTextWidth.canvas;
+
   const context = canvas.getContext("2d");
   context.font = font;
+  // context.fillText(text, 10, 50);
   const metrics = context.measureText(text);
   return metrics.width;
 }
@@ -142,6 +159,9 @@ export default {
           factor = ( max - min ) / 400;
         }
 
+        window.document.body.classList.add("drawable-force-cursor");
+        window.document.body.style.cursor = "ew-resize";
+
         window.onmousemove = (event: MouseEvent) => {
           const inp = this.$refs["input"];
 
@@ -162,6 +182,8 @@ export default {
         window.onmouseup = () => {
           window.onmousemove = oldMouseMoveHandler;
           window.onmouseup = oldMouseUpHandler;
+          window.document.body.classList.remove("drawable-force-cursor");
+          window.document.body.style.cursor = null;
         }
 
       }

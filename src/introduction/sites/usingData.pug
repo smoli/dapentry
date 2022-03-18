@@ -1,0 +1,24 @@
+html
+    head
+        title Using Data | dapentry
+        include ../includes/introHead
+    body
+
+        include ../includes/introHeader
+
+        section(class="drawable-intro-content")
+
+            include ../includes/steps/dataeditor
+
+
+        div(class="drawable-page-navigator")
+            a(class="drawable-previous" href="introduction.html")
+                h1 Previous
+                | Basic tools
+            a(class="drawable-next")
+                h1 Next
+                | Using data
+
+        include ../includes/introFooter
+
+        script(type="module" src="../introduction.ts")

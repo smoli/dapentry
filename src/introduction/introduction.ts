@@ -15,6 +15,8 @@ const strippedLayout: LayoutOptions = {
 };
 
 const wide: ApplicationOptions = { aspectRatio: AspectRatio.ar3_2, drawingHeight: 400, availableTools: [] }
+const square: ApplicationOptions = { aspectRatio: AspectRatio.ar1_1, drawingHeight: 400, availableTools: [] }
+
 const primitives = [ToolNames.Circle, ToolNames.Rectangle, ToolNames.Line];
 const transformations = [ToolNames.Move, ToolNames.Rotate, ToolNames.Scale];
 
@@ -41,3 +43,12 @@ makeDesigner("intro-snapping", { ...strippedLayout }, {
     `CIRCLECP Circle2,$styles.default,Canvas@center,Canvas@top
 SCALE Circle2, 0.29, 1.00, "left"`);
 
+
+makeDesigner("intro-dataeditor", {...strippedLayout, hideLeftColumn: false, hideStepList: true }, {
+    ...square,
+    poiAvailable: false
+}, `CIRCLECR Circle1,$styles.default,Canvas@center,radius`,
+    {
+        radius: 100
+    }
+)

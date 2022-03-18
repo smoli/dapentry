@@ -54,6 +54,7 @@
   "parcelIgnore": [
     "introduction.html",
     "imprint.html",
-    "privacy.html"
+    "privacy.html",
+    "usingData.html"
   ]
 }

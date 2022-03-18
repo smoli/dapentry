@@ -79,6 +79,7 @@ header {
 
 footer {
   display: flex;
+  flex-direction: row;
   background-color: @uiColor3;
   text-align: left;
   box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.1);
@@ -132,13 +133,14 @@ footer {
     flex-direction: row-reverse;
   }
 
+
   .drawable-intro-howto {
 
     display: flex;
-    align-items: start;
     margin: 0;
     padding: 5em 0;
     background-color: @uiColor1;
+    max-width: 70vw;
 
 
     .drawable-app-container {
@@ -148,13 +150,23 @@ footer {
       flex: 0 0 30em;
       height: 20em;
       margin: 0 6em;
+
+      input {
+        box-sizing: content-box !important;
+      }
+    }
+
+    .drawable-app-container.wide {
+      flex: 0 0 40em;
+      height: 20em;
     }
 
 
     .drawable-intro-howto-descr {
       display: block;
       flex: 1 1 30em;
-      max-width: 40em;
+      min-width: 10em;
+
 
       h2 {
         margin: 0;

@@ -27,12 +27,20 @@ const i18n = createI18n({
  * @param layout            Define what ui elements are displayed
  * @param appOptions        Define what features the designer supports
  * @param initialCode
+ * @param initialFields
  */
 export function makeDesigner(containerId: string,
                              layout: LayoutOptions = {},
                              appOptions: ApplicationOptions = applicationDefaults,
-                             initialCode: string = ""): AppController {
+                             initialCode: string = "",
+                             initialFields: { [key:string]: number } = {}): AppController {
 
+
+    const mount = document.getElementById(containerId);
+
+    if (!mount) {
+        return;
+    }
 
     const logHandler = {
         get(target, propkey) {
@@ -84,7 +92,6 @@ export function makeDesigner(containerId: string,
     console.log(Object.assign(Object.assign({}, layoutDefaults), layout));
 
     state.setLayout(Object.assign(Object.assign({}, layoutDefaults), layout))
-    const mount = document.getElementById(containerId);
 
     if (mount.hasAttribute("tabindex")) {
         mount.onkeydown = event => appController.handleKeyEvent(event);
@@ -94,6 +101,11 @@ export function makeDesigner(containerId: string,
     if (initialCode) {
         appController.setCode(initialCode);
     }
+
+    if (initialFields) {
+        Object.keys(initialFields).forEach(name => state.addDataField(name, initialFields[name]));
+    }
+
     return appController;
 }
 
