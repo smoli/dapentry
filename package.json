@@ -53,7 +53,7 @@
 
   "parcelIgnore": [
     "introduction.html",
-    "imprint.html"
-
+    "imprint.html",
+    "privacy.html"
   ]
 }
