@@ -600,6 +600,8 @@ export class AppController {
         }
 
         if (event.code === AppConfig.Keys.NextStepCode) {
+            event.stopPropagation();
+            event.preventDefault();
             await this.nextStep();
         } else if (event.code === AppConfig.Keys.DeleteCode) {
             await this.deleteSelectedObjects();

@@ -67,8 +67,7 @@ export function createSegments(tokens: Array<Token>, textTemplate: string, state
 
     const t = textTemplate;
 
-    const matches = t.match(/([\w\s]+|\{\d+\}|\[\d+\])/g);
-
+    const matches = t.match(/([\w\s]+|\[\{\d+\}\]|\{\d+\})/g);
     const segments = [];
 
     for (let i = 0; i < matches.length; i++) {

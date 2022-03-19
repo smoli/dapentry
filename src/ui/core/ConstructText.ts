@@ -41,5 +41,5 @@ export function constructText(tokens, $t): string {
         }
     }
 
-    return $t("statements." + getTextIdForTokens(tokens), tokenTexts);
+    return $t("statements." + getTextIdForTokens(tokens), tokenTexts).replace(/[\[\]]/g, "");
 }

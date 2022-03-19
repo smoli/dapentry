@@ -52,3 +52,14 @@ makeDesigner("intro-dataeditor", {...strippedLayout, hideLeftColumn: false, hide
         radius: 100
     }
 )
+
+makeDesigner("intro-basicrecording", {...strippedLayout, hideLeftColumn: false, hideDataEditor: true }, {
+    ...square,
+    poiAvailable: false
+}, `CIRCLECR Circle1,$styles.default,Canvas@center,137.90
+RECTTL Rectangle1,$styles.default,(266.99, 198.27),295.11,156.15
+MOVETO Rectangle1@bottom,Circle1@top
+ROTATE Rectangle1, 90, Rectangle1@center
+SCALEP Rectangle1, "right", Circle1@bottom, "left"
+SCALEP Rectangle1, "left", Circle1@top, "right"`
+)
