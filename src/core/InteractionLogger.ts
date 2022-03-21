@@ -44,7 +44,7 @@ class InteractionLogger {
 
         this._log.push({ event: InteractionEvents[event], eventData: ser });
 
-        if (localStorage) {
+        if (typeof localStorage !== "undefined") {
             localStorage.setItem("interactionLog", JSON.stringify(this._log));
         }
     }

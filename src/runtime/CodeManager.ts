@@ -5,7 +5,6 @@ import {ASSERT} from "../core/Assertions";
 import {AppConfig} from "../core/AppConfig";
 
 
-
 export type TokenList = Array<Token>;
 
 
@@ -542,10 +541,12 @@ export class CodeManager {
         for (let i = 0; i < this._code.length; i++) {
             const tokens = this.getTokensForStatement(i);
 
+            const reg = new RegExp(`^${registerName}(.[^\\.]+)?`)
+
             const tokenHasRegister = (token: Token) => {
                 switch (token.type) {
                     case TokenTypes.REGISTER:
-                        return token.value === registerName;
+                        return token.value === registerName || (token.value as string).match(reg);
 
                     case TokenTypes.NONLOCALREGISTER:
                         return token.value === registerName;
@@ -620,6 +621,52 @@ export class CodeManager {
 
     public registerExists(registerName): boolean {
         return this._registers.indexOf(registerName) !== -1;
+    }
+
+    public renameTableColumn(registerName: string, oldColumnName: string, newColumnName: string): boolean {
+
+        const index: number = this.getCreationStatement(registerName);
+
+        if (index === -1) {
+            return false;
+        }
+
+        const tokens = Parser.parseLine(this._code[index]);
+
+        ASSERT(tokens[0].type === TokenTypes.OPCODE && tokens[0].value === "LOAD",
+            "Renaming table columns only supported for table literals");
+
+        ASSERT(tokens[2].type === TokenTypes.TABLE,
+            "Renaming table columns only supported for table literals");
+
+        tokens[2].value[0] = tokens[2].value[0].map(n => n === oldColumnName ? newColumnName : n);
+
+        this._code[index] = Parser.constructCodeLine(tokens);
+
+        const indexes: Set<number> = this.getStatementIndexesWithParticipation(registerName);
+
+        for (let i of indexes) {
+            const tokens = Parser.parseLine(this._code[i]);
+
+            let update = false;
+            const reg = new RegExp(`^([^\\.]+\\.)(${oldColumnName}+)$`)
+            for (const t of tokens) {
+                if (t.type !== TokenTypes.REGISTER) {
+                    continue;
+                }
+
+                if (typeof t.value === "string" && t.value.match(reg)) {
+                    t.value = t.value.replace(reg, "$1" + newColumnName);
+                    update = true;
+                }
+            }
+
+            if (update) {
+                this._code[i] = Parser.constructCodeLine(tokens);
+            }
+        }
+
+        return true;
     }
 
     public renameRegister(oldName: string, newName: string): boolean {

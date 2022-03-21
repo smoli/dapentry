@@ -120,5 +120,11 @@ export class MockRenderer extends ObjectRenderer {
     updateInfoText(handle: InfoHandle, text: string, position?: Point2D) {
     }
 
+    renderInfoLine(p1: Point2D, p2: Point2D): InfoHandle {
+        return undefined;
+    }
+
+    updateInfoLine(handle: InfoHandle, p1: Point2D, p2: Point2D) {
+    }
 
 }

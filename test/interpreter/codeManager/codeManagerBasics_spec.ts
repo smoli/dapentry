@@ -221,24 +221,4 @@ describe('Code manager - Basics', () => {
         ]);
 
     })
-
-    it('can provide a list with all statement lines that use a register as an argument', () => {
-        const m = new CodeManager();
-        const code = `
-            LOAD r1, 23
-            ADD r1, 23
-            LOAD r2, r1
-            ADD r3, r1, r2           
-        `;
-
-        m.addCodeString(code);
-        expect(Array.from(m.getStatementIndexesWithParticipation("r1")))
-            .to.deep.equal([0, 1, 2, 3])
-        expect(Array.from(m.getStatementIndexesWithParticipation("r2")))
-            .to.deep.equal([2, 3])
-        expect(Array.from(m.getStatementIndexesWithParticipation("r3")))
-            .to.deep.equal([3])
-        expect(Array.from(m.getStatementIndexesWithParticipation("does not exist")))
-            .to.deep.equal([])
-    });
 });

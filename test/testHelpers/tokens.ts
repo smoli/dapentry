@@ -16,6 +16,10 @@ export function T_REGISTER(value): Token {
     return { type: TokenTypes.REGISTER, value }
 }
 
+export function T_NONLOCAL_REGISTER(value): Token {
+    return { type: TokenTypes.NONLOCALREGISTER, value }
+}
+
 export function T_NAME(name: string): Token {
     return { type: TokenTypes.NAME, value: name };
 }
@@ -41,6 +45,14 @@ export function T_POINT(x: Token, y: Token): Token {
 
 export function T_ARRAY(...tokens: Array<Token>): Token {
     return { type: TokenTypes.ARRAY, value: tokens };
+}
+
+export function T_ARRAY_N(...numbers: Array<number>): Token {
+    return { type: TokenTypes.ARRAY, value: numbers.map(n => T_NUMBER(n)) };
+}
+
+export function T_TABLE(columns: Array<string>, ...rows: Array<Token>): Token {
+    return { type: TokenTypes.TABLE, value: [columns, rows]}
 }
 
 export function T_OPERATOR(value: string): Token {
