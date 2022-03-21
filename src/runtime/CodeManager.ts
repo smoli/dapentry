@@ -546,7 +546,7 @@ export class CodeManager {
             const tokenHasRegister = (token: Token) => {
                 switch (token.type) {
                     case TokenTypes.REGISTER:
-                        return token.value === registerName || (token.value as string).match(reg);
+                        return token.value === registerName || ( token.value as string ).match(reg);
 
                     case TokenTypes.NONLOCALREGISTER:
                         return token.value === registerName;
@@ -627,21 +627,22 @@ export class CodeManager {
 
         const index: number = this.getCreationStatement(registerName);
 
-        if (index === -1) {
-            return false;
+        // We do not necessarily have a creation statement. The table might be created
+        // by just passing the data to the interpreter as scope
+        // or by another piece of code that is not managed by this codeManager
+        if (index !== -1) {
+            const tokens = Parser.parseLine(this._code[index]);
+
+            ASSERT(tokens[0].type === TokenTypes.OPCODE && tokens[0].value === "LOAD",
+                "Renaming table columns only supported for table literals");
+
+            ASSERT(tokens[2].type === TokenTypes.TABLE,
+                "Renaming table columns only supported for table literals");
+
+            tokens[2].value[0] = tokens[2].value[0].map(n => n === oldColumnName ? newColumnName : n);
+
+            this._code[index] = Parser.constructCodeLine(tokens);
         }
-
-        const tokens = Parser.parseLine(this._code[index]);
-
-        ASSERT(tokens[0].type === TokenTypes.OPCODE && tokens[0].value === "LOAD",
-            "Renaming table columns only supported for table literals");
-
-        ASSERT(tokens[2].type === TokenTypes.TABLE,
-            "Renaming table columns only supported for table literals");
-
-        tokens[2].value[0] = tokens[2].value[0].map(n => n === oldColumnName ? newColumnName : n);
-
-        this._code[index] = Parser.constructCodeLine(tokens);
 
         const indexes: Set<number> = this.getStatementIndexesWithParticipation(registerName);
 

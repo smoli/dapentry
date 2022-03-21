@@ -52,7 +52,8 @@ const mutations = {
         clearSelection: "code/clearSelection",
         setSelection: "code/setSelection",
         addToSelection: "code/addToSelection",
-        renameRegister: "code/renameRegister"
+        renameRegister: "code/renameRegister",
+        renameTableColumn: "code/renameTableColumn"
     },
 
     drawing: {
@@ -333,6 +334,7 @@ export class State {
 
     renameTableColumn(name: string, oldColumn: string, newColumn: string) {
         this.commit(mutations.data.renameTableColumn, { name, oldColumn, newColumn });
+        this.commit(mutations.code.renameTableColumn, { name, oldColumn, newColumn });
     }
 
     removeTableColumn(name: string, column: string) {

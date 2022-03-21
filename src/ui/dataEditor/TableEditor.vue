@@ -9,7 +9,16 @@
       </thead>
       <tbody>
       <tr v-for="c of columnNames">
-        <th draggable="true" @dragstart="onColumnDragStart(c, $event)">{{ c }}:</th>
+        <th>
+          <span v-if="editingColumn !== c"
+                draggable="true"
+                @dblclick="onEditColumnName(c)"
+                @dragstart="onColumnDragStart(c, $event)">{{ c }}:</span>
+
+          <GrowingInput ref="columnName" autofocus="true" @onblur="onColumnNameBlur" v-if="editingColumn === c"
+                        class="drawable-data-field-name" :value="c" @change="onColumnNameChange"
+          />
+        </th>
         <td v-for="(row, index) of field.value">
           <GrowingInput :value="row[c]" @change="onValueChanged(index, c, $event)"/>
         </td>
@@ -30,6 +39,12 @@ export default {
   props: ["field"],
   inject: ["controller"],
 
+  data() {
+    return {
+      editingColumn: null
+    }
+  },
+
   computed: {
     columnNames() {
       return Object.keys(this.field.value[0]);
@@ -41,6 +56,18 @@ export default {
   },
 
   methods: {
+    onColumnNameBlur() {
+      this.editingColumn = null;
+    },
+
+    async onColumnNameChange(event) {
+        await this.controller.renameTableColumn(this.field.name, this.editingColumn, event.target.value);
+    },
+
+    onEditColumnName(name) {
+        this.editingColumn = name;
+    },
+
     onValueChanged(index, column, event) {
       this.controller.setDataTableCellValue(this.field.name, index, column, event.target.value);
     },

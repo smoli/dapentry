@@ -61,6 +61,7 @@ export const AppConfig = {
         defaultTextStyleRegisterName: "$styles.textDefault",
         canvasObjectName: "Canvas",
         allowedFieldNames: /^[a-zA-Z][a-zA-Z0-9.-]*[a-zA-Z0-9]*$/,
+        allowedColumnNames: /^[a-zA-Z][a-zA-Z0-9]*$/,
         forbiddenDataFieldNames: [],
 
         Opcodes: {

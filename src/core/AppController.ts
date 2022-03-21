@@ -34,6 +34,7 @@ import {LoadFromLibrary} from "../actions/LoadFromLibrary";
 import {InteractionEventKind, InteractionEvents} from "./InteractionEvents";
 import {logInteraction} from "./InteractionLogger";
 import {AspectRatio} from "../geometry/AspectRatio";
+import {RenameTableColumn} from "../actions/RenameTableColumn";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -347,6 +348,12 @@ export class AppController {
 
     async renameDataField(oldName: string, newName: string) {
         await this._execute(new RenameDataField(oldName, newName));
+        await this._runCode();
+        this._updateDrawing();
+    }
+
+    async renameTableColumn(registerName:string, oldColumnName: string, newColumnName: string) {
+        await this._execute(new RenameTableColumn(registerName, oldColumnName, newColumnName));
         await this._runCode();
         this._updateDrawing();
     }

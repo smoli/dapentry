@@ -108,6 +108,11 @@ export const codeState = {
             ASSERT(state.codeManager.registerExists(payload.newName) === false, "Cannot rename to an existing name");
             state.codeManager.renameRegister(payload.oldName, payload.newName);
             state.code = state.codeManager.code.map(s => s);
+        },
+
+        renameTableColumn(state: CodeState, payload: { name: string, oldColumn: string, newColumn: string }) {
+            state.codeManager.renameTableColumn(payload.name, payload.oldColumn, payload.newColumn);
+            state.code = state.codeManager.code.map(s => s);
         }
     }
 }

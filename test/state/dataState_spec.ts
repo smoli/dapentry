@@ -378,6 +378,12 @@ describe('Data State', () => {
 
             state.addDataField("f1", [{ a: 1, b: 2 }, { a: 2, b: 3 }, { a: 3, b: 4 }]);
 
+            const code = `
+                LOAD r1, f1.x
+            `;
+
+            state.setCodeString(code);
+
             state.renameTableColumn("f1", "a", "x");
             expect(state.store.state.data.fields).to.deep.equal([
                 {
@@ -391,6 +397,12 @@ describe('Data State', () => {
                     description: null,
                     published: true
                 }]);
+
+            expect(Parser.parseLine(state.store.state.code.code[0])).to.deep.equal([
+                T_OPCODE("LOAD"),
+                T_REGISTER("r1"),
+                T_REGISTER("f1.x")
+            ])
         });
 
         it("does nothing when renaming to a column name that already exists on the table", () => {
