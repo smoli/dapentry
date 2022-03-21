@@ -1,6 +1,6 @@
 html
     head
-        title Steps | dapentry
+        title Editing Steps | dapentry
         include ../includes/introHead
     body
 
@@ -8,17 +8,15 @@ html
 
         section(class="drawable-intro-content")
 
-            include ../includes/steps/basicRecording
-
-            include ../includes/steps/deletingSteps
+            include ../includes/steps/editingSteps
 
         div(class="drawable-page-navigator")
-            a(class="drawable-previous" href="introduction.html")
+            a(class="drawable-previous" href="steps.html")
                 h1 Previous
-                | Introduction
-            a(class="drawable-next" href="editingSteps.html")
+                | Steps
+            a(class="drawable-next" href="usingData.html")
                 h1 Next
-                | Editing Steps
+                | Using data
 
         include ../includes/introFooter
         script(type="module" src="../introduction.ts")

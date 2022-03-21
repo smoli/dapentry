@@ -1,0 +1,24 @@
+section(class="drawable-intro-howto")
+
+    div(class="drawable-app-container wide" id="intro-deleting-steps" tabindex="0")
+
+    div(class="drawable-intro-howto-descr")
+        h2 Deleting steps
+        p.
+            Each step has a little X on the top right that allows you to delete this step.
+
+        p.
+            Looking closely at the steps you'll notice that some steps depend on each other.
+            For example the third step
+
+        ul
+            li "Move Rectangle1's bottom to Circle1's top"
+
+        p.
+            makes only sense after both the rectangle and the circle are created (Steps one and two).
+
+
+        p.
+            So step 3 "depends" on steps 1 and 2. When you delete one of the first two steps, step 3
+            will be deleted as well. If you do so, a popup will appear so you can confirm the operation.
+
