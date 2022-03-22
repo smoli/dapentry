@@ -2,13 +2,15 @@
   "compilerOptions": {
     "target": "es2015",
     "module": "commonjs",
+    "esModuleInterop": true,
     "jsx": "preserve",
     "moduleResolution": "node",
     "removeComments": true,
     "sourceMap": false,
     "strict": false,
     "noImplicitAny": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "allowJs": true
   },
 
   "include": [

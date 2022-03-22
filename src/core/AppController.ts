@@ -35,6 +35,7 @@ import {InteractionEventKind, InteractionEvents} from "./InteractionEvents";
 import {logInteraction} from "./InteractionLogger";
 import {AspectRatio} from "../geometry/AspectRatio";
 import {RenameTableColumn} from "../actions/RenameTableColumn";
+import {LoadFieldFromCSV} from "../actions/LoadFieldFromCSV";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -332,6 +333,12 @@ export class AppController {
         await this._runCode();
         this._updateDrawing();
         await this._persistence?.saveCode();
+    }
+
+    async loadFieldFromCSV(name: string, csvString: string) {
+        await this._execute(new LoadFieldFromCSV(name, csvString));
+        await this._runCode();
+        this._updateDrawing();
     }
 
     async addValueToDataField(name: string, value: ( number | string )) {

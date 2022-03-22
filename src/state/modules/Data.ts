@@ -205,7 +205,7 @@ export const dataState = {
                     return {
                         name: f.name,
                         value: payload.value,
-                        type: f.type,
+                        type: getFieldTypeFromValue(payload.value),
                         description: f.description,
                         published: f.published,
                     }

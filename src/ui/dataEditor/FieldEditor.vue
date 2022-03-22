@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr @drop="onFileDrop" @dragover="onFileDragOver" @dragleave="onFileDragLeave" :class="{ 'file-drag': fileDrag }">
     <td>
       <button @click="onRemoveField" class="drawable-ui-transparent">-</button>
     </td>
@@ -37,7 +37,8 @@ export default {
 
   data() {
     return {
-      editingFieldName: false
+      editingFieldName: false,
+      fileDrag: false
     }
   },
 
@@ -80,9 +81,45 @@ export default {
         info.type = type = DnDDataType.ArrayRegister;
         event.dataTransfer.setData(type, serializeDNDInfo(info));
       }
+    },
 
+    onFileDragOver(event) {
+      event.preventDefault();
+      this.fileDrag = true;
+    },
+
+    onFileDragLeave(event) {
+      event.preventDefault();
+      this.fileDrag = false;
+    },
+
+    async onFileDrop(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.fileDrag = false;
+
+      if (event.dataTransfer.files.length) {
+        if (event.dataTransfer.files.length > 1) {
+          const dialog = this.controller.modalFactory.createInfoModal();
+          await dialog.show({
+            text: "Please use only one file!"
+          });
+
+          return;
+        }
+
+        const fr = new FileReader();
+
+        fr.onload = (event) => {
+          this.controller.loadFieldFromCSV(this.field.name, "" + event.target.result)
+        }
+
+        fr.readAsText(event.dataTransfer.files[0]);
+      }
 
     }
+
+
 
 
   }
