@@ -5,7 +5,9 @@
   "scripts": {
     "start": "parcel ./src/index.html --no-hmr --no-cache",
     "start-intro": "parcel src/introduction/sites/*.pug --no-hmr --no-cache --port 2345",
+    "start-publish": "parcel experiments/published.html --no-hmr --no-cache --port 3456",
     "build-intro": "parcel build src/introduction/sites/*.pug",
+    "build-lib": "parcel build src/publish/dapentryLib",
     "test": "mocha -r ts-node/register -r node-fetch --recursive test/**/*.ts",
     "coverage": "nyc npm run test",
     "build:docs": "npx typedoc --entryPointStrategy expand ./src --out ./doc/reference"
