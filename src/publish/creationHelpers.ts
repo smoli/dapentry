@@ -1,5 +1,6 @@
 import {GrCircle} from "../geometry/GrCircle";
 import {GrRectangle} from "../geometry/GrRectangle";
+import {GrLine} from "../geometry/GrLine";
 
 export function distance(x1: number, y1: number, x2: number, y2: number): number {
     return Math.hypot(x2 - x1, y2 - y1);
@@ -48,4 +49,13 @@ export function rectangleBottomRight(name: string, x: number, y: number, width: 
 
 export function rectangleTopRight(name: string, x: number, y: number, width: number, height: number):GrRectangle {
     return new GrRectangle(name, x - width / 2, y + height / 2, width, height);
+}
+
+// Lines
+export function linePointPoint(name: string, x1: number, y1: number, x2: number, y2: number): GrLine {
+    return new GrLine(name, x1, y1, x2, y2);
+}
+
+export function linePointVectorLength(name: string, x1: number, y1: number, vx: number, vy: number, l: number):GrLine {
+    return new GrLine(name, x1, y1, x1 + vx * l, y1 + vy * l);
 }

@@ -161,6 +161,26 @@ export class JSPublisher {
                 r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
 
+
+            case AppConfig.Runtime.Opcodes.Line.PointPoint:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointPoint("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getXYFromToken(tokens[4])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                break;
+
+            case AppConfig.Runtime.Opcodes.Line.PointVectorLength:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointVectorLength("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getXYFromToken(tokens[4])}, ` +
+                    `${getNumberFromToken(tokens[5])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                break;
+
             default:
                 UNREACHABLE(`Exporting of OPCODE "${opCode}" is not implemented.`);
         }

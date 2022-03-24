@@ -125,6 +125,28 @@ describe('JS publisher', () => {
                 "__objects.Rectangle1.style = $styles.default;"
             ]);
         });
+    });
 
+    describe("exporting rectangle statements", () => {
+        it('exports from point to point', () => {
+            const code1 = `LINEPP Line1,$styles.default,Canvas@left,(100, 600)`;
+            let js = JSPublisher.getJSLine(code1);
+
+            expect(js).to.deep.equal([
+                `__objects.Line1 = dapentry.linePointPoint("Line1", __canvas.left.x, __canvas.left.y, 100, 600);`,
+                "__objects.Line1.style = $styles.default;"
+            ]);
+
+            const code2 = `LINEPP Line2,$styles.default,Canvas@left,Line1@end`;
+            js = JSPublisher.getJSLine(code2);
+
+            // the second point is exported as __objects.Line1.end... because we created the Line1 in this test before.
+            // The publisher then registers the name Line1 as an object. If we do not publish the first line of code through
+            // the publisher the second point would only be Line1.end...
+            expect(js).to.deep.equal([
+                `__objects.Line2 = dapentry.linePointPoint("Line2", __canvas.left.x, __canvas.left.y, __objects.Line1.end.x, __objects.Line1.end.y);`,
+                "__objects.Line2.style = $styles.default;"
+            ]);
+        });
     });
 });
