@@ -9,38 +9,118 @@ import {jsPublishTemplate} from "./jsPublishTemplate";
 const OBJECT_MAP = "__objects";
 const MODULE = "dapentry";
 const DRAWING_FUNCTION_NAME = "drawing";
+const CANVAS = "__canvas";
+
+export function getOpCode(tokens: Array<Token>): string {
+    ASSERT(tokens[0].type === TokenTypes.OPCODE, `${tokens[0]} is no opcode token`)
+    return tokens[0].value as string;
+}
+
+export function getXYFromToken(token: Token): string {
+    if (token.type === TokenTypes.POINT) {
+        return `${getNumberFromToken(token.value[0])}, ${getNumberFromToken(token.value[1])}`;
+    } else if (token.type === TokenTypes.REGISTERAT || token.type === TokenTypes.REGISTER) {
+        return `${getVariableName(token)}.x, ${getVariableName(token)}.y`
+    }
+
+    UNREACHABLE();
+}
+
+export function getNumberFromToken(token: Token): string {
+    ASSERT(token.type === TokenTypes.NUMBER, `${token} is no number token`);
+    return "" + token.value;
+}
+
+const objects: { [key: string]: boolean } = {};
+
+export function getVariableName(token:Token): string {
+    if (objects[token.value as string]) {
+        return OBJECT_MAP + "." + token.value;
+    } else if (token.value === AppConfig.Runtime.canvasObjectName) {
+        return CANVAS;
+    } else if (token.type == TokenTypes.REGISTERAT) {
+
+        ASSERT(typeof token.value[1].value === "string", "Only string where supported");
+        return getVariableName(token.value[0]) + "." + token.value[1].value;
+    } else {
+        return token.value as string;
+    }
+}
+
+export function getObjectVariable(token: Token): string {
+    objects[token.value as string] = true;
+    return `${OBJECT_MAP}.${token.value}`;
+}
+
+
+export function getDistance(tokenA:Token, tokenB:Token) {
+    let r = "dapentry.distance(";
+    r += getXYFromToken(tokenA);
+    r += ", ";
+    r += getXYFromToken(tokenB);
+    r += ")";
+    return r;
+}
+
+export function getMidpoint(tokenA:Token, tokenB:Token) {
+    let r = "dapentry.midPoint(";
+    r += getXYFromToken(tokenA);
+    r += ", ";
+    r += getXYFromToken(tokenB);
+    r += ")";
+
+    return r;
+}
 
 export class JSPublisher {
 
-    protected static getOpCode(tokens: Array<Token>): string {
-        ASSERT(tokens[0].type === TokenTypes.OPCODE, `${tokens[0]} is no opcode token`)
-        return tokens[0].value as string;
-    }
 
-    protected static getXYFromPointToken(token: Token): string {
-        ASSERT(token.type === TokenTypes.POINT, `${token} is no point token`);
-        return `${JSPublisher.getNumberFromToken(token.value[0])}, ${JSPublisher.getNumberFromToken(token.value[1])}`;
-    }
-
-    protected static getNumberFromToken(token: Token): string {
-        ASSERT(token.type === TokenTypes.NUMBER, `${token} is no number token`);
-        return "" + token.value;
-    }
-
-    protected static getObjectVariable(token: Token): string {
-        return `${OBJECT_MAP}.${token.value}`;
-    }
 
     public static getJSLine(code): Array<string> {
         const tokens = Parser.parseLine(code);
-        const opCode = JSPublisher.getOpCode(tokens);
+        const opCode = getOpCode(tokens);
 
         const r = [];
 
         switch (opCode) {
+            case AppConfig.Runtime.Opcodes.Circle.Legacy:
             case AppConfig.Runtime.Opcodes.Circle.CenterRadius:
-                r.push(`${JSPublisher.getObjectVariable(tokens[1])} = new ${MODULE}.Circle("${tokens[1].value}", ${JSPublisher.getXYFromPointToken(tokens[3])}, ${JSPublisher.getNumberFromToken(tokens[4])});`);
-                r.push(`${JSPublisher.getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])} = new ${MODULE}.Circle("${tokens[1].value}", ` +
+                       `${getXYFromToken(tokens[3])}, ` +
+                       `${getNumberFromToken(tokens[4])});`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                break;
+
+            case AppConfig.Runtime.Opcodes.Circle.CenterPoint:
+                r.push(`${getObjectVariable(tokens[1])} = new ${MODULE}.Circle("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getDistance(tokens[3], tokens[4])});`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                break;
+
+            case AppConfig.Runtime.Opcodes.Circle.PointPoint:
+                r.push(`${getObjectVariable(tokens[1])} = new ${MODULE}.Circle("${tokens[1].value}", ` +
+                    `${getMidpoint(tokens[3], tokens[4])}, ` +
+                    `${getDistance(tokens[3], tokens[4])});`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                break;
+
+
+            case AppConfig.Runtime.Opcodes.Rect.Legacy:
+                break;
+            case AppConfig.Runtime.Opcodes.Rect.PointPoint:
+                break;
+            case AppConfig.Runtime.Opcodes.Rect.CenterWH:
+                break;
+            case AppConfig.Runtime.Opcodes.Rect.TopLeftWH:
+                break;
+            case AppConfig.Runtime.Opcodes.Rect.TopRightWH:
+                break;
+            case AppConfig.Runtime.Opcodes.Rect.BottomLeftWH:
+                break;
+            case AppConfig.Runtime.Opcodes.Rect.BottomRightWH:
+                break;
+
         }
 
         return r;
@@ -95,7 +175,6 @@ export class JSPublisher {
         const res = [`function ${DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`];
         res.push(...JSPublisher.getFieldsCode(fields));
         res.push(`const ${OBJECT_MAP} = {};`)
-        res.push(`__objects.canvas = __canvas;`);
 
         res.push(...JSPublisher.getRawJSCode(code));
 
