@@ -17,7 +17,7 @@ describe('JS publisher', () => {
         ]);
 
         console.log(JSPublisher.getDrawingModule(
-            code, "drawing", AspectRatio.ar1_1, 1000, 1000, [], [], ["Circle1"]
-        ).join("\n"))
+            code, AspectRatio.ar1_1, 1000, [], [], ["Circle1"]
+        ))
     });
 });

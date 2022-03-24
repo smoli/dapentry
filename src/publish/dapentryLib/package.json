@@ -2,8 +2,8 @@
   "name": "dapentryLib",
   "version": "0.1.0",
   "source": "index.ts",
-  "browser": "dist/dapentryLib.js",
-  "module": "dist/dapentryLib.mjs",
+  "type": "module",
+  "module": "dapentryLib.mjs",
   "targets": {
     "module": {
       "includeNodeModules": ["d3", "d3-array", "d3-axis",
