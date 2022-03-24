@@ -13,12 +13,12 @@ import {T_NUMBER, T_OPCODE, T_POINT, T_POINT_NN, T_REGISTER, T_REGISTERAT} from 
 describe('JS publisher', () => {
 
     it('takes a simple line of dapentry code and creates JS code for it', () => {
-        const code = 'CIRCLECR Circle1,$styles.default,(555.79, 228.72),228.34';
+        const code = 'CIRCLECR Circle1,$styles.default,(100, 100),75';
 
         const js = JSPublisher.getRawJSCode(code);
 
         expect(js).to.deep.equal([
-            `__objects.Circle1 = new dapentry.Circle("Circle1", 555.79, 228.72, 228.34);`,
+            `__objects.Circle1 = dapentry.circleCenterRadius("Circle1", 100, 100, 75);`,
             "__objects.Circle1.style = $styles.default;"
         ]);
     });
@@ -49,7 +49,7 @@ describe('JS publisher', () => {
             let js = JSPublisher.getJSLine(code1);
 
             expect(js).to.deep.equal([
-                `__objects.Circle1 = new dapentry.Circle("Circle1", __canvas.center.x, __canvas.center.y, dapentry.distance(__canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y));`,
+                `__objects.Circle1 = dapentry.circleCenterPoint("Circle1", __canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y);`,
                 "__objects.Circle1.style = $styles.default;"
             ]);
 
@@ -57,7 +57,7 @@ describe('JS publisher', () => {
             js = JSPublisher.getJSLine(code2);
 
             expect(js).to.deep.equal([
-                `__objects.Circle1 = new dapentry.Circle("Circle1", aPoint.x, aPoint.y, dapentry.distance(aPoint.x, aPoint.y, __canvas.right.x, __canvas.right.y));`,
+                `__objects.Circle1 = dapentry.circleCenterPoint("Circle1", aPoint.x, aPoint.y, __canvas.right.x, __canvas.right.y);`,
                 "__objects.Circle1.style = $styles.default;"
             ]);
         });
@@ -68,9 +68,63 @@ describe('JS publisher', () => {
             const js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects.Circle1 = new dapentry.Circle("Circle1", dapentry.midPoint(__canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y), dapentry.distance(__canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y));`,
+                `__objects.Circle1 = dapentry.circlePointPoint("Circle1", __canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y);`,
                 "__objects.Circle1.style = $styles.default;"
             ]);
         })
+    });
+
+    describe("exporting rectangle statements", () => {
+
+        it("exports from top left, width, height", () => {
+            const code = `RECTTL Rectangle1,$styles.default,(100, 100),200,80`;
+            const js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `__objects.Rectangle1 = dapentry.rectangleTopLeft("Rectangle1", 100, 100, 200, 80);`,
+                "__objects.Rectangle1.style = $styles.default;"
+            ]);
+        });
+
+        it("exports from bottom left, width, height", () => {
+            const code = `RECTBL Rectangle1,$styles.default,(100, 100),200,80`;
+            const js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `__objects.Rectangle1 = dapentry.rectangleBottomLeft("Rectangle1", 100, 100, 200, 80);`,
+                "__objects.Rectangle1.style = $styles.default;"
+            ]);
+        });
+
+        it("exports from bottom right, width, height", () => {
+            const code = `RECTBR Rectangle1,$styles.default,(100, 100),200,80`;
+            const js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `__objects.Rectangle1 = dapentry.rectangleBottomRight("Rectangle1", 100, 100, 200, 80);`,
+                "__objects.Rectangle1.style = $styles.default;"
+            ]);
+        });
+
+        it("exports from bottom right, width, height", () => {
+            const code = `RECTTR Rectangle1,$styles.default,(100, 100),200,80`;
+            const js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `__objects.Rectangle1 = dapentry.rectangleTopRight("Rectangle1", 100, 100, 200, 80);`,
+                "__objects.Rectangle1.style = $styles.default;"
+            ]);
+        });
+
+        it("exports from bottom point to point", () => {
+            const code = `RECTPP Rectangle1,$styles.default,Canvas@center,Canvas@topRight`;
+            const js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `__objects.Rectangle1 = dapentry.rectanglePointPoint("Rectangle1", __canvas.center.x, __canvas.center.y, __canvas.topRight.x, __canvas.topRight.y);`,
+                "__objects.Rectangle1.style = $styles.default;"
+            ]);
+        });
+
     });
 });

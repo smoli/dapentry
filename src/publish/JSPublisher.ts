@@ -85,42 +85,84 @@ export class JSPublisher {
         switch (opCode) {
             case AppConfig.Runtime.Opcodes.Circle.Legacy:
             case AppConfig.Runtime.Opcodes.Circle.CenterRadius:
-                r.push(`${getObjectVariable(tokens[1])} = new ${MODULE}.Circle("${tokens[1].value}", ` +
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterRadius("${tokens[1].value}", ` +
                        `${getXYFromToken(tokens[3])}, ` +
                        `${getNumberFromToken(tokens[4])});`);
                 r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.CenterPoint:
-                r.push(`${getObjectVariable(tokens[1])} = new ${MODULE}.Circle("${tokens[1].value}", ` +
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterPoint("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
-                    `${getDistance(tokens[3], tokens[4])});`);
+                    `${getXYFromToken(tokens[4])});`);
                 r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.PointPoint:
-                r.push(`${getObjectVariable(tokens[1])} = new ${MODULE}.Circle("${tokens[1].value}", ` +
-                    `${getMidpoint(tokens[3], tokens[4])}, ` +
-                    `${getDistance(tokens[3], tokens[4])});`);
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circlePointPoint("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getXYFromToken(tokens[4])});`);
                 r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
 
 
-            case AppConfig.Runtime.Opcodes.Rect.Legacy:
-                break;
             case AppConfig.Runtime.Opcodes.Rect.PointPoint:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectanglePointPoint("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getXYFromToken(tokens[4])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.CenterWH:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleCenter("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getNumberFromToken(tokens[4])}, ` +
+                    `${getNumberFromToken(tokens[5])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.TopLeftWH:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopLeft("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getNumberFromToken(tokens[4])}, ` +
+                    `${getNumberFromToken(tokens[5])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.TopRightWH:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopRight("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getNumberFromToken(tokens[4])}, ` +
+                    `${getNumberFromToken(tokens[5])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.BottomLeftWH:
-                break;
-            case AppConfig.Runtime.Opcodes.Rect.BottomRightWH:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomLeft("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getNumberFromToken(tokens[4])}, ` +
+                    `${getNumberFromToken(tokens[5])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
                 break;
 
+            case AppConfig.Runtime.Opcodes.Rect.BottomRightWH:
+                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomRight("${tokens[1].value}", ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getNumberFromToken(tokens[4])}, ` +
+                    `${getNumberFromToken(tokens[5])}` +
+                    ");"
+                );
+                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                break;
+
+            default:
+                UNREACHABLE(`Exporting of OPCODE "${opCode}" is not implemented.`);
         }
 
         return r;

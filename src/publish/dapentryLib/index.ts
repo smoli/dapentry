@@ -20,6 +20,9 @@
  */
 
 
+import {GrRectangle} from "../../geometry/GrRectangle";
+import {GrCircle} from "../../geometry/GrCircle";
+
 export {GrCanvas as Canvas} from "../../geometry/GrCanvas";
 export {GrLine as Line} from "../../geometry/GrLine";
 export {GrRectangle as Rectangle} from "../../geometry/GrRectangle";
@@ -28,6 +31,7 @@ export {GrCircle as Circle} from "../../geometry/GrCircle";
 export {GrText as Text} from "../../geometry/GrText";
 export {AspectRatio} from "../../geometry/AspectRatio";
 export {SvgObjectRenderer as SVGRenderer} from "../../ui/drawing/SvgObjectRenderer";
+export * from "../creationHelpers"
 
 export const defaultStyles = {
     default: {
@@ -48,6 +52,4 @@ export const defaultStyles = {
     }
 };
 
-export function distance(x1: number, y1: number, x2: number, y2: number) {
-    Math.hypot(x2 - x1, y2 - y1);
-}
+
