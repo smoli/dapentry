@@ -5926,7 +5926,25 @@ class $229862f972072627$export$fb77dabb7e6f239e extends $9976dad94f405c55$export
 }
 
 
+const $84cad01672e6beb4$export$214b055320e0bf32 = {
+    default: {
+        "fillColor": "#FF7F50",
+        "strokeColor": "#FF7F50",
+        "fillOpacity": 0.2,
+        "strokeWidth": 2
+    },
+    textDefault: {
+        "fillColor": "#FF7F50",
+        "strokeColor": "#FF7F50",
+        "fillOpacity": 1,
+        "strokeWidth": 0,
+        "textAlignment": 0,
+        "verticalAlignment": 0,
+        "fontFamily": "Sans-serif",
+        "fontSize": 50
+    }
+};
 
 
-export {$b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $973b23ce99918ba1$export$37563e431fdea7bd as Line, $d4397e41424130cc$export$30a59a0caead8e7a as Rectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as Polygon, $f5a4253b3c677715$export$25ceb2c69899a589 as Circle, $56919d7b8c67450a$export$23e702491ed1c44c as Text, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer};
+export {$84cad01672e6beb4$export$214b055320e0bf32 as defaultStyles, $b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $973b23ce99918ba1$export$37563e431fdea7bd as Line, $d4397e41424130cc$export$30a59a0caead8e7a as Rectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as Polygon, $f5a4253b3c677715$export$25ceb2c69899a589 as Circle, $56919d7b8c67450a$export$23e702491ed1c44c as Text, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer};
 //# sourceMappingURL=dapentryLib.mjs.map

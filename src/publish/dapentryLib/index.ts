@@ -17,7 +17,6 @@
     License: https://github.com/d3/d3/blob/main/LICENSE
 
  @licence
- @preserve
  */
 
 
@@ -29,3 +28,22 @@ export {GrCircle as Circle} from "../../geometry/GrCircle";
 export {GrText as Text} from "../../geometry/GrText";
 export {AspectRatio} from "../../geometry/AspectRatio";
 export {SvgObjectRenderer as SVGRenderer} from "../../ui/drawing/SvgObjectRenderer";
+
+export const defaultStyles = {
+    default: {
+        "fillColor": "#FF7F50",
+        "strokeColor": "#FF7F50",
+        "fillOpacity": 0.2,
+        "strokeWidth": 2,
+    },
+    textDefault: {
+        "fillColor": "#FF7F50",
+        "strokeColor": "#FF7F50",
+        "fillOpacity": 1,
+        "strokeWidth": 0,
+        "textAlignment": 0,
+        "verticalAlignment": 0,
+        "fontFamily": "Sans-serif",
+        "fontSize": 50,
+    }
+};

@@ -1,32 +1,11 @@
 // created with dapentry, https://www.dapentry.com
-// this software uses d3, https://d3js.org:
-//      Copyright 2010-2022 Mike Bostock
-//      License: https://github.com/d3/d3/blob/main/LICENSE
 
-import * as dapentry from "./dist/dapentryLib.mjs";
+import * as dapentry from "./dapentryLib.mjs";
 
 let __viewBoxHeight = 1000;
 let __aspectRatio = "ar1_1";
 
-const $styles = {
-    default: {
-        "fillColor": "#FF7F50",
-        "strokeColor": "#FF7F50",
-        "fillOpacity": 0.2,
-        "strokeWidth": 2,
-    },
-    textDefault: {
-        "fillColor": "#FF7F50",
-        "strokeColor": "#FF7F50",
-        "fillOpacity": 1,
-        "strokeWidth": 0,
-        "textAlignment": 0,
-        "verticalAlignment": 0,
-        "fontFamily": "Sans-serif",
-        "fontSize": 50,
-    }
-};
-
+const $styles = dapentry.defaultStyles;
 const __renderer = new dapentry.SVGRenderer();
 let __canvas = null;
 let __viewBoxWidth = __viewBoxHeight;
