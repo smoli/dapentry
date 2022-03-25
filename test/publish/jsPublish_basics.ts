@@ -18,8 +18,8 @@ describe('JS publisher', () => {
         const js = JSPublisher.getRawJSCode(code);
 
         expect(js).to.deep.equal([
-            `__objects.Circle1 = dapentry.circleCenterRadius("Circle1", 100, 100, 75);`,
-            "__objects.Circle1.style = $styles.default;"
+            `__objects("Circle1", dapentry.circleCenterRadius("Circle1", 100, 100, 75));`,
+            `__objects("Circle1").style = dapentry.$styles.default;`
         ]);
     });
 
@@ -49,16 +49,16 @@ describe('JS publisher', () => {
             let js = JSPublisher.getJSLine(code1);
 
             expect(js).to.deep.equal([
-                `__objects.Circle1 = dapentry.circleCenterPoint("Circle1", __canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y);`,
-                "__objects.Circle1.style = $styles.default;"
+                `__objects("Circle1", dapentry.circleCenterPoint("Circle1", __canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y));`,
+                `__objects("Circle1").style = dapentry.$styles.default;`
             ]);
 
             const code2 = `CIRCLECP Circle1,$styles.default,aPoint,Canvas@right`;
             js = JSPublisher.getJSLine(code2);
 
             expect(js).to.deep.equal([
-                `__objects.Circle1 = dapentry.circleCenterPoint("Circle1", aPoint.x, aPoint.y, __canvas.right.x, __canvas.right.y);`,
-                "__objects.Circle1.style = $styles.default;"
+                `__objects("Circle1", dapentry.circleCenterPoint("Circle1", aPoint.x, aPoint.y, __canvas.right.x, __canvas.right.y));`,
+                `__objects("Circle1").style = dapentry.$styles.default;`
             ]);
         });
 
@@ -68,8 +68,8 @@ describe('JS publisher', () => {
             const js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects.Circle1 = dapentry.circlePointPoint("Circle1", __canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y);`,
-                "__objects.Circle1.style = $styles.default;"
+                `__objects("Circle1", dapentry.circlePointPoint("Circle1", __canvas.center.x, __canvas.center.y, __canvas.right.x, __canvas.right.y));`,
+                `__objects("Circle1").style = dapentry.$styles.default;`
             ]);
         })
     });
@@ -81,8 +81,8 @@ describe('JS publisher', () => {
             const js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects.Rectangle1 = dapentry.rectangleTopLeft("Rectangle1", 100, 100, 200, 80);`,
-                "__objects.Rectangle1.style = $styles.default;"
+                `__objects("Rectangle1", dapentry.rectangleTopLeft("Rectangle1", 100, 100, 200, 80));`,
+                `__objects("Rectangle1").style = dapentry.$styles.default;`
             ]);
         });
 
@@ -91,8 +91,8 @@ describe('JS publisher', () => {
             const js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects.Rectangle1 = dapentry.rectangleBottomLeft("Rectangle1", 100, 100, 200, 80);`,
-                "__objects.Rectangle1.style = $styles.default;"
+                `__objects("Rectangle1", dapentry.rectangleBottomLeft("Rectangle1", 100, 100, 200, 80));`,
+                `__objects("Rectangle1").style = dapentry.$styles.default;`
             ]);
         });
 
@@ -101,8 +101,8 @@ describe('JS publisher', () => {
             const js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects.Rectangle1 = dapentry.rectangleBottomRight("Rectangle1", 100, 100, 200, 80);`,
-                "__objects.Rectangle1.style = $styles.default;"
+                `__objects("Rectangle1", dapentry.rectangleBottomRight("Rectangle1", 100, 100, 200, 80));`,
+                `__objects("Rectangle1").style = dapentry.$styles.default;`
             ]);
         });
 
@@ -111,8 +111,8 @@ describe('JS publisher', () => {
             const js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects.Rectangle1 = dapentry.rectangleTopRight("Rectangle1", 100, 100, 200, 80);`,
-                "__objects.Rectangle1.style = $styles.default;"
+                `__objects("Rectangle1", dapentry.rectangleTopRight("Rectangle1", 100, 100, 200, 80));`,
+                `__objects("Rectangle1").style = dapentry.$styles.default;`
             ]);
         });
 
@@ -121,8 +121,8 @@ describe('JS publisher', () => {
             const js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects.Rectangle1 = dapentry.rectanglePointPoint("Rectangle1", __canvas.center.x, __canvas.center.y, __canvas.topRight.x, __canvas.topRight.y);`,
-                "__objects.Rectangle1.style = $styles.default;"
+                `__objects("Rectangle1", dapentry.rectanglePointPoint("Rectangle1", __canvas.center.x, __canvas.center.y, __canvas.topRight.x, __canvas.topRight.y));`,
+                `__objects("Rectangle1").style = dapentry.$styles.default;`
             ]);
         });
     });
@@ -133,19 +133,19 @@ describe('JS publisher', () => {
             let js = JSPublisher.getJSLine(code1);
 
             expect(js).to.deep.equal([
-                `__objects.Line1 = dapentry.linePointPoint("Line1", __canvas.left.x, __canvas.left.y, 100, 600);`,
-                "__objects.Line1.style = $styles.default;"
+                `__objects("Line1", dapentry.linePointPoint("Line1", __canvas.left.x, __canvas.left.y, 100, 600));`,
+                `__objects("Line1").style = dapentry.$styles.default;`
             ]);
 
             const code2 = `LINEPP Line2,$styles.default,Canvas@left,Line1@end`;
             js = JSPublisher.getJSLine(code2);
 
-            // the second point is exported as __objects.Line1.end... because we created the Line1 in this test before.
+            // the second point is exported as __objects("Line1".end... because we created the Line1 in this test before.
             // The publisher then registers the name Line1 as an object. If we do not publish the first line of code through
             // the publisher the second point would only be Line1.end...
             expect(js).to.deep.equal([
-                `__objects.Line2 = dapentry.linePointPoint("Line2", __canvas.left.x, __canvas.left.y, __objects.Line1.end.x, __objects.Line1.end.y);`,
-                "__objects.Line2.style = $styles.default;"
+                `__objects("Line2", dapentry.linePointPoint("Line2", __canvas.left.x, __canvas.left.y, __objects("Line1").end.x, __objects("Line1").end.y));`,
+                `__objects("Line2").style = dapentry.$styles.default;`
             ]);
         });
     });

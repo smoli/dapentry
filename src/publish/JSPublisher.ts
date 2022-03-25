@@ -6,7 +6,7 @@ import {DataField, DataFieldType} from "../state/modules/Data";
 import {jsPublishTemplate} from "./jsPublishTemplate";
 
 
-const OBJECT_MAP = "__objects";
+const OBJECT_MANAGER = "__objects";
 const MODULE = "dapentry";
 const DRAWING_FUNCTION_NAME = "drawing";
 const CANVAS = "__canvas";
@@ -49,7 +49,12 @@ export function getVariableName(token: Token): string {
 
 export function getObjectVariable(token: Token): string {
     objects[token.value as string] = true;
-    return `${OBJECT_MAP}["${token.value}"]`;
+    return `${OBJECT_MANAGER}("${token.value}")`;
+}
+
+export function getObjectVariableSetter(token: Token, code: string): string {
+    objects[token.value as string] = true;
+    return `${OBJECT_MANAGER}("${token.value}", ${code})`;
 }
 
 
@@ -72,6 +77,40 @@ export function getMidpoint(tokenA: Token, tokenB: Token) {
     return r;
 }
 
+let loopVarIndex = 0;
+
+function getDoStartForTokens(tokens: Array<Token>) {
+
+    let doVar;
+    let times;
+
+    if (tokens.length === 2) {
+        doVar = "$do" + loopVarIndex;
+        loopVarIndex += 1;
+        times = tokens[1].value;
+    } else {
+        doVar = tokens[1].value;
+        times = tokens[2].value;
+    }
+
+    return `for(let ${doVar} = 0; ${doVar} < ${times}; ${doVar}++) {`
+}
+
+function getEndDoForTokens(tokens: Array<Token>) {
+    return "}";
+}
+
+function getObjectCreationStatement(tokens: Array<Token>, creatorFunc: string, ...params): Array<string> {
+    const add = [];
+    add.push(`${MODULE}.${creatorFunc}("${tokens[1].value}"`)
+    add.push(...params);
+
+    return [
+        getObjectVariableSetter(tokens[1], add.join(", ") + ")") + ";",
+        `${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`
+    ];
+}
+
 export class JSPublisher {
 
 
@@ -84,90 +123,155 @@ export class JSPublisher {
         switch (opCode) {
             case AppConfig.Runtime.Opcodes.Circle.Legacy:
             case AppConfig.Runtime.Opcodes.Circle.CenterRadius:
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "circleCenterRadius",
+                    getXYFromToken(tokens[3]),
+                    getNumberFromToken(tokens[4])
+                ));
+
+/*
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterRadius("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getNumberFromToken(tokens[4])});`);
                 r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.CenterPoint:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterPoint("${tokens[1].value}", ` +
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "circleCenterPoint",
+                    getXYFromToken(tokens[3]),
+                    getXYFromToken(tokens[4])
+                ));
+
+             /*   r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterPoint("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getXYFromToken(tokens[4])});`);
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.PointPoint:
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "circlePointPoint",
+                    getXYFromToken(tokens[3]),
+                    getXYFromToken(tokens[4])
+                ));
+/*
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circlePointPoint("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getXYFromToken(tokens[4])});`);
                 r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+*/
                 break;
 
 
             case AppConfig.Runtime.Opcodes.Rect.PointPoint:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectanglePointPoint("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getXYFromToken(tokens[4])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "rectanglePointPoint",
+                    getXYFromToken(tokens[3]),
+                    getXYFromToken(tokens[4])
+                ));
                 break;
             case AppConfig.Runtime.Opcodes.Rect.CenterWH:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleCenter("${tokens[1].value}", ` +
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "rectangleCenter",
+                    getXYFromToken(tokens[3]),
+                    getNumberFromToken(tokens[4]),
+                    getNumberFromToken(tokens[5])
+                ));
+               /* r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleCenter("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getNumberFromToken(tokens[4])}, ` +
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
             case AppConfig.Runtime.Opcodes.Rect.TopLeftWH:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopLeft("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getNumberFromToken(tokens[4])}, ` +
-                    `${getNumberFromToken(tokens[5])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "rectangleTopLeft",
+                    getXYFromToken(tokens[3]),
+                    getNumberFromToken(tokens[4]),
+                    getNumberFromToken(tokens[5])
+                ));
+                // r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopLeft("${tokens[1].value}", ` +
+                //     `${getXYFromToken(tokens[3])}, ` +
+                //     `${getNumberFromToken(tokens[4])}, ` +
+                //     `${getNumberFromToken(tokens[5])}` +
+                //     ");"
+                // );
+                // r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.TopRightWH:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopRight("${tokens[1].value}", ` +
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "rectangleTopRight",
+                    getXYFromToken(tokens[3]),
+                    getNumberFromToken(tokens[4]),
+                    getNumberFromToken(tokens[5])
+                ));
+                /*r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopRight("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getNumberFromToken(tokens[4])}, ` +
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
             case AppConfig.Runtime.Opcodes.Rect.BottomLeftWH:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomLeft("${tokens[1].value}", ` +
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "rectangleBottomLeft",
+                    getXYFromToken(tokens[3]),
+                    getNumberFromToken(tokens[4]),
+                    getNumberFromToken(tokens[5])
+                ));
+               /* r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomLeft("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getNumberFromToken(tokens[4])}, ` +
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Rect.BottomRightWH:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomRight("${tokens[1].value}", ` +
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "rectangleBottomRight",
+                    getXYFromToken(tokens[3]),
+                    getNumberFromToken(tokens[4]),
+                    getNumberFromToken(tokens[5])
+                ));
+               /* r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomRight("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getNumberFromToken(tokens[4])}, ` +
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
 
             case AppConfig.Runtime.Opcodes.Line.PointPoint:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointPoint("${tokens[1].value}", ` +
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "linePointPoint",
+                    getXYFromToken(tokens[3]),
+                    getXYFromToken(tokens[4])
+                ));
+              /*  r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointPoint("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getXYFromToken(tokens[4])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Line.PointVectorLength:
@@ -178,6 +282,14 @@ export class JSPublisher {
                     ");"
                 );
                 r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                break;
+
+            case AppConfig.Runtime.Opcodes.Do:
+                r.push(getDoStartForTokens(tokens));
+                break;
+
+            case AppConfig.Runtime.Opcodes.EndDo:
+                r.push(getEndDoForTokens(tokens));
                 break;
 
             default:
@@ -228,13 +340,13 @@ export class JSPublisher {
 
 
     public static getDrawingFunctionBody(code: string,
-                                  fields: Array<DataField>,
-                                  publishedNames: Array<string>): Array<string> {
+                                         fields: Array<DataField>,
+                                         publishedNames: Array<string>): Array<string> {
         const res = [];
         res.push(...JSPublisher.getFieldsCode(fields));
-        res.push(`const ${OBJECT_MAP} = {};`)
+        res.push(`const ${OBJECT_MANAGER} = dapentry.makeObjectManager();`)
         res.push(...JSPublisher.getRawJSCode(code));
-        res.push(`return [${publishedNames.map(n => `${OBJECT_MAP}["${n}"]`).join(", ")}];`);
+        res.push(`return [${publishedNames.map(n => `${OBJECT_MANAGER}("${n}")`).join(", ")}];`);
 
         return res;
     }
@@ -263,7 +375,7 @@ export class JSPublisher {
             .replace("<DRAWING_FUNCTION_NAME>", DRAWING_FUNCTION_NAME)
             .replace("<VIEWBOX_HEIGHT>", "" + height)
             .replace("<ASPECT_RATIO>", AspectRatio[aspect])
-            .replace("<DRAWING_FUNCTION>", this.getDrawingFunctionCode(code, args, fields, publishedNames).join("\n"))
+            .replace("<DRAWING_FUNCTION>", JSPublisher.getDrawingFunctionCode(code, args, fields, publishedNames).join("\n"))
 
         return r;
     }
