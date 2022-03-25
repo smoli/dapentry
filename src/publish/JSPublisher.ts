@@ -31,6 +31,11 @@ export function getNumOrRegFromToken(token: Token): string {
     return "" + token.value;
 }
 
+export function getLiteralFromStringToken(token: Token): string {
+    ASSERT(token.type === TokenTypes.STRING, `${token} is no string token`);
+    return ( token.value as string ).replace(/\"/g, "");
+}
+
 const objects: { [key: string]: boolean } = {};
 
 export function getVariableName(token: Token): string {
@@ -262,6 +267,46 @@ export class JSPublisher {
 
             case AppConfig.Runtime.Opcodes.EndEach:
                 r.push(getEndEachForTokens(tokens));
+                break;
+
+
+            case AppConfig.Runtime.Opcodes.Scale.Factor:
+                r.push(`${MODULE}.scaleObject(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getNumOrRegFromToken(tokens[2])}, ` +
+                    `${getNumOrRegFromToken(tokens[3])}, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.x, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.y` +
+                    `);`)
+                break;
+            case AppConfig.Runtime.Opcodes.Scale.FactorUniform:
+                r.push(`${MODULE}.scaleObjectUniform(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getNumOrRegFromToken(tokens[2])}, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[3])}.x, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[3])}.y` +
+                    `);`)
+                break;
+            case AppConfig.Runtime.Opcodes.Scale.ToPoint:
+                r.push(`${MODULE}.scaleObjectToPoint(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.x, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.y, ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.x, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.y` +
+                    `);`)
+                break;
+
+            case AppConfig.Runtime.Opcodes.Scale.ToPointUniform:
+                r.push(`${MODULE}.scaleObjectToPointUniform(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.x, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.y, ` +
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.x, ` +
+                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.y` +
+                    `);`)
                 break;
 
 

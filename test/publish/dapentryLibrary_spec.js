@@ -3,9 +3,20 @@ import {expect} from "chai"
 import {
     circleCenterPoint,
     circleCenterRadius,
-    circlePointPoint, linePointPoint, linePointVectorLength, rectangleBottomLeft, rectangleBottomRight, rectangleCenter,
-    rectanglePointPoint, rectangleTopLeft, rectangleTopRight
-} from "../../src/publish/creationHelpers";
+    circlePointPoint,
+    linePointPoint,
+    linePointVectorLength,
+    rectangleBottomLeft,
+    rectangleBottomRight,
+    rectangleCenter,
+    rectanglePointPoint,
+    rectangleTopLeft,
+    rectangleTopRight,
+    scaleObject,
+    scaleObjectUniform,
+    scaleObjectToPoint, scaleObjectToPointUniform
+} from "../../src/publish/operationHelpers";
+import {GrRectangle} from "../../src/geometry/GrRectangle";
 
 
 describe('dapentry library', () => {
@@ -107,6 +118,59 @@ describe('dapentry library', () => {
             expect(l.start).to.deep.equal({x: 100, y: 100});
             expect(l.end).to.deep.equal({x: 200, y: 150});
         });
+    });
 
+    describe("provides functions for scaling", () => {
+       it("scale by factors", () => {
+            const r = new GrRectangle("r", 100, 100, 100, 150);
+
+            expect(r.bottom).to.deep.equal({ x: 100, y: 175 })
+
+            scaleObject(r, 0.5, 0.3, r.bottom.x, r.bottom.y);
+
+            expect(r.width).to.equal(50);
+            expect(r.height).to.equal(45);
+
+            expect(r.bottom).to.deep.equal({ x: 100, y: 175 })
+            expect(r.top).to.deep.equal({ x: 100, y: 130 })
+       });
+
+       it("scale by factors uniformly", () => {
+            const r = new GrRectangle("r", 100, 100, 100, 150);
+
+            expect(r.bottom).to.deep.equal({ x: 100, y: 175 })
+
+            scaleObjectUniform(r, 0.5, r.bottom.x, r.bottom.y);
+
+            expect(r.width).to.equal(50);
+            expect(r.height).to.equal(75);
+
+            expect(r.bottom).to.deep.equal({ x: 100, y: 175 })
+            expect(r.top).to.deep.equal({ x: 100, y: 100 })
+       });
+
+       it("scale to a point", () => {
+            const r = new GrRectangle("r", 100, 100, 100, 150);
+
+            scaleObjectToPoint(r, r.top.x, r.top.y, r.top.x, 0, r.bottom.x, r.bottom.y);
+
+            expect(r.width).to.equal(100);
+            expect(r.height).to.equal(175);
+
+            expect(r.bottom).to.deep.equal({ x: 100, y: 175 })
+            expect(r.top).to.deep.equal({ x: 100, y: 0 })
+       });
+
+       it("scale to a point uniformly", () => {
+            const r = new GrRectangle("r", 100, 100, 100, 150);
+
+            scaleObjectToPointUniform(r, r.top.x, r.top.y, r.top.x, 0, r.bottom.x, r.bottom.y);
+
+            expect(r.width).to.equal(100 * 175 / 150);
+            expect(r.height).to.equal(175);
+
+            expect(r.bottom).to.deep.equal({ x: 100, y: 175 })
+            expect(r.top).to.deep.equal({ x: 100, y: 0 })
+       });
     });
 });

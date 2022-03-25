@@ -1,6 +1,9 @@
 import {GrCircle} from "../geometry/GrCircle";
 import {GrRectangle} from "../geometry/GrRectangle";
 import {GrLine} from "../geometry/GrLine";
+import {GrObject} from "../geometry/GrObject";
+import {Point2D} from "../geometry/Point2D";
+import {makeScaleFactorsUniform, scaleToAPoint} from "../geometry/GeoMath";
 
 export function distance(x1: number, y1: number, x2: number, y2: number): number {
     return Math.hypot(x2 - x1, y2 - y1);
@@ -58,4 +61,38 @@ export function linePointPoint(name: string, x1: number, y1: number, x2: number,
 
 export function linePointVectorLength(name: string, x1: number, y1: number, vx: number, vy: number, l: number):GrLine {
     return new GrLine(name, x1, y1, x1 + vx * l, y1 + vy * l);
+}
+
+
+// Scaling
+export function scaleObject(object: GrObject, fx: number, fy: number, pivotX: number, pivotY: number) {
+    object.scale(fx, fy, new Point2D(pivotX, pivotY))
+}
+
+export function scaleObjectUniform(object: GrObject, f: number, pivotX: number, pivotY: number) {
+    object.scale(f, f, new Point2D(pivotX, pivotY))
+}
+
+
+function computeFactorsForScaleToPoint(object: GrObject, draggedX: number, draggedY: number, targetX: number, targetY: number, pivotX: number, pivotY: number) {
+    let old = new Point2D(draggedX, draggedY);
+    let target = new Point2D(targetX, targetY);
+    let pivot = new Point2D(pivotX, pivotY);
+
+    old = object.mapPointToLocal(old);
+    pivot = object.mapPointToLocal(pivot);
+    target = object.mapPointToLocal(target);
+
+    return scaleToAPoint(old, pivot, target);
+}
+
+export function scaleObjectToPoint(object: GrObject, draggedX: number, draggedY: number, targetX: number, targetY: number, pivotX: number, pivotY: number) {
+    let { fx, fy } = computeFactorsForScaleToPoint(object, draggedX, draggedY, targetX, targetY, pivotX, pivotY);
+    object.scale(fx, fy, new Point2D(pivotX, pivotY))
+}
+
+export function scaleObjectToPointUniform(object: GrObject, draggedX: number, draggedY: number, targetX: number, targetY: number, pivotX: number, pivotY: number) {
+    let { fx, fy } = computeFactorsForScaleToPoint(object, draggedX, draggedY, targetX, targetY, pivotX, pivotY);
+    fy = fx = makeScaleFactorsUniform(fx, fy);
+    object.scale(fx, fy, new Point2D(pivotX, pivotY))
 }

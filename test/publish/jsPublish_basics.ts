@@ -149,4 +149,24 @@ describe('JS publisher', () => {
             ]);
         });
     });
+
+    describe("scaling statements", () => {
+        it("exports scaling by factors", () => {
+            const code = `SCALE Rectangle1, 1.5, 1, "bottomLeft"`;
+            let js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `dapentry.scaleObject(__objects("Rectangle1"), 1.5, 1, __objects("Rectangle1").bottomLeft.x, __objects("Rectangle1").bottomLeft.y);`
+            ]);
+        });
+
+        it("exports scaling to a point", () => {
+            const code = `SCALEP Rectangle1, "top", Canvas@top, "bottom"`;
+            let js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `dapentry.scaleObjectToPoint(__objects("Rectangle1"), __objects("Rectangle1").top.x, __objects("Rectangle1").top.y, __canvas.top.x, __canvas.top.y, __objects("Rectangle1").bottom.x, __objects("Rectangle1").bottom.y);`
+            ]);
+        });
+    })
 });

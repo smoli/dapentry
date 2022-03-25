@@ -8,7 +8,7 @@ export {GrPolygon as Polygon} from "../../src/geometry/GrPolygon";
 export {GrCircle as Circle} from "../../src/geometry/GrCircle";
 export {GrText as Text} from "../../src/geometry/GrText";
 export {AspectRatio} from "../../src/geometry/AspectRatio";
-export * from "../../src/publish/creationHelpers"
+export * from "./operationHelpers"
 
 export const $styles = {
     default: {
