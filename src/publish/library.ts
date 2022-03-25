@@ -1,4 +1,4 @@
-import {GrObject} from "../../src/geometry/GrObject";
+import {GrObject, ObjectType} from "../../src/geometry/GrObject";
 import {GrObjectList} from "../../src/geometry/GrObjectList";
 
 export {GrCanvas as Canvas} from "../../src/geometry/GrCanvas";
@@ -35,10 +35,15 @@ export function makeObjectManager() {
     return function(name: string, object: GrObject = null) {
         if (object) {
             if (__objects[name]) {
-                const l = new GrObjectList(name);
-                l.addObject(__objects[name]);
+                let l = __objects[name];
+                if (l.type !== ObjectType.List) {
+                    const newL = new GrObjectList(name);
+                    newL.addObject(l);
+                    __objects[name] = newL;
+                    l = newL;
+                }
+
                 l.addObject(object);
-                __objects[name] = l;
             } else {
                 __objects[name] = object;
             }

@@ -5,6 +5,8 @@ import {expect} from "chai";
 import * as library from "../../src/publish/library";
 import {GrCanvas} from "../../src/geometry/GrCanvas";
 import {ObjectType} from "../../src/geometry/GrObject";
+import {DataFieldType} from "../../src/state/modules/Data";
+
 const canvas = GrCanvas.create_1_1(1000);
 
 describe('A published drawing', () => {
@@ -32,7 +34,7 @@ describe('A published drawing', () => {
 
         const code = `
         DO 4
-        RECTBL Rectangle1,$styles.default,Canvas@center,150, 100
+            RECTBL Rectangle1,$styles.default,Canvas@center,150, 100
         ENDDO
         `
         const jsCode = JSPublisher.getDrawingFunctionBody(code, [], ["Rectangle1"]);
@@ -43,5 +45,30 @@ describe('A published drawing', () => {
 
         expect(r.length).to.equal(1);
         expect(r[0].type).to.equal(ObjectType.List);
+        expect(r[0].objects.length).to.equal(4);
+    });
+
+
+    it("works for loops that refer a field as well", () => {
+        const code = `
+        DO x
+            RECTBL Rectangle1,$styles.default,Canvas@center,150, 100
+        ENDDO
+        `
+        const jsCode = JSPublisher.getDrawingFunctionBody(code, [{
+            name: "x",
+            value: "7",
+            type: DataFieldType.Number,
+            description: "lkjh",
+            published: false
+        }], ["Rectangle1"]);
+
+        const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
+
+        const r = drawing(library, canvas);
+
+        expect(r.length).to.equal(1);
+        expect(r[0].type).to.equal(ObjectType.List);
+        expect(r[0].objects.length).to.equal(7);
     });
 });
