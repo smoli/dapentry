@@ -1,7 +1,7 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {
-    getNumberFromToken,
+    getNumOrRegFromToken,
     getOpCode,
     getVariableName,
     getXYFromToken,
@@ -34,7 +34,7 @@ describe('JS publisher', () => {
         });
 
         it('get the number from a number token as a string', () => {
-            expect(getNumberFromToken(T_NUMBER(12))).to.equal("12");
+            expect(getNumOrRegFromToken(T_NUMBER(12))).to.equal("12");
         });
 
         it("gets the variable name from a register token", () => {

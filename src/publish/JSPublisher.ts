@@ -18,7 +18,7 @@ export function getOpCode(tokens: Array<Token>): string {
 
 export function getXYFromToken(token: Token): string {
     if (token.type === TokenTypes.POINT) {
-        return `${getNumberFromToken(token.value[0])}, ${getNumberFromToken(token.value[1])}`;
+        return `${getNumOrRegFromToken(token.value[0])}, ${getNumOrRegFromToken(token.value[1])}`;
     } else if (token.type === TokenTypes.REGISTERAT || token.type === TokenTypes.REGISTER) {
         return `${getVariableName(token)}.x, ${getVariableName(token)}.y`
     }
@@ -26,8 +26,8 @@ export function getXYFromToken(token: Token): string {
     UNREACHABLE();
 }
 
-export function getNumberFromToken(token: Token): string {
-    ASSERT(token.type === TokenTypes.NUMBER, `${token} is no number token`);
+export function getNumOrRegFromToken(token: Token): string {
+    ASSERT(token.type === TokenTypes.NUMBER || token.type === TokenTypes.REGISTER, `${token} is no number token`);
     return "" + token.value;
 }
 
@@ -100,6 +100,26 @@ function getEndDoForTokens(tokens: Array<Token>) {
     return "}";
 }
 
+function getForEachStartForTokens(tokens: Array<Token>) {
+
+    let itVar;
+    let listVar;
+
+    itVar = tokens[1].value;
+
+    if (tokens.length === 3) {
+        listVar = tokens[2].value;
+    } else {
+        listVar = itVar;
+    }
+
+    return `${listVar}.forEach(${itVar} => {`;
+}
+
+function getEndEachForTokens(tokens: Array<Token>) {
+    return "});";
+}
+
 function getObjectCreationStatement(tokens: Array<Token>, creatorFunc: string, ...params): Array<string> {
     const add = [];
     add.push(`${MODULE}.${creatorFunc}("${tokens[1].value}"`)
@@ -127,15 +147,8 @@ export class JSPublisher {
                     tokens,
                     "circleCenterRadius",
                     getXYFromToken(tokens[3]),
-                    getNumberFromToken(tokens[4])
+                    getNumOrRegFromToken(tokens[4])
                 ));
-
-/*
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterRadius("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getNumberFromToken(tokens[4])});`);
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
-*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.CenterPoint:
@@ -145,11 +158,6 @@ export class JSPublisher {
                     getXYFromToken(tokens[3]),
                     getXYFromToken(tokens[4])
                 ));
-
-             /*   r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterPoint("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getXYFromToken(tokens[4])});`);
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.PointPoint:
@@ -159,12 +167,6 @@ export class JSPublisher {
                     getXYFromToken(tokens[3]),
                     getXYFromToken(tokens[4])
                 ));
-/*
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circlePointPoint("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getXYFromToken(tokens[4])});`);
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
-*/
                 break;
 
 
@@ -176,69 +178,44 @@ export class JSPublisher {
                     getXYFromToken(tokens[4])
                 ));
                 break;
+
             case AppConfig.Runtime.Opcodes.Rect.CenterWH:
                 r.push(...getObjectCreationStatement(
                     tokens,
                     "rectangleCenter",
                     getXYFromToken(tokens[3]),
-                    getNumberFromToken(tokens[4]),
-                    getNumberFromToken(tokens[5])
+                    getNumOrRegFromToken(tokens[4]),
+                    getNumOrRegFromToken(tokens[5])
                 ));
-               /* r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleCenter("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getNumberFromToken(tokens[4])}, ` +
-                    `${getNumberFromToken(tokens[5])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
+
             case AppConfig.Runtime.Opcodes.Rect.TopLeftWH:
                 r.push(...getObjectCreationStatement(
                     tokens,
                     "rectangleTopLeft",
                     getXYFromToken(tokens[3]),
-                    getNumberFromToken(tokens[4]),
-                    getNumberFromToken(tokens[5])
+                    getNumOrRegFromToken(tokens[4]),
+                    getNumOrRegFromToken(tokens[5])
                 ));
-                // r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopLeft("${tokens[1].value}", ` +
-                //     `${getXYFromToken(tokens[3])}, ` +
-                //     `${getNumberFromToken(tokens[4])}, ` +
-                //     `${getNumberFromToken(tokens[5])}` +
-                //     ");"
-                // );
-                // r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
+
             case AppConfig.Runtime.Opcodes.Rect.TopRightWH:
                 r.push(...getObjectCreationStatement(
                     tokens,
                     "rectangleTopRight",
                     getXYFromToken(tokens[3]),
-                    getNumberFromToken(tokens[4]),
-                    getNumberFromToken(tokens[5])
+                    getNumOrRegFromToken(tokens[4]),
+                    getNumOrRegFromToken(tokens[5])
                 ));
-                /*r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopRight("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getNumberFromToken(tokens[4])}, ` +
-                    `${getNumberFromToken(tokens[5])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
             case AppConfig.Runtime.Opcodes.Rect.BottomLeftWH:
                 r.push(...getObjectCreationStatement(
                     tokens,
                     "rectangleBottomLeft",
                     getXYFromToken(tokens[3]),
-                    getNumberFromToken(tokens[4]),
-                    getNumberFromToken(tokens[5])
+                    getNumOrRegFromToken(tokens[4]),
+                    getNumOrRegFromToken(tokens[5])
                 ));
-               /* r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomLeft("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getNumberFromToken(tokens[4])}, ` +
-                    `${getNumberFromToken(tokens[5])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Rect.BottomRightWH:
@@ -246,16 +223,9 @@ export class JSPublisher {
                     tokens,
                     "rectangleBottomRight",
                     getXYFromToken(tokens[3]),
-                    getNumberFromToken(tokens[4]),
-                    getNumberFromToken(tokens[5])
+                    getNumOrRegFromToken(tokens[4]),
+                    getNumOrRegFromToken(tokens[5])
                 ));
-               /* r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomRight("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getNumberFromToken(tokens[4])}, ` +
-                    `${getNumberFromToken(tokens[5])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
 
@@ -266,19 +236,13 @@ export class JSPublisher {
                     getXYFromToken(tokens[3]),
                     getXYFromToken(tokens[4])
                 ));
-              /*  r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointPoint("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getXYFromToken(tokens[4])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);*/
                 break;
 
             case AppConfig.Runtime.Opcodes.Line.PointVectorLength:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointVectorLength("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getXYFromToken(tokens[4])}, ` +
-                    `${getNumberFromToken(tokens[5])}` +
+                    `${getNumOrRegFromToken(tokens[5])}` +
                     ");"
                 );
                 r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
@@ -291,6 +255,15 @@ export class JSPublisher {
             case AppConfig.Runtime.Opcodes.EndDo:
                 r.push(getEndDoForTokens(tokens));
                 break;
+
+            case AppConfig.Runtime.Opcodes.ForEach:
+                r.push(getForEachStartForTokens(tokens));
+                break;
+
+            case AppConfig.Runtime.Opcodes.EndEach:
+                r.push(getEndEachForTokens(tokens));
+                break;
+
 
             default:
                 UNREACHABLE(`Exporting of OPCODE "${opCode}" is not implemented.`);
@@ -315,8 +288,7 @@ export class JSPublisher {
                 return `${field.name} = ${field.value}`;
 
             case DataFieldType.List:
-                `${field.name} = [${( field.value as Array<number> ).join(", ")}]`;
-                break;
+                return `${field.name} = [${( field.value as Array<number> ).join(", ")}]`;
 
             case DataFieldType.String:
                 return `${field.name} = "${field.value}"`;
