@@ -33,9 +33,9 @@ export function getNumberFromToken(token: Token): string {
 
 const objects: { [key: string]: boolean } = {};
 
-export function getVariableName(token:Token): string {
+export function getVariableName(token: Token): string {
     if (objects[token.value as string]) {
-        return OBJECT_MAP + "." + token.value;
+        return getObjectVariable(token);
     } else if (token.value === AppConfig.Runtime.canvasObjectName) {
         return CANVAS;
     } else if (token.type == TokenTypes.REGISTERAT) {
@@ -49,11 +49,11 @@ export function getVariableName(token:Token): string {
 
 export function getObjectVariable(token: Token): string {
     objects[token.value as string] = true;
-    return `${OBJECT_MAP}.${token.value}`;
+    return `${OBJECT_MAP}["${token.value}"]`;
 }
 
 
-export function getDistance(tokenA:Token, tokenB:Token) {
+export function getDistance(tokenA: Token, tokenB: Token) {
     let r = "dapentry.distance(";
     r += getXYFromToken(tokenA);
     r += ", ";
@@ -62,7 +62,7 @@ export function getDistance(tokenA:Token, tokenB:Token) {
     return r;
 }
 
-export function getMidpoint(tokenA:Token, tokenB:Token) {
+export function getMidpoint(tokenA: Token, tokenB: Token) {
     let r = "dapentry.midPoint(";
     r += getXYFromToken(tokenA);
     r += ", ";
@@ -75,7 +75,6 @@ export function getMidpoint(tokenA:Token, tokenB:Token) {
 export class JSPublisher {
 
 
-
     public static getJSLine(code): Array<string> {
         const tokens = Parser.parseLine(code);
         const opCode = getOpCode(tokens);
@@ -86,23 +85,23 @@ export class JSPublisher {
             case AppConfig.Runtime.Opcodes.Circle.Legacy:
             case AppConfig.Runtime.Opcodes.Circle.CenterRadius:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterRadius("${tokens[1].value}", ` +
-                       `${getXYFromToken(tokens[3])}, ` +
-                       `${getNumberFromToken(tokens[4])});`);
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                    `${getXYFromToken(tokens[3])}, ` +
+                    `${getNumberFromToken(tokens[4])});`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.CenterPoint:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circleCenterPoint("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getXYFromToken(tokens[4])});`);
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
 
             case AppConfig.Runtime.Opcodes.Circle.PointPoint:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.circlePointPoint("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getXYFromToken(tokens[4])});`);
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
 
 
@@ -112,7 +111,7 @@ export class JSPublisher {
                     `${getXYFromToken(tokens[4])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.CenterWH:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleCenter("${tokens[1].value}", ` +
@@ -121,7 +120,7 @@ export class JSPublisher {
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.TopLeftWH:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopLeft("${tokens[1].value}", ` +
@@ -130,7 +129,7 @@ export class JSPublisher {
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.TopRightWH:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleTopRight("${tokens[1].value}", ` +
@@ -139,7 +138,7 @@ export class JSPublisher {
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
             case AppConfig.Runtime.Opcodes.Rect.BottomLeftWH:
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.rectangleBottomLeft("${tokens[1].value}", ` +
@@ -148,7 +147,7 @@ export class JSPublisher {
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
 
             case AppConfig.Runtime.Opcodes.Rect.BottomRightWH:
@@ -158,7 +157,7 @@ export class JSPublisher {
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
 
 
@@ -168,7 +167,7 @@ export class JSPublisher {
                     `${getXYFromToken(tokens[4])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
 
             case AppConfig.Runtime.Opcodes.Line.PointVectorLength:
@@ -178,7 +177,7 @@ export class JSPublisher {
                     `${getNumberFromToken(tokens[5])}` +
                     ");"
                 );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${tokens[2].value};`);
+                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 break;
 
             default:
@@ -219,7 +218,8 @@ export class JSPublisher {
     }
 
     public static getArgsCode(args: Array<DataField>): string {
-        return args.map(a => JSPublisher.getCodeForField(a)).join(", ");
+        const a = args.map(a => JSPublisher.getCodeForField(a));
+        return a.join(", ");
     }
 
     public static getFieldsCode(fields: Array<DataField>): Array<string> {
@@ -227,20 +227,26 @@ export class JSPublisher {
     }
 
 
+    public static getDrawingFunctionBody(code: string,
+                                  fields: Array<DataField>,
+                                  publishedNames: Array<string>): Array<string> {
+        const res = [];
+        res.push(...JSPublisher.getFieldsCode(fields));
+        res.push(`const ${OBJECT_MAP} = {};`)
+        res.push(...JSPublisher.getRawJSCode(code));
+        res.push(`return [${publishedNames.map(n => `${OBJECT_MAP}["${n}"]`).join(", ")}];`);
+
+        return res;
+    }
+
     public static getDrawingFunctionCode(
         code: string,
-        aspect: AspectRatio,
         args: Array<DataField>,
         fields: Array<DataField>,
         publishedNames: Array<string>): Array<string> {
 
         const res = [`function ${DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`];
-        res.push(...JSPublisher.getFieldsCode(fields));
-        res.push(`const ${OBJECT_MAP} = {};`)
-
-        res.push(...JSPublisher.getRawJSCode(code));
-
-        res.push(`return [${publishedNames.map(n => `${OBJECT_MAP}.${n}`).join(", ")}];`);
+        res.push(...JSPublisher.getDrawingFunctionBody(code, fields, publishedNames))
         res.push("}");
         return res;
     }
@@ -257,7 +263,7 @@ export class JSPublisher {
             .replace("<DRAWING_FUNCTION_NAME>", DRAWING_FUNCTION_NAME)
             .replace("<VIEWBOX_HEIGHT>", "" + height)
             .replace("<ASPECT_RATIO>", AspectRatio[aspect])
-            .replace("<DRAWING_FUNCTION>", this.getDrawingFunctionCode(code, aspect, args, fields, publishedNames).join("\n"))
+            .replace("<DRAWING_FUNCTION>", this.getDrawingFunctionCode(code, args, fields, publishedNames).join("\n"))
 
         return r;
     }
