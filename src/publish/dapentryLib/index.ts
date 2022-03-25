@@ -20,36 +20,8 @@
  */
 
 
-import {GrRectangle} from "../../geometry/GrRectangle";
-import {GrCircle} from "../../geometry/GrCircle";
 
-export {GrCanvas as Canvas} from "../../geometry/GrCanvas";
-export {GrLine as Line} from "../../geometry/GrLine";
-export {GrRectangle as Rectangle} from "../../geometry/GrRectangle";
-export {GrPolygon as Polygon} from "../../geometry/GrPolygon";
-export {GrCircle as Circle} from "../../geometry/GrCircle";
-export {GrText as Text} from "../../geometry/GrText";
-export {AspectRatio} from "../../geometry/AspectRatio";
+export * from "../library"
 export {SvgObjectRenderer as SVGRenderer} from "../../ui/drawing/SvgObjectRenderer";
-export * from "../creationHelpers"
-
-export const defaultStyles = {
-    default: {
-        "fillColor": "#FF7F50",
-        "strokeColor": "#FF7F50",
-        "fillOpacity": 0.2,
-        "strokeWidth": 2,
-    },
-    textDefault: {
-        "fillColor": "#FF7F50",
-        "strokeColor": "#FF7F50",
-        "fillOpacity": 1,
-        "strokeWidth": 0,
-        "textAlignment": 0,
-        "verticalAlignment": 0,
-        "fontFamily": "Sans-serif",
-        "fontSize": 50,
-    }
-};
 
 

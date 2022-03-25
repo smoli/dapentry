@@ -1,13 +1,11 @@
 import {describe, it} from "mocha";
 import {JSPublisher} from "../../src/publish/JSPublisher";
-import {AspectRatio} from "../../src/geometry/AspectRatio";
 import {expect} from "chai";
 
-import * as mockLib from "./mockLib";
+import * as library from "../../src/publish/library";
 import {GrCanvas} from "../../src/geometry/GrCanvas";
 import {ObjectType} from "../../src/geometry/GrObject";
 const canvas = GrCanvas.create_1_1(1000);
-
 
 describe('A published drawing', () => {
 
@@ -19,11 +17,11 @@ describe('A published drawing', () => {
 
         const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
 
-        const r = drawing(mockLib, canvas);
+        const r = drawing(library, canvas);
 
         expect(r.length).to.equal(1);
 
-        const rect:mockLib.Rectangle = r[0];
+        const rect:library.Rectangle = r[0];
 
         expect(rect.width).to.equal(500);
         expect(rect.height).to.equal(500);
@@ -41,7 +39,7 @@ describe('A published drawing', () => {
 
         const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
 
-        const r = drawing(mockLib, canvas);
+        const r = drawing(library, canvas);
 
         expect(r.length).to.equal(1);
         expect(r[0].type).to.equal(ObjectType.List);
