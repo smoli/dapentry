@@ -68,6 +68,7 @@ export function renderObjects(objects) {
  This recalculates and renders the drawing.
  */
 export function renderDrawing(data = [10, 20, 30, 40, 50]) {
+    __renderer.clear("Objects");
     renderObjects(drawing(data));
 }
 

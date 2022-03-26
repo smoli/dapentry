@@ -475,6 +475,7 @@ export class JSPublisher {
     public static getRenderDrawingFunctionCode(args: Array<DataField>): Array<string> {
         const res = [];
         res.push(`function ${RENDER_DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`)
+        res.push('\t__renderer.clear("Objects");')
         res.push(`\trenderObjects(${DRAWING_FUNCTION_NAME}(${args.map(a => a.name).join(",\n")}));`)
         res.push("}");
         return res;
