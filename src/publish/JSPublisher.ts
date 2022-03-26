@@ -19,7 +19,7 @@ export function getOpCode(tokens: Array<Token>): string {
 
 export function getXYFromToken(token: Token): string {
     if (token.type === TokenTypes.POINT) {
-        return `${getNumOrRegFromToken(token.value[0])}, ${getNumOrRegFromToken(token.value[1])}`;
+        return `${getExpressionFromToken(token.value[0])}, ${getExpressionFromToken(token.value[1])}`;
     } else if (token.type === TokenTypes.REGISTERAT || token.type === TokenTypes.REGISTER) {
         return `${getVariableName(token)}.x, ${getVariableName(token)}.y`
     }
@@ -27,9 +27,13 @@ export function getXYFromToken(token: Token): string {
     UNREACHABLE();
 }
 
-export function getNumOrRegFromToken(token: Token): string {
-    ASSERT(token.type === TokenTypes.NUMBER || token.type === TokenTypes.REGISTER, `${token} is no number token`);
-    return "" + token.value;
+export function getExpressionFromToken(token: Token): string {
+    if (token.type === TokenTypes.EXPRESSION) {
+        return Parser.constructCodeLine([token]);
+    } else {
+        ASSERT(token.type === TokenTypes.NUMBER || token.type === TokenTypes.REGISTER, `${token} is no number token`);
+        return "" + token.value;
+    }
 }
 
 export function getLiteralFromStringToken(token: Token): string {
@@ -169,7 +173,7 @@ export class JSPublisher {
                     tokens,
                     "circleCenterRadius",
                     getXYFromToken(tokens[3]),
-                    getNumOrRegFromToken(tokens[4])
+                    getExpressionFromToken(tokens[4])
                 ));
                 break;
 
@@ -206,8 +210,8 @@ export class JSPublisher {
                     tokens,
                     "rectangleCenter",
                     getXYFromToken(tokens[3]),
-                    getNumOrRegFromToken(tokens[4]),
-                    getNumOrRegFromToken(tokens[5])
+                    getExpressionFromToken(tokens[4]),
+                    getExpressionFromToken(tokens[5])
                 ));
                 break;
 
@@ -216,8 +220,8 @@ export class JSPublisher {
                     tokens,
                     "rectangleTopLeft",
                     getXYFromToken(tokens[3]),
-                    getNumOrRegFromToken(tokens[4]),
-                    getNumOrRegFromToken(tokens[5])
+                    getExpressionFromToken(tokens[4]),
+                    getExpressionFromToken(tokens[5])
                 ));
                 break;
 
@@ -226,8 +230,8 @@ export class JSPublisher {
                     tokens,
                     "rectangleTopRight",
                     getXYFromToken(tokens[3]),
-                    getNumOrRegFromToken(tokens[4]),
-                    getNumOrRegFromToken(tokens[5])
+                    getExpressionFromToken(tokens[4]),
+                    getExpressionFromToken(tokens[5])
                 ));
                 break;
             case AppConfig.Runtime.Opcodes.Rect.BottomLeftWH:
@@ -235,8 +239,8 @@ export class JSPublisher {
                     tokens,
                     "rectangleBottomLeft",
                     getXYFromToken(tokens[3]),
-                    getNumOrRegFromToken(tokens[4]),
-                    getNumOrRegFromToken(tokens[5])
+                    getExpressionFromToken(tokens[4]),
+                    getExpressionFromToken(tokens[5])
                 ));
                 break;
 
@@ -245,8 +249,8 @@ export class JSPublisher {
                     tokens,
                     "rectangleBottomRight",
                     getXYFromToken(tokens[3]),
-                    getNumOrRegFromToken(tokens[4]),
-                    getNumOrRegFromToken(tokens[5])
+                    getExpressionFromToken(tokens[4]),
+                    getExpressionFromToken(tokens[5])
                 ));
                 break;
 
@@ -264,7 +268,7 @@ export class JSPublisher {
                 r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointVectorLength("${tokens[1].value}", ` +
                     `${getXYFromToken(tokens[3])}, ` +
                     `${getXYFromToken(tokens[4])}, ` +
-                    `${getNumOrRegFromToken(tokens[5])}` +
+                    `${getExpressionFromToken(tokens[5])}` +
                     ");"
                 );
                 r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
@@ -290,8 +294,8 @@ export class JSPublisher {
             case AppConfig.Runtime.Opcodes.Scale.Factor:
                 r.push(`${MODULE}.scaleObject(` +
                     `${getObjectVariable(tokens[1])}, ` +
-                    `${getNumOrRegFromToken(tokens[2])}, ` +
-                    `${getNumOrRegFromToken(tokens[3])}, ` +
+                    `${getExpressionFromToken(tokens[2])}, ` +
+                    `${getExpressionFromToken(tokens[3])}, ` +
                     `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.x, ` +
                     `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.y` +
                     `);`)
@@ -299,7 +303,7 @@ export class JSPublisher {
             case AppConfig.Runtime.Opcodes.Scale.FactorUniform:
                 r.push(`${MODULE}.scaleObjectUniform(` +
                     `${getObjectVariable(tokens[1])}, ` +
-                    `${getNumOrRegFromToken(tokens[2])}, ` +
+                    `${getExpressionFromToken(tokens[2])}, ` +
                     `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[3])}.x, ` +
                     `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[3])}.y` +
                     `);`)
@@ -339,14 +343,14 @@ export class JSPublisher {
                 r.push(`${MODULE}.moveObjectAlongX(` +
                     `${getObjectVariable(tokens[1])}, ` +
                     `${getPoiFromRegisterAt(tokens[1])}, ` +
-                    `${getNumOrRegFromToken(tokens[2])}` +
+                    `${getExpressionFromToken(tokens[2])}` +
                     `);`);
                 break;
             case AppConfig.Runtime.Opcodes.Move.AlongY:
                 r.push(`${MODULE}.moveObjectAlongY(` +
                     `${getObjectVariable(tokens[1])}, ` +
                     `${getPoiFromRegisterAt(tokens[1])}, ` +
-                    `${getNumOrRegFromToken(tokens[2])}` +
+                    `${getExpressionFromToken(tokens[2])}` +
                     `);`);
                 break;
 
@@ -376,6 +380,36 @@ export class JSPublisher {
         return r;
     }
 
+    public static getCodeForExpression(token: Token): string {
+
+        const walk = (token: Token): string => {
+            switch (token.type) {
+                case TokenTypes.REGISTER:
+                case TokenTypes.NONLOCALREGISTER:
+                case TokenTypes.REGISTERAT:
+                case TokenTypes.NUMBER:
+                case TokenTypes.OPERATOR:
+                    return token.value as string;
+
+                case TokenTypes.EXPRESSION:
+                    return walk(token.value[0]) + " " +
+                           walk(token.value[1]) + " " +
+                        walk(token.value[2]);
+
+                case TokenTypes.MATHFUNC:
+                    return `${MODULE}.${token.value[0].value}(${walk(token.value[1])})`
+
+
+                default:
+                    UNREACHABLE(`Unsupported token type ${TokenTypes[token.type]} in expression`);
+
+            }
+        }
+
+        return walk(token);
+
+    }
+
     public static getCodeForField(field: DataField): string {
         switch (field.type) {
             case DataFieldType.Number:
@@ -385,6 +419,14 @@ export class JSPublisher {
                 return `${field.name} = [${( field.value as Array<number> ).join(", ")}]`;
 
             case DataFieldType.String:
+                try {
+                    const token = Parser.parseExpression(field.value as string);
+                    if (token) {
+                        return `${field.name} = ${JSPublisher.getCodeForExpression(token)}`;
+                    }
+                } catch (e) {
+                    return `${field.name} = "${field.value}"`;
+                }
                 return `${field.name} = "${field.value}"`;
 
             case DataFieldType.Table:

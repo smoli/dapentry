@@ -6,8 +6,26 @@ import * as library from "../../src/publish/library";
 import {GrCanvas} from "../../src/geometry/GrCanvas";
 import {ObjectType} from "../../src/geometry/GrObject";
 import {DataField, DataFieldType} from "../../src/state/modules/Data";
+import {bind} from "lodash";
 
 const canvas = GrCanvas.create_1_1(1000);
+
+const libProxyHandler = {
+    get(target, propkey) {
+        return (...args) => {
+            console.group("\nCall to " + propkey);
+            args.forEach(a => console.log(a));
+            const r = target[propkey].apply(target, args);
+
+            console.log("Result: ", r, "\n");
+
+            console.groupEnd();
+            return r;
+        };
+    }
+}
+
+const loggingLib = new Proxy(library, libProxyHandler);
 
 describe('A published drawing', () => {
 
@@ -112,6 +130,25 @@ describe('A published drawing', () => {
             ENDEACH        
         `;
 
+
+        /*
+        const data = [10, 20, 30, 40, 50];
+const width = 1 / dapentry.size(data);
+const ratio = 1 / dapentry.max(data);
+const __objects = dapentry.makeObjectManager();
+__objects("Rectangle3", dapentry.rectanglePointPoint("Rectangle3", __canvas.topLeft.x, __canvas.topLeft.y, __canvas.bottomRight.x, __canvas.bottomRight.y));
+__objects("Rectangle3").style = dapentry.$styles.default;
+dapentry.scaleObject(__objects("Rectangle3"), width, 1, __objects("Rectangle3").left.x, __objects("Rectangle3").left.y);
+data.forEach(data => {
+__objects("Rectangle4", dapentry.rectanglePointPoint("Rectangle4", __objects("Rectangle3").topLeft.x, __objects("Rectangle3").topLeft.y, __objects("Rectangle3").bottomRight.x, __objects("Rectangle3").bottomRight.y));
+__objects("Rectangle4").style = dapentry.$styles.default;
+dapentry.scaleObject(__objects("Rectangle4"), 1, (data * ratio), __objects("Rectangle4").bottom.x, __objects("Rectangle4").bottom.y);
+dapentry.moveObjectToPoint
+                (__objects("Rectangle3"), 9, __objects("Rectangle3"), 10);
+});
+return [__objects("Rectangle4")];
+         */
+
         const fields: Array<DataField> = [{
             name: "data", type: DataFieldType.List, published: false, description: "",
             value: [10, 20, 30, 40, 50]
@@ -125,6 +162,8 @@ describe('A published drawing', () => {
         ];
 
         const jsCode = JSPublisher.getDrawingFunctionBody(code, fields, ["Rectangle4"]);
+
+        console.log(jsCode.join("\n"));
 
         const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
 

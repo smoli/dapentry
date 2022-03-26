@@ -129,3 +129,29 @@ export function moveObjectToPoint(object: GrObject, point: POI, targetObject: Gr
     object.movePOI(point, v);
 }
 
+
+export function size(value: Array<any>):number {
+    return value.length;
+}
+
+export function max(value: Array<number>): number {
+    return Math.max.apply(null, value);
+}
+
+export function avg(value: Array<number>): number {
+    return value.reduce((a, b) => a + b) / value.length;
+}
+
+export function median(value: Array<number>): number {
+    const s = [...value].sort((a, b) => a - b);
+    const c = Math.floor(s.length / 2);
+
+    let r = s[c]
+
+    if (s.length % 2 === 0) {
+        r = r + s[c - 1];
+        return r / 2;
+    }
+
+    return r
+}

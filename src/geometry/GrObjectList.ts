@@ -79,6 +79,13 @@ export class GrObjectList extends GrObject {
         }
     }
 
+    scale(fx: number, fy: number, pivot: Point2D = null) {
+        this._objects.last.scale(fx, fy, pivot);
+    }
+
+    rotateByDeg(value: number, pivot: Point2D = null) {
+        this._objects.last.rotateByDeg(value, pivot);
+    }
 
     at(where: WHERE_VALUE): (Point2D | string | number) {
         if (!this._objects.last) {
