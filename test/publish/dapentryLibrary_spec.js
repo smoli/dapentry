@@ -14,9 +14,11 @@ import {
     rectangleTopRight,
     scaleObject,
     scaleObjectUniform,
-    scaleObjectToPoint, scaleObjectToPointUniform
+    scaleObjectToPoint, scaleObjectToPointUniform, moveObject, moveObjectAlongX, moveObjectAlongY, moveObjectToPoint
 } from "../../src/publish/operationHelpers";
 import {GrRectangle} from "../../src/geometry/GrRectangle";
+import {GrCircle} from "../../src/geometry/GrCircle";
+import {POI} from "../../src/geometry/GrObject";
 
 
 describe('dapentry library', () => {
@@ -172,5 +174,42 @@ describe('dapentry library', () => {
             expect(r.bottom).to.deep.equal({ x: 100, y: 175 })
             expect(r.top).to.deep.equal({ x: 100, y: 0 })
        });
+    });
+
+    describe("provides functions for moving", () => {
+
+        it('move by vector', () => {
+            const c = new GrCircle("c", 100, 50, 75);
+
+            moveObject(c, POI.center, 10, 15);
+
+            expect(c.center).to.deep.equal({ x: 110, y: 65 })
+        });
+
+        it('move along x axis', () => {
+            const c = new GrCircle("c", 100, 50, 75);
+
+            moveObjectAlongX(c, POI.center, 10);
+
+            expect(c.center).to.deep.equal({ x: 110, y: 50 })
+        });
+
+        it('move along y axis', () => {
+            const c = new GrCircle("c", 100, 50, 75);
+
+            moveObjectAlongY(c, POI.center, 10);
+
+            expect(c.center).to.deep.equal({ x: 100, y: 60 })
+        });
+
+        it('move to a point', () => {
+            const c1 = new GrCircle("c", 100, 50, 75);
+            const c2 = new GrCircle("c", 150, 80, 50);
+
+            moveObjectToPoint(c1, POI.left, c2, POI.right);
+
+            expect(c1.center).to.deep.equal({ x: 275, y: 80 })
+        });
+
     });
 });

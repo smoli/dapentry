@@ -1,13 +1,15 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {
-    getNumOrRegFromToken,
+    getNumOrRegFromToken, getObjectVariable,
     getOpCode,
     getVariableName,
     getXYFromToken,
+    getPoiFromRegisterAt,
     JSPublisher
 } from "../../src/publish/JSPublisher";
 import {T_NUMBER, T_OPCODE, T_POINT, T_POINT_NN, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
+import {POI} from "../../src/geometry/GrObject";
 
 
 describe('JS publisher', () => {
@@ -40,6 +42,18 @@ describe('JS publisher', () => {
         it("gets the variable name from a register token", () => {
             expect(getVariableName(T_REGISTER("df"))).to.equal("df");
         });
+
+        it("get object reference from a register", () => {
+           expect(getObjectVariable(T_REGISTER("ob"))).to.equal(`__objects("ob")`);
+        });
+
+        it("get object reference from an at-register", () => {
+           expect(getObjectVariable(T_REGISTERAT("ob", "center"))).to.equal(`__objects("ob")`);
+        });
+
+        it("get poi id from register at", () => {
+            expect(getPoiFromRegisterAt(T_REGISTERAT("ob", "center"))).to.equal(POI.center);
+        })
     });
 
     describe("exporting circle statements", () => {
@@ -168,5 +182,28 @@ describe('JS publisher', () => {
                 `dapentry.scaleObjectToPoint(__objects("Rectangle1"), __objects("Rectangle1").top.x, __objects("Rectangle1").top.y, __canvas.top.x, __canvas.top.y, __objects("Rectangle1").bottom.x, __objects("Rectangle1").bottom.y);`
             ]);
         });
-    })
+    });
+
+    describe("moving statements", () => {
+       it("exports move by", () => {
+          const code = `MOVEBY Rectangle1@center,(170, 179)`;
+          let js = JSPublisher.getJSLine(code);
+
+          expect(js).to.deep.equal([
+             `dapentry.moveObject(__objects("Rectangle1"), ${POI.center}, 170, 179);`
+          ]);
+       });
+
+       it("exports move to point", () => {
+          const code = `MOVETO Rectangle1@bottomRight,Canvas@center`;
+          let js = JSPublisher.getJSLine(code);
+
+          expect(js).to.deep.equal([
+             `dapentry.moveObjectToPoint(__objects("Rectangle1"), ${POI.bottomRight}, __canvas, ${POI.center});`
+          ]);
+
+       });
+    });
+
+
 });

@@ -4,6 +4,7 @@ import {AppConfig} from "../core/AppConfig";
 import {AspectRatio} from "../geometry/AspectRatio";
 import {DataField, DataFieldType} from "../state/modules/Data";
 import {jsPublishTemplate} from "./jsPublishTemplate";
+import {POI} from "../geometry/GrObject";
 
 
 const OBJECT_MANAGER = "__objects";
@@ -53,13 +54,29 @@ export function getVariableName(token: Token): string {
 }
 
 export function getObjectVariable(token: Token): string {
-    objects[token.value as string] = true;
-    return `${OBJECT_MANAGER}("${token.value}")`;
+    let name:string;
+    if (token.type === TokenTypes.REGISTER) {
+        name = token.value as string;
+    } else if (token.type === TokenTypes.REGISTERAT) {
+        name = token.value[0].value as string;
+    }
+
+    if (name === AppConfig.Runtime.canvasObjectName) {
+        return CANVAS;
+    }
+
+    objects[name] = true;
+    return `${OBJECT_MANAGER}("${name}")`;
 }
 
 export function getObjectVariableSetter(token: Token, code: string): string {
     objects[token.value as string] = true;
     return `${OBJECT_MANAGER}("${token.value}", ${code})`;
+}
+
+export function getPoiFromRegisterAt(token: Token): number {
+    ASSERT(token.type === TokenTypes.REGISTERAT, "Token is no REGISTERAT");
+    return POI[token.value[1].value as string];
 }
 
 
@@ -310,10 +327,42 @@ export class JSPublisher {
                 break;
 
 
+            case AppConfig.Runtime.Opcodes.Move.ByVector:
+                r.push(`${MODULE}.moveObject(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getPoiFromRegisterAt(tokens[1])}, ` +
+                    `${getXYFromToken(tokens[2])}` +
+                    `);`);
+                break;
+
+            case AppConfig.Runtime.Opcodes.Move.AlongX:
+                r.push(`${MODULE}.moveObjectAlongX(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getPoiFromRegisterAt(tokens[1])}, ` +
+                    `${getNumOrRegFromToken(tokens[2])}` +
+                    `);`);
+                break;
+            case AppConfig.Runtime.Opcodes.Move.AlongY:
+                r.push(`${MODULE}.moveObjectAlongY(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getPoiFromRegisterAt(tokens[1])}, ` +
+                    `${getNumOrRegFromToken(tokens[2])}` +
+                    `);`);
+                break;
+
+            case AppConfig.Runtime.Opcodes.Move.ToPoint:
+                r.push(`${MODULE}.moveObjectToPoint
+                (` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getPoiFromRegisterAt(tokens[1])}, ` +
+                    `${getObjectVariable(tokens[2])}, ` +
+                    `${getPoiFromRegisterAt(tokens[2])}` +
+                    `);`);
+                break;
+
             default:
                 UNREACHABLE(`Exporting of OPCODE "${opCode}" is not implemented.`);
         }
-
         return r;
     }
 

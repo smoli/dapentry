@@ -107,7 +107,6 @@ export class GfxMove extends GfxOperation {
                 to = this.target.at(this._referencePoint.where) as Point2D;
                 // @ts-ignore
                 from = this.target.at(this._targetPoint.where) as Point2D;
-
             }
         }
 
