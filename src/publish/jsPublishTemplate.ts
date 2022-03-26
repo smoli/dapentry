@@ -9,11 +9,17 @@ import * as dapentry from "./dapentryLib.mjs";
 let __viewBoxHeight = <VIEWBOX_HEIGHT>;
 let __aspectRatio = "<ASPECT_RATIO>";
 
-const $styles = dapentry.defaultStyles;
 const __renderer = new dapentry.SVGRenderer();
 let __canvas = null;
 let __viewBoxWidth = __viewBoxHeight;
 
+/**
+ * Initialize the drawing.
+ *
+ * @param svgElementID      The id of the dom element to draw to. Must be an svg.
+ * @param aspectRatio       The aspect ratio the drawing should be. Valid values are 'ar1_1', 'ar3_2', 'ar4_3', 'ar16_9', 'ar16_10'
+ * @param viewBoxHeight     The height of the viewbox. Width will be calculated based on the aspect ratio.
+ */
 export function init(svgElementID, aspectRatio = __aspectRatio, viewBoxHeight = __viewBoxHeight) {
     __renderer.init(svgElementID);
 
@@ -52,13 +58,25 @@ export function init(svgElementID, aspectRatio = __aspectRatio, viewBoxHeight = 
 }
 
 
-export function renderDrawing(radius = 200) {
-    renderObjects(<DRAWING_FUNCTION_NAME>(radius))
-}
-
+/**
+    Renders a list of objects.
+*/
 export function renderObjects(objects) {
     objects.forEach(o => __renderer.render(o, false));
 }
 
-<DRAWING_FUNCTION>
+/**
+    This recalculates and renders the drawing.
+*/
+export <RENDER_DRAWING_FUNCTION>
+
+/**
+    This only recalculates the drawing. The result
+    is a list of objects that you can pass to
+     
+        renderObjects
+        
+    to redraw the drawing.
+*/
+export <DRAWING_FUNCTION>
 `;

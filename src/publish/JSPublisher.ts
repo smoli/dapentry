@@ -10,6 +10,7 @@ import {POI} from "../geometry/GrObject";
 const OBJECT_MANAGER = "__objects";
 const MODULE = "dapentry";
 const DRAWING_FUNCTION_NAME = "drawing";
+const RENDER_DRAWING_FUNCTION_NAME = "renderDrawing";
 const CANVAS = "__canvas";
 
 export function getOpCode(tokens: Array<Token>): string {
@@ -58,7 +59,7 @@ export function getVariableName(token: Token): string {
 }
 
 export function getObjectVariable(token: Token): string {
-    let name:string;
+    let name: string;
     if (token.type === TokenTypes.REGISTER) {
         name = token.value as string;
     } else if (token.type === TokenTypes.REGISTERAT) {
@@ -393,7 +394,7 @@ export class JSPublisher {
 
                 case TokenTypes.EXPRESSION:
                     return walk(token.value[0]) + " " +
-                           walk(token.value[1]) + " " +
+                        walk(token.value[1]) + " " +
                         walk(token.value[2]);
 
                 case TokenTypes.MATHFUNC:
@@ -471,6 +472,14 @@ export class JSPublisher {
         return res;
     }
 
+    public static getRenderDrawingFunctionCode(args: Array<DataField>): Array<string> {
+        const res = [];
+        res.push(`function ${RENDER_DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`)
+        res.push(`\trenderObjects(${DRAWING_FUNCTION_NAME}(${args.map(a => a.name).join(",\n")}));`)
+        res.push("}");
+        return res;
+    }
+
     public static getDrawingModule(
         code: string,
         aspect: AspectRatio,
@@ -484,6 +493,7 @@ export class JSPublisher {
             .replace("<VIEWBOX_HEIGHT>", "" + height)
             .replace("<ASPECT_RATIO>", AspectRatio[aspect])
             .replace("<DRAWING_FUNCTION>", JSPublisher.getDrawingFunctionCode(code, args, fields, publishedNames).join("\n"))
+            .replace("<RENDER_DRAWING_FUNCTION>", JSPublisher.getRenderDrawingFunctionCode(args).join("\n"));
 
         return r;
     }

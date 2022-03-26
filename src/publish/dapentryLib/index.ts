@@ -22,6 +22,7 @@
 
 
 export * from "../library"
+export {GrCanvas as Canvas} from "../../geometry/GrCanvas";
 export {SvgObjectRenderer as SVGRenderer} from "../../ui/drawing/SvgObjectRenderer";
 
 

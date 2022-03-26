@@ -1,6 +1,7 @@
 import {GrObject, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {WHERE_VALUE} from "../runtime/interpreter/types/AtParameter";
 import {Point2D} from "./Point2D";
+import {Style} from "../core/StyleManager";
 
 class ObjectArray extends Array<GrObject> {
     private _baseName: string;
@@ -95,11 +96,15 @@ export class GrObjectList extends GrObject {
         return this._objects.last.at(where);
     }
 
-    get style() {
+    get style():Style {
         if (!this._objects.last) {
             return null;
         }
         return this._objects.last.style;
+    }
+
+    set style(value: Style) {
+        this._objects.last.style = value;
     }
 
     get fillOpacity() {
@@ -157,5 +162,38 @@ export class GrObjectList extends GrObject {
         }
         this._objects.last.strokeWidth = value;
     }
+
+    get bottom(): Point2D {
+        return this._objects.last.bottom;
+    }
+
+    get top(): Point2D {
+        return this._objects.last.top;
+    }
+
+    get left(): Point2D {
+        return this._objects.last.left;
+    }
+
+    get right(): Point2D {
+        return this._objects.last.right;
+    }
+
+    get topLeft(): Point2D {
+        return this._objects.last["topLeft"];
+    }
+
+    get topRight(): Point2D {
+        return this._objects.last["topRight"];
+    }
+
+    get bottomRight(): Point2D {
+        return this._objects.last["bottomRight"];
+    }
+
+    get bottomLeft(): Point2D {
+        return this._objects.last["bottomLeft"];
+    }
+
 
 }

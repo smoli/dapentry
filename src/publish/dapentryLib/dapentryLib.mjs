@@ -1,3 +1,22 @@
+function $parcel$export(e, n, v, s) {
+  Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
+}
+function $parcel$exportWildcard(dest, source) {
+  Object.keys(source).forEach(function(key) {
+    if (key === 'default' || key === '__esModule' || dest.hasOwnProperty(key)) {
+      return;
+    }
+
+    Object.defineProperty(dest, key, {
+      enumerable: true,
+      get: function get() {
+        return source[key];
+      }
+    });
+  });
+
+  return dest;
+}
 var $parcel$global =
 typeof globalThis !== 'undefined'
   ? globalThis
@@ -36,6 +55,17 @@ if (parcelRequire == null) {
 
   $parcel$global["parcelRequire592b"] = parcelRequire;
 }
+var $f794df200bdd1c64$exports = {};
+
+$parcel$export($f794df200bdd1c64$exports, "$styles", () => $f794df200bdd1c64$export$bb7311ec83c149ab);
+$parcel$export($f794df200bdd1c64$exports, "makeObjectManager", () => $f794df200bdd1c64$export$9a199263f62e818d);
+$parcel$export($f794df200bdd1c64$exports, "Canvas", () => $b834cbea40bafe97$export$9b40e5dd2ee321ea);
+$parcel$export($f794df200bdd1c64$exports, "Line", () => $973b23ce99918ba1$export$37563e431fdea7bd);
+$parcel$export($f794df200bdd1c64$exports, "Rectangle", () => $d4397e41424130cc$export$30a59a0caead8e7a);
+$parcel$export($f794df200bdd1c64$exports, "Polygon", () => $7f75fa07e5d188f3$export$150c260caa43ceb8);
+$parcel$export($f794df200bdd1c64$exports, "Circle", () => $f5a4253b3c677715$export$25ceb2c69899a589);
+$parcel$export($f794df200bdd1c64$exports, "Text", () => $56919d7b8c67450a$export$23e702491ed1c44c);
+$parcel$export($f794df200bdd1c64$exports, "AspectRatio", () => $9b7a75a9356c9401$export$e840e8869344ca38);
 class $bcd40cdc131f79c5$export$6212d225472eb66a {
     constructor(x, y){
         this.x = x;
@@ -689,278 +719,124 @@ $92808e6f1672ab53$export$ad0875ee5f43e1f._objectNames = [
 
 
 
-
-class $d4397e41424130cc$export$30a59a0caead8e7a extends $92808e6f1672ab53$export$ad0875ee5f43e1f {
-    constructor(name, x, y, w, h){
-        super($92808e6f1672ab53$export$53f0d9fcb05d9d1d.Rectangle, name, x, y);
-        this._width = w;
-        this._height = h;
+class $e60ec5afccde461f$var$ObjectArray extends Array {
+    set baseName(value) {
+        this._baseName = value;
     }
-    static create(name, x, y, w, h) {
-        return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x, y, w, h);
+    push(...items) {
+        let index = this.length;
+        const r = super.push(...items);
+        items.forEach((obj, i)=>{
+            obj.uniqueName = this._baseName + "-" + (index + i);
+        });
+        return r;
+    }
+    get last() {
+        if (this.length) return this[this.length - 1];
+        return undefined;
+    }
+}
+class $e60ec5afccde461f$export$fefeb732093e696a extends $92808e6f1672ab53$export$ad0875ee5f43e1f {
+    constructor(name){
+        super($92808e6f1672ab53$export$53f0d9fcb05d9d1d.List, name, 0, 0);
+        this._objects = new $e60ec5afccde461f$var$ObjectArray();
+        this._objects.baseName = this.uniqueName;
     }
     copy() {
-        return $d4397e41424130cc$export$30a59a0caead8e7a.create(this._uniqueName, this.center.x, this.center.y, this.width, this.height);
+        const copy = new $e60ec5afccde461f$export$fefeb732093e696a(this._uniqueName);
+        copy._objects = this._objects;
+        return copy;
     }
-    get height() {
-        return this._height;
+    get objects() {
+        return this._objects;
     }
-    set height(value) {
-        this._height = value;
-    }
-    get width() {
-        return this._width;
-    }
-    set width(value) {
-        this._width = value;
-    }
-    get boundingBox() {
-        return Object.assign(Object.assign({}, super.boundingBox), {
-            w: this._width,
-            h: this._height
-        });
-    }
-    get topLeft() {
-        return this.makePoint(-this.width / 2, -this.height / 2);
-    }
-    get topRight() {
-        return this.makePoint(this.width / 2, -this.height / 2);
-    }
-    get bottomRight() {
-        return this.makePoint(this.width / 2, this.height / 2);
-    }
-    get bottomLeft() {
-        return this.makePoint(-this.width / 2, this.height / 2);
-    }
-    scale(fx, fy, pivot = null) {
-        if ($ad5b03a8205d6f7a$export$42b5981aee884db0(pivot, this._center)) {
-            this._width *= Math.abs(fx);
-            this._height *= Math.abs(fy);
-            return;
-        }
-        const pl = this.mapPointToLocal(pivot);
-        const cl = this.mapPointToLocal(this._center);
-        const dxl = (pl.x - cl.x) * (1 - fx);
-        const dyl = (pl.y - cl.y) * (1 - fy);
-        const dg = this.mapVectorToGlobal(new $bcd40cdc131f79c5$export$6212d225472eb66a(dxl, dyl));
-        this._center.add(dg);
-        this._width *= Math.abs(fx);
-        this._height *= Math.abs(fy);
-    }
-    getScaleResetInfo() {
-        return {
-            width: this._width,
-            height: this._height,
-            center: this.center.copy
-        };
-    }
-    resetScaling(info) {
-        this._width = info.width;
-        this._height = info.height;
-        this._center = info.center.copy;
+    addObject(object) {
+        this._objects.push(object);
+        object.setParent(this);
     }
     pointsOfInterest(purpose) {
-        return Object.assign(Object.assign({}, super.pointsOfInterest(purpose)), {
-            [$92808e6f1672ab53$export$595246eedb19e9bc.topLeft]: this.topLeft.copy,
-            [$92808e6f1672ab53$export$595246eedb19e9bc.topRight]: this.topRight.copy,
-            [$92808e6f1672ab53$export$595246eedb19e9bc.bottomLeft]: this.bottomLeft.copy,
-            [$92808e6f1672ab53$export$595246eedb19e9bc.bottomRight]: this.bottomRight.copy
-        });
+        if (purpose === $92808e6f1672ab53$export$58fb1881ac046f3b.MANIPULATION || purpose === $92808e6f1672ab53$export$58fb1881ac046f3b.SCALING) {
+            if (this._objects.last) return this._objects.last.pointsOfInterest($92808e6f1672ab53$export$58fb1881ac046f3b.MANIPULATION);
+        } else if (purpose === $92808e6f1672ab53$export$58fb1881ac046f3b.SNAPPING) {
+            if (this._objects.length === 1) return this._objects.last.pointsOfInterest($92808e6f1672ab53$export$58fb1881ac046f3b.SNAPPING);
+            else if (this._objects.length > 1) return this._objects[this._objects.length - 2].pointsOfInterest($92808e6f1672ab53$export$58fb1881ac046f3b.SNAPPING);
+        } else return {};
     }
-    getPivotFor(poi) {
-        switch(poi){
-            case $92808e6f1672ab53$export$595246eedb19e9bc.topLeft:
-                return $92808e6f1672ab53$export$595246eedb19e9bc.bottomRight;
-            case $92808e6f1672ab53$export$595246eedb19e9bc.topRight:
-                return $92808e6f1672ab53$export$595246eedb19e9bc.bottomLeft;
-            case $92808e6f1672ab53$export$595246eedb19e9bc.bottomLeft:
-                return $92808e6f1672ab53$export$595246eedb19e9bc.topRight;
-            case $92808e6f1672ab53$export$595246eedb19e9bc.bottomRight:
-                return $92808e6f1672ab53$export$595246eedb19e9bc.topLeft;
-            default:
-                return super.getPivotFor(poi);
-        }
+    movePOI(poi, byVector) {
+        if (this._objects.last) return this._objects.last.movePOI(poi, byVector);
     }
-    get publishedProperties() {
-        return [
-            {
-                name: "Width",
-                id: "width",
-                value: this._width
-            },
-            {
-                name: "Height",
-                id: "height",
-                value: this._height
-            },
-            {
-                name: "Area",
-                id: "area",
-                value: this._width * this._height
-            },
-            {
-                name: "Circumference",
-                id: "circumference",
-                value: 2 * (this._width + this._height)
-            },
-            ...super.publishedProperties
-        ];
+    scale(fx, fy, pivot = null) {
+        this._objects.last.scale(fx, fy, pivot);
     }
-}
-
-
-
-
-
-
-class $5fadf28b37c9ced6$export$8f6e4a0088afd800 {
-    constructor(n, d){
-        this.n = n.copy;
-        this.d = d;
+    rotateByDeg(value, pivot = null) {
+        this._objects.last.rotateByDeg(value, pivot);
     }
-    static createPP(p1, p2) {
-        return $5fadf28b37c9ced6$export$8f6e4a0088afd800.createPV(p1, p2.copy.sub(p1));
+    at(where) {
+        if (!this._objects.last) return null;
+        return this._objects.last.at(where);
     }
-    static createPV(pointOnLine, vector) {
-        let nx = -vector.y;
-        let ny = vector.x;
-        const s = nx * pointOnLine.x + ny * pointOnLine.y;
-        const l = Math.sqrt(Math.pow(nx, 2) + Math.pow(ny, 2));
-        if (s > 0) {
-            nx /= l;
-            ny /= l;
-        } else {
-            nx /= -l;
-            ny /= -l;
-        }
-        let d = nx * pointOnLine.x + ny * pointOnLine.y;
-        return new $5fadf28b37c9ced6$export$8f6e4a0088afd800(new $bcd40cdc131f79c5$export$6212d225472eb66a(nx, ny), d);
+    get style() {
+        if (!this._objects.last) return null;
+        return this._objects.last.style;
     }
-    pointOnLine(point) {
-        return $ad5b03a8205d6f7a$export$9663ddc1cf085b32(point.x * this.n.x + point.y * this.n.y, this.d);
+    set style(value) {
+        this._objects.last.style = value;
     }
-    projectPoint(point) {
-        return point.projectOnLine(this);
+    get fillOpacity() {
+        if (!this._objects.last) return null;
+        return this._objects.last.fillOpacity;
     }
-    intersectLine(line) {
-        const det = this.n.x * line.n.y - this.n.y * line.n.x;
-        if ($ad5b03a8205d6f7a$export$9663ddc1cf085b32(det, 0)) return null;
-        const x = (this.d * line.n.y - line.d * this.n.y) / det;
-        const y = (this.d * line.n.x - line.d * this.n.x) / det;
-        return new $bcd40cdc131f79c5$export$6212d225472eb66a(x, y);
+    get fillColor() {
+        if (!this._objects.last) return null;
+        return this._objects.last.fillColor;
     }
-    intersectCircle(circle) {
-        const dl = -(circle.o.x * this.n.x + circle.o.y * this.n.y - this.d);
-        const det = this.n.x * this.n.x + this.n.y * this.n.y;
-        if ($ad5b03a8205d6f7a$export$9663ddc1cf085b32(det, 0)) return [];
-        let sq = Math.pow(circle.r, 2) * det - Math.pow(dl, 2);
-        if ($ad5b03a8205d6f7a$export$9663ddc1cf085b32(sq, 0)) return [
-            new $bcd40cdc131f79c5$export$6212d225472eb66a(this.n.x * dl / det + circle.o.x, this.n.y * dl / det + circle.o.x)
-        ];
-        else if (sq > 0) {
-            sq = Math.sqrt(sq);
-            let x = (this.n.x * dl + this.n.y * sq) / det + circle.o.x;
-            let y = (this.n.y * dl - this.n.x * sq) / det + circle.o.y;
-            const p1 = new $bcd40cdc131f79c5$export$6212d225472eb66a(x, y);
-            x = (this.n.x * dl - this.n.y * sq) / det + circle.o.x;
-            y = (this.n.y * dl + this.n.x * sq) / det + circle.o.y;
-            const p2 = new $bcd40cdc131f79c5$export$6212d225472eb66a(x, y);
-            return [
-                p1,
-                p2
-            ];
-        } else return [];
+    get strokeColor() {
+        if (!this._objects.last) return null;
+        return this._objects.last.strokeColor;
     }
-}
-
-
-
-class $91b4f6d56d3aa528$export$94b946a2f314bed0 {
-    constructor(o, r){
-        this.o = o.copy;
-        this.r = r;
+    get strokeWidth() {
+        if (!this._objects.last) return null;
+        return this._objects.last.strokeWidth;
     }
-    pointOnCircle(point) {
-        return $ad5b03a8205d6f7a$export$9663ddc1cf085b32(point.copy.sub(this.o).length, this.r);
+    set fillOpacity(value) {
+        if (!this._objects.last) return;
+        this._objects.last.fillOpacity = value;
     }
-}
-
-
-class $f5a4253b3c677715$export$25ceb2c69899a589 extends $92808e6f1672ab53$export$ad0875ee5f43e1f {
-    constructor(name, x, y, r){
-        super($92808e6f1672ab53$export$53f0d9fcb05d9d1d.Circle, name, x, y);
-        this._radius = r;
+    set fillColor(value) {
+        if (!this._objects.last) return;
+        this._objects.last.fillColor = value;
     }
-    static create(name, x, y, r) {
-        return new $f5a4253b3c677715$export$25ceb2c69899a589(name, x, y, r);
+    set strokeColor(value) {
+        if (!this._objects.last) return;
+        this._objects.last.strokeColor = value;
     }
-    copy() {
-        return $f5a4253b3c677715$export$25ceb2c69899a589.create(this._uniqueName, this.center.x, this.center.y, this.radius);
+    set strokeWidth(value) {
+        if (!this._objects.last) return;
+        this._objects.last.strokeWidth = value;
     }
-    get radius() {
-        return this._radius;
+    get bottom() {
+        return this._objects.last.bottom;
     }
-    set radius(value) {
-        this._radius = value;
+    get top() {
+        return this._objects.last.top;
     }
-    get boundingBox() {
-        return Object.assign(Object.assign({}, super.boundingBox), {
-            w: this._radius * 2,
-            h: this._radius * 2
-        });
+    get left() {
+        return this._objects.last.left;
     }
-    getPointAtPercentage(pct) {
-        const t = $ad5b03a8205d6f7a$export$6eec49b1a6289c4e * pct;
-        return this.top.copy.sub(this.center).rotate(t).add(this.center);
+    get right() {
+        return this._objects.last.right;
     }
-    getScaleResetInfo() {
-        return this._radius;
+    get topLeft() {
+        return this._objects.last["topLeft"];
     }
-    resetScaling(radius) {
-        this._radius = radius;
+    get topRight() {
+        return this._objects.last["topRight"];
     }
-    scale(fx, fy) {
-        if (fx === 1) this._radius *= fy;
-        else this._radius *= fx;
+    get bottomRight() {
+        return this._objects.last["bottomRight"];
     }
-    projectPoint(point) {
-        const l = $5fadf28b37c9ced6$export$8f6e4a0088afd800.createPP(point, this.center);
-        const c = new $91b4f6d56d3aa528$export$94b946a2f314bed0(this.center, this.radius);
-        const p = l.intersectCircle(c);
-        const d0 = point.copy.sub(p[0]).length;
-        const d1 = point.copy.sub(p[1]).length;
-        if (d0 < d1) return p[0];
-        else return p[1];
-    }
-    projectPointAsPercentage(point) {
-        const p = this.projectPoint(point);
-        const a = this.yAxis.copy.scale(-1).angleTo(p.sub(this.center));
-        if (a < 0) return -a / $ad5b03a8205d6f7a$export$6eec49b1a6289c4e;
-        else return 1 - a / $ad5b03a8205d6f7a$export$6eec49b1a6289c4e;
-    }
-    get publishedProperties() {
-        return [
-            {
-                name: "Radius",
-                id: "radius",
-                value: this._radius
-            },
-            {
-                name: "Area",
-                id: "area",
-                value: Math.pow(this._radius, 2) * Math.PI
-            },
-            {
-                name: "Circumference",
-                id: "circumference",
-                value: this._radius * 2 * Math.PI
-            },
-            ...super.publishedProperties
-        ];
-    }
-    getPivotFor(poi, forPurpose) {
-        if (forPurpose === $92808e6f1672ab53$export$58fb1881ac046f3b.SCALING) return $92808e6f1672ab53$export$595246eedb19e9bc.center;
-        return super.getPivotFor(poi, forPurpose);
+    get bottomLeft() {
+        return this._objects.last["bottomLeft"];
     }
 }
 
@@ -1084,6 +960,68 @@ class $b834cbea40bafe97$export$9b40e5dd2ee321ea extends $92808e6f1672ab53$export
 
 
 
+
+
+
+class $5fadf28b37c9ced6$export$8f6e4a0088afd800 {
+    constructor(n, d){
+        this.n = n.copy;
+        this.d = d;
+    }
+    static createPP(p1, p2) {
+        return $5fadf28b37c9ced6$export$8f6e4a0088afd800.createPV(p1, p2.copy.sub(p1));
+    }
+    static createPV(pointOnLine, vector) {
+        let nx = -vector.y;
+        let ny = vector.x;
+        const s = nx * pointOnLine.x + ny * pointOnLine.y;
+        const l = Math.sqrt(Math.pow(nx, 2) + Math.pow(ny, 2));
+        if (s > 0) {
+            nx /= l;
+            ny /= l;
+        } else {
+            nx /= -l;
+            ny /= -l;
+        }
+        let d = nx * pointOnLine.x + ny * pointOnLine.y;
+        return new $5fadf28b37c9ced6$export$8f6e4a0088afd800(new $bcd40cdc131f79c5$export$6212d225472eb66a(nx, ny), d);
+    }
+    pointOnLine(point) {
+        return $ad5b03a8205d6f7a$export$9663ddc1cf085b32(point.x * this.n.x + point.y * this.n.y, this.d);
+    }
+    projectPoint(point) {
+        return point.projectOnLine(this);
+    }
+    intersectLine(line) {
+        const det = this.n.x * line.n.y - this.n.y * line.n.x;
+        if ($ad5b03a8205d6f7a$export$9663ddc1cf085b32(det, 0)) return null;
+        const x = (this.d * line.n.y - line.d * this.n.y) / det;
+        const y = (this.d * line.n.x - line.d * this.n.x) / det;
+        return new $bcd40cdc131f79c5$export$6212d225472eb66a(x, y);
+    }
+    intersectCircle(circle) {
+        const dl = -(circle.o.x * this.n.x + circle.o.y * this.n.y - this.d);
+        const det = this.n.x * this.n.x + this.n.y * this.n.y;
+        if ($ad5b03a8205d6f7a$export$9663ddc1cf085b32(det, 0)) return [];
+        let sq = Math.pow(circle.r, 2) * det - Math.pow(dl, 2);
+        if ($ad5b03a8205d6f7a$export$9663ddc1cf085b32(sq, 0)) return [
+            new $bcd40cdc131f79c5$export$6212d225472eb66a(this.n.x * dl / det + circle.o.x, this.n.y * dl / det + circle.o.x)
+        ];
+        else if (sq > 0) {
+            sq = Math.sqrt(sq);
+            let x = (this.n.x * dl + this.n.y * sq) / det + circle.o.x;
+            let y = (this.n.y * dl - this.n.x * sq) / det + circle.o.y;
+            const p1 = new $bcd40cdc131f79c5$export$6212d225472eb66a(x, y);
+            x = (this.n.x * dl - this.n.y * sq) / det + circle.o.x;
+            y = (this.n.y * dl + this.n.x * sq) / det + circle.o.y;
+            const p2 = new $bcd40cdc131f79c5$export$6212d225472eb66a(x, y);
+            return [
+                p1,
+                p2
+            ];
+        } else return [];
+    }
+}
 
 
 class $973b23ce99918ba1$export$37563e431fdea7bd extends $92808e6f1672ab53$export$ad0875ee5f43e1f {
@@ -1258,6 +1196,127 @@ class $973b23ce99918ba1$export$37563e431fdea7bd extends $92808e6f1672ab53$export
     }
 }
 
+
+
+
+
+class $d4397e41424130cc$export$30a59a0caead8e7a extends $92808e6f1672ab53$export$ad0875ee5f43e1f {
+    constructor(name, x, y, w, h){
+        super($92808e6f1672ab53$export$53f0d9fcb05d9d1d.Rectangle, name, x, y);
+        this._width = w;
+        this._height = h;
+    }
+    static create(name, x, y, w, h) {
+        return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x, y, w, h);
+    }
+    copy() {
+        return $d4397e41424130cc$export$30a59a0caead8e7a.create(this._uniqueName, this.center.x, this.center.y, this.width, this.height);
+    }
+    get height() {
+        return this._height;
+    }
+    set height(value) {
+        this._height = value;
+    }
+    get width() {
+        return this._width;
+    }
+    set width(value) {
+        this._width = value;
+    }
+    get boundingBox() {
+        return Object.assign(Object.assign({}, super.boundingBox), {
+            w: this._width,
+            h: this._height
+        });
+    }
+    get topLeft() {
+        return this.makePoint(-this.width / 2, -this.height / 2);
+    }
+    get topRight() {
+        return this.makePoint(this.width / 2, -this.height / 2);
+    }
+    get bottomRight() {
+        return this.makePoint(this.width / 2, this.height / 2);
+    }
+    get bottomLeft() {
+        return this.makePoint(-this.width / 2, this.height / 2);
+    }
+    scale(fx, fy, pivot = null) {
+        if ($ad5b03a8205d6f7a$export$42b5981aee884db0(pivot, this._center)) {
+            this._width *= Math.abs(fx);
+            this._height *= Math.abs(fy);
+            return;
+        }
+        const pl = this.mapPointToLocal(pivot);
+        const cl = this.mapPointToLocal(this._center);
+        const dxl = (pl.x - cl.x) * (1 - fx);
+        const dyl = (pl.y - cl.y) * (1 - fy);
+        const dg = this.mapVectorToGlobal(new $bcd40cdc131f79c5$export$6212d225472eb66a(dxl, dyl));
+        this._center.add(dg);
+        this._width *= Math.abs(fx);
+        this._height *= Math.abs(fy);
+    }
+    getScaleResetInfo() {
+        return {
+            width: this._width,
+            height: this._height,
+            center: this.center.copy
+        };
+    }
+    resetScaling(info) {
+        this._width = info.width;
+        this._height = info.height;
+        this._center = info.center.copy;
+    }
+    pointsOfInterest(purpose) {
+        return Object.assign(Object.assign({}, super.pointsOfInterest(purpose)), {
+            [$92808e6f1672ab53$export$595246eedb19e9bc.topLeft]: this.topLeft.copy,
+            [$92808e6f1672ab53$export$595246eedb19e9bc.topRight]: this.topRight.copy,
+            [$92808e6f1672ab53$export$595246eedb19e9bc.bottomLeft]: this.bottomLeft.copy,
+            [$92808e6f1672ab53$export$595246eedb19e9bc.bottomRight]: this.bottomRight.copy
+        });
+    }
+    getPivotFor(poi) {
+        switch(poi){
+            case $92808e6f1672ab53$export$595246eedb19e9bc.topLeft:
+                return $92808e6f1672ab53$export$595246eedb19e9bc.bottomRight;
+            case $92808e6f1672ab53$export$595246eedb19e9bc.topRight:
+                return $92808e6f1672ab53$export$595246eedb19e9bc.bottomLeft;
+            case $92808e6f1672ab53$export$595246eedb19e9bc.bottomLeft:
+                return $92808e6f1672ab53$export$595246eedb19e9bc.topRight;
+            case $92808e6f1672ab53$export$595246eedb19e9bc.bottomRight:
+                return $92808e6f1672ab53$export$595246eedb19e9bc.topLeft;
+            default:
+                return super.getPivotFor(poi);
+        }
+    }
+    get publishedProperties() {
+        return [
+            {
+                name: "Width",
+                id: "width",
+                value: this._width
+            },
+            {
+                name: "Height",
+                id: "height",
+                value: this._height
+            },
+            {
+                name: "Area",
+                id: "area",
+                value: this._width * this._height
+            },
+            {
+                name: "Circumference",
+                id: "circumference",
+                value: 2 * (this._width + this._height)
+            },
+            ...super.publishedProperties
+        ];
+    }
+}
 
 
 
@@ -1485,6 +1544,99 @@ class $7f75fa07e5d188f3$export$880ab0e6b60325c1 extends $7f75fa07e5d188f3$export
 
 
 
+
+class $91b4f6d56d3aa528$export$94b946a2f314bed0 {
+    constructor(o, r){
+        this.o = o.copy;
+        this.r = r;
+    }
+    pointOnCircle(point) {
+        return $ad5b03a8205d6f7a$export$9663ddc1cf085b32(point.copy.sub(this.o).length, this.r);
+    }
+}
+
+
+class $f5a4253b3c677715$export$25ceb2c69899a589 extends $92808e6f1672ab53$export$ad0875ee5f43e1f {
+    constructor(name, x, y, r){
+        super($92808e6f1672ab53$export$53f0d9fcb05d9d1d.Circle, name, x, y);
+        this._radius = r;
+    }
+    static create(name, x, y, r) {
+        return new $f5a4253b3c677715$export$25ceb2c69899a589(name, x, y, r);
+    }
+    copy() {
+        return $f5a4253b3c677715$export$25ceb2c69899a589.create(this._uniqueName, this.center.x, this.center.y, this.radius);
+    }
+    get radius() {
+        return this._radius;
+    }
+    set radius(value) {
+        this._radius = value;
+    }
+    get boundingBox() {
+        return Object.assign(Object.assign({}, super.boundingBox), {
+            w: this._radius * 2,
+            h: this._radius * 2
+        });
+    }
+    getPointAtPercentage(pct) {
+        const t = $ad5b03a8205d6f7a$export$6eec49b1a6289c4e * pct;
+        return this.top.copy.sub(this.center).rotate(t).add(this.center);
+    }
+    getScaleResetInfo() {
+        return this._radius;
+    }
+    resetScaling(radius) {
+        this._radius = radius;
+    }
+    scale(fx, fy) {
+        if (fx === 1) this._radius *= fy;
+        else this._radius *= fx;
+    }
+    projectPoint(point) {
+        const l = $5fadf28b37c9ced6$export$8f6e4a0088afd800.createPP(point, this.center);
+        const c = new $91b4f6d56d3aa528$export$94b946a2f314bed0(this.center, this.radius);
+        const p = l.intersectCircle(c);
+        const d0 = point.copy.sub(p[0]).length;
+        const d1 = point.copy.sub(p[1]).length;
+        if (d0 < d1) return p[0];
+        else return p[1];
+    }
+    projectPointAsPercentage(point) {
+        const p = this.projectPoint(point);
+        const a = this.yAxis.copy.scale(-1).angleTo(p.sub(this.center));
+        if (a < 0) return -a / $ad5b03a8205d6f7a$export$6eec49b1a6289c4e;
+        else return 1 - a / $ad5b03a8205d6f7a$export$6eec49b1a6289c4e;
+    }
+    get publishedProperties() {
+        return [
+            {
+                name: "Radius",
+                id: "radius",
+                value: this._radius
+            },
+            {
+                name: "Area",
+                id: "area",
+                value: Math.pow(this._radius, 2) * Math.PI
+            },
+            {
+                name: "Circumference",
+                id: "circumference",
+                value: this._radius * 2 * Math.PI
+            },
+            ...super.publishedProperties
+        ];
+    }
+    getPivotFor(poi, forPurpose) {
+        if (forPurpose === $92808e6f1672ab53$export$58fb1881ac046f3b.SCALING) return $92808e6f1672ab53$export$595246eedb19e9bc.center;
+        return super.getPivotFor(poi, forPurpose);
+    }
+}
+
+
+
+
 var $9f8c1044c8011eb8$export$746e27699a54e043;
 (function($9f8c1044c8011eb8$export$746e27699a54e043) {
     $9f8c1044c8011eb8$export$746e27699a54e043[$9f8c1044c8011eb8$export$746e27699a54e043["center"] = 0] = "center";
@@ -1702,6 +1854,195 @@ class $56919d7b8c67450a$export$23e702491ed1c44c extends $92808e6f1672ab53$export
         return $92808e6f1672ab53$export$595246eedb19e9bc.center;
     }
 }
+
+
+
+var $c9b688d84c372821$exports = {};
+
+$parcel$export($c9b688d84c372821$exports, "distance", () => $c9b688d84c372821$export$9f17032d917177de);
+$parcel$export($c9b688d84c372821$exports, "midpoint", () => $c9b688d84c372821$export$f2e8a19be46147af);
+$parcel$export($c9b688d84c372821$exports, "circleCenterRadius", () => $c9b688d84c372821$export$9752a52f44b3771b);
+$parcel$export($c9b688d84c372821$exports, "circleCenterPoint", () => $c9b688d84c372821$export$138267ac14f24cdd);
+$parcel$export($c9b688d84c372821$exports, "circlePointPoint", () => $c9b688d84c372821$export$510bcbb1daa29625);
+$parcel$export($c9b688d84c372821$exports, "rectanglePointPoint", () => $c9b688d84c372821$export$4f275ceaaaca1eea);
+$parcel$export($c9b688d84c372821$exports, "rectangleCenter", () => $c9b688d84c372821$export$5699841f9034f25a);
+$parcel$export($c9b688d84c372821$exports, "rectangleTopLeft", () => $c9b688d84c372821$export$43c3802c496dcab8);
+$parcel$export($c9b688d84c372821$exports, "rectangleBottomLeft", () => $c9b688d84c372821$export$ffc9a385f68270d7);
+$parcel$export($c9b688d84c372821$exports, "rectangleBottomRight", () => $c9b688d84c372821$export$e4174898e76ca80b);
+$parcel$export($c9b688d84c372821$exports, "rectangleTopRight", () => $c9b688d84c372821$export$be96957d972b1ea8);
+$parcel$export($c9b688d84c372821$exports, "linePointPoint", () => $c9b688d84c372821$export$3fd0e84e3b39983a);
+$parcel$export($c9b688d84c372821$exports, "linePointVectorLength", () => $c9b688d84c372821$export$bfdf0cec956c91f6);
+$parcel$export($c9b688d84c372821$exports, "scaleObject", () => $c9b688d84c372821$export$b8427670a32a2793);
+$parcel$export($c9b688d84c372821$exports, "scaleObjectUniform", () => $c9b688d84c372821$export$136fad7c848856b6);
+$parcel$export($c9b688d84c372821$exports, "scaleObjectToPoint", () => $c9b688d84c372821$export$ed6a1f2400c516ff);
+$parcel$export($c9b688d84c372821$exports, "scaleObjectToPointUniform", () => $c9b688d84c372821$export$790a046ebb3fec6e);
+$parcel$export($c9b688d84c372821$exports, "moveObject", () => $c9b688d84c372821$export$949242f9d660edf5);
+$parcel$export($c9b688d84c372821$exports, "moveObjectAlongX", () => $c9b688d84c372821$export$3d984db7fb07f69c);
+$parcel$export($c9b688d84c372821$exports, "moveObjectAlongY", () => $c9b688d84c372821$export$cc481b5dad075641);
+$parcel$export($c9b688d84c372821$exports, "moveObjectToPoint", () => $c9b688d84c372821$export$c417714628899d34);
+$parcel$export($c9b688d84c372821$exports, "size", () => $c9b688d84c372821$export$346677f925de839c);
+$parcel$export($c9b688d84c372821$exports, "max", () => $c9b688d84c372821$export$8960430cfd85939f);
+$parcel$export($c9b688d84c372821$exports, "avg", () => $c9b688d84c372821$export$86c4352b5bd9c815);
+$parcel$export($c9b688d84c372821$exports, "median", () => $c9b688d84c372821$export$9c490b34b2f16a34);
+
+
+
+
+
+
+function $c9b688d84c372821$export$9f17032d917177de(x1, y1, x2, y2) {
+    return Math.hypot(x2 - x1, y2 - y1);
+}
+function $c9b688d84c372821$export$f2e8a19be46147af(x1, y1, x2, y2) {
+    return {
+        x: x1 + (x2 - x1) * 0.5,
+        y: y1 + (y2 - y1) * 0.5
+    };
+}
+function $c9b688d84c372821$export$9752a52f44b3771b(name, x, y, r) {
+    return new $f5a4253b3c677715$export$25ceb2c69899a589(name, x, y, r);
+}
+function $c9b688d84c372821$export$138267ac14f24cdd(name, x1, y1, x2, y2) {
+    return new $f5a4253b3c677715$export$25ceb2c69899a589(name, x1, y1, $c9b688d84c372821$export$9f17032d917177de(x1, y1, x2, y2));
+}
+function $c9b688d84c372821$export$510bcbb1daa29625(name, x1, y1, x2, y2) {
+    const center = $c9b688d84c372821$export$f2e8a19be46147af(x1, y1, x2, y2);
+    return new $f5a4253b3c677715$export$25ceb2c69899a589(name, center.x, center.y, $c9b688d84c372821$export$9f17032d917177de(center.x, center.y, x2, y2));
+}
+function $c9b688d84c372821$export$4f275ceaaaca1eea(name, x1, y1, x2, y2) {
+    const center = $c9b688d84c372821$export$f2e8a19be46147af(x1, y1, x2, y2);
+    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, center.x, center.y, Math.abs(x1 - x2), Math.abs(y1 - y2));
+}
+function $c9b688d84c372821$export$5699841f9034f25a(name, x, y, width, height) {
+    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x, y, width, height);
+}
+function $c9b688d84c372821$export$43c3802c496dcab8(name, x, y, width, height) {
+    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x + width / 2, y + height / 2, width, height);
+}
+function $c9b688d84c372821$export$ffc9a385f68270d7(name, x, y, width, height) {
+    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x + width / 2, y - height / 2, width, height);
+}
+function $c9b688d84c372821$export$e4174898e76ca80b(name, x, y, width, height) {
+    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x - width / 2, y - height / 2, width, height);
+}
+function $c9b688d84c372821$export$be96957d972b1ea8(name, x, y, width, height) {
+    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x - width / 2, y + height / 2, width, height);
+}
+function $c9b688d84c372821$export$3fd0e84e3b39983a(name, x1, y1, x2, y2) {
+    return new $973b23ce99918ba1$export$37563e431fdea7bd(name, x1, y1, x2, y2);
+}
+function $c9b688d84c372821$export$bfdf0cec956c91f6(name, x1, y1, vx, vy, l) {
+    return new $973b23ce99918ba1$export$37563e431fdea7bd(name, x1, y1, x1 + vx * l, y1 + vy * l);
+}
+function $c9b688d84c372821$export$b8427670a32a2793(object, fx, fy, pivotX, pivotY) {
+    object.scale(fx, fy, new $bcd40cdc131f79c5$export$6212d225472eb66a(pivotX, pivotY));
+}
+function $c9b688d84c372821$export$136fad7c848856b6(object, f, pivotX, pivotY) {
+    object.scale(f, f, new $bcd40cdc131f79c5$export$6212d225472eb66a(pivotX, pivotY));
+}
+function $c9b688d84c372821$var$computeFactorsForScaleToPoint(object, draggedX, draggedY, targetX, targetY, pivotX, pivotY) {
+    let old = new $bcd40cdc131f79c5$export$6212d225472eb66a(draggedX, draggedY);
+    let target = new $bcd40cdc131f79c5$export$6212d225472eb66a(targetX, targetY);
+    let pivot = new $bcd40cdc131f79c5$export$6212d225472eb66a(pivotX, pivotY);
+    old = object.mapPointToLocal(old);
+    pivot = object.mapPointToLocal(pivot);
+    target = object.mapPointToLocal(target);
+    return $ad5b03a8205d6f7a$export$cb65b2ef163ba1b6(old, pivot, target);
+}
+function $c9b688d84c372821$export$ed6a1f2400c516ff(object, draggedX, draggedY, targetX, targetY, pivotX, pivotY) {
+    let { fx: fx , fy: fy  } = $c9b688d84c372821$var$computeFactorsForScaleToPoint(object, draggedX, draggedY, targetX, targetY, pivotX, pivotY);
+    object.scale(fx, fy, new $bcd40cdc131f79c5$export$6212d225472eb66a(pivotX, pivotY));
+}
+function $c9b688d84c372821$export$790a046ebb3fec6e(object, draggedX, draggedY, targetX, targetY, pivotX, pivotY) {
+    let { fx: fx , fy: fy  } = $c9b688d84c372821$var$computeFactorsForScaleToPoint(object, draggedX, draggedY, targetX, targetY, pivotX, pivotY);
+    fy = fx = $ad5b03a8205d6f7a$export$ba3dd70ec20ecc6e(fx, fy);
+    object.scale(fx, fy, new $bcd40cdc131f79c5$export$6212d225472eb66a(pivotX, pivotY));
+}
+function $c9b688d84c372821$export$949242f9d660edf5(object, point, vx, vy) {
+    object.movePOI(point, new $bcd40cdc131f79c5$export$6212d225472eb66a(vx, vy));
+}
+function $c9b688d84c372821$export$3d984db7fb07f69c(object, point, vx) {
+    object.movePOI(point, new $bcd40cdc131f79c5$export$6212d225472eb66a(vx, 0));
+}
+function $c9b688d84c372821$export$cc481b5dad075641(object, point, vy) {
+    object.movePOI(point, new $bcd40cdc131f79c5$export$6212d225472eb66a(0, vy));
+}
+function $c9b688d84c372821$export$c417714628899d34(object, point, targetObject, targetPoint) {
+    let to;
+    let from;
+    if (object === targetObject && object.type === $92808e6f1672ab53$export$53f0d9fcb05d9d1d.List && object.objects.length > 1) {
+        const l = object.objects.length;
+        to = object.objects[l - 2].pointsOfInterest($92808e6f1672ab53$export$58fb1881ac046f3b.MANIPULATION)[targetPoint];
+        from = object.objects[l - 1].pointsOfInterest($92808e6f1672ab53$export$58fb1881ac046f3b.MANIPULATION)[point];
+    } else {
+        to = targetObject.pointsOfInterest($92808e6f1672ab53$export$58fb1881ac046f3b.MANIPULATION)[targetPoint];
+        from = object.pointsOfInterest($92808e6f1672ab53$export$58fb1881ac046f3b.MANIPULATION)[point];
+    }
+    const v = to.copy.sub(from);
+    object.movePOI(point, v);
+}
+function $c9b688d84c372821$export$346677f925de839c(value) {
+    return value.length;
+}
+function $c9b688d84c372821$export$8960430cfd85939f(value) {
+    return Math.max.apply(null, value);
+}
+function $c9b688d84c372821$export$86c4352b5bd9c815(value) {
+    return value.reduce((a, b)=>a + b
+    ) / value.length;
+}
+function $c9b688d84c372821$export$9c490b34b2f16a34(value) {
+    const s = [
+        ...value
+    ].sort((a, b)=>a - b
+    );
+    const c = Math.floor(s.length / 2);
+    let r = s[c];
+    if (s.length % 2 === 0) {
+        r = r + s[c - 1];
+        return r / 2;
+    }
+    return r;
+}
+
+
+const $f794df200bdd1c64$export$bb7311ec83c149ab = {
+    default: {
+        "fillColor": "#FF7F50",
+        "strokeColor": "#FF7F50",
+        "fillOpacity": 0.2,
+        "strokeWidth": 2
+    },
+    textDefault: {
+        "fillColor": "#FF7F50",
+        "strokeColor": "#FF7F50",
+        "fillOpacity": 1,
+        "strokeWidth": 0,
+        "textAlignment": 0,
+        "verticalAlignment": 0,
+        "fontFamily": "Sans-serif",
+        "fontSize": 50
+    }
+};
+function $f794df200bdd1c64$export$9a199263f62e818d() {
+    const __objects = {};
+    return function(name, object = null) {
+        if (object) {
+            if (__objects[name]) {
+                let l = __objects[name];
+                if (l.type !== $92808e6f1672ab53$export$53f0d9fcb05d9d1d.List) {
+                    const newL = new $e60ec5afccde461f$export$fefeb732093e696a(name);
+                    newL.addObject(l);
+                    __objects[name] = newL;
+                    l = newL;
+                }
+                l.addObject(object);
+            } else __objects[name] = object;
+        }
+        return __objects[name];
+    };
+}
+$parcel$exportWildcard($f794df200bdd1c64$exports, $c9b688d84c372821$exports);
 
 
 
@@ -5928,59 +6269,7 @@ class $229862f972072627$export$fb77dabb7e6f239e extends $9976dad94f405c55$export
 }
 
 
-const $84cad01672e6beb4$export$214b055320e0bf32 = {
-    default: {
-        "fillColor": "#FF7F50",
-        "strokeColor": "#FF7F50",
-        "fillOpacity": 0.2,
-        "strokeWidth": 2
-    },
-    textDefault: {
-        "fillColor": "#FF7F50",
-        "strokeColor": "#FF7F50",
-        "fillOpacity": 1,
-        "strokeWidth": 0,
-        "textAlignment": 0,
-        "verticalAlignment": 0,
-        "fontFamily": "Sans-serif",
-        "fontSize": 50
-    }
-};
-function $84cad01672e6beb4$export$9f17032d917177de(x1, y1, x2, y2) {
-    return Math.hypot(x2 - x1, y2 - y1);
-}
-function $84cad01672e6beb4$export$f2e8a19be46147af(x1, y1, x2, y2) {
-    return {
-        x: x1 + (x2 - x1) * 0.5,
-        y: y1 + (y2 - y1) * 0.5
-    };
-}
-function $84cad01672e6beb4$export$9752a52f44b3771b(name, x, y, r) {
-    return new $f5a4253b3c677715$export$25ceb2c69899a589(name, x, y, r);
-}
-function $84cad01672e6beb4$export$138267ac14f24cdd(name, x1, y1, x2, y2) {
-    return new $f5a4253b3c677715$export$25ceb2c69899a589(name, x1, y1, $84cad01672e6beb4$export$9f17032d917177de(x1, y1, x2, y2));
-}
-function $84cad01672e6beb4$export$510bcbb1daa29625(name, x1, y1, x2, y2) {
-    const center = $84cad01672e6beb4$export$f2e8a19be46147af(x1, y1, x2, y2);
-    return new $f5a4253b3c677715$export$25ceb2c69899a589(name, center.x, center.y, $84cad01672e6beb4$export$9f17032d917177de(center.x, center.y, x2, y2));
-}
-function $84cad01672e6beb4$export$5699841f9034f25a(name, x, y, width, height) {
-    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x, y, width, height);
-}
-function $84cad01672e6beb4$export$43c3802c496dcab8(name, x, y, width, height) {
-    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x + width / 2, y + height / 2, width, height);
-}
-function $84cad01672e6beb4$export$ffc9a385f68270d7(name, x, y, width, height) {
-    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x + width / 2, y - height / 2, width, height);
-}
-function $84cad01672e6beb4$export$e4174898e76ca80b(name, x, y, width, height) {
-    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x - width / 2, y - height / 2, width, height);
-}
-function $84cad01672e6beb4$export$be96957d972b1ea8(name, x, y, width, height) {
-    return new $d4397e41424130cc$export$30a59a0caead8e7a(name, x - width / 2, y + height / 2, width, height);
-}
 
 
-export {$84cad01672e6beb4$export$214b055320e0bf32 as defaultStyles, $84cad01672e6beb4$export$9f17032d917177de as distance, $84cad01672e6beb4$export$f2e8a19be46147af as midpoint, $84cad01672e6beb4$export$9752a52f44b3771b as circleCenterRadius, $84cad01672e6beb4$export$138267ac14f24cdd as circleCenterPoint, $84cad01672e6beb4$export$510bcbb1daa29625 as circlePointPoint, $84cad01672e6beb4$export$5699841f9034f25a as rectangleCenter, $84cad01672e6beb4$export$43c3802c496dcab8 as rectangleTopLeft, $84cad01672e6beb4$export$ffc9a385f68270d7 as rectangleBottomLeft, $84cad01672e6beb4$export$e4174898e76ca80b as rectangleBottomRight, $84cad01672e6beb4$export$be96957d972b1ea8 as rectangleTopRight, $b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $973b23ce99918ba1$export$37563e431fdea7bd as Line, $d4397e41424130cc$export$30a59a0caead8e7a as Rectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as Polygon, $f5a4253b3c677715$export$25ceb2c69899a589 as Circle, $56919d7b8c67450a$export$23e702491ed1c44c as Text, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer};
+export {$b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $b834cbea40bafe97$export$9b40e5dd2ee321ea as GrCanvas, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer, $f794df200bdd1c64$export$bb7311ec83c149ab as $styles, $f794df200bdd1c64$export$9a199263f62e818d as makeObjectManager, $973b23ce99918ba1$export$37563e431fdea7bd as GrLine, $d4397e41424130cc$export$30a59a0caead8e7a as GrRectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as GrPolygon, $f5a4253b3c677715$export$25ceb2c69899a589 as GrCircle, $56919d7b8c67450a$export$23e702491ed1c44c as GrText, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $c9b688d84c372821$export$9f17032d917177de as distance, $c9b688d84c372821$export$f2e8a19be46147af as midpoint, $c9b688d84c372821$export$9752a52f44b3771b as circleCenterRadius, $c9b688d84c372821$export$138267ac14f24cdd as circleCenterPoint, $c9b688d84c372821$export$510bcbb1daa29625 as circlePointPoint, $c9b688d84c372821$export$4f275ceaaaca1eea as rectanglePointPoint, $c9b688d84c372821$export$5699841f9034f25a as rectangleCenter, $c9b688d84c372821$export$43c3802c496dcab8 as rectangleTopLeft, $c9b688d84c372821$export$ffc9a385f68270d7 as rectangleBottomLeft, $c9b688d84c372821$export$e4174898e76ca80b as rectangleBottomRight, $c9b688d84c372821$export$be96957d972b1ea8 as rectangleTopRight, $c9b688d84c372821$export$3fd0e84e3b39983a as linePointPoint, $c9b688d84c372821$export$bfdf0cec956c91f6 as linePointVectorLength, $c9b688d84c372821$export$b8427670a32a2793 as scaleObject, $c9b688d84c372821$export$136fad7c848856b6 as scaleObjectUniform, $c9b688d84c372821$export$ed6a1f2400c516ff as scaleObjectToPoint, $c9b688d84c372821$export$790a046ebb3fec6e as scaleObjectToPointUniform, $c9b688d84c372821$export$949242f9d660edf5 as moveObject, $c9b688d84c372821$export$3d984db7fb07f69c as moveObjectAlongX, $c9b688d84c372821$export$cc481b5dad075641 as moveObjectAlongY, $c9b688d84c372821$export$c417714628899d34 as moveObjectToPoint, $c9b688d84c372821$export$346677f925de839c as size, $c9b688d84c372821$export$8960430cfd85939f as max, $c9b688d84c372821$export$86c4352b5bd9c815 as avg, $c9b688d84c372821$export$9c490b34b2f16a34 as median};
 //# sourceMappingURL=dapentryLib.mjs.map
