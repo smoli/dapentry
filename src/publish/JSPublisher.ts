@@ -9,9 +9,10 @@ import {POI} from "../geometry/GrObject";
 
 const OBJECT_MANAGER = "__objects";
 const MODULE = "dapentry";
+const DRAWING_CLASS_NAME = "drawing";
 const DRAWING_FUNCTION_NAME = "drawing";
 const RENDER_DRAWING_FUNCTION_NAME = "renderDrawing";
-const CANVAS = "__canvas";
+const CANVAS = "this.__canvas";
 
 export function getOpCode(tokens: Array<Token>): string {
     ASSERT(tokens[0].type === TokenTypes.OPCODE, `${tokens[0]} is no opcode token`)
@@ -356,8 +357,7 @@ export class JSPublisher {
                 break;
 
             case AppConfig.Runtime.Opcodes.Move.ToPoint:
-                r.push(`${MODULE}.moveObjectToPoint
-                (` +
+                r.push(`${MODULE}.moveObjectToPoint(` +
                     `${getObjectVariable(tokens[1])}, ` +
                     `${getPoiFromRegisterAt(tokens[1])}, ` +
                     `${getObjectVariable(tokens[2])}, ` +
@@ -474,7 +474,7 @@ export class JSPublisher {
         fields: Array<DataField>,
         publishedNames: Array<string>): Array<string> {
 
-        const res = [`function ${DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`];
+        const res = [`${DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`];
         res.push(...JSPublisher.getDrawingFunctionBody(code, fields, publishedNames))
         res.push("}");
         return res;
@@ -482,9 +482,9 @@ export class JSPublisher {
 
     public static getRenderDrawingFunctionCode(args: Array<DataField>): Array<string> {
         const res = [];
-        res.push(`function ${RENDER_DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`)
-        res.push('\t__renderer.clear("Objects");')
-        res.push(`\trenderObjects(${DRAWING_FUNCTION_NAME}(${args.map(a => a.name).join(",\n")}));`)
+        res.push(`${RENDER_DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`)
+        res.push('\tthis.__renderer.clear("Objects");')
+        res.push(`\tthis.renderObjects(this.${DRAWING_FUNCTION_NAME}(${args.map(a => a.name).join(",\n")}));`)
         res.push("}");
         return res;
     }
@@ -498,6 +498,7 @@ export class JSPublisher {
         publishedNames: Array<string>): string {
 
         const r = jsPublishTemplate
+            .replace("<DRAWING_CLASS_NAME>", DRAWING_CLASS_NAME)
             .replace("<DRAWING_FUNCTION_NAME>", DRAWING_FUNCTION_NAME)
             .replace("<VIEWBOX_HEIGHT>", "" + height)
             .replace("<ASPECT_RATIO>", AspectRatio[aspect])

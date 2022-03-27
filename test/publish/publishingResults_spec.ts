@@ -25,6 +25,10 @@ const libProxyHandler = {
     }
 }
 
+function makeDrawingFunction(jsCode:Array<string>): Function {
+    return new Function("dapentry", "__canvas", ["this.__canvas = __canvas;\n", ...jsCode].join("\n"));
+}
+
 const loggingLib = new Proxy(library, libProxyHandler);
 
 describe('A published drawing', () => {
@@ -35,7 +39,7 @@ describe('A published drawing', () => {
 
         console.log(jsCode.join("\n"))
 
-        const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
+        const drawing = makeDrawingFunction(jsCode);
 
         const r = drawing(library, canvas);
 
@@ -57,7 +61,7 @@ describe('A published drawing', () => {
         `
         const jsCode = JSPublisher.getDrawingFunctionBody(code, [], ["Rectangle1"]);
 
-        const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
+        const drawing = makeDrawingFunction(jsCode);
 
         const r = drawing(library, canvas);
 
@@ -81,7 +85,7 @@ describe('A published drawing', () => {
             published: false
         }], ["Rectangle1"]);
 
-        const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
+        const drawing = makeDrawingFunction(jsCode);
 
         const r = drawing(library, canvas);
 
@@ -106,7 +110,7 @@ describe('A published drawing', () => {
 
         console.log(jsCode.join("\n"))
 
-        const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
+        const drawing = makeDrawingFunction(jsCode);
 
         const r = drawing(library, canvas);
 
@@ -144,15 +148,15 @@ describe('A published drawing', () => {
 
         const jsCode = JSPublisher.getDrawingFunctionBody(code, fields, ["Rectangle4"]);
 
-        const drawing = new Function("dapentry", "__canvas", jsCode.join("\n"));
+        const drawing = makeDrawingFunction(jsCode);
 
-        const r = drawing(library, canvas);
 
         console.log(JSPublisher.getDrawingModule(code, AspectRatio.ar1_1, 1000,
             [fields[0]],
             [fields[1], fields[2]],
             ["Rectangle4"]));
 
+        const r = drawing(library, canvas);
 
 
         expect(r.length).to.equal(1);
