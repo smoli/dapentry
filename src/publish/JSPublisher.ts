@@ -365,6 +365,14 @@ export class JSPublisher {
                     `);`);
                 break;
 
+            case AppConfig.Runtime.Opcodes.Rotate:
+                r.push(`${MODULE}.rotateObject(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getExpressionFromToken(tokens[2])}, ` +
+                    `${getXYFromToken(tokens[3])}` +
+                    `);`);
+                break;
+
             default:
                 UNREACHABLE(`Exporting of OPCODE "${opCode}" is not implemented.`);
         }

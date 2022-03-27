@@ -129,6 +129,13 @@ export function moveObjectToPoint(object: GrObject, point: POI, targetObject: Gr
     object.movePOI(point, v);
 }
 
+// Rotate
+export function rotateObject(object: GrObject, angleDeg: number, pivotX: number, pivotY: number) {
+    object.rotateByDeg(angleDeg, new Point2D(pivotX, pivotY));
+}
+
+
+// Math functions
 
 export function size(value: Array<any>):number {
     return value.length;

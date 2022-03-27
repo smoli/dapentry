@@ -119,7 +119,8 @@ export const AppConfig = {
             EndDo: "ENDDO",
             ForEach: "FOREACH",
             EndEach: "ENDEACH",
-            MakeInstance: "MAKE"
+            MakeInstance: "MAKE",
+            Rotate: "ROTATE"
         }
     },
 

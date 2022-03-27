@@ -94,7 +94,7 @@ export class GfxInterpreter extends Interpreter {
         this.addOperation("BEZIER", makeGfxOperation(GfxBezier, objCallback));
         this.addOperation(AppConfig.Runtime.Opcodes.Text, makeGfxOperation(GfxText, objCallback));
 
-        this.addOperation("ROTATE", makeGfxOperation(GfxRotate, objCallback));
+        this.addOperation(AppConfig.Runtime.Opcodes.Rotate, makeGfxOperation(GfxRotate, objCallback));
 
         Object.values(AppConfig.Runtime.Opcodes.Scale)
             .forEach(opcode => {

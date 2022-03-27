@@ -8,7 +8,7 @@ import {
     getPoiFromRegisterAt,
     JSPublisher
 } from "../../src/publish/JSPublisher";
-import {T_NUMBER, T_OPCODE, T_POINT, T_POINT_NN, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
+import {T_EXPRESSION, T_NUMBER, T_OPCODE, T_POINT, T_POINT_NN, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
 import {POI} from "../../src/geometry/GrObject";
 
 
@@ -38,6 +38,12 @@ describe('JS publisher', () => {
         it('get the number from a number token as a string', () => {
             expect(getExpressionFromToken(T_NUMBER(12))).to.equal("12");
         });
+
+        it('gets the expression from an expression token', () => {
+            expect(getExpressionFromToken(T_EXPRESSION(
+                T_REGISTER("v1"), "+", T_NUMBER("12")
+            ))).to.equal("(v1 + 12)");
+        })
 
         it("gets the variable name from a register token", () => {
             expect(getVariableName(T_REGISTER("df"))).to.equal("df");
@@ -203,6 +209,17 @@ describe('JS publisher', () => {
           ]);
 
        });
+    });
+
+    describe("rotate statements", () => {
+        it("exports rotate by degrees", () => {
+            const code = `ROTATE Rectangle1, 45, Rectangle1@center`;
+            let js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                'dapentry.rotateObject(__objects("Rectangle1"), 45, __objects("Rectangle1").center.x, __objects("Rectangle1").center.y);'
+            ]);
+        })
     });
 
 

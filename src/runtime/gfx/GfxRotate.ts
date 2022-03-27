@@ -1,6 +1,4 @@
-import {Operation} from "../interpreter/Operation";
 import {Parameter} from "../interpreter/Parameter";
-import {GrObject, POI} from "../../geometry/GrObject";
 import {GfxOperation} from "./GfxOperation";
 import {GrObjectList} from "../../geometry/GrObjectList";
 import {Point2D} from "../../geometry/Point2D";
