@@ -71,9 +71,10 @@ export class drawing {
     /**
      This recalculates and renders the drawing.
      */
-    renderDrawing(data = [10, 20, 30, 40, 50]) {
+    renderDrawing(spokes = 5, spokeSize = 0.5) {
         this.__renderer.clear("Objects");
-        this.renderObjects(this.drawing(data));
+        this.renderObjects(this.drawing(spokes,
+            spokeSize));
     }
 
     /**
@@ -84,21 +85,24 @@ export class drawing {
 
      to redraw the drawing.
      */
-    drawing(data = [10, 20, 30, 40, 50]) {
-        const width = 1 / dapentry.size(data);
-        const ratio = 1 / dapentry.max(data);
+    drawing(spokes = 5, spokeSize = 0.5) {
+        const angle = 180 / spokes;
         const __objects = dapentry.makeObjectManager();
-        __objects("Rectangle3", dapentry.rectanglePointPoint("Rectangle3", this.__canvas.topLeft.x, this.__canvas.topLeft.y, this.__canvas.bottomRight.x, this.__canvas.bottomRight.y));
-        __objects("Rectangle3").style = dapentry.$styles.default;
-        dapentry.scaleObject(__objects("Rectangle3"), width, 1, __objects("Rectangle3").left.x, __objects("Rectangle3").left.y);
-        data.forEach(data => {
-            __objects("Rectangle4", dapentry.rectanglePointPoint("Rectangle4", __objects("Rectangle3").topLeft.x, __objects("Rectangle3").topLeft.y, __objects("Rectangle3").bottomRight.x, __objects("Rectangle3").bottomRight.y));
-            __objects("Rectangle4").style = dapentry.$styles.default;
-            dapentry.scaleObject(__objects("Rectangle4"), 1, (data * ratio), __objects("Rectangle4").bottom.x, __objects("Rectangle4").bottom.y);
-            dapentry.moveObjectToPoint
-            (__objects("Rectangle3"), 9, __objects("Rectangle3"), 10);
-        });
-        return [__objects("Rectangle4")];
+        __objects("Line1", dapentry.linePointPoint("Line1", this.__canvas.center.x, this.__canvas.center.y, this.__canvas.top.x, this.__canvas.top.y));
+        __objects("Line1").style = dapentry.$styles.default;
+        for(let $do1 = 0; $do1 < spokes; $do1++) {
+            if (__objects("Polygon1")) {
+                dapentry.extendPolygon(__objects("Polygon1"), [ { x: __objects("Line1").end.x, y: __objects("Line1").end.y } ]);
+            } else {
+                __objects("Polygon1", dapentry.polygon("Polygon1", __objects("Polygon1"), true, [ { x: __objects("Line1").end.x, y: __objects("Line1").end.y } ]));
+                __objects("Polygon1").style = dapentry.$styles.default;
+            }
+            dapentry.rotateObject(__objects("Line1"), angle, __objects("Line1").start.x, __objects("Line1").start.y);
+            dapentry.extendPolygon(__objects("Polygon1"), [ { x: __objects("Line1").at(spokeSize).x, y: __objects("Line1").at(spokeSize).y } ]);
+            dapentry.rotateObject(__objects("Line1"), angle, __objects("Line1").start.x, __objects("Line1").start.y);
+        }
+        return [__objects("Polygon1")];
     }
 
 }
+

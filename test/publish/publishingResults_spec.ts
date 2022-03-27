@@ -182,7 +182,44 @@ describe('A published drawing', () => {
         expect(r[0].objects[4].bottom.y).to.equal(1000);
         expect(r[0].objects[4].width).to.equal(200);
         expect(r[0].objects[4].height).to.equal(1000 / 50 * 50);
+    });
 
+    it("can create a polygon", () => {
 
-    })
+        const code = `
+            LINEPP Line1, $styles.default, Canvas@center, Canvas@top
+            DO spokes
+            POLY Polygon1, $styles.default, [Line1@end], 1
+            ROTATE Line1, angle, Line1@start
+            EXTPOLY Polygon1, [Line1@(spokeSize)]
+            ROTATE Line1, angle, Line1@start
+            ENDDO
+        `;
+
+        const fields: Array<DataField> = [{
+            name: "spokes", type: DataFieldType.Number, published: false, description: "",
+            value: 5
+        },{
+            name: "spokeSize", type: DataFieldType.Number, published: false, description: "",
+            value: 0.5
+        }, {
+            name: "angle", type: DataFieldType.String, published: false, description: "",
+            value: "180 / spokes"
+        }
+        ];
+
+        const jsCode = JSPublisher.getDrawingFunctionBody(code, fields, ["Polygon1"]);
+
+        const drawing = makeDrawingFunction(jsCode);
+
+        const r = drawing(library, canvas);
+
+        console.log(JSPublisher.getDrawingModule(code, AspectRatio.ar1_1, 1000,
+            [fields[0], fields[1]],
+            [fields[2]],
+            ["Polygon1"]));
+
+        expect(r.length).to.equal(1);
+        expect(r[0].type).to.equal(ObjectType.Polygon);
+    });
 });

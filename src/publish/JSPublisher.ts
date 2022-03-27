@@ -29,6 +29,16 @@ export function getXYFromToken(token: Token): string {
     UNREACHABLE();
 }
 
+export function getPoint2DFromToken(token: Token): string {
+    if (token.type === TokenTypes.POINT) {
+        return `{ x: ${getExpressionFromToken(token.value[0])}, y: ${getExpressionFromToken(token.value[1])} }`;
+    } else if (token.type === TokenTypes.REGISTERAT || token.type === TokenTypes.REGISTER) {
+        return `{ x: ${getVariableName(token)}.x, y: ${getVariableName(token)}.y }`
+    }
+
+    UNREACHABLE();
+}
+
 export function getExpressionFromToken(token: Token): string {
     if (token.type === TokenTypes.EXPRESSION) {
         return Parser.constructCodeLine([token]);
@@ -51,6 +61,10 @@ export function getVariableName(token: Token): string {
     } else if (token.value === AppConfig.Runtime.canvasObjectName) {
         return CANVAS;
     } else if (token.type == TokenTypes.REGISTERAT) {
+
+        if(token.value[1].type !== TokenTypes.NAME) {
+            return getVariableName(token.value[0]) + ".at(" + getExpressionFromToken(token.value[1]) + ")";
+        }
 
         ASSERT(typeof token.value[1].value === "string", "Only string where supported");
         return getVariableName(token.value[0]) + "." + token.value[1].value;
@@ -267,13 +281,13 @@ export class JSPublisher {
                 break;
 
             case AppConfig.Runtime.Opcodes.Line.PointVectorLength:
-                r.push(`${getObjectVariable(tokens[1])} = ${MODULE}.linePointVectorLength("${tokens[1].value}", ` +
-                    `${getXYFromToken(tokens[3])}, ` +
-                    `${getXYFromToken(tokens[4])}, ` +
-                    `${getExpressionFromToken(tokens[5])}` +
-                    ");"
-                );
-                r.push(`${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "linePointVectorLength",
+                    getXYFromToken(tokens[3]),
+                    getXYFromToken(tokens[4]),
+                    getExpressionFromToken(tokens[5])
+                ));
                 break;
 
             case AppConfig.Runtime.Opcodes.Do:
@@ -371,6 +385,35 @@ export class JSPublisher {
                     `${getExpressionFromToken(tokens[2])}, ` +
                     `${getXYFromToken(tokens[3])}` +
                     `);`);
+                break;
+
+            case AppConfig.Runtime.Opcodes.Poly.Create:
+                r.push(`if (${getObjectVariable(tokens[1])}) {`)
+                r.push(
+                    `\t${MODULE}.extendPolygon(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `[ ${(tokens[3].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
+                    `);`);
+                r.push(`} else {`)
+                r.push(
+                    `\t${OBJECT_MANAGER}("${tokens[1].value}", ` +
+                    `${MODULE}.polygon(` +
+                    `"${tokens[1].value}", ` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `${!!tokens[4].value}, ` +
+                    `[ ${(tokens[3].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
+                `));`);
+                r.push(`\t${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
+                r.push("}");
+                break;
+
+            case AppConfig.Runtime.Opcodes.Poly.Extend:
+                r.push(
+                    `${MODULE}.extendPolygon(` +
+                    `${getObjectVariable(tokens[1])}, ` +
+                    `[ ${(tokens[2].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
+                    `);`);
+
                 break;
 
             default:

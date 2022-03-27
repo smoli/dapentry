@@ -5,6 +5,7 @@ import {GrObject, ObjectType, POI, POIPurpose} from "../geometry/GrObject";
 import {Point2D} from "../geometry/Point2D";
 import {makeScaleFactorsUniform, scaleToAPoint} from "../geometry/GeoMath";
 import {GrObjectList} from "../geometry/GrObjectList";
+import {GrPolygon} from "../geometry/GrPolygon";
 
 export function distance(x1: number, y1: number, x2: number, y2: number): number {
     return Math.hypot(x2 - x1, y2 - y1);
@@ -63,6 +64,24 @@ export function linePointPoint(name: string, x1: number, y1: number, x2: number,
 export function linePointVectorLength(name: string, x1: number, y1: number, vx: number, vy: number, l: number):GrLine {
     return new GrLine(name, x1, y1, x1 + vx * l, y1 + vy * l);
 }
+
+// Polygon
+export function polygon(name: string, object: GrObject, closed: boolean, points: Array<{x: number, y: number}>): GrPolygon {
+    let poly: GrPolygon;
+    if (object) {
+        poly = object as GrPolygon;
+        poly.addPoints(points.map(p => new Point2D(p.x, p.y)))
+    } else {
+        poly = new GrPolygon(name, points.map(p => new Point2D(p.x, p.y)), closed);
+    }
+
+    return poly;
+}
+
+export function extendPolygon(object: GrPolygon, points: Array<{x: number, y: number}>) {
+    object.addPoints(points.map(p => new Point2D(p.x, p.y)));
+}
+
 
 
 // Scaling

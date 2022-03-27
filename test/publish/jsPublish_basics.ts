@@ -170,6 +170,18 @@ describe('JS publisher', () => {
         });
     });
 
+    describe("exports polygon statements", () => {
+       it("creates a polygon", () => {
+            const code = `POLY Polygon1, $styles.default, [ (300, 230), (750, 180), (970, 430), (640, 690) ], 1`
+           let js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `__objects("Polygon1", dapentry.polygon("Polygon1", __objects("Polygon1"), true, [ { x: 300, y: 230 }, { x: 750, y: 180 }, { x: 970, y: 430 }, { x: 640, y: 690 } ]));`,
+                `__objects("Polygon1").style = dapentry.$styles.default;`
+            ])
+       });
+    });
+
     describe("scaling statements", () => {
         it("exports scaling by factors", () => {
             const code = `SCALE Rectangle1, 1.5, 1, "bottomLeft"`;

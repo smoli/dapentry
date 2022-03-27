@@ -113,7 +113,11 @@ export class GrPolygonBase extends GrObject {
         )  {
             this.computeCenterAndBB();
         }
+    }
 
+    public addPoints(points: Array<Point2D>) {
+        Array.prototype.push.apply(this._points, points);
+        this.computeCenterAndBB();
     }
 
     public removeLastPoint() {

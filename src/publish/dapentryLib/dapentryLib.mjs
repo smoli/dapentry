@@ -319,7 +319,8 @@ const $620bb2240d4be70e$export$d67e1898834e3885 = {
             EndDo: "ENDDO",
             ForEach: "FOREACH",
             EndEach: "ENDEACH",
-            MakeInstance: "MAKE"
+            MakeInstance: "MAKE",
+            Rotate: "ROTATE"
         }
     },
     Data: {
@@ -1412,6 +1413,10 @@ class $7f75fa07e5d188f3$export$203b0713bd4ddf5e extends $92808e6f1672ab53$export
         const bb = this.boundingBox;
         if (point.x < bb.x - bb.w / 2 || point.x > bb.x + bb.w / 2 || point.y < bb.y - bb.h / 2 || point.y > bb.y + bb.h / 2) this.computeCenterAndBB();
     }
+    addPoints(points) {
+        Array.prototype.push.apply(this._points, points);
+        this.computeCenterAndBB();
+    }
     removeLastPoint() {
         this._points.pop();
         this.computeCenterAndBB();
@@ -1872,6 +1877,8 @@ $parcel$export($c9b688d84c372821$exports, "rectangleBottomRight", () => $c9b688d
 $parcel$export($c9b688d84c372821$exports, "rectangleTopRight", () => $c9b688d84c372821$export$be96957d972b1ea8);
 $parcel$export($c9b688d84c372821$exports, "linePointPoint", () => $c9b688d84c372821$export$3fd0e84e3b39983a);
 $parcel$export($c9b688d84c372821$exports, "linePointVectorLength", () => $c9b688d84c372821$export$bfdf0cec956c91f6);
+$parcel$export($c9b688d84c372821$exports, "polygon", () => $c9b688d84c372821$export$b7b19aa0ee06c73);
+$parcel$export($c9b688d84c372821$exports, "extendPolygon", () => $c9b688d84c372821$export$2f7de087257a5258);
 $parcel$export($c9b688d84c372821$exports, "scaleObject", () => $c9b688d84c372821$export$b8427670a32a2793);
 $parcel$export($c9b688d84c372821$exports, "scaleObjectUniform", () => $c9b688d84c372821$export$136fad7c848856b6);
 $parcel$export($c9b688d84c372821$exports, "scaleObjectToPoint", () => $c9b688d84c372821$export$ed6a1f2400c516ff);
@@ -1880,10 +1887,12 @@ $parcel$export($c9b688d84c372821$exports, "moveObject", () => $c9b688d84c372821$
 $parcel$export($c9b688d84c372821$exports, "moveObjectAlongX", () => $c9b688d84c372821$export$3d984db7fb07f69c);
 $parcel$export($c9b688d84c372821$exports, "moveObjectAlongY", () => $c9b688d84c372821$export$cc481b5dad075641);
 $parcel$export($c9b688d84c372821$exports, "moveObjectToPoint", () => $c9b688d84c372821$export$c417714628899d34);
+$parcel$export($c9b688d84c372821$exports, "rotateObject", () => $c9b688d84c372821$export$9b2b68ce31244b03);
 $parcel$export($c9b688d84c372821$exports, "size", () => $c9b688d84c372821$export$346677f925de839c);
 $parcel$export($c9b688d84c372821$exports, "max", () => $c9b688d84c372821$export$8960430cfd85939f);
 $parcel$export($c9b688d84c372821$exports, "avg", () => $c9b688d84c372821$export$86c4352b5bd9c815);
 $parcel$export($c9b688d84c372821$exports, "median", () => $c9b688d84c372821$export$9c490b34b2f16a34);
+
 
 
 
@@ -1934,6 +1943,20 @@ function $c9b688d84c372821$export$3fd0e84e3b39983a(name, x1, y1, x2, y2) {
 function $c9b688d84c372821$export$bfdf0cec956c91f6(name, x1, y1, vx, vy, l) {
     return new $973b23ce99918ba1$export$37563e431fdea7bd(name, x1, y1, x1 + vx * l, y1 + vy * l);
 }
+function $c9b688d84c372821$export$b7b19aa0ee06c73(name, object, closed, points) {
+    let poly;
+    if (object) {
+        poly = object;
+        poly.addPoints(points.map((p)=>new $bcd40cdc131f79c5$export$6212d225472eb66a(p.x, p.y)
+        ));
+    } else poly = new $7f75fa07e5d188f3$export$150c260caa43ceb8(name, points.map((p)=>new $bcd40cdc131f79c5$export$6212d225472eb66a(p.x, p.y)
+    ), closed);
+    return poly;
+}
+function $c9b688d84c372821$export$2f7de087257a5258(object, points) {
+    object.addPoints(points.map((p)=>new $bcd40cdc131f79c5$export$6212d225472eb66a(p.x, p.y)
+    ));
+}
 function $c9b688d84c372821$export$b8427670a32a2793(object, fx, fy, pivotX, pivotY) {
     object.scale(fx, fy, new $bcd40cdc131f79c5$export$6212d225472eb66a(pivotX, pivotY));
 }
@@ -1980,6 +2003,9 @@ function $c9b688d84c372821$export$c417714628899d34(object, point, targetObject, 
     }
     const v = to.copy.sub(from);
     object.movePOI(point, v);
+}
+function $c9b688d84c372821$export$9b2b68ce31244b03(object, angleDeg, pivotX, pivotY) {
+    object.rotateByDeg(angleDeg, new $bcd40cdc131f79c5$export$6212d225472eb66a(pivotX, pivotY));
 }
 function $c9b688d84c372821$export$346677f925de839c(value) {
     return value.length;
@@ -6271,5 +6297,5 @@ class $229862f972072627$export$fb77dabb7e6f239e extends $9976dad94f405c55$export
 
 
 
-export {$b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $b834cbea40bafe97$export$9b40e5dd2ee321ea as GrCanvas, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer, $f794df200bdd1c64$export$bb7311ec83c149ab as $styles, $f794df200bdd1c64$export$9a199263f62e818d as makeObjectManager, $973b23ce99918ba1$export$37563e431fdea7bd as GrLine, $d4397e41424130cc$export$30a59a0caead8e7a as GrRectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as GrPolygon, $f5a4253b3c677715$export$25ceb2c69899a589 as GrCircle, $56919d7b8c67450a$export$23e702491ed1c44c as GrText, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $c9b688d84c372821$export$9f17032d917177de as distance, $c9b688d84c372821$export$f2e8a19be46147af as midpoint, $c9b688d84c372821$export$9752a52f44b3771b as circleCenterRadius, $c9b688d84c372821$export$138267ac14f24cdd as circleCenterPoint, $c9b688d84c372821$export$510bcbb1daa29625 as circlePointPoint, $c9b688d84c372821$export$4f275ceaaaca1eea as rectanglePointPoint, $c9b688d84c372821$export$5699841f9034f25a as rectangleCenter, $c9b688d84c372821$export$43c3802c496dcab8 as rectangleTopLeft, $c9b688d84c372821$export$ffc9a385f68270d7 as rectangleBottomLeft, $c9b688d84c372821$export$e4174898e76ca80b as rectangleBottomRight, $c9b688d84c372821$export$be96957d972b1ea8 as rectangleTopRight, $c9b688d84c372821$export$3fd0e84e3b39983a as linePointPoint, $c9b688d84c372821$export$bfdf0cec956c91f6 as linePointVectorLength, $c9b688d84c372821$export$b8427670a32a2793 as scaleObject, $c9b688d84c372821$export$136fad7c848856b6 as scaleObjectUniform, $c9b688d84c372821$export$ed6a1f2400c516ff as scaleObjectToPoint, $c9b688d84c372821$export$790a046ebb3fec6e as scaleObjectToPointUniform, $c9b688d84c372821$export$949242f9d660edf5 as moveObject, $c9b688d84c372821$export$3d984db7fb07f69c as moveObjectAlongX, $c9b688d84c372821$export$cc481b5dad075641 as moveObjectAlongY, $c9b688d84c372821$export$c417714628899d34 as moveObjectToPoint, $c9b688d84c372821$export$346677f925de839c as size, $c9b688d84c372821$export$8960430cfd85939f as max, $c9b688d84c372821$export$86c4352b5bd9c815 as avg, $c9b688d84c372821$export$9c490b34b2f16a34 as median};
+export {$b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $b834cbea40bafe97$export$9b40e5dd2ee321ea as GrCanvas, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer, $f794df200bdd1c64$export$bb7311ec83c149ab as $styles, $f794df200bdd1c64$export$9a199263f62e818d as makeObjectManager, $973b23ce99918ba1$export$37563e431fdea7bd as GrLine, $d4397e41424130cc$export$30a59a0caead8e7a as GrRectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as GrPolygon, $f5a4253b3c677715$export$25ceb2c69899a589 as GrCircle, $56919d7b8c67450a$export$23e702491ed1c44c as GrText, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $c9b688d84c372821$export$9f17032d917177de as distance, $c9b688d84c372821$export$f2e8a19be46147af as midpoint, $c9b688d84c372821$export$9752a52f44b3771b as circleCenterRadius, $c9b688d84c372821$export$138267ac14f24cdd as circleCenterPoint, $c9b688d84c372821$export$510bcbb1daa29625 as circlePointPoint, $c9b688d84c372821$export$4f275ceaaaca1eea as rectanglePointPoint, $c9b688d84c372821$export$5699841f9034f25a as rectangleCenter, $c9b688d84c372821$export$43c3802c496dcab8 as rectangleTopLeft, $c9b688d84c372821$export$ffc9a385f68270d7 as rectangleBottomLeft, $c9b688d84c372821$export$e4174898e76ca80b as rectangleBottomRight, $c9b688d84c372821$export$be96957d972b1ea8 as rectangleTopRight, $c9b688d84c372821$export$3fd0e84e3b39983a as linePointPoint, $c9b688d84c372821$export$bfdf0cec956c91f6 as linePointVectorLength, $c9b688d84c372821$export$b7b19aa0ee06c73 as polygon, $c9b688d84c372821$export$2f7de087257a5258 as extendPolygon, $c9b688d84c372821$export$b8427670a32a2793 as scaleObject, $c9b688d84c372821$export$136fad7c848856b6 as scaleObjectUniform, $c9b688d84c372821$export$ed6a1f2400c516ff as scaleObjectToPoint, $c9b688d84c372821$export$790a046ebb3fec6e as scaleObjectToPointUniform, $c9b688d84c372821$export$949242f9d660edf5 as moveObject, $c9b688d84c372821$export$3d984db7fb07f69c as moveObjectAlongX, $c9b688d84c372821$export$cc481b5dad075641 as moveObjectAlongY, $c9b688d84c372821$export$c417714628899d34 as moveObjectToPoint, $c9b688d84c372821$export$9b2b68ce31244b03 as rotateObject, $c9b688d84c372821$export$346677f925de839c as size, $c9b688d84c372821$export$8960430cfd85939f as max, $c9b688d84c372821$export$86c4352b5bd9c815 as avg, $c9b688d84c372821$export$9c490b34b2f16a34 as median};
 //# sourceMappingURL=dapentryLib.mjs.map
