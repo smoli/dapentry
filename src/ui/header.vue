@@ -5,7 +5,7 @@
     <button @click="onSave">Save drawing</button>
     <button @click="onNewDrawing">New drawing</button>
     <aspect-ratio-switcher />
-    <locale-switcher/>
+<!--    <locale-switcher/>-->
     <profile-button/>
   </section>
 </template>

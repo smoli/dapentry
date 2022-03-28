@@ -1,8 +1,8 @@
 <template>
   <div class="locale-switcher">
-    <label>{{ $t("ui.language") }}</label>
-    <select v-bind="$i18n.locale" @change="onLocaleSelected">
-      <option :key="`locale-${currentLocale}`" :value="currentLocale" selected="selected" disabled="disabled">{{ $t(`languages.${currentLocale}`) }}</option>
+    <label>{{ $t("ui.language") }}{{ availableLocales }}</label>
+    <select @change="onLocaleSelected">
+<!--      <option :key="`locale-${currentLocale}`" :value="currentLocale" selected="selected" disabled="disabled">{{ $t(`languages.${currentLocale}`) }}</option>-->
       <option v-for="locale in availableLocales" :key="`locale-${locale}`" :value="locale" >{{ $t(`languages.${locale}`) }}</option>
     </select>
   </div>
@@ -19,7 +19,7 @@ export default {
     },
 
     availableLocales() {
-      return this.$i18n.availableLocales.filter(l => this.$t(`languages.${l}`) !== this.$t(`languages.${this.$i18n.locale}`));
+      return this.$i18n.availableLocales//.filter(l => this.$t(`languages.${l}`) !== this.$t(`languages.${this.$i18n.locale}`));
     }
   },
 
