@@ -14,7 +14,7 @@ export class LoadFromLibrary extends BaseAction {
     }
 
 
-    protected load(entry:LibraryEntry) {
+    protected async load(entry:LibraryEntry) {
         entry.arguments.forEach(arg => {
             this.state.addDataField(arg.name, arg.default, arg.description, true);
         });
@@ -31,6 +31,7 @@ export class LoadFromLibrary extends BaseAction {
             }
         });
 
+        await this.controller.setAspectRatio(entry.aspectRatio)
         this.state.setDrawingId(entry.id);
         this.state.setDrawingCreatedBy(entry.createdBy)
         this.state.setDrawingNameAndDescription(entry.name, entry.description);
@@ -46,7 +47,7 @@ export class LoadFromLibrary extends BaseAction {
 
         if (entry) {
             this.controller.resetAll();
-            this.load(entry);
+            await this.load(entry);
         }
 
     }
