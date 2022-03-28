@@ -176,8 +176,12 @@ describe('JS publisher', () => {
            let js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
-                `__objects("Polygon1", dapentry.polygon("Polygon1", __objects("Polygon1"), true, [ { x: 300, y: 230 }, { x: 750, y: 180 }, { x: 970, y: 430 }, { x: 640, y: 690 } ]));`,
-                `__objects("Polygon1").style = dapentry.$styles.default;`
+                `if (__objects("Polygon1")) {`,
+                `\tdapentry.extendPolygon(__objects("Polygon1"), [ { x: 300, y: 230 }, { x: 750, y: 180 }, { x: 970, y: 430 }, { x: 640, y: 690 } ]);`,
+                `} else {`,
+                `\t__objects("Polygon1", dapentry.polygon("Polygon1", __objects("Polygon1"), true, [ { x: 300, y: 230 }, { x: 750, y: 180 }, { x: 970, y: 430 }, { x: 640, y: 690 } ]));`,
+                `\t__objects("Polygon1").style = dapentry.$styles.default;`,
+                `}`
             ])
        });
     });

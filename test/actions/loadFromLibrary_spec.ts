@@ -10,7 +10,7 @@ import {AspectRatio} from "../../src/geometry/AspectRatio";
 
 describe('Load from library action', () => {
 
-    it('loads a library entry as the current drawing', () => {
+    it('loads a library entry as the current drawing', async () => {
         const action = new LoadFromLibrary("Star");
         const state = new State(createAppStore(), null);
         action.controller = new MockController(state, null, new GfxInterpreter());
@@ -60,7 +60,7 @@ describe('Load from library action', () => {
             ]
         })
 
-        action.execute(null);
+        await action.execute(null);
 
         expect(state.store.state.drawing.id).to.equal(9);
         expect(state.store.state.drawing.name).to.equal("Star");
