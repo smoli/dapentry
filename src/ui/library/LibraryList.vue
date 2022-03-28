@@ -15,8 +15,8 @@
             <Preview :svg-code="entry.svgPreview"
                      :vb-width="entry.previewVBWidth"
                      :vb-height="entry.previewVBHeight"
-                     width="40px"
-                     height="40px"/>
+                     :width="40"
+                     :height="40"/>
           </button>
           <div class="drawable-library-entry-info">
             <h3>{{ entry.name }}</h3>
