@@ -71,13 +71,18 @@ export class UpdateStatement extends BaseAction {
 
                 if (this.codeManager.getCreatedRegisterForStatement(this._statementIndex) === token.value) {
                     if (this.codeManager.registerExists(this._newValue)) {
-                        return { errors: [new DuplicateRegisterError(this._newValue) ]};
+                        return { errors: [new DuplicateRegisterError(this._newValue)] };
                     } else {
                         // We're renaming a created register
                         this.state.renameRegister(token.value, this._newValue);
                     }
 
 
+                } else if (Parser.parseExpression(this._newValue).type === TokenTypes.EXPRESSION) {
+                    const exp = Parser.parseExpression(this._newValue);
+                    token.type = exp.type;
+                    token.value = exp.value;
+                    newStatements.push(Parser.constructCodeLine(tokens));
                 } else {
                     token.type = TokenTypes.OTHER;      // the value will be reparsed
                     token.value = this._newValue;
@@ -95,7 +100,6 @@ export class UpdateStatement extends BaseAction {
                         this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} ${this._newValue}`);
                         this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
                     }
-
                 } else {
                     token.type = TokenTypes.REGISTER;
                     token.value = this._newValue;

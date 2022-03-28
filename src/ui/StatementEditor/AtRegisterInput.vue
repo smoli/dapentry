@@ -5,8 +5,7 @@
       @drop="onDrop"
   >
 
-  <GrowingInput :value="content.token.value[0].value" @change="onChangeObject"/>
-  <GrowingInput :value="content.token.value[1].value" @change="onChangeWhere" min="0" max="1"
+  <GrowingInput :value="content.token.value[0].value" @change="onChangeObject"/>{{binder}}<GrowingInput :value="content.token.value[1].value" @change="onChangeWhere" min="0" max="1"
                 @dragenter="whereOnDragEnter"
                 @dragover="whereOnDragOver"
                 @drop="whereOnDrop"
@@ -18,12 +17,29 @@
 <script lang="ts">
 import GrowingInput from "./GrowingInput.vue";
 import {deSerializeDNDInfo, DnDDataType, makeDnDHandlers, prefixed} from "../dnd/DnDInfo";
+import {TokenTypes} from "../../runtime/interpreter/TokenTypes";
 
 export default {
   name: "AtRegisterInput",
   components: { GrowingInput },
   props: ["content"],
   inject: ["controller"],
+
+  computed: {
+    binder() {
+      switch (this.content.token.value[1].type) {
+        case TokenTypes.EXPRESSION:
+        case TokenTypes.REGISTER:
+        case TokenTypes.NUMBER:
+          return "at";
+
+          case TokenTypes.NAME:
+            return "'s";
+
+      }
+
+    }
+  },
 
   methods: {
     onChangeObject(event) {
