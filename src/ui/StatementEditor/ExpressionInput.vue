@@ -40,15 +40,21 @@ export default {
     },
 
     async onChange(event) {
+      let value = event.target.value;
+
+      if (!isNaN(value)) {
+        value = "" + Number(value);
+      }
+
       try {
-        Parser.parseExpression(event.target.value);
+        Parser.parseExpression(value);
       } catch (e) {
         this.validationMessage = "Invalid Syntax"
         return
       }
       this.validationMessage = null;
 
-      const errors = await this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, event.target.value);
+      const errors = await this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, value);
 
       if (errors.length) {
         this.validationMessage = errors.map(e => {

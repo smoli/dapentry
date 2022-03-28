@@ -36,14 +36,20 @@ export default {
       const oldValue = this.field.value;
       this.validationMessage = null;
 
+      let value = event.target.value;
+
+      if (!isNaN(value)) {
+        value = "" + Number(value);
+      }
+
       try {
-        Parser.parseExpression(event.target.value);
+        Parser.parseExpression(value);
       } catch (e) {
         this.validationMessage = "Invalid Syntax"
         return;
       }
       event.target.setCustomValidity("");
-      const errors = await this.controller.setDataFieldValue(this.field.name, event.target.value);
+      const errors = await this.controller.setDataFieldValue(this.field.name, value);
 
       if (errors?.length) {
         await this.controller.setDataFieldValue(this.field.name, oldValue);
