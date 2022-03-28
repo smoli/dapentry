@@ -238,5 +238,49 @@ describe('JS publisher', () => {
         })
     });
 
+    describe("style statements", () => {
+/*
+FILL Circle1, "#340f8a"
+OPACITY Circle1, 1
+STROKE Circle1, "#570f48"
+STROKEWIDTH Circle1, "79"
+ */
+       it("exports fill color", () => {
+           const code = `FILL Circle1, "#340f8a"`;
+           let js = JSPublisher.getJSLine(code);
+
+           expect(js).to.deep.equal([
+               '__objects("Circle1").style.fillColor = "#340f8a";'
+           ]);
+       });
+
+       it("exports fill opacity", () => {
+           const code = `OPACITY Circle1, 0.1`;
+           let js = JSPublisher.getJSLine(code);
+
+           expect(js).to.deep.equal([
+               '__objects("Circle1").style.fillOpacity = 0.1;'
+           ]);
+       });
+
+       it("exports stroke color", () => {
+           const code = `STROKE Circle1, "#570f48"`;
+           let js = JSPublisher.getJSLine(code);
+
+           expect(js).to.deep.equal([
+               '__objects("Circle1").style.strokeColor = "#570f48";'
+           ]);
+       });
+
+       it("exports stroke width", () => {
+           const code = `STROKEWIDTH Circle1, 79`;
+           let js = JSPublisher.getJSLine(code);
+
+           expect(js).to.deep.equal([
+               '__objects("Circle1").style.strokeWidth = 79;'
+           ]);
+       });
+    });
+
 
 });

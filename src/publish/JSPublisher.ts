@@ -42,6 +42,8 @@ export function getPoint2DFromToken(token: Token): string {
 export function getExpressionFromToken(token: Token): string {
     if (token.type === TokenTypes.EXPRESSION) {
         return Parser.constructCodeLine([token]);
+    } else if (token.type === TokenTypes.STRING) {
+        return `"${token.value}"`;
     } else {
         ASSERT(token.type === TokenTypes.NUMBER || token.type === TokenTypes.REGISTER, `${token} is no number token`);
         return "" + token.value;
@@ -413,7 +415,22 @@ export class JSPublisher {
                     `${getObjectVariable(tokens[1])}, ` +
                     `[ ${(tokens[2].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
                     `);`);
+                break;
 
+            case AppConfig.Runtime.Opcodes.FillColor:
+                r.push(`${getObjectVariable(tokens[1])}.style.fillColor = ${getExpressionFromToken(tokens[2])};`)
+                break;
+
+            case AppConfig.Runtime.Opcodes.FillOpacity:
+                r.push(`${getObjectVariable(tokens[1])}.style.fillOpacity = ${getExpressionFromToken(tokens[2])};`)
+                break;
+
+            case AppConfig.Runtime.Opcodes.StrokeColor:
+                r.push(`${getObjectVariable(tokens[1])}.style.strokeColor = ${getExpressionFromToken(tokens[2])};`)
+                break;
+
+            case AppConfig.Runtime.Opcodes.StrokeWidth:
+                r.push(`${getObjectVariable(tokens[1])}.style.strokeWidth = ${getExpressionFromToken(tokens[2])};`)
                 break;
 
             default:
