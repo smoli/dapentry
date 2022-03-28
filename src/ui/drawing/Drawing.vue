@@ -151,6 +151,11 @@ export default {
     },
 
     keyPress(event) {
+      if (!event) {
+        console.warn("Unsolicited key handler invocation.")
+        return;
+      }
+
       if (event.key === "Shift"
           || event.key === "Alt"
           || event.key === "Control"
