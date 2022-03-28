@@ -20,9 +20,9 @@
                 class="drawable-steplist-step-delete drawable-ui-transparent">
           x
         </button>
-        <i :title="$t('ui.stepList.pauseExplanation')"
+        <span :title="$t('ui.stepList.pauseExplanation')"
            v-if="line.originalLine === lastSelectedLine && !line.filteredOut"
-           class="drawable-steplist-step-pause fa-solid fa-circle-pause"></i>
+           class="drawable-steplist-step-pause">||</span>
       </div>
     </div>
     <div v-if="showCode">
