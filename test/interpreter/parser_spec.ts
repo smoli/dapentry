@@ -1,10 +1,10 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
-import {Parser, TokenTypes, Token} from "../../src/runtime/interpreter/Parser";
+import {Parser, TokenTypes, Token, sameToken} from "../../src/runtime/interpreter/Parser";
 import {
-    T_ANNOTATION,
+    T_ANNOTATION, T_ARRAY,
     T_EXPRESSION,
-    T_LABEL, T_MATHFUNC,
+    T_LABEL, T_MATHFUNC, T_NAME,
     T_NUMBER,
     T_OPCODE,
     T_OPERATOR, T_POINT_NN,
@@ -296,7 +296,19 @@ describe('Parser', () => {
                         T_REGISTER("r1")
             );
         });
+    });
+
+    it("provides a function for token comparison", () => {
+
+        const t = T_REGISTER("df");
+        expect(sameToken(t, t)).to.be.true;
+
+        expect(sameToken(T_REGISTER("d"), T_REGISTER("d"))).to.be.true;
+        expect(sameToken(T_REGISTER("d"), T_REGISTER("e"))).to.be.false;
+        expect(sameToken(T_REGISTER("d"), T_NAME("d"))).to.be.false;
+
+        expect(sameToken(T_ARRAY(T_NUMBER(1), T_NUMBER(2)), T_ARRAY(T_NUMBER(1), T_NUMBER(2)))).to.be.true;
 
 
-    })
+    });
 });

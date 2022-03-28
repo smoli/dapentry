@@ -15,6 +15,6 @@ export class SetStrokeWidth extends BaseAction {
     protected _execute(data: any): any {
         const opCode = AppConfig.Runtime.Opcodes.StrokeWidth;
         const code = this._objectNames.map(n => `${opCode} ${n}, "${this._width}"`)
-        this.addOrInsertStatement(code);
+        this.addOrInsertStatement(code, [{ sameTokens: [0, 1] }]);
     }
 }

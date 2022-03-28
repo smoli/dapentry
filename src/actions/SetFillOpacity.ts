@@ -14,7 +14,8 @@ export class SetFillOpacity extends BaseAction {
 
     protected _execute(data: any): any {
         const opCode = AppConfig.Runtime.Opcodes.FillOpacity;
-        const code = this._objectNames.map(n => `${opCode} ${n}, "${this._opacity}"`)
-        this.addOrInsertStatement(code);
+        const code = this._objectNames.map(n => `${opCode} ${n}, ${this._opacity}`);
+
+        this.addOrInsertStatement(code, [{ sameTokens: [0, 1] }]);
     }
 }

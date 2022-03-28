@@ -8,6 +8,61 @@ export interface Token {
     args?: Array<string>
 }
 
+export function sameToken(tokenA: Token, tokenB: Token):boolean {
+    if (tokenA === tokenB) {
+        return true;
+    }
+
+    if (tokenA.type !== tokenB.type) {
+        return false;
+    }
+
+    switch (tokenA.type) {
+        case TokenTypes.OPCODE:
+        case TokenTypes.REGISTER:
+        case TokenTypes.NONLOCALREGISTER:
+        case TokenTypes.NUMBER:
+        case TokenTypes.STRING:
+        case TokenTypes.LABEL:
+        case TokenTypes.OPERATOR:
+        case TokenTypes.NAME:
+            return tokenA.value === tokenB.value;
+
+        case TokenTypes.ARRAY:
+        case TokenTypes.REGISTERAT:
+        case TokenTypes.POINT:
+        case TokenTypes.EXPRESSION:
+            const vA = tokenA.value as Array<Token>;
+            const vB = tokenB.value as Array<Token>;
+            if (vA.length !== vB.length) {
+                return false;
+            }
+            for(let i = 0; i < vA.length; i++) {
+                if (!sameToken(vA[i], vB[i])) {
+                    return false;
+                }
+            }
+            return true;
+
+
+
+
+
+        case TokenTypes.FUNCDECL:
+            break;
+        case TokenTypes.TABLE:
+            break;
+        case TokenTypes.ANNOTATION:
+            break;
+        case TokenTypes.MATHFUNC:
+            break;
+        case TokenTypes.OTHER:
+            break;
+    }
+
+    return false;
+}
+
 export class Parser {
 
     public static parseExpression(line: string): Token {
