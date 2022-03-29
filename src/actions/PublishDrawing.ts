@@ -7,6 +7,7 @@ import {JSPublisher} from "../publish/JSPublisher";
 import fs from 'fs';
 const dapentryLib_mjs = fs.readFileSync('src/publish/dapentryLib/dapentryLib.mjs', 'utf8');
 const index_html = fs.readFileSync('src/publish/example.html', 'utf8');
+const readme_md = fs.readFileSync('src/publish/Readme.md', 'utf8');
 
 const example_mjs = `
 import { Drawing } from "./drawing.mjs";
@@ -62,6 +63,7 @@ export class PublishDrawing extends BaseAction {
 
 
         const files = [
+            { name: "Readme.md", lastModified: new Date(), input: readme_md },
             { name: "index.html", lastModified: new Date(), input: index_html },
             { name: "dapentryLib.mjs", lastModified: new Date(), input: dapentryLib_mjs },
             { name: "drawing.mjs", lastModified: new Date(), input: moduleCode },
