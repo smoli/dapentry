@@ -36,6 +36,7 @@ import {logInteraction} from "./InteractionLogger";
 import {AspectRatio} from "../geometry/AspectRatio";
 import {RenameTableColumn} from "../actions/RenameTableColumn";
 import {LoadFieldFromCSV} from "../actions/LoadFieldFromCSV";
+import {PublishDrawing} from "../actions/PublishDrawing";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -659,6 +660,10 @@ export class AppController {
 
     public async saveDrawingToLibrary() {
         await this._execute(new SaveDrawingToLibrary());
+    }
+
+    public async publishDrawing() {
+        await this._execute(new PublishDrawing());
     }
 
     public async loadDrawingFromLibrary(entryName: string) {

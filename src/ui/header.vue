@@ -3,6 +3,7 @@
     <h1>{{ $t("ui.appName") }}<span>0.1&alpha;</span></h1>
     <svg-saver />
     <button @click="onSave">Save drawing</button>
+    <button @click="onPublish">Publish as JS</button>
     <button @click="onNewDrawing">New drawing</button>
     <aspect-ratio-switcher />
 <!--    <locale-switcher/>-->
@@ -47,6 +48,10 @@ export default {
 
     onSave() {
       this.controller.saveDrawingToLibrary();
+    },
+
+    onPublish() {
+      this.controller.publishDrawing();
     },
   }
 }

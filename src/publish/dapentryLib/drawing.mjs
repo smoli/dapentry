@@ -1,3 +1,4 @@
+
 // created with dapentry, https://www.dapentry.com
 // this software uses d3, https://d3js.org:
 //      Copyright 2010-2022 Mike Bostock
@@ -71,10 +72,10 @@ export class drawing {
     /**
      This recalculates and renders the drawing.
      */
-    renderDrawing(spokes = 5, spokeSize = 0.5) {
+    renderDrawing(spokes = 5, spokeLength = 0.5) {
         this.__renderer.clear("Objects");
         this.renderObjects(this.drawing(spokes,
-            spokeSize));
+            spokeLength));
     }
 
     /**
@@ -85,7 +86,7 @@ export class drawing {
 
      to redraw the drawing.
      */
-    drawing(spokes = 5, spokeSize = 0.5) {
+    drawing(spokes = 5, spokeLength = 0.5) {
         const angle = 180 / spokes;
         const __objects = dapentry.makeObjectManager();
         __objects("Line1", dapentry.linePointPoint("Line1", this.__canvas.center.x, this.__canvas.center.y, this.__canvas.top.x, this.__canvas.top.y));
@@ -98,11 +99,10 @@ export class drawing {
                 __objects("Polygon1").style = dapentry.$styles.default;
             }
             dapentry.rotateObject(__objects("Line1"), angle, __objects("Line1").start.x, __objects("Line1").start.y);
-            dapentry.extendPolygon(__objects("Polygon1"), [ { x: __objects("Line1").at(spokeSize).x, y: __objects("Line1").at(spokeSize).y } ]);
+            dapentry.extendPolygon(__objects("Polygon1"), [ { x: __objects("Line1").at(spokeLength).x, y: __objects("Line1").at(spokeLength).y } ]);
             dapentry.rotateObject(__objects("Line1"), angle, __objects("Line1").start.x, __objects("Line1").start.y);
         }
         return [__objects("Polygon1")];
     }
 
 }
-
