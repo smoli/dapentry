@@ -9,8 +9,8 @@ import {POI} from "../geometry/GrObject";
 
 const OBJECT_MANAGER = "__objects";
 const MODULE = "dapentry";
-const DRAWING_CLASS_NAME = "drawing";
-const DRAWING_FUNCTION_NAME = "drawing";
+const DRAWING_CLASS_NAME = "Drawing";
+const DRAWING_FUNCTION_NAME = "update";
 const RENDER_DRAWING_FUNCTION_NAME = "renderDrawing";
 const CANVAS = "this.__canvas";
 

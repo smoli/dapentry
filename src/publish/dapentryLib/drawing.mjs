@@ -7,9 +7,9 @@
 import * as dapentry from "./dapentryLib.mjs";
 
 let __viewBoxHeight = 1000;
-let __aspectRatio = "ar1_1";
+let __aspectRatio = "ar4_3";
 
-export class drawing {
+export class Drawing {
 
     constructor() {
         this.__renderer = new dapentry.SVGRenderer();
@@ -72,10 +72,10 @@ export class drawing {
     /**
      This recalculates and renders the drawing.
      */
-    renderDrawing(spokes = 5, spokeLength = 0.5) {
+    renderDrawing(f1 = [10, 20, 30, 40], f2 = 5) {
         this.__renderer.clear("Objects");
-        this.renderObjects(this.drawing(spokes,
-            spokeLength));
+        this.renderObjects(this.update(f1,
+            f2));
     }
 
     /**
@@ -86,23 +86,11 @@ export class drawing {
 
      to redraw the drawing.
      */
-    drawing(spokes = 5, spokeLength = 0.5) {
-        const angle = 180 / spokes;
+    update(f1 = [10, 20, 30, 40], f2 = 5) {
         const __objects = dapentry.makeObjectManager();
-        __objects("Line1", dapentry.linePointPoint("Line1", this.__canvas.center.x, this.__canvas.center.y, this.__canvas.top.x, this.__canvas.top.y));
-        __objects("Line1").style = dapentry.$styles.default;
-        for(let $do1 = 0; $do1 < spokes; $do1++) {
-            if (__objects("Polygon1")) {
-                dapentry.extendPolygon(__objects("Polygon1"), [ { x: __objects("Line1").end.x, y: __objects("Line1").end.y } ]);
-            } else {
-                __objects("Polygon1", dapentry.polygon("Polygon1", __objects("Polygon1"), true, [ { x: __objects("Line1").end.x, y: __objects("Line1").end.y } ]));
-                __objects("Polygon1").style = dapentry.$styles.default;
-            }
-            dapentry.rotateObject(__objects("Line1"), angle, __objects("Line1").start.x, __objects("Line1").start.y);
-            dapentry.extendPolygon(__objects("Polygon1"), [ { x: __objects("Line1").at(spokeLength).x, y: __objects("Line1").at(spokeLength).y } ]);
-            dapentry.rotateObject(__objects("Line1"), angle, __objects("Line1").start.x, __objects("Line1").start.y);
-        }
-        return [__objects("Polygon1")];
+        __objects("Circle1", dapentry.circleCenterPoint("Circle1", this.__canvas.center.x, this.__canvas.center.y, this.__canvas.top.x, this.__canvas.top.y));
+        __objects("Circle1").style = dapentry.$styles.default;
+        return [__objects("Circle1")];
     }
 
 }

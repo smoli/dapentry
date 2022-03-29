@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>published dapentry drawing</title>
+    <script src="example.mjs" type="module"></script>
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: sans-serif;
+            background-color: #f4f4f8;
+        }
+
+        h1, p, #drawing {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #drawing {
+            background-color: white;
+            border: 1px solid #fed766;
+            border-top-width: 1em;
+        }
+    </style>
+</head>
+<body>
+<h1>Your dapentry drawing</h1>
+<svg id="drawing" height="50vh"></svg>
+<p>
+    This drawing was created using <a href="https://dapentry.com">dapentry</a>.
+</p>
+</body>
+
+</html>
