@@ -61,5 +61,46 @@ export const Icons = {
   <circle cx="50" cy="50" r="50" style="fill: none; stroke: black; stroke-width:9"/>
   <line x1="35" y1="25" x2="35" y2="75" style="fill: none; stroke: black; stroke-width:9; stroke-linecap:round"/>
   <line x1="65" y1="25" x2="65" y2="75" style="fill: none; stroke: black; stroke-width:9; stroke-linecap:round"/>
+</svg>`,
+
+    NewDrawing: `<svg viewbox="-10 -10 100 120" width="2em">
+  <path d="M0 100 l0 -70 l 30 -30 l 50 0 l 0 100Z " style="fill:none;stroke:black;stroke-width:7" />
+  <path d="M0 30 l30 0 l 0 -30" style="fill:none;stroke:black;stroke-width:7" />
+</svg>`,
+
+    SaveDrawing: `<svg viewbox="-10 -10 100 120" width="2em">
+  <defs>
+    <marker id="arrowheade" markerWidth="3" markerHeight="4"
+    refX="0" refY="2" orient="auto">
+      <polygon points="0 0, 3 2, 0 4" />
+    </marker>
+  </defs>
+   <line x1="40" y1="90" x2="40" y2="50" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" marker-end="url(#arrowheade)" />
+  <path d="M0 60 l 0 40 l 80 0 l 0 -40" style="fill: none;stroke:black;stroke-width:7" />
+  <text x="40" y="20" style="font-family:sans-serif; font-size: 2em;font-weight:bold;text-anchor:middle">Lib</text>
+</svg>`,
+
+    ExportSVG: `<svg viewbox="-10 -10 100 120" width="2em">
+  <defs>
+    <marker id="arrowheade" markerWidth="3" markerHeight="4"
+    refX="0" refY="2" orient="auto">
+      <polygon points="0 0, 3 2, 0 4" />
+    </marker>
+  </defs>
+   <line x1="40" y1="30" x2="40" y2="70" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" marker-end="url(#arrowheade)" />
+  <path d="M0 60 l 0 40 l 80 0 l 0 -40" style="fill: none;stroke:black;stroke-width:7" />
+  <text x="40" y="20" style="font-family:sans-serif; font-size: 2em;font-weight:bold;text-anchor:middle">SVG</text>
+</svg>`,
+
+    ExportJS: `<svg viewbox="-10 -10 100 120" width="2em">
+  <defs>
+    <marker id="arrowheade" markerWidth="3" markerHeight="4"
+    refX="0" refY="2" orient="auto">
+      <polygon points="0 0, 3 2, 0 4" />
+    </marker>
+  </defs>
+   <line x1="40" y1="30" x2="40" y2="70" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" marker-end="url(#arrowheade)" />
+  <path d="M0 60 l 0 40 l 80 0 l 0 -40" style="fill: none;stroke:black;stroke-width:7" />
+  <text x="40" y="20" style="font-family:sans-serif; font-size: 2em;font-weight:bold;text-anchor:middle">JS</text>
 </svg>`
 }

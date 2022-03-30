@@ -9,13 +9,46 @@
     display: inline-block;
     margin: 0;
     padding: 0;
-    flex-grow: 1000;
+    flex: 1 1 100%;
 
     span {
       font-weight: lighter;
       font-size: 0.5em;
     }
   }
+
+  .drawable-header-functions:nth-child(2) {
+    justify-content: center;
+  }
+
+  .drawable-header-functions:nth-child(3) {
+    justify-content: right;
+  }
+
+  .drawable-header-functions {
+
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 100%;
+
+    button {
+      background-color: @uiColor2;
+      margin-right: 0.25em;
+      margin-left: 0.25em;
+      display: flex;
+      align-items: center;
+      padding: 0.2em 0.4em;
+
+      svg {
+
+      }
+    }
+
+    button:hover {
+      background-color: @uiColor1;
+    }
+  }
+
 
   label {
     font-weight: bold;

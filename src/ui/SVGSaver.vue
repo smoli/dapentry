@@ -1,14 +1,19 @@
 <template>
-  <button @click="onSaveSVG">Export SVG</button>
+  <button @click="onSaveSVG" title="Export as SVG" v-html="icon" ></button>
 </template>
 
 <script lang="ts">
 import {UserInfo} from "../state/modules/Authentication";
 import {AppConfig} from "../core/AppConfig";
+import {Icons} from "./css/icons/icons";
 
 export default {
   name: "svg-saver",
   inject: ["controller"],
+
+  data() {
+    return { icon: Icons.ExportSVG }
+  },
 
   methods: {
     onSaveSVG() {
