@@ -5,6 +5,7 @@ import PublishDrawingDialog, {PublishDrawingHandler} from "../ui/SaveDrawing/Pub
 import {JSPublisher} from "../publish/JSPublisher";
 
 import fs from 'fs';
+import {DataField, DataFieldType} from "../state/modules/Data";
 const dapentryLib_mjs = fs.readFileSync('src/publish/dapentryLib/dapentryLib.mjs', 'utf8');
 const index_html = fs.readFileSync('src/publish/example.html', 'utf8');
 const readme_md = fs.readFileSync('src/publish/Readme.md', 'utf8');
@@ -25,9 +26,25 @@ export class PublishDrawing extends BaseAction {
         return AspectRatio[this.controller.state.store.state.drawing.aspectRatio];
     }
 
-    protected makeExampleModule(args: Array<any>): string {
+    protected makeExampleModule(args: Array<DataField>): string {
         const vars = args.map(a => {
-            return `const ${a.name} = ${a.value};`;
+            let value = "";
+            switch (a.type) {
+                case DataFieldType.Number:
+                    value = "" + a.value;
+                    break;
+                case DataFieldType.List:
+                    value = `[${(a.value as Array<any>).join(", ")}]`;
+                    break;
+                case DataFieldType.String:
+                    value = `"${a.value}"`;
+                    break;
+                case DataFieldType.Table:
+                    value = JSON.stringify(a.value);
+                    break;
+
+            }
+            return `const ${a.name} = ${value};`;
         }).join("\n");
 
         const params = args.map(a => a.name).join(", ");

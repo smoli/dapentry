@@ -120,12 +120,9 @@ export class AppController {
             ...applicationDefaults,
             ...options
         })
-
-        this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
     }
 
     protected _processOptions(options: ApplicationOptions) {
-        this._canvas = GrCanvas.create(options.aspectRatio, options.drawingHeight);
 
         const tools = [...options.availableTools];
         if (tools.indexOf(ToolNames.Select) === -1) {
@@ -139,6 +136,10 @@ export class AppController {
 
         this._poiAvailable = options.poiAvailable;
         this._defaultDrawingHeight = options.drawingHeight;
+
+        this._canvas = GrCanvas.create(options.aspectRatio, this._defaultDrawingHeight);
+        this._state.setAspectRatio(options.aspectRatio);
+        this._state.setDrawingDimensions(this._canvas.width, this._canvas.height);
     }
 
     get poiAvailable(): boolean {
@@ -166,12 +167,14 @@ export class AppController {
 
     public resetAll() {
         this.state.resetAll();
-        this._interpreter.resetGuides();
 
         this._processOptions({
             ...applicationDefaults,
             ...this._startupOptions
         });
+        this._interpreter.clearObjects(this._canvas);
+        this._interpreter.resetGuides();
+        this._updateDrawing();
     }
 
     public async setAspectRatio(ar: AspectRatio) {
