@@ -12,7 +12,9 @@ export default {
           <form>
             <fieldset>
               <legend>Published Objects</legend>
-              <desc>Guides will always be included as unpublished.</desc>
+              <desc>All objects will be exported.<br/>
+                    Only published objects will be visible on the drawing.<br/>
+                    Guides will always be included as unpublished.</desc>
               <ul>
                 <li class="drawable-save-form-objects" v-for="(obj,i) of publishedObjects">
                   <input :id="'save-drawing-cbx' + i" type="checkbox" v-model="obj.use" :disabled="obj.isGuide"/>
