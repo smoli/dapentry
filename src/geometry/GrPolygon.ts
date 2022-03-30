@@ -135,10 +135,10 @@ export class GrPolygonBase extends GrObject {
         this.computeCenterAndBB();
     }
 
-    rotateByDeg(value: number) {
-        super.rotateByDeg(value);
+    rotateByDeg(value: number, pivot: Point2D) {
+        super.rotateByDeg(value, pivot);
         const a = deg2rad(value);
-        this._points.forEach(p => p.rotate(a, this.center));
+        this._points.forEach(p => p.rotate(a, pivot));
     }
 
     pointsOfInterest(purpose:POIPurpose): POIMap {
@@ -164,7 +164,7 @@ export class GrPolygonBase extends GrObject {
         return r;
     }
 
-    getPivotFor(poi: POI): POI {
+    getPivotFor(poi: POI, purpose: POIPurpose): POI {
         switch (poi) {
             case POI.topLeft:
                 return POI.bottomRight;
@@ -179,7 +179,8 @@ export class GrPolygonBase extends GrObject {
                 return POI.topLeft;
 
             default:
-                return super.getPivotFor(poi);
+
+                return super.getPivotFor(poi, purpose);
         }
     }
 

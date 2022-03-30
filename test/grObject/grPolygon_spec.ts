@@ -48,7 +48,7 @@ describe('GrPolygon', () => {
     it("can be rotated", () => {
         const poly = GrPolygon.create("ro", [new Point2D(0, 0), new Point2D(10, 0)]);
 
-        poly.rotateByDeg(90);
+        poly.rotateByDeg(90, poly.center);
 
         expect(eqp(poly.points[0], {x: 5, y: -5})).to.be.true;
         expect(eqp(poly.points[1], {x: 5, y: 5})).to.be.true;
@@ -71,7 +71,7 @@ describe('GrPolygon', () => {
             {x: 0, y: -50})
         ).to.be.true;
 
-        poly.rotateByDeg(45);
+        poly.rotateByDeg(45, poly.center);
 
         console.log(poly.pointsOfInterest(POIPurpose.SCALING)[POI.bottom]);
         expect(eqp(
@@ -124,7 +124,7 @@ describe('GrPolygon', () => {
         ]);
         const P = poi => poly.pointsOfInterest(POIPurpose.SCALING)[poi]
 
-        poly.rotateByDeg(57.123423);
+        poly.rotateByDeg(57.123423, poly.center);
 
         const bottom = P(POI.bottom);
 

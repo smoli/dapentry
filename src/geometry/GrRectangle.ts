@@ -1,7 +1,6 @@
 import {BoundingBox, GrObject, ObjectProperty, ObjectType, POI, POIMap, POIPurpose} from "./GrObject";
 import {Point2D} from "./Point2D";
 import {eqp} from "./GeoMath";
-import {publicDecrypt} from "crypto";
 
 export class GrRectangle extends GrObject {
 
@@ -111,7 +110,11 @@ export class GrRectangle extends GrObject {
         };
     }
 
-    getPivotFor(poi: POI): POI {
+    getPivotFor(poi: POI, purpose: POIPurpose): POI {
+        if (purpose === POIPurpose.ROTATING) {
+            return POI.center;
+        }
+
         switch (poi) {
             case POI.topLeft:
                 return POI.bottomRight;

@@ -76,7 +76,7 @@ export class RotateTool extends Tool {
         if (eventData.interactionEvent === InteractionEvents.MouseDown) {
             const poi = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[poiId];
             this._rotationPoi = Number(poiId);
-            this._pivotPoi = POI.center;
+            this._pivotPoi = this._object.getPivotFor(poiId, POIPurpose.ROTATING);
             this._pivotPoint = this._object.pointsOfInterest(POIPurpose.MANIPULATION)[this._pivotPoi];
 
             this._rotationObject = this._object.createProxy();
@@ -84,6 +84,8 @@ export class RotateTool extends Tool {
             this._startVector = poi.copy.sub(this._pivotPoint);
             this._finalAngle = 0;
             this._state.next(Events.HandleDown);
+
+            console.log(POI[poiId], POI[this._pivotPoi]);
         }
     }
 
@@ -121,10 +123,10 @@ export class RotateTool extends Tool {
 
                 let a = vector.angleTo(this._startVector);
                 a = rad2deg(a);
-                this._rotationObject.rotatePOI(this._rotationPoi, a);
+                this._rotationObject.rotateByDeg(a, this._pivotPoint);
                 this._renderer.render(this._rotationObject, true);
                 this._finalAngle += a;
-                this._object.rotateByDeg(this._finalAngle);
+                this._object.rotateByDeg(this._finalAngle, this._pivotPoint);
                 this._rotationObject = null;
                 return true;
 
@@ -134,7 +136,7 @@ export class RotateTool extends Tool {
 
                     let a = vector.angleTo(this._startVector);
                     a = rad2deg(a);
-                    this._rotationObject.rotatePOI(this._rotationPoi, a)
+                    this._rotationObject.rotateByDeg(a, this._pivotPoint)
                     this._startVector = vector;
                     this._finalAngle += a;
 
