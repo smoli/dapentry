@@ -34,7 +34,6 @@ export const uiState = {
         },
 
         setLayout(state: UIState, layout: LayoutOptions) {
-            console.log("LAYOUT " + state.count, layout);
             Object.assign(state.layout, { ... layout });
         },
 

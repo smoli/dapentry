@@ -29,7 +29,6 @@ export default {
 
   computed: {
     expressionString() {
-      console.log(this.content.token);
       return Parser.constructCodeLine([this.content.token]).trim();
     }
   },

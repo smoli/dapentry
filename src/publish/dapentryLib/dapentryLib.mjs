@@ -6219,15 +6219,12 @@ class $229862f972072627$export$fb77dabb7e6f239e extends $9976dad94f405c55$export
             return ed;
         }
         svgObject.on("mousedown", (event)=>{
-            console.log("Handle down");
             handler(object, makeEvent($fb74569b2db9a7e7$export$fdc6f9e2a46b1b01.MouseDown, event), data);
         });
         svgObject.on("mouseup", (event)=>{
-            console.log("Handle click");
             handler(object, makeEvent($fb74569b2db9a7e7$export$fdc6f9e2a46b1b01.MouseUp, event), data);
         });
         svgObject.on("click", (event)=>{
-            console.log("Handle click");
             handler(object, makeEvent($fb74569b2db9a7e7$export$fdc6f9e2a46b1b01.Click, event), data);
         });
     }

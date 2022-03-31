@@ -5,7 +5,6 @@ export function constructText(tokens, $t): string {
     const firstToken = tokens[0];
 
     if (!firstToken) {
-        console.log("NO FIRST TOKEN", tokens || null)
         return "NO FIRST TOKEN!";
     }
 

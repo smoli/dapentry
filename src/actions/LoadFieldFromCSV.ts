@@ -24,7 +24,6 @@ export class LoadFieldFromCSV extends BaseAction {
             return r;
         });
         delete csvData["columns"];
-        console.log(csvData);
         this.state.setDataFieldValue(this._fieldName, csvData)
 
         return  null;

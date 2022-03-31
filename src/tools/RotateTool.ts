@@ -64,7 +64,6 @@ export class RotateTool extends Tool {
         const poi: POIMap = this._object.pointsOfInterest(POIPurpose.MANIPULATION);
         Object.keys(poi)
             .forEach(poiId => {
-                console.log(poiId, POI[poiId], poi[poiId])
                 this._renderer.renderHandle(this._object, poiId, poi[poiId], this._onHandleEvent.bind(this), Number(poiId));
             });
 
@@ -84,8 +83,6 @@ export class RotateTool extends Tool {
             this._startVector = poi.copy.sub(this._pivotPoint);
             this._finalAngle = 0;
             this._state.next(Events.HandleDown);
-
-            console.log(POI[poiId], POI[this._pivotPoi]);
         }
     }
 

@@ -915,15 +915,12 @@ export class SvgObjectRenderer extends ObjectRenderer {
         }
 
         svgObject.on("mousedown", (event) => {
-            console.log("Handle down")
             handler(object, makeEvent(InteractionEvents.MouseDown, event), data)
         });
         svgObject.on("mouseup", (event) => {
-            console.log("Handle click")
             handler(object, makeEvent(InteractionEvents.MouseUp, event), data)
         })
         svgObject.on("click", (event) => {
-            console.log("Handle click")
             handler(object, makeEvent(InteractionEvents.Click, event), data)
         });
     }

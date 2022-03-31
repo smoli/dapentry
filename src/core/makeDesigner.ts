@@ -85,11 +85,8 @@ export function makeDesigner(containerId: string,
     // const appController = new Proxy(new AppController(state, interpreter, appOptions), logHandler);
     const appController = new AppController(state, interpreter, appOptions);
     app.provide("controller", appController);
-    console.log("Mounting ", containerId)
     app.mount("#" + containerId);
     appController.init();
-
-    console.log(Object.assign(Object.assign({}, layoutDefaults), layout));
 
     state.setLayout(Object.assign(Object.assign({}, layoutDefaults), layout))
 

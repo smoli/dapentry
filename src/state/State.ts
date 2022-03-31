@@ -222,8 +222,6 @@ export class State {
     switchTool(toolName: ToolNames, ...params: Array<any>) {
         if (this._store.state.tool.available.indexOf(toolName) !== -1 || toolName === null) {
             this.commit(mutations.tool.switch, { toolName, params });
-        } else {
-            console.log(`Tool ${ToolNames[toolName]}(${toolName}) is not available`)
         }
     }
 

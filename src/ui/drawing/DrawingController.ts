@@ -228,7 +228,6 @@ export class DrawingController {
     }
 
     protected onClick(event: MouseEvent) {
-        console.log("Click")
         this._pumpToTool(InteractionEvents.Click, event)
     }
 

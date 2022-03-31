@@ -88,7 +88,6 @@ export const drawingState = {
 
         setPreview(state: DrawingState, preview: string) {
             state.preview = preview;
-            console.log(preview);
         },
 
         setDimensions(state: DrawingState, newDimensions: DrawingDimensions) {

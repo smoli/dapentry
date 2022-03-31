@@ -62,12 +62,6 @@ export default {
       }
   },
 
-  watch: {
-      hideToolbar() {
-        console.log(this.$store.state.ui.count, "Hide toolbar is now", this.$store.state.ui.layout.hideToolbar)
-      }
-  },
-
   methods: {
     onToggleLibrary() {
       this.controller.toggleLibrary();

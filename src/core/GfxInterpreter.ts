@@ -291,8 +291,6 @@ class GfxMake extends GfxOperation {
             }
         })
 
-        console.log(code);
-
         this._interpreter.parse(code);
         // We do this everytime, because when we're in a loop and width points to a register
         // the value of width might change between iterations.

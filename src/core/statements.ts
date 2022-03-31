@@ -2,8 +2,6 @@ import {Token, TokenTypes} from "../runtime/interpreter/Parser";
 import {AppConfig} from "./AppConfig";
 
 export function isMakeStatement(tokens: Array<Token>) {
-    console.log(tokens[0].type === TokenTypes.OPCODE);
-    console.log(tokens[0].value === AppConfig.Runtime.Opcodes.MakeInstance);
     return tokens[0].type === TokenTypes.OPCODE && tokens[0].value === AppConfig.Runtime.Opcodes.MakeInstance;
 }
 
