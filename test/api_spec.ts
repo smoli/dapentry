@@ -42,6 +42,7 @@ describe("API", () => {
                 "svg_preview": "Hello",
                 "preview_vb_width": 123,
                 "preview_vb_height": 456,
+                "createdBy": 12,
                 "arguments": [
                     {
                         "id": 12,
@@ -91,6 +92,7 @@ describe("API", () => {
             const le = API.convertAPILibraryEntry(apiData);
 
             expect(le).to.deep.equal({
+                "createdBy": 12,
                 "id": 9,
                 "name": "Star",
                 "description": "Star",
