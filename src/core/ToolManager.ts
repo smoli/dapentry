@@ -163,8 +163,6 @@ export class ToolManager {
                 eventData.selection = [...this._selection];
             }
 
-            logInteraction(interactionEvent, eventData);
-
             this._currentTool.update(interactionEvent, eventData);
 
             if (this._currentTool.isDone) {

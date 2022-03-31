@@ -592,23 +592,6 @@ export class AppController {
 
     public async handleKeyEvent(event: KeyboardEvent) {
 
-        logInteraction(InteractionEvents.Key, {
-            alt: false,
-            button: 0,
-            buttons: 0,
-            ctrl: false,
-            dx: 0,
-            dy: 0,
-            interactionEvent: undefined,
-            key: event.key,
-            keyCode:event.keyCode,
-            kind: InteractionEventKind.key,
-            shift: false,
-            x: 0,
-            y: 0
-        });
-
-
         if (document.activeElement && document.activeElement.tagName.toUpperCase() === "INPUT") {
             return;
         }
