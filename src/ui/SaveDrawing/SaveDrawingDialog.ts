@@ -88,7 +88,7 @@ export default {
           drawing
         </button>
         <button v-if="id !== -1" @click="onYes" class="drawable-ui-accept" :disabled="!validation.valid">Update
-          drawing {{ id }}
+          drawing
         </button>
         <button @click="onNo" class="drawable-ui-decline">Cancel</button>
       </div>

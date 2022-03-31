@@ -195,6 +195,7 @@ export class API {
 
         const res:LibraryEntry = {
             ...data,
+            createdBy: Number(data.createdBy),
             svgPreview: data.svg_preview,
             previewVBWidth: data.preview_vb_width,
             previewVBHeight: data.preview_vb_height,
