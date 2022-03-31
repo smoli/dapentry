@@ -7,6 +7,7 @@ This package contains all you need to get started using your published drawing. 
 * `dapentryLib.mjs` - A library containing functionality that is used to compute and render the drawing
 * `index.html` - An example HTML-file that displays the drawing
 * `example.mjs` - JavaScript code that is used by the index.html to display the drawing.
+* `server.js` - A simple nodjs static http-server to display the example
 * `Readme.md` - This file
 
 ## Using the drawing-code
@@ -77,11 +78,30 @@ You can of course take the code and run it through your preferred bundler like e
 
 See [the MDN page on JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) for more info.
 
+## Simple HHTP-Server
+
+The example code comes with a simple http-server to display the drawing. Since we're using ES2015-modules you cannot 
+just open the html-file in a webbrowser. The browser will not load the javascript files this way.
+
+The server requires [Node.js](https://nodejs.org). It uses no further dependencies. To use the server run 
+
+```
+$ node server.js
+```
+
+It will open a http-server on a random port and tell you the address, e.g.
+
+```
+Server is running on http://127.0.0.1:61404
+```
+
+Now open the given address in the browser to run the example code. 
+
 ## License
 
 The rights to the generated code in `drawing.mjs` lie by the creator of the drawing.
 
-The rights to the code in `dapentryLibrary.mjs` lies with its creator, Stephan Smola, except for 
+The rights to the code in `dapentryLibrary.mjs` lie with its author, Stephan Smola, except for 
 code from [d3](https://d3js.org/) which it bundles. d3 is Copyright 2010-2022 by Mike Bostock.
 
 THE SOFTWARE AND THE GENERATED CODE IS PROVIDED "AS IS" AND THE AUTHOR OF THE

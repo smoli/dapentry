@@ -3,11 +3,12 @@ import {DialogCloseReason} from "../ui/core/ModalFactory";
 import {AspectRatio} from "../geometry/AspectRatio";
 import PublishDrawingDialog, {PublishDrawingHandler} from "../ui/SaveDrawing/PublishDrawingDialog";
 import {JSPublisher} from "../publish/JSPublisher";
+import {DataField, DataFieldType} from "../state/modules/Data";
 
 import fs from 'fs';
-import {DataField, DataFieldType} from "../state/modules/Data";
 const dapentryLib_mjs = fs.readFileSync('src/publish/dapentryLib/dapentryLib.mjs', 'utf8');
 const index_html = fs.readFileSync('src/publish/example.html', 'utf8');
+const server_js = fs.readFileSync('src/publish/server.js', 'utf8');
 const readme_md = fs.readFileSync('src/publish/Readme.md', 'utf8');
 
 const example_mjs = `
@@ -78,9 +79,9 @@ export class PublishDrawing extends BaseAction {
 
         const zip = await import("client-zip");
 
-
         const files = [
             { name: "Readme.md", lastModified: new Date(), input: readme_md },
+            { name: "server.js", lastModified: new Date(), input: server_js },
             { name: "index.html", lastModified: new Date(), input: index_html },
             { name: "dapentryLib.mjs", lastModified: new Date(), input: dapentryLib_mjs },
             { name: "drawing.mjs", lastModified: new Date(), input: moduleCode },
@@ -88,8 +89,9 @@ export class PublishDrawing extends BaseAction {
                 name: "example.mjs",
                 lastModified: new Date(),
                 input: this.makeExampleModule(data.arguments.filter(f => f.published))
-            },
-        ]
+            }
+        ];
+
         const blob = await zip.downloadZip(files).blob();
 
         const element = document.createElement('a');
@@ -97,10 +99,7 @@ export class PublishDrawing extends BaseAction {
         element.download = "dapentryDrawing.zip";
         element.style.display = 'none';
         document.body.appendChild(element);
-
         element.click();
-
         document.body.removeChild(element);
-
     }
 }
