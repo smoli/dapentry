@@ -33,13 +33,13 @@ export class LoopStatements extends BaseAction {
             .filter(c => this._indexes.indexOf(c.originalLine) !== -1)
             .map(c => c.level)
 
-        if (Math.max(...selectedLevels) !== 0) {
-            const dialog = this.controller.modalFactory.createInfoModal();
-            await dialog.show({
-                text: "ui.infoMessages.nestedLoopsNotSupported"
-            })
-            return;
-        }
+        // if (Math.max(...selectedLevels) !== 0) {
+        //     const dialog = this.controller.modalFactory.createInfoModal();
+        //     await dialog.show({
+        //         text: "ui.infoMessages.nestedLoopsNotSupported"
+        //     })
+        //     return;
+        // }
 
         this.state.insertStatements(from, `DO ${AppConfig.Actions.LoopStatements.iterations}`);
         this.state.insertStatements(to + 2, "ENDDO");  // + 2 because indexes change when inserting "DO"

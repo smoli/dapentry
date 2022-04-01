@@ -59,7 +59,7 @@ class GlobalStackFrame extends StackFrame {
 export class Interpreter {
 
     private _stack: Array<StackFrame> = [];
-    private _currentFrame: StackFrame;
+    protected _currentFrame: StackFrame;
     protected _program: Array<Operation> = [];
 
     private _executed: boolean = false;

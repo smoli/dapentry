@@ -15,15 +15,15 @@ describe('Scenarios 1', () => {
             ENDDO
         `;
 
-            const i = await runCode(code);
+        const i = await runCode(code);
 
-            const rects = i.getRegister("Rectangle1");
+        const rects = i.getRegister("Rectangle1");
 
-            expect(rects).to.be.instanceof(GrObjectList);
-            expect(rects.objects.length).to.equal(3);
-            expect(rects.objects[0].center).to.deep.equal({ x: 100, y: 100 });
-            expect(rects.objects[1].center).to.deep.equal({ x: 100, y: 50 });
-            expect(rects.objects[2].center).to.deep.equal({ x: 100, y: 0 });
+        expect(rects).to.be.instanceof(GrObjectList);
+        expect(rects.objects.length).to.equal(3);
+        expect(rects.objects[0].center).to.deep.equal({ x: 100, y: 100 });
+        expect(rects.objects[1].center).to.deep.equal({ x: 100, y: 50 });
+        expect(rects.objects[2].center).to.deep.equal({ x: 100, y: 0 });
     });
-    
+
 });

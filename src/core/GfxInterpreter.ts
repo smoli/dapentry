@@ -10,7 +10,7 @@ import {GfxMove} from "../runtime/gfx/GfxMove";
 import {GfxRotate} from "../runtime/gfx/GfxRotate";
 import {GfxFill} from "../runtime/gfx/GfxFill";
 import {GfxStroke} from "../runtime/gfx/GfxStroke";
-import {GrObject} from "../geometry/GrObject";
+import {GrObject, ObjectType} from "../geometry/GrObject";
 import {GfxComposite, GfxObjectList} from "../runtime/gfx/GfxObject";
 import {GfxScale} from "../runtime/gfx/GfxScale";
 import {GfxExtendPolygon} from "../runtime/gfx/GfxExtendPolygon";
@@ -25,6 +25,7 @@ import {GfxFillOpacity} from "../runtime/gfx/GfxFillOpacity";
 import {GfxText} from "../runtime/gfx/GfxText";
 import {ArrayIterator} from "../runtime/interpreter/types/ArrayIterator";
 import {DataFieldType} from "../state/modules/Data";
+import {GrObjectList} from "../geometry/GrObjectList";
 
 /**
  * Creates a operation class that calls a callback for the grObject
@@ -138,6 +139,37 @@ export class GfxInterpreter extends Interpreter {
         this._lastObjectTouched = object;
     }
 
+    popStack(returnRegister: Parameter = null, receiveRegister: Parameter = null) {
+        const toHoist = {}
+        this._currentFrame.registerNames.forEach(n => {
+            const v = this._currentFrame.getRegister(n);
+
+            if (v instanceof GrObject) {
+                toHoist[n] = v;
+            }
+        });
+        super.popStack(returnRegister, receiveRegister);
+
+        Object.keys(toHoist)
+            .forEach(n => {
+               if (this._currentFrame.hasRegister(n, false)) {
+                   const current = this._currentFrame.getRegister(n);
+
+                   if (current instanceof GrObjectList) {
+                       current.addObject(toHoist[n]);
+                   } else {
+                       const l = new GrObjectList(n);
+                       l.addObject(current);
+                       l.addObject(toHoist[n]);
+                       this._currentFrame.setRegister(n, l);
+                       this._objects[n] = l;
+                   }
+               } else {
+                   this._currentFrame.setRegister(n, toHoist[n]);
+               }
+            });
+    }
+
     protected objectCallBackGlobal(object: GrObject) {
         if (object.uniqueName.startsWith("$")) {
             return;
@@ -147,8 +179,11 @@ export class GfxInterpreter extends Interpreter {
             object.markAsGuide();
         }
 
-        this._objects[object.uniqueName] = object;
-        this._globals.setRegister(object.uniqueName, object);
+        if (!( this._objects[object.uniqueName] && this._objects[object.uniqueName].type === ObjectType.List )) {
+            this._objects[object.uniqueName] = object;
+            this._globals.setRegister(object.uniqueName, object);
+        }
+
         this._lastObjectTouched = object;
     }
 

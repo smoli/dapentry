@@ -1278,7 +1278,8 @@ class $d4397e41424130cc$export$30a59a0caead8e7a extends $92808e6f1672ab53$export
             [$92808e6f1672ab53$export$595246eedb19e9bc.bottomRight]: this.bottomRight.copy
         });
     }
-    getPivotFor(poi) {
+    getPivotFor(poi, purpose) {
+        if (purpose === $92808e6f1672ab53$export$58fb1881ac046f3b.ROTATING) return $92808e6f1672ab53$export$595246eedb19e9bc.center;
         switch(poi){
             case $92808e6f1672ab53$export$595246eedb19e9bc.topLeft:
                 return $92808e6f1672ab53$export$595246eedb19e9bc.bottomRight;
@@ -1430,10 +1431,10 @@ class $7f75fa07e5d188f3$export$203b0713bd4ddf5e extends $92808e6f1672ab53$export
         );
         this.computeCenterAndBB();
     }
-    rotateByDeg(value) {
-        super.rotateByDeg(value);
+    rotateByDeg(value, pivot) {
+        super.rotateByDeg(value, pivot);
         const a = $ad5b03a8205d6f7a$export$b1b275608b2b1b8(value);
-        this._points.forEach((p)=>p.rotate(a, this.center)
+        this._points.forEach((p)=>p.rotate(a, pivot)
         );
     }
     pointsOfInterest(purpose) {
@@ -1451,7 +1452,7 @@ class $7f75fa07e5d188f3$export$203b0713bd4ddf5e extends $92808e6f1672ab53$export
         });
         return r;
     }
-    getPivotFor(poi) {
+    getPivotFor(poi, purpose) {
         switch(poi){
             case $92808e6f1672ab53$export$595246eedb19e9bc.topLeft:
                 return $92808e6f1672ab53$export$595246eedb19e9bc.bottomRight;
@@ -1462,7 +1463,7 @@ class $7f75fa07e5d188f3$export$203b0713bd4ddf5e extends $92808e6f1672ab53$export
             case $92808e6f1672ab53$export$595246eedb19e9bc.bottomRight:
                 return $92808e6f1672ab53$export$595246eedb19e9bc.topLeft;
             default:
-                return super.getPivotFor(poi);
+                return super.getPivotFor(poi, purpose);
         }
     }
     scale(fx, fy, pivot = null) {

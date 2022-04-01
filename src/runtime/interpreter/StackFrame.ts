@@ -21,6 +21,10 @@ export class StackFrame {
         return this._parent;
     }
 
+    get registerNames(): Array<string> {
+        return this._registers.registerNames;
+    }
+
     private _getRegisterBaseValue(baseName: string): any {
         let ret;
         if (!this._registers.hasRegister(baseName)) {

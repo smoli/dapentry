@@ -49,7 +49,7 @@ export class Operation {
             return true;
         }
 
-        return this.closure.hasRegister(param.name, true);
+        return this.closure.hasRegister(param.name, false);
     }
 
     protected _setParam(param: Parameter, value: any) {

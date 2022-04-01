@@ -14,6 +14,10 @@ export class RegisterStore {
         this._registers[name] = value;
     }
 
+    public get registerNames():Array<string> {
+        return Object.keys(this._registers);
+    }
+
     public getRegister(name: string): any {
         return this._registers[name]
     }
