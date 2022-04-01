@@ -29,10 +29,28 @@ export const $styles = {
     }
 };
 
+export function hoistObjects(managerFrom, managerTo) {
+    const from = managerFrom();
+    Object.keys(from).forEach((name) => {
+        const top = managerTo(name);
+        if (top) {
+            if (top instanceof GrObjectList) {
+                top.addObject(from[name]);
+            } else {
+                managerTo(name, from[name]);
+            }
+        } else managerTo(name, from[name]);
+    });
+}
 
-export function makeObjectManager() {
+
+export function makeObjectManager(parent) {
     const __objects = {};
-    return function(name: string, object: GrObject = null) {
+    return function(name: string, object: GrObject = null, deep:boolean = true) {
+        if (!name) {
+            return __objects;
+        }
+
         if (object) {
             if (__objects[name]) {
                 let l = __objects[name];
@@ -49,7 +67,7 @@ export function makeObjectManager() {
             }
         }
 
-        return __objects[name];
+        return __objects[name] || (deep && parent && parent(name));
     }
 }
 

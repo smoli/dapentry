@@ -75,7 +75,7 @@ export function getVariableName(token: Token): string {
     }
 }
 
-export function getObjectVariable(token: Token): string {
+export function getObjectVariable(token: Token, shallow: boolean = false): string {
     let name: string;
     if (token.type === TokenTypes.REGISTER) {
         name = token.value as string;
@@ -88,12 +88,16 @@ export function getObjectVariable(token: Token): string {
     }
 
     objects[name] = true;
-    return `${OBJECT_MANAGER}("${name}")`;
+
+    if (shallow) {
+        return `${JSPublisher.objectManager}("${name}", null, false)`;
+    }
+    return `${JSPublisher.objectManager}("${name}")`;
 }
 
 export function getObjectVariableSetter(token: Token, code: string): string {
     objects[token.value as string] = true;
-    return `${OBJECT_MANAGER}("${token.value}", ${code})`;
+    return `${JSPublisher.objectManager}("${token.value}", ${code})`;
 }
 
 export function getPoiFromRegisterAt(token: Token): number {
@@ -144,12 +148,20 @@ function getEndDoForTokens(tokens: Array<Token>) {
     return "}";
 }
 
-function getForEachStartForTokens(tokens: Array<Token>) {
+function getItVarForForeach(tokens: Array<Token>):string {
+    return tokens[1].value as string;
+}
+
+function getObjectManagerForForEachTokens(tokens:Array<Token>):string {
+    return `__objects${getItVarForForeach(tokens)}`;
+}
+
+function getForEachStartForTokens(tokens: Array<Token>, parentObjectManager:string):string {
 
     let itVar;
     let listVar;
 
-    itVar = tokens[1].value;
+    itVar = getItVarForForeach(tokens);
 
     if (tokens.length === 3) {
         listVar = tokens[2].value;
@@ -157,11 +169,12 @@ function getForEachStartForTokens(tokens: Array<Token>) {
         listVar = itVar;
     }
 
-    return `${listVar}.forEach(${itVar} => {`;
+    return `const ${getObjectManagerForForEachTokens(tokens)} = dapentry.makeObjectManager(${parentObjectManager});\n` +
+           `${listVar}.forEach(${itVar} => {`;
 }
 
-function getEndEachForTokens(tokens: Array<Token>) {
-    return "});";
+function getEndEachForTokens(tokens: Array<Token>, forEachTokens:Array<Token>, parentObjectManager:string):string {
+    return `});\ndapentry.hoistObjects(${getObjectManagerForForEachTokens(forEachTokens)}, ${parentObjectManager});`;
 }
 
 function getObjectCreationStatement(tokens: Array<Token>, creatorFunc: string, ...params): Array<string> {
@@ -177,6 +190,12 @@ function getObjectCreationStatement(tokens: Array<Token>, creatorFunc: string, .
 
 export class JSPublisher {
 
+    private static _loopStack = [];
+    private static _objectManagerStack = [OBJECT_MANAGER];
+
+    public static get objectManager():string {
+        return JSPublisher._objectManagerStack[JSPublisher._objectManagerStack.length - 1];
+    }
 
     public static getJSLine(code): Array<string> {
         const tokens = Parser.parseLine(code);
@@ -301,11 +320,15 @@ export class JSPublisher {
                 break;
 
             case AppConfig.Runtime.Opcodes.ForEach:
-                r.push(getForEachStartForTokens(tokens));
+                r.push(getForEachStartForTokens(tokens, JSPublisher.objectManager));
+                JSPublisher._loopStack.push(tokens);
+                JSPublisher._objectManagerStack.push(getObjectManagerForForEachTokens(tokens));
                 break;
 
             case AppConfig.Runtime.Opcodes.EndEach:
-                r.push(getEndEachForTokens(tokens));
+                const forEachTokens = JSPublisher._loopStack.pop();
+                JSPublisher._objectManagerStack.pop();
+                r.push(getEndEachForTokens(tokens, forEachTokens, JSPublisher.objectManager));
                 break;
 
 
@@ -390,7 +413,7 @@ export class JSPublisher {
                 break;
 
             case AppConfig.Runtime.Opcodes.Poly.Create:
-                r.push(`if (${getObjectVariable(tokens[1])}) {`)
+                r.push(`if (${getObjectVariable(tokens[1], true)}) {`)
                 r.push(
                     `\t${MODULE}.extendPolygon(` +
                     `${getObjectVariable(tokens[1])}, ` +
@@ -398,10 +421,10 @@ export class JSPublisher {
                     `);`);
                 r.push(`} else {`)
                 r.push(
-                    `\t${OBJECT_MANAGER}("${tokens[1].value}", ` +
+                    `\t${JSPublisher.objectManager}("${tokens[1].value}", ` +
                     `${MODULE}.polygon(` +
                     `"${tokens[1].value}", ` +
-                    `${getObjectVariable(tokens[1])}, ` +
+                    `${getObjectVariable(tokens[1], true)}, ` +
                     `${!!tokens[4].value}, ` +
                     `[ ${(tokens[3].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
                 `));`);
@@ -521,9 +544,9 @@ export class JSPublisher {
                                          publishedNames: Array<string>): Array<string> {
         const res = [];
         res.push(...JSPublisher.getFieldsCode(fields));
-        res.push(`const ${OBJECT_MANAGER} = dapentry.makeObjectManager();`)
+        res.push(`const ${JSPublisher.objectManager} = dapentry.makeObjectManager();`)
         res.push(...JSPublisher.getRawJSCode(code));
-        res.push(`return [${publishedNames.map(n => `${OBJECT_MANAGER}("${n}")`).join(", ")}];`);
+        res.push(`return [${publishedNames.map(n => `${JSPublisher.objectManager}("${n}")`).join(", ")}];`);
 
         return res;
     }
@@ -534,6 +557,8 @@ export class JSPublisher {
         fields: Array<DataField>,
         publishedNames: Array<string>): Array<string> {
 
+        JSPublisher._objectManagerStack = [OBJECT_MANAGER];
+        JSPublisher._loopStack = [];
         const res = [`${DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`];
         res.push(...JSPublisher.getDrawingFunctionBody(code, fields, publishedNames))
         res.push("}");

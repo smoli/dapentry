@@ -58,6 +58,7 @@ if (parcelRequire == null) {
 var $f794df200bdd1c64$exports = {};
 
 $parcel$export($f794df200bdd1c64$exports, "$styles", () => $f794df200bdd1c64$export$bb7311ec83c149ab);
+$parcel$export($f794df200bdd1c64$exports, "hoistObjects", () => $f794df200bdd1c64$export$eb688b4a3b171f3d);
 $parcel$export($f794df200bdd1c64$exports, "makeObjectManager", () => $f794df200bdd1c64$export$9a199263f62e818d);
 $parcel$export($f794df200bdd1c64$exports, "Canvas", () => $b834cbea40bafe97$export$9b40e5dd2ee321ea);
 $parcel$export($f794df200bdd1c64$exports, "Line", () => $973b23ce99918ba1$export$37563e431fdea7bd);
@@ -2051,9 +2052,20 @@ const $f794df200bdd1c64$export$bb7311ec83c149ab = {
         "fontSize": 50
     }
 };
-function $f794df200bdd1c64$export$9a199263f62e818d() {
+function $f794df200bdd1c64$export$eb688b4a3b171f3d(managerFrom, managerTo) {
+    const from = managerFrom();
+    Object.keys(from).forEach((name)=>{
+        const top = managerTo(name);
+        if (top) {
+            if (top instanceof $e60ec5afccde461f$export$fefeb732093e696a) top.addObject(from[name]);
+            else managerTo(name, from[name]);
+        } else managerTo(name, from[name]);
+    });
+}
+function $f794df200bdd1c64$export$9a199263f62e818d(parent) {
     const __objects = {};
-    return function(name, object = null) {
+    return function(name, object = null, deep = true) {
+        if (!name) return __objects;
         if (object) {
             if (__objects[name]) {
                 let l = __objects[name];
@@ -2066,7 +2078,7 @@ function $f794df200bdd1c64$export$9a199263f62e818d() {
                 l.addObject(object);
             } else __objects[name] = object;
         }
-        return __objects[name];
+        return __objects[name] || deep && parent && parent(name);
     };
 }
 $parcel$exportWildcard($f794df200bdd1c64$exports, $c9b688d84c372821$exports);
@@ -6295,5 +6307,5 @@ class $229862f972072627$export$fb77dabb7e6f239e extends $9976dad94f405c55$export
 
 
 
-export {$b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $b834cbea40bafe97$export$9b40e5dd2ee321ea as GrCanvas, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer, $f794df200bdd1c64$export$bb7311ec83c149ab as $styles, $f794df200bdd1c64$export$9a199263f62e818d as makeObjectManager, $973b23ce99918ba1$export$37563e431fdea7bd as GrLine, $d4397e41424130cc$export$30a59a0caead8e7a as GrRectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as GrPolygon, $f5a4253b3c677715$export$25ceb2c69899a589 as GrCircle, $56919d7b8c67450a$export$23e702491ed1c44c as GrText, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $c9b688d84c372821$export$9f17032d917177de as distance, $c9b688d84c372821$export$f2e8a19be46147af as midpoint, $c9b688d84c372821$export$9752a52f44b3771b as circleCenterRadius, $c9b688d84c372821$export$138267ac14f24cdd as circleCenterPoint, $c9b688d84c372821$export$510bcbb1daa29625 as circlePointPoint, $c9b688d84c372821$export$4f275ceaaaca1eea as rectanglePointPoint, $c9b688d84c372821$export$5699841f9034f25a as rectangleCenter, $c9b688d84c372821$export$43c3802c496dcab8 as rectangleTopLeft, $c9b688d84c372821$export$ffc9a385f68270d7 as rectangleBottomLeft, $c9b688d84c372821$export$e4174898e76ca80b as rectangleBottomRight, $c9b688d84c372821$export$be96957d972b1ea8 as rectangleTopRight, $c9b688d84c372821$export$3fd0e84e3b39983a as linePointPoint, $c9b688d84c372821$export$bfdf0cec956c91f6 as linePointVectorLength, $c9b688d84c372821$export$b7b19aa0ee06c73 as polygon, $c9b688d84c372821$export$2f7de087257a5258 as extendPolygon, $c9b688d84c372821$export$b8427670a32a2793 as scaleObject, $c9b688d84c372821$export$136fad7c848856b6 as scaleObjectUniform, $c9b688d84c372821$export$ed6a1f2400c516ff as scaleObjectToPoint, $c9b688d84c372821$export$790a046ebb3fec6e as scaleObjectToPointUniform, $c9b688d84c372821$export$949242f9d660edf5 as moveObject, $c9b688d84c372821$export$3d984db7fb07f69c as moveObjectAlongX, $c9b688d84c372821$export$cc481b5dad075641 as moveObjectAlongY, $c9b688d84c372821$export$c417714628899d34 as moveObjectToPoint, $c9b688d84c372821$export$9b2b68ce31244b03 as rotateObject, $c9b688d84c372821$export$346677f925de839c as size, $c9b688d84c372821$export$8960430cfd85939f as max, $c9b688d84c372821$export$86c4352b5bd9c815 as avg, $c9b688d84c372821$export$9c490b34b2f16a34 as median};
+export {$b834cbea40bafe97$export$9b40e5dd2ee321ea as Canvas, $b834cbea40bafe97$export$9b40e5dd2ee321ea as GrCanvas, $229862f972072627$export$fb77dabb7e6f239e as SVGRenderer, $f794df200bdd1c64$export$bb7311ec83c149ab as $styles, $f794df200bdd1c64$export$eb688b4a3b171f3d as hoistObjects, $f794df200bdd1c64$export$9a199263f62e818d as makeObjectManager, $973b23ce99918ba1$export$37563e431fdea7bd as GrLine, $d4397e41424130cc$export$30a59a0caead8e7a as GrRectangle, $7f75fa07e5d188f3$export$150c260caa43ceb8 as GrPolygon, $f5a4253b3c677715$export$25ceb2c69899a589 as GrCircle, $56919d7b8c67450a$export$23e702491ed1c44c as GrText, $9b7a75a9356c9401$export$e840e8869344ca38 as AspectRatio, $c9b688d84c372821$export$9f17032d917177de as distance, $c9b688d84c372821$export$f2e8a19be46147af as midpoint, $c9b688d84c372821$export$9752a52f44b3771b as circleCenterRadius, $c9b688d84c372821$export$138267ac14f24cdd as circleCenterPoint, $c9b688d84c372821$export$510bcbb1daa29625 as circlePointPoint, $c9b688d84c372821$export$4f275ceaaaca1eea as rectanglePointPoint, $c9b688d84c372821$export$5699841f9034f25a as rectangleCenter, $c9b688d84c372821$export$43c3802c496dcab8 as rectangleTopLeft, $c9b688d84c372821$export$ffc9a385f68270d7 as rectangleBottomLeft, $c9b688d84c372821$export$e4174898e76ca80b as rectangleBottomRight, $c9b688d84c372821$export$be96957d972b1ea8 as rectangleTopRight, $c9b688d84c372821$export$3fd0e84e3b39983a as linePointPoint, $c9b688d84c372821$export$bfdf0cec956c91f6 as linePointVectorLength, $c9b688d84c372821$export$b7b19aa0ee06c73 as polygon, $c9b688d84c372821$export$2f7de087257a5258 as extendPolygon, $c9b688d84c372821$export$b8427670a32a2793 as scaleObject, $c9b688d84c372821$export$136fad7c848856b6 as scaleObjectUniform, $c9b688d84c372821$export$ed6a1f2400c516ff as scaleObjectToPoint, $c9b688d84c372821$export$790a046ebb3fec6e as scaleObjectToPointUniform, $c9b688d84c372821$export$949242f9d660edf5 as moveObject, $c9b688d84c372821$export$3d984db7fb07f69c as moveObjectAlongX, $c9b688d84c372821$export$cc481b5dad075641 as moveObjectAlongY, $c9b688d84c372821$export$c417714628899d34 as moveObjectToPoint, $c9b688d84c372821$export$9b2b68ce31244b03 as rotateObject, $c9b688d84c372821$export$346677f925de839c as size, $c9b688d84c372821$export$8960430cfd85939f as max, $c9b688d84c372821$export$86c4352b5bd9c815 as avg, $c9b688d84c372821$export$9c490b34b2f16a34 as median};
 //# sourceMappingURL=dapentryLib.mjs.map

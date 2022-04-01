@@ -222,4 +222,56 @@ describe('A published drawing', () => {
         expect(r.length).to.equal(1);
         expect(r[0].type).to.equal(ObjectType.Polygon);
     });
+
+    it("will create a list of polygons through nested loops", () => {
+        const code = `
+            FOREACH x
+                FOREACH y                   
+                    POLY Polygon1, $styles.default, [ (x, y) ], 1
+                ENDEACH
+            ENDEACH
+        `;
+
+        const fields:Array<DataField> = [
+            {
+                name: "x",
+                value: [10, 20, 30],
+                type: DataFieldType.List,
+                description: "",
+                published: false
+            },{
+                name: "y",
+                value: [30, 20, 10],
+                type: DataFieldType.List,
+                description: "",
+                published: false
+            }
+        ];
+
+        const jsCode = JSPublisher.getDrawingFunctionBody(code, fields, ["Polygon1"]);
+
+        console.log(jsCode.join("\n"));
+
+        const drawing = makeDrawingFunction(jsCode);
+        const r = drawing(library, canvas);
+
+        expect(r.length).to.equal(1);
+        expect(ObjectType[r[0].type]).to.equal(ObjectType[ObjectType.List]);
+        expect(r[0].objects.length).to.equal(3);
+        expect(r[0].objects[0].points).to.deep.equal([
+            { x: 10, y: 30 },
+            { x: 10, y: 20 },
+            { x: 10, y: 10 }
+        ]);
+        expect(r[0].objects[1].points).to.deep.equal([
+            { x: 20, y: 30 },
+            { x: 20, y: 20 },
+            { x: 20, y: 10 }
+        ]);
+        expect(r[0].objects[2].points).to.deep.equal([
+            { x: 30, y: 30 },
+            { x: 30, y: 20 },
+            { x: 30, y: 10 }
+        ]);
+    });
 });
