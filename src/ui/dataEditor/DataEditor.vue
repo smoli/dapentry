@@ -48,7 +48,9 @@ export default {
 
   computed: {
     fieldEditors() {
-      return createFields(this.$store.state.data.fields);
+      const r = createFields(this.$store.state.data.fields);
+      console.log("FIELD_EDITORS\n", r.map(f => `${f.field.name} = ${f.field.value}`).join("\n"))
+      return r;
     }
   },
 

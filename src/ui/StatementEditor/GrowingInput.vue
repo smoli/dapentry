@@ -84,6 +84,7 @@ export default {
 
   updated() {
     const inp = this.$refs["input"];
+    inp.value = this.validatedValue = this.value;
     this.updateWidth(inp.value);
   },
 
