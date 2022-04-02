@@ -2,10 +2,16 @@
   <Modal v-if="$store.state.ui.modalComponent.length !== 0"></Modal>
   <drawable-header v-if="!$store.state.ui.layout.hideHeader"></drawable-header>
   <section class="drawable-app-main">
-    <div class="drawable-left-column" v-if="!$store.state.ui.layout.hideLeftColumn">
-        <DataEditor v-if="!$store.state.ui.layout.hideDataEditor"></DataEditor>
-        <StepList v-if="!$store.state.ui.layout.hideStepList"></StepList>
-      </div>
+    <div class="drawable-left-column" ref="left" v-if="!$store.state.ui.layout.hideLeftColumn">
+      <DataEditor v-if="!$store.state.ui.layout.hideDataEditor"></DataEditor>
+      <StepList v-if="!$store.state.ui.layout.hideStepList"></StepList>
+    </div>
+    <div class="drawable-left-column-sizer">
+      <button class="drawable-left-column-width-adjust" v-if="leftWidth !== normalWidth" @click="smallerLeft">&lt;
+      </button>
+      <button class="drawable-left-column-width-adjust" v-if="leftWidth !== wideWidth" @click="biggerLeft">&gt;
+      </button>
+    </div>
     <div class="drawable-main-column" v-if="!$store.state.ui.layout.hideMainColumn">
       <tool-bar v-if="!$store.state.ui.layout.hideToolbar"></tool-bar>
       <statement-editor v-if="!$store.state.ui.layout.hideStatementEditor"></statement-editor>
@@ -38,6 +44,9 @@ import {Icons} from "./css/icons/icons";
 import LayoutSwitcher from "./LayoutSwitcher.vue";
 
 
+const LEFT_NORMAL_WIDTH = 20;
+const LEFT_WIDE_WIDTH = 40;
+
 export default {
   name: "Drawable",
   components: {
@@ -56,15 +65,43 @@ export default {
   inject: ["controller"],
   props: [],
 
+  data() {
+    return {
+      leftWidth: LEFT_NORMAL_WIDTH,
+      normalWidth: LEFT_NORMAL_WIDTH,
+      wideWidth: LEFT_WIDE_WIDTH
+    }
+  },
+
+  mounted() {
+    this.$refs.left.style.flexBasis = `${this.normalWidth}em`;
+  },
+
   computed: {
-      hideToolbar() {
-        return this.$store.state.ui.layout.hideToolbar;
-      }
+    hideToolbar() {
+      return this.$store.state.ui.layout.hideToolbar;
+    }
   },
 
   methods: {
     onToggleLibrary() {
       this.controller.toggleLibrary();
+    },
+
+    smallerLeft() {
+      if (this.leftWidth === LEFT_NORMAL_WIDTH) {
+        return;
+      }
+      this.leftWidth = LEFT_NORMAL_WIDTH;
+      this.$refs.left.style.flexBasis = `${this.leftWidth}em`;
+    },
+
+    biggerLeft() {
+      if (this.leftWidth === LEFT_WIDE_WIDTH) {
+        return;
+      }
+      this.leftWidth = LEFT_WIDE_WIDTH;
+      this.$refs.left.style.flexBasis = `${this.leftWidth}em`;
     }
   }
 }

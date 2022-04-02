@@ -1,9 +1,9 @@
 .drawable-left-column {
   background: @uiColor2;
-  border-right: 1px solid darken(@uiColor2, 2%);
   max-width: 50%;
 
-  > section:nth-child(2) {
+
+  > section:nth-child(3) {
     border-top: 1px solid @uiColor1;
     margin-top: 1em;
   }
@@ -19,4 +19,25 @@
 
   }
 
+}
+
+.drawable-left-column-sizer {
+  background-color: @uiColor2;
+  border-right: 1px solid darken(@uiColor2, 2%);
+
+  .drawable-left-column-width-adjust {
+    height: 100%;
+    float: left;
+    border: none;
+    background-color: inherit;
+    border-radius: 0;
+    color: @uiColor3;
+    padding: 0.1em;
+  }
+
+
+  .drawable-left-column-width-adjust:hover {
+    background-color: darken(@uiColor2, 2%);
+    color: @uiColor3;
+  }
 }

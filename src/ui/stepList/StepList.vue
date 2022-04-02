@@ -15,6 +15,7 @@
            :class="{ selected: line.selected, filteredOut: line.filteredOut}"
            :style="{ 'margin-left': line.level + 'em' }"
            @click="onStepClicked(line, $event)">
+<!--        <button v-if="line.blockBegin">&gt;</button>-->
         <span v-if="!line.filteredOut">{{ line.text }}</span>
         <button v-if="!line.filteredOut" @click="onDeleteStep(line, $event)"
                 class="drawable-steplist-step-delete drawable-ui-transparent">
@@ -41,6 +42,7 @@ import {ASSERT} from "../../core/Assertions";
 import {rangeSelect} from "../core/rangeSelect";
 import {constructText} from "../core/ConstructText";
 import ToggleButton from "../core/ToggleButton.vue";
+import {AppConfig} from "../../core/AppConfig";
 
 
 export default {
@@ -91,6 +93,7 @@ export default {
         const tokens = Parser.parseLine(anno.code);
         return {
           ...anno,
+          blockBegin: tokens[0].value === AppConfig.Runtime.Opcodes.ForEach || tokens[0].value === AppConfig.Runtime.Opcodes.Do,
           filteredOut: this.filter ? visibleIndexes.indexOf(anno.originalLine) === -1 : false,
           text: constructText(tokens, this.$t),
           selected: selection.indexOf(anno.originalLine) !== -1
