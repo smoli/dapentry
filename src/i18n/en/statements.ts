@@ -41,7 +41,7 @@ export const statements = {
     "DO_NONE": "Repeat {1} times",
     "DO_VALUE": "Repeat {2} times",
     "DO_VALUE_INDEX": "Repeat {3} times",
-    "FOREACH": "For each value of {1}",
+    "FOREACH": "For each value of {2}",
     "ENDEACH": "end each",
     "MAKE": "Insert {1} size {4} at {5} with",
     "ENDDO": "end repeat"

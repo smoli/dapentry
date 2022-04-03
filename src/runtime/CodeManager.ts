@@ -527,6 +527,27 @@ export class CodeManager {
         return false;
     }
 
+    isStatementInForEach(index: number, listRegister: string): boolean {
+        let i = index;
+        const part = this.getStatementIndexesWithParticipation(listRegister, false);
+        const forEachs = [...part]
+            .filter(i => i < index)
+            .filter(i => {
+                return this.getOpCodeForStatement(i) === AppConfig.Runtime.Opcodes.ForEach;
+            });
+
+        if (!forEachs.length) return false;
+
+        for(let i of forEachs) {
+            if (this.findMatchingEndEach(i) > index) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
     /**
      * Get the indexes of all statements that have the given register as an
      * argument.

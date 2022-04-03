@@ -35,12 +35,13 @@ export class Do extends Operation {
     }
 
 
-    public static endDo() {
+    public static endDo(interpreter: Interpreter) {
         if (!Do._info.length) {
             throw new Error("Not within a loop");
         }
 
         Do._info.pop();
+        interpreter.popStack();
     }
 
     get value(): any {
@@ -75,7 +76,9 @@ export class Do extends Operation {
             targetName: targetName
         })
 
-        const sf = this.closure;
+        const sf = interpreter.pushStack();
+
+        // const sf = this.closure;
 
         if (targetName) {
             sf.setRegister(targetName, iteration);
@@ -97,7 +100,7 @@ export class EndDo extends Operation {
             }
             interpreter.gotoLabel(info.label);
         } else {
-            Do.endDo();
+            Do.endDo(interpreter);
         }
     }
 

@@ -3,6 +3,7 @@ import {expect} from "chai"
 import {runCode} from "../testHelpers/toolRunCode";
 import {GrObjectList} from "../../src/geometry/GrObjectList";
 import {GrPolygon} from "../../src/geometry/GrPolygon";
+import {ObjectType} from "../../src/geometry/GrObject";
 
 
 describe('Loops', () => {
@@ -45,16 +46,15 @@ describe('Loops', () => {
 
         expect(rects).to.be.instanceof(GrObjectList);
         expect(rects.objects.length).to.equal(9);
-        // expect(rects.objects[0].center).to.deep.equal({ x: 100, y: 100 });
         expect(rects.objects[0].center).to.deep.equal({ x: 100, y: 50 });
         expect(rects.objects[1].center).to.deep.equal({ x: 100, y: 0 });
         expect(rects.objects[2].center).to.deep.equal({ x: 100, y: -50 });
-        expect(rects.objects[3].center).to.deep.equal({ x: 100, y: -100 });
-        expect(rects.objects[4].center).to.deep.equal({ x: 100, y: -150 });
-        expect(rects.objects[5].center).to.deep.equal({ x: 100, y: -200 });
-        expect(rects.objects[6].center).to.deep.equal({ x: 100, y: -250 });
-        expect(rects.objects[7].center).to.deep.equal({ x: 100, y: -300 });
-        expect(rects.objects[8].center).to.deep.equal({ x: 100, y: -350 });
+        expect(rects.objects[3].center).to.deep.equal({ x: 100, y: 50 });
+        expect(rects.objects[4].center).to.deep.equal({ x: 100, y: 0 });
+        expect(rects.objects[5].center).to.deep.equal({ x: 100, y: -50 });
+        expect(rects.objects[6].center).to.deep.equal({ x: 100, y: 50 });
+        expect(rects.objects[7].center).to.deep.equal({ x: 100, y: 0 });
+        expect(rects.objects[8].center).to.deep.equal({ x: 100, y: -50 });
     });
 
     it("can be used with polygons", async () => {

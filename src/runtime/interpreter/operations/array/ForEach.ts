@@ -8,7 +8,9 @@ interface LoopInfo {
     label: string,
     iterator: ArrayIterator,
     loopValueName: string,
-    indexName: string
+    indexName: string,
+    iterableName: string,
+    list: Array<any>
 }
 
 export class ForEach extends Operation {
@@ -66,6 +68,10 @@ export class ForEach extends Operation {
         info.iterator.reset();
     }
 
+    public static clearLoopInfo() {
+        ForEach._info = [];
+    }
+
     protected _getParam(param) {
         let r = null;
         if (param.isRegister) {
@@ -93,15 +99,29 @@ export class ForEach extends Operation {
     }
 
     async execute(interpreter: Interpreter): Promise<any> {
-        const v = this.value;
+        let v = this.value;
         let iterator = v;
         let loopValueName = null;
 
-        if (!(v instanceof ArrayIterator)) {
-            iterator = new ArrayIterator(v);
-            loopValueName = this._target.name;
+
+        if (!this._index) {
+            // When we're working directly on the list we check if we're nested
+            // within another for each on the same list. We then use that list as
+            // our value, because in the current stack frame the value behind the
+            // lists name is only one value and not the actual list.
+            let outer = ForEach._info.find(i => i.iterableName === this._target.name);
+            if (outer) {
+                v = outer.list;
+                if (v instanceof ArrayIterator) {
+                    v = v.array;
+                }
+            }
         }
 
+        if (!(v instanceof ArrayIterator)) {
+            iterator = new ArrayIterator(v);
+        }
+            loopValueName = this._target.name;
 
         const labelName = "$FOREACH" + ForEach._info.length;
         interpreter.setLabel(labelName);
@@ -115,7 +135,9 @@ export class ForEach extends Operation {
             label: labelName,
             iterator: iterator as ArrayIterator,
             loopValueName,
-            indexName
+            indexName,
+            iterableName: this._target.name,
+            list: v
         })
 
         const sf = interpreter.pushStack();

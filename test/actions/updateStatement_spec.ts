@@ -27,11 +27,62 @@ describe('Update statement', () => {
 
         expect(state.store.state.code.code).to.deep.equal([
             "LOAD r1, 10",
-            "FOREACH a",
+            "FOREACH $a, a",
             "ADD r1, 2",
             "ENDEACH"
         ])
     });
+
+    it('uses iterator name (by convention) for lists on statements that are within a forEach on that list', async () => {
+        const action = new UpdateStatement(2, [2], "a");
+        const state = new State(createAppStore(), null);
+        action.controller = new MockController(state);
+
+        state.addDataField("a", [1, 2, 3, 4]);
+
+        const code = `LOAD r1, 10
+        FOREACH a
+        ADD r1, 2
+        ENDEACH`;
+
+        state.setCodeString(code);
+
+        await action.execute(null);
+
+        expect(state.store.state.code.code).to.deep.equal([
+            "LOAD r1, 10",
+            "FOREACH a",
+            "ADD r1, $a",
+            "ENDEACH"
+        ])
+    });
+
+    it('uses list name for lists on statements that are not within a forEach on that list', async () => {
+        const action = new UpdateStatement(4, [2], "a");
+        const state = new State(createAppStore(), null);
+        action.controller = new MockController(state);
+
+        state.addDataField("a", [1, 2, 3, 4]);
+
+        const code = `LOAD r1, 10
+        FOREACH a
+        ADD r1, 2
+        ENDEACH
+        ADD r1, 2`;
+
+        state.setCodeString(code);
+
+        await action.execute(null);
+
+        expect(state.store.state.code.code).to.deep.equal([
+            "LOAD r1, 10",
+            "FOREACH a",
+            "ADD r1, 2",
+            "ENDEACH",
+            "ADD r1, a"
+        ])
+    })
+
 
     it("switches the where type to register if necessary", async () => {
         const state = new State(createAppStore(), null);

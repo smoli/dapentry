@@ -26,9 +26,11 @@ export class UpdateStatement extends BaseAction {
         const original = this.codeManager.code[index];
         const tokens = Parser.parseLine(original);
 
-        const newStatements = [];
+        const newStatements = []
 
-        newStatements.push(`FOREACH ${dataName}`);
+        const iteratorName = `$${dataName}`;
+
+        newStatements.push(`FOREACH ${iteratorName}, ${dataName}`);
 
         tokens[argumentToReplace].value = dataName;
         const newCreationStatement = Parser.constructCodeLine(tokens);
@@ -41,6 +43,10 @@ export class UpdateStatement extends BaseAction {
 
     protected checkIsArray(value: any): boolean {
         return ( typeof value.forEach === "function" );
+    }
+
+    protected statementInForEachOverList(): boolean {
+        return this.codeManager.isStatementInForEach(this._statementIndex, this._newValue);
     }
 
     async _execute(): Promise<ActionResult> {
@@ -97,9 +103,13 @@ export class UpdateStatement extends BaseAction {
                     const endIndex = this.codeManager.findMatchingEndDo(this._statementIndex);
 
                     if (endIndex !== -1) {
-                        this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} ${this._newValue}`);
+                        this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`);
                         this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
                     }
+                } else if (this.checkIsArray(dataValue) && this.statementInForEachOverList()) {
+                    token.type = TokenTypes.REGISTER;
+                    token.value = "$" + this._newValue;
+                    newStatements.push(Parser.constructCodeLine(tokens));
                 } else {
                     token.type = TokenTypes.REGISTER;
                     token.value = this._newValue;

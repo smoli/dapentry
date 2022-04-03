@@ -156,7 +156,11 @@ export class GfxInterpreter extends Interpreter {
                    const current = this._currentFrame.getRegister(n);
 
                    if (current instanceof GrObjectList) {
-                       current.addObject(toHoist[n]);
+                       if (toHoist[n] instanceof GrObjectList) {
+                           toHoist[n].objects.forEach(o => current.addObject(o))
+                       } else {
+                        current.addObject(toHoist[n]);
+                       }
                    } else {
                        const l = new GrObjectList(n);
                        l.addObject(current);

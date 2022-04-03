@@ -21,7 +21,41 @@ describe('Code Manager - Loop Analysis', () => {
         m.addCodeString(code);
 
         expect(m.isStatementInLoop(2)).to.be.true;
+    });
 
+    it("can tell if a statement is within a forEach on a specific list register", () => {
+       const code = `
+        ADD r1, 1
+        FOREACH $c, c
+            ADD r1, 4
+            FOREACH $a, a
+                ADD r1, 9
+                FOREACH $b, b
+                    ADD r1, 2
+                ENDEACH
+                ADD r1, a
+            ENDEACH
+        ENDEACH
+        ADD r1, 3
+        FOREACH $a, a
+            DO 7
+                ADD r1, 9
+            ENDDO
+        ENDEACH
+       `;
+
+       const m = new CodeManager();
+       m.addCodeString(code);
+
+       expect(m.isStatementInForEach(0, "a")).to.be.false;
+       expect(m.isStatementInForEach(2, "a")).to.be.false;
+       expect(m.isStatementInForEach(4, "a")).to.be.true;
+       expect(m.isStatementInForEach(6, "a")).to.be.true;
+       expect(m.isStatementInForEach(8, "a")).to.be.true;
+       expect(m.isStatementInForEach(11, "a")).to.be.false;
+       expect(m.isStatementInForEach(13, "a")).to.be.true;
+       expect(m.isStatementInForEach(14, "a")).to.be.true;
+       expect(m.isStatementInForEach(15, "a")).to.be.true;
     });
 
     it("can create new unused register names", () => {

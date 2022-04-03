@@ -14,6 +14,7 @@ import {makeParameter} from "./makeParameter";
 import {InterpreterError} from "./errors/InterpreterError";
 import {UnknownOpCodeError} from "./errors/UnknownOpCodeError";
 import {UnknownRegisterError} from "./errors/UnknownRegisterError";
+import {ForEach} from "./operations/array/ForEach";
 
 class GlobalStackFrame extends StackFrame {
 
@@ -144,6 +145,7 @@ export class Interpreter {
         this._currentFrame = this._globals;
         this._currentHaltIterations = Number.MAX_SAFE_INTEGER;
         this._errors = [];
+        ForEach.clearLoopInfo();
     }
 
     private _prepareLabels(): { [key: string]: number } {

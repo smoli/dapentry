@@ -225,7 +225,7 @@ export class AppController {
             this._updateSelection();
         } catch (e) {
             console.info("Errors during execution");
-
+            console.log(e.message);
             if (!( e instanceof InterpreterError )) {
                 throw e;
             }

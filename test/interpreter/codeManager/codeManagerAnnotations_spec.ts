@@ -149,8 +149,7 @@ describe('Code Manager - Annotations', () => {
             { originalLine: 2, code: "ADD r0, 1", level: 1 },
             { originalLine: 3, code: "MUL r0, 2", level: 1 },
             { originalLine: 4, code: "ENDDO", level: 0 },
-            { originalLine: 5, code: "ADD r0, 12", level: 0 },
-
+            { originalLine: 5, code: "ADD r0, 12", level: 0 }
         ])
     });
 });
