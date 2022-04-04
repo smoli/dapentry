@@ -275,6 +275,25 @@ describe('A published drawing', () => {
         ]);
     });
 
+    it("will create an object list for object created in a do-loop", () => {
+        const code = `
+            DO 5
+                LINEPP Line1, $styles.default, Canvas@center, Canvas@top
+            ENDDO
+        `;
+
+        const jsCode = JSPublisher.getDrawingFunctionBody(code, [], ["Line1"]);
+
+        console.log(jsCode.join("\n"));
+
+        const drawing = makeDrawingFunction(jsCode);
+        const r = drawing(library, canvas);
+
+        expect(r.length).to.equal(1);
+        expect(r[0].type).to.equal(ObjectType.List);
+
+    });
+
     it("will not create an object list of guide objects", () => {
         const code = `
             FOREACH x

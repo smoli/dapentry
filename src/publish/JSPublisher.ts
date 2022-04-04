@@ -126,27 +126,39 @@ export function getMidpoint(tokenA: Token, tokenB: Token) {
     return r;
 }
 
-let loopVarIndex = 0;
+let doLoopCounter = 0;
 
-function getDoStartForTokens(tokens: Array<Token>) {
+function getDoVarForTokens(tokens: Array<Token>):string {
+    if (tokens.length === 2) {
+        return "$do" + doLoopCounter;
+    } else {
+        return tokens[1].value as string;
+    }
+}
 
-    let doVar;
+function getObjectManagerForDoTokens(tokens: Array<Token>):string {
+    return `__${getDoVarForTokens(tokens)}$objects`;
+}
+
+function getDoStartForTokens(tokens: Array<Token>, parentObjectManager: string):string {
+
+    doLoopCounter += 1;
+    let doVar = getDoVarForTokens(tokens);
     let times;
 
     if (tokens.length === 2) {
-        doVar = "$do" + loopVarIndex;
-        loopVarIndex += 1;
         times = tokens[1].value;
     } else {
-        doVar = tokens[1].value;
         times = tokens[2].value;
     }
 
-    return `for(let ${doVar} = 0; ${doVar} < ${times}; ${doVar}++) {`
+    return `const ${getObjectManagerForDoTokens(tokens)} = dapentry.makeObjectManager(${GUIDES}, ${parentObjectManager});`  +
+          "\n" +
+         `for(let ${doVar} = 0; ${doVar} < ${times}; ${doVar}++) {`
 }
 
-function getEndDoForTokens(tokens: Array<Token>) {
-    return "}";
+function getEndDoForTokens(tokens: Array<Token>, doTokens: Array<Token>, parentObjectManager: string) {
+    return `}\ndapentry.hoistObjects(${getObjectManagerForDoTokens(doTokens)}, ${parentObjectManager});`;
 }
 
 function getItVarForForeach(tokens: Array<Token>): string {
@@ -313,11 +325,15 @@ export class JSPublisher {
                 break;
 
             case AppConfig.Runtime.Opcodes.Do:
-                r.push(getDoStartForTokens(tokens));
+                r.push(getDoStartForTokens(tokens, JSPublisher.objectManager));
+                JSPublisher._loopStack.push(tokens);
+                JSPublisher._objectManagerStack.push(getObjectManagerForDoTokens(tokens));
                 break;
 
             case AppConfig.Runtime.Opcodes.EndDo:
-                r.push(getEndDoForTokens(tokens));
+                const doTokens = JSPublisher._loopStack.pop();
+                JSPublisher._objectManagerStack.pop();
+                r.push(getEndDoForTokens(tokens, doTokens, JSPublisher.objectManager));
                 break;
 
             case AppConfig.Runtime.Opcodes.ForEach:
