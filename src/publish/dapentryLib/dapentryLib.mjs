@@ -2062,12 +2062,12 @@ function $f794df200bdd1c64$export$eb688b4a3b171f3d(managerFrom, managerTo) {
         } else managerTo(name, from[name]);
     });
 }
-function $f794df200bdd1c64$export$9a199263f62e818d(parent) {
+function $f794df200bdd1c64$export$9a199263f62e818d(guides = {}, parent = null) {
     const __objects = {};
     return function(name, object = null, deep = true) {
         if (!name) return __objects;
         if (object) {
-            if (__objects[name]) {
+            if (__objects[name] && !guides[name]) {
                 let l = __objects[name];
                 if (l.type !== $92808e6f1672ab53$export$53f0d9fcb05d9d1d.List) {
                     const newL = new $e60ec5afccde461f$export$fefeb732093e696a(name);

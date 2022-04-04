@@ -74,7 +74,8 @@ export class PublishDrawing extends BaseAction {
             this.controller.state.store.state.drawing.dimensions.height,
             data.arguments.filter(f => f.published),
             data.arguments.filter(f => !f.published),
-            data.publishedObjects.filter(o => o.use).map(o => o.object.uniqueName)
+            data.publishedObjects.filter(o => o.use).map(o => o.object.uniqueName),
+            data.publishedObjects.filter(o => o.isGuide).map(o => o.object.uniqueName)
         );
 
         const zip = await import("client-zip");

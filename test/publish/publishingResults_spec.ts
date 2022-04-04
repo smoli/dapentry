@@ -274,4 +274,32 @@ describe('A published drawing', () => {
             { x: 30, y: 10 }
         ]);
     });
+
+    it("will not create an object list of guide objects", () => {
+        const code = `
+            FOREACH x
+                LINEPP Line1, $styles.default, Canvas@center, Canvas@top
+            ENDEACH
+        `;
+
+        const fields:Array<DataField> = [
+            {
+                name: "x",
+                value: [10, 20, 30],
+                type: DataFieldType.List,
+                description: "",
+                published: false
+            }
+        ];
+
+        const jsCode = JSPublisher.getDrawingFunctionBody(code, fields, ["Line1"], ["Line1"]);
+
+        console.log(jsCode.join("\n"));
+
+        const drawing = makeDrawingFunction(jsCode);
+        const r = drawing(library, canvas);
+
+        expect(r.length).to.equal(1);
+        expect(r[0].type).to.equal(ObjectType.Line);
+    });
 });

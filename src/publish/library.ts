@@ -44,7 +44,7 @@ export function hoistObjects(managerFrom, managerTo) {
 }
 
 
-export function makeObjectManager(parent) {
+export function makeObjectManager(guides = {}, parent = null) {
     const __objects = {};
     return function(name: string, object: GrObject = null, deep:boolean = true) {
         if (!name) {
@@ -52,7 +52,7 @@ export function makeObjectManager(parent) {
         }
 
         if (object) {
-            if (__objects[name]) {
+            if (__objects[name] && !guides[name]) {
                 let l = __objects[name];
                 if (l.type !== ObjectType.List) {
                     const newL = new GrObjectList(name);

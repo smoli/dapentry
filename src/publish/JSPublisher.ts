@@ -8,6 +8,7 @@ import {POI} from "../geometry/GrObject";
 
 
 const OBJECT_MANAGER = "__objects";
+const GUIDES = "__guides";
 const MODULE = "dapentry";
 const DRAWING_CLASS_NAME = "Drawing";
 const DRAWING_FUNCTION_NAME = "update";
@@ -64,7 +65,7 @@ export function getVariableName(token: Token): string {
         return CANVAS;
     } else if (token.type == TokenTypes.REGISTERAT) {
 
-        if(token.value[1].type !== TokenTypes.NAME) {
+        if (token.value[1].type !== TokenTypes.NAME) {
             return getVariableName(token.value[0]) + ".at(" + getExpressionFromToken(token.value[1]) + ")";
         }
 
@@ -148,15 +149,15 @@ function getEndDoForTokens(tokens: Array<Token>) {
     return "}";
 }
 
-function getItVarForForeach(tokens: Array<Token>):string {
+function getItVarForForeach(tokens: Array<Token>): string {
     return tokens[1].value as string;
 }
 
-function getObjectManagerForForEachTokens(tokens:Array<Token>):string {
+function getObjectManagerForForEachTokens(tokens: Array<Token>): string {
     return `__objects${getItVarForForeach(tokens)}`;
 }
 
-function getForEachStartForTokens(tokens: Array<Token>, parentObjectManager:string):string {
+function getForEachStartForTokens(tokens: Array<Token>, parentObjectManager: string): string {
 
     let itVar;
     let listVar;
@@ -169,11 +170,11 @@ function getForEachStartForTokens(tokens: Array<Token>, parentObjectManager:stri
         listVar = itVar;
     }
 
-    return `const ${getObjectManagerForForEachTokens(tokens)} = dapentry.makeObjectManager(${parentObjectManager});\n` +
-           `${listVar}.forEach(${itVar} => {`;
+    return `const ${getObjectManagerForForEachTokens(tokens)} = dapentry.makeObjectManager(${GUIDES}, ${parentObjectManager});\n` +
+        `${listVar}.forEach(${itVar} => {`;
 }
 
-function getEndEachForTokens(tokens: Array<Token>, forEachTokens:Array<Token>, parentObjectManager:string):string {
+function getEndEachForTokens(tokens: Array<Token>, forEachTokens: Array<Token>, parentObjectManager: string): string {
     return `});\ndapentry.hoistObjects(${getObjectManagerForForEachTokens(forEachTokens)}, ${parentObjectManager});`;
 }
 
@@ -193,7 +194,7 @@ export class JSPublisher {
     private static _loopStack = [];
     private static _objectManagerStack = [OBJECT_MANAGER];
 
-    public static get objectManager():string {
+    public static get objectManager(): string {
         return JSPublisher._objectManagerStack[JSPublisher._objectManagerStack.length - 1];
     }
 
@@ -417,7 +418,7 @@ export class JSPublisher {
                 r.push(
                     `\t${MODULE}.extendPolygon(` +
                     `${getObjectVariable(tokens[1])}, ` +
-                    `[ ${(tokens[3].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
+                    `[ ${( tokens[3].value as Array<Token> ).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
                     `);`);
                 r.push(`} else {`)
                 r.push(
@@ -426,8 +427,8 @@ export class JSPublisher {
                     `"${tokens[1].value}", ` +
                     `${getObjectVariable(tokens[1], true)}, ` +
                     `${!!tokens[4].value}, ` +
-                    `[ ${(tokens[3].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
-                `));`);
+                    `[ ${( tokens[3].value as Array<Token> ).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
+                    `));`);
                 r.push(`\t${getObjectVariable(tokens[1])}.style = ${MODULE}.${tokens[2].value};`);
                 r.push("}");
                 break;
@@ -436,7 +437,7 @@ export class JSPublisher {
                 r.push(
                     `${MODULE}.extendPolygon(` +
                     `${getObjectVariable(tokens[1])}, ` +
-                    `[ ${(tokens[2].value as Array<Token>).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
+                    `[ ${( tokens[2].value as Array<Token> ).map(t => getPoint2DFromToken(t)).join(", ")} ]` +
                     `);`);
                 break;
 
@@ -538,13 +539,18 @@ export class JSPublisher {
         return fields.map(f => `const ${JSPublisher.getCodeForField(f)};`);
     }
 
+    public static getGuidesCode(guideNames: Array<string>): string {
+        return `const ${GUIDES} = { ${guideNames.map(n => `"${n}": true`).join(", ")} };`;
+    }
 
     public static getDrawingFunctionBody(code: string,
                                          fields: Array<DataField>,
-                                         publishedNames: Array<string>): Array<string> {
+                                         publishedNames: Array<string>,
+                                         guideNames: Array<string> = []): Array<string> {
         const res = [];
         res.push(...JSPublisher.getFieldsCode(fields));
-        res.push(`const ${JSPublisher.objectManager} = dapentry.makeObjectManager();`)
+        res.push(JSPublisher.getGuidesCode(guideNames));
+        res.push(`const ${JSPublisher.objectManager} = dapentry.makeObjectManager(${GUIDES});`)
         res.push(...JSPublisher.getRawJSCode(code));
         res.push(`return [${publishedNames.map(n => `${JSPublisher.objectManager}("${n}")`).join(", ")}];`);
 
@@ -555,12 +561,13 @@ export class JSPublisher {
         code: string,
         args: Array<DataField>,
         fields: Array<DataField>,
-        publishedNames: Array<string>): Array<string> {
+        publishedNames: Array<string>,
+        guideNames: Array<string> = []): Array<string> {
 
         JSPublisher._objectManagerStack = [OBJECT_MANAGER];
         JSPublisher._loopStack = [];
         const res = [`${DRAWING_FUNCTION_NAME}(${JSPublisher.getArgsCode(args)}) {`];
-        res.push(...JSPublisher.getDrawingFunctionBody(code, fields, publishedNames))
+        res.push(...JSPublisher.getDrawingFunctionBody(code, fields, publishedNames, guideNames))
         res.push("}");
         return res;
     }
@@ -580,14 +587,15 @@ export class JSPublisher {
         height: number,
         args: Array<DataField>,
         fields: Array<DataField>,
-        publishedNames: Array<string>): string {
+        publishedNames: Array<string>,
+        guideNames: Array<string> = []): string {
 
         const r = jsPublishTemplate
             .replace("<DRAWING_CLASS_NAME>", DRAWING_CLASS_NAME)
             .replace("<DRAWING_FUNCTION_NAME>", DRAWING_FUNCTION_NAME)
             .replace("<VIEWBOX_HEIGHT>", "" + height)
             .replace("<ASPECT_RATIO>", AspectRatio[aspect])
-            .replace("<DRAWING_FUNCTION>", JSPublisher.getDrawingFunctionCode(code, args, fields, publishedNames).join("\n"))
+            .replace("<DRAWING_FUNCTION>", JSPublisher.getDrawingFunctionCode(code, args, fields, publishedNames, guideNames).join("\n"))
             .replace("<RENDER_DRAWING_FUNCTION>", JSPublisher.getRenderDrawingFunctionCode(args).join("\n"));
 
         return r;
