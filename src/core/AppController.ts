@@ -38,6 +38,7 @@ import {RenameTableColumn} from "../actions/RenameTableColumn";
 import {LoadFieldFromCSV} from "../actions/LoadFieldFromCSV";
 import {PublishDrawing} from "../actions/PublishDrawing";
 import {RenameObject} from "../actions/RenameObject";
+import {RemoveValueFromListDataField} from "../actions/RemoveValueFromListDataField";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -348,6 +349,12 @@ export class AppController {
 
     async addValueToDataField(name: string, value: ( number | string )) {
         await this._execute(new AddValueToDataField(name, value));
+        await this._runCode();
+        this._updateDrawing();
+    }
+
+    async removeValueFromListDataField(name: string, index: number) {
+        await this._execute(new RemoveValueFromListDataField(name, index));
         await this._runCode();
         this._updateDrawing();
     }

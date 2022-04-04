@@ -7,6 +7,7 @@
 <script lang="ts">
 import GrowingInput from "../StatementEditor/GrowingInput.vue";
 import FieldEditor from "./FieldEditor.vue";
+
 export default {
   name: "ListEditor",
   components: { FieldEditor, GrowingInput },
@@ -15,7 +16,12 @@ export default {
 
   methods: {
     onValueChanged(index, event) {
-      this.controller.setDataListFieldValue(this.field.name, index, event.target.value);
+      if (event.target.value.trim() === "") {
+        this.controller.removeValueFromListDataField(this.field.name, index);
+      } else {
+        this.controller.setDataListFieldValue(this.field.name, index, event.target.value);
+      }
+
     }
   }
 }
