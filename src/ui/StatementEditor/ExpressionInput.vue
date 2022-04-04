@@ -45,11 +45,13 @@ export default {
         value = "" + Number(value);
       }
 
-      try {
-        Parser.parseExpression(value);
-      } catch (e) {
-        this.validationMessage = "Invalid Syntax"
-        return
+      if (!value.match(/^"[^"]+"$/)) {
+        try {
+          Parser.parseExpression(value);
+        } catch (e) {
+          this.validationMessage = "Invalid Syntax"
+          return
+        }
       }
       this.validationMessage = null;
 
@@ -65,8 +67,8 @@ export default {
             case "UnknownRegisterError":
               return `${e.registerName} unknown`;
 
-              case "UnknownRegisterComponentError":
-                return `${e.registerName}.${e.componentName} unknown`
+            case "UnknownRegisterComponentError":
+              return `${e.registerName}.${e.componentName} unknown`
 
             case "UnknownFunctionError":
               return `Function ${e.funcName} unknown`;

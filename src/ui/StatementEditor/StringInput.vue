@@ -18,7 +18,11 @@ export default {
 
   methods: {
     onChange(event) {
-      this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, `"${event.target.value}"`);
+      if (this.$store.state.data.fields.find(field => field.name === event.target.value)) {
+        this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, `${event.target.value}`);
+      } else {
+        this.controller.updateStatement(this.content.statementIndex, this.content.subIndexes, `"${event.target.value}"`);
+      }
     },
 
     ...makeDnDHandlers(function (event: DragEvent) {
