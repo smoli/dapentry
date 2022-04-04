@@ -504,6 +504,18 @@ export class JSPublisher {
     }
 
     public static getCodeForField(field: DataField): string {
+        if (typeof field.value === "string") {
+            try {
+                const token = Parser.parseExpression(field.value as string);
+                if (token) {
+                    return `${field.name} = ${JSPublisher.getCodeForExpression(token)}`;
+                }
+            } catch (e) {
+                return `${field.name} = "${field.value}"`;
+            }
+        }
+
+
         switch (field.type) {
             case DataFieldType.Number:
                 return `${field.name} = ${field.value}`;

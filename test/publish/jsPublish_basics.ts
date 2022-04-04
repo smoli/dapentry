@@ -1,15 +1,17 @@
 import {describe, it} from "mocha";
 import {expect} from "chai"
 import {
-    getExpressionFromToken, getObjectVariable,
+    getExpressionFromToken,
+    getObjectVariable,
     getOpCode,
+    getPoiFromRegisterAt,
     getVariableName,
     getXYFromToken,
-    getPoiFromRegisterAt,
     JSPublisher
 } from "../../src/publish/JSPublisher";
-import {T_EXPRESSION, T_NUMBER, T_OPCODE, T_POINT, T_POINT_NN, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
+import {T_EXPRESSION, T_NUMBER, T_OPCODE, T_POINT_NN, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
 import {POI} from "../../src/geometry/GrObject";
+import {DataField, DataFieldType} from "../../src/state/modules/Data";
 
 
 describe('JS publisher', () => {
@@ -59,6 +61,28 @@ describe('JS publisher', () => {
 
         it("get poi id from register at", () => {
             expect(getPoiFromRegisterAt(T_REGISTERAT("ob", "center"))).to.equal(POI.center);
+        });
+
+        it("export js expression on fields with expression value", () => {
+            const f1:DataField = {
+                name: "f1",
+                type: DataFieldType.Number,
+                value: "1 / max(a)",
+                published: false,
+                description: ""
+            };
+
+            expect(JSPublisher.getCodeForField(f1)).to.equal("f1 = 1 / dapentry.max(a)");
+
+            const f2:DataField = {
+                name: "f1",
+                type: DataFieldType.String,
+                value: "1 / max(a)",
+                published: false,
+                description: ""
+            };
+
+            expect(JSPublisher.getCodeForField(f1)).to.equal("f1 = 1 / dapentry.max(a)");
         })
     });
 
