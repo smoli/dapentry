@@ -273,7 +273,44 @@ describe('Data State', () => {
                 published: true
             }
         ]);
+    });
 
+    it('can remove a value from a list data field', () => {
+        const store = createAppStore();
+        const state = new State(store, null);
+
+        state.addDataField("f1", 10);
+        state.addDataField("f2", [10, 20]);
+        state.addDataField("f3", [10, 20, 30]);
+        state.addDataField("f5", [{ a: 1, b: 2 }, { a: 2, b: 3 }]);
+
+        state.removeValueFromListOrTable("f3", 1);
+
+        expect(state.store.state.data.fields.find(f => f.name === "f3")).to.deep.equal({
+            name: "f3",
+            value: [10, 30],
+            type: DataFieldType.List,
+            description: null,
+            published: true
+        });
+
+        state.removeValueFromListOrTable("f2", 1);
+        expect(state.store.state.data.fields.find(f => f.name === "f2")).to.deep.equal({
+            name: "f2",
+            value: 10,
+            type: DataFieldType.Number,
+            description: null,
+            published: true
+        });
+
+        state.removeValueFromListOrTable("f5", 1);
+        expect(state.store.state.data.fields.find(f => f.name === "f5")).to.deep.equal({
+            name: "f5",
+            value: [{ a: 1, b: 2 }],
+            type: DataFieldType.Table,
+            description: null,
+            published: true
+        });
     });
 
 

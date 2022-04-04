@@ -258,6 +258,38 @@ export const dataState = {
             })
         },
 
+        removeValueFromListOrTable(state: DataState, payload: { name: string, index: number }) {
+            state.fields = state.fields.map(f => {
+                if (f.name !== payload.name) {
+                    return f;
+                }
+
+                switch (f.type) {
+                    case DataFieldType.Number:
+                        return f;
+
+                    case DataFieldType.List:
+                        f.value = (f.value as Array<any>).filter((v, i) => i !== payload.index);
+                        if (f.value.length === 1) {
+                            f.value = f.value[0] as number;
+                            f.type = DataFieldType.Number
+                        }
+                        return f;
+
+
+                    case DataFieldType.String:
+                        return f;
+
+                    case DataFieldType.Table:
+                        f.value = (f.value as Array<any>).filter((v, i) => i !== payload.index);
+                        return f;
+
+                    default:
+                        UNREACHABLE();
+                }
+            })
+        },
+
         addValueToField(state: DataState, payload: { name: string, value: ( number | string ) }) {
             // @ts-ignore
             state.fields = state.fields.map(f => {

@@ -81,6 +81,7 @@ const mutations = {
         setListFieldValue: "data/setListFieldValue",
         setTableCellValue: "data/setTableCellValue",
         addValueToField: "data/addValueToField",
+        removeValueFromListOrTable: "data/removeValueFromListOrTable",
         addColumnToField: "data/addColumnToField",
         renameTableColumn: "data/renameTableColumn",
         removeTableColumn: "data/removeTableColumn",
@@ -324,6 +325,10 @@ export class State {
 
     addValueToDataField(name: string, value: ( number | string )) {
         this.commit(mutations.data.addValueToField, { name, value });
+    }
+
+    removeValueFromListOrTable(name: string, index: number) {
+        this.commit(mutations.data.removeValueFromListOrTable, { name, index });
     }
 
     addColumnToDataField(name: string, value: ( number | string )) {
