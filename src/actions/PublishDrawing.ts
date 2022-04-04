@@ -12,6 +12,7 @@ const server_js = fs.readFileSync('src/publish/server.js', 'utf8');
 const readme_md = fs.readFileSync('src/publish/Readme.md', 'utf8');
 
 const example_mjs = `
+import * as dapentry from "./dapentryLib.mjs";
 import { Drawing } from "./drawing.mjs";
 const d = new Drawing();
 d.init("drawing");
@@ -29,23 +30,7 @@ export class PublishDrawing extends BaseAction {
 
     protected makeExampleModule(args: Array<DataField>): string {
         const vars = args.map(a => {
-            let value = "";
-            switch (a.type) {
-                case DataFieldType.Number:
-                    value = "" + a.value;
-                    break;
-                case DataFieldType.List:
-                    value = `[${(a.value as Array<any>).join(", ")}]`;
-                    break;
-                case DataFieldType.String:
-                    value = `"${a.value}"`;
-                    break;
-                case DataFieldType.Table:
-                    value = JSON.stringify(a.value);
-                    break;
-
-            }
-            return `const ${a.name} = ${value};`;
+            return `const ${JSPublisher.getCodeForField(a)};`;
         }).join("\n");
 
         const params = args.map(a => a.name).join(", ");
