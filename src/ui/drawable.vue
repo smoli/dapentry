@@ -7,9 +7,9 @@
       <StepList v-if="!$store.state.ui.layout.hideStepList"></StepList>
     </div>
     <div class="drawable-left-column-sizer">
-      <button class="drawable-left-column-width-adjust" v-if="leftWidth !== normalWidth" @click="smallerLeft">&lt;
+      <button class="drawable-left-column-width-adjust" v-if="leftWidth !== normalWidth" @click="smallerLeft">&lang;
       </button>
-      <button class="drawable-left-column-width-adjust" v-if="leftWidth !== wideWidth" @click="biggerLeft">&gt;
+      <button class="drawable-left-column-width-adjust" v-if="leftWidth !== wideWidth" @click="biggerLeft">&rang;
       </button>
     </div>
     <div class="drawable-main-column" v-if="!$store.state.ui.layout.hideMainColumn">
