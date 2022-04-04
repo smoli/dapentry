@@ -80,7 +80,8 @@ export class UpdateStatement extends BaseAction {
                         return { errors: [new DuplicateRegisterError(this._newValue)] };
                     } else {
                         // We're renaming a created register
-                        this.state.renameRegister(token.value, this._newValue);
+                        await this.controller.renameObject(token.value, this._newValue);
+                        return {}
                     }
 
 

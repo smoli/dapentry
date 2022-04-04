@@ -37,6 +37,7 @@ import {AspectRatio} from "../geometry/AspectRatio";
 import {RenameTableColumn} from "../actions/RenameTableColumn";
 import {LoadFieldFromCSV} from "../actions/LoadFieldFromCSV";
 import {PublishDrawing} from "../actions/PublishDrawing";
+import {RenameObject} from "../actions/RenameObject";
 
 type PerformanceMeasurement = { [key: string]: DOMHighResTimeStamp };
 
@@ -393,6 +394,17 @@ export class AppController {
             return;
         }
         await this._execute(new AddStatement(code));
+        await this._runCode();
+        this._updateDrawing();
+        await this._persistence?.saveCode();
+    }
+
+    renameGuide(oldName: string, newName: string) {
+        this._interpreter.renameGuide(oldName, newName);
+    }
+
+    async renameObject(oldName: string, newName: string) {
+        await this._execute(new RenameObject(oldName, newName));
         await this._runCode();
         this._updateDrawing();
         await this._persistence?.saveCode();

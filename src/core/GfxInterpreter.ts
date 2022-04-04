@@ -207,6 +207,13 @@ export class GfxInterpreter extends Interpreter {
         }
     }
 
+    renameGuide(oldName: string, newName: string) {
+        if (this._guides[oldName]) {
+            delete this._guides[oldName];
+            this._guides[newName] = true;
+        }
+    }
+
     resetGuides() {
         this._guides = {};
     }
