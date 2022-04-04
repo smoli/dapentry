@@ -31,8 +31,6 @@ import {API} from "../api/API";
 import {AddColumnToDataField} from "../actions/AddColumnToDataField";
 import {InterpreterError} from "../runtime/interpreter/errors/InterpreterError";
 import {LoadFromLibrary} from "../actions/LoadFromLibrary";
-import {InteractionEventKind, InteractionEvents} from "./InteractionEvents";
-import {logInteraction} from "./InteractionLogger";
 import {AspectRatio} from "../geometry/AspectRatio";
 import {RenameTableColumn} from "../actions/RenameTableColumn";
 import {LoadFieldFromCSV} from "../actions/LoadFieldFromCSV";
@@ -406,6 +404,13 @@ export class AppController {
         await this._persistence?.saveCode();
     }
 
+    /**
+     * This is not an action as it is called by an action, e.g.
+     * update statement, so we do not publish the controller's
+     * interpreter.
+     * @param oldName
+     * @param newName
+     */
     renameGuide(oldName: string, newName: string) {
         this._interpreter.renameGuide(oldName, newName);
     }
