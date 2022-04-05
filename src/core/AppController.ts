@@ -96,7 +96,7 @@ const toolsThatAllowSelection: Array<ToolNames> = [
 
 export class AppController {
     private readonly _state: State;
-    private _interpreter: GfxInterpreter;
+    protected _interpreter: GfxInterpreter;
     private _canvas: GrCanvas;
     private _performance: PerformanceMeasure = new PerformanceMeasure();
     private _styleManager: StyleManager = new StyleManager();

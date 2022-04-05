@@ -40,6 +40,24 @@ export class MockController extends AppController {
 
     get modalFactory(): ModalFactory {
         return makeMockModalFactory(this._onConfirm)
-
     }
+
+    renameGuide(oldName: string, newName: string) {
+        if (this._interpreter) {
+            super.renameGuide(oldName, newName);
+        }
+    }
+
+    async _runCode() {
+        if (this._interpreter) {
+            await super._runCode();
+        }
+    }
+
+    _updateDrawing() {
+        if (this._interpreter) {
+            super._updateDrawing();
+        }
+    }
+
 }
