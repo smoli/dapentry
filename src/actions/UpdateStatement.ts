@@ -3,6 +3,7 @@ import {Parser, TokenTypes} from "../runtime/interpreter/Parser";
 import {CodeManager} from "../runtime/CodeManager";
 import {AppConfig} from "../core/AppConfig";
 import {DuplicateRegisterError} from "../runtime/interpreter/errors/DuplicateRegisterError";
+import {DialogCloseReason} from "../ui/core/ModalFactory";
 
 export class UpdateStatement extends BaseAction {
     private readonly _newValue: string;
@@ -104,9 +105,27 @@ export class UpdateStatement extends BaseAction {
                     const endIndex = this.codeManager.findMatchingEndDo(this._statementIndex);
 
                     if (endIndex !== -1) {
-                        this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`);
-                        this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
+                        if (this.statementInForEachOverList()) {
+                            const dialog = this.controller.modalFactory.createConfirmationModal();
+                            const res = await dialog.show({
+                                text: "ForeEach over " + this._newValue + " or loop over it's current value?",
+                                yesButtonTextId: "ForEach",
+                                noButtonTextId: "Loop over value"
+                            });
+
+                            if (res.reason === DialogCloseReason.NO) {
+                                token.value = "$" + this._newValue;
+                                newStatements.push(Parser.constructCodeLine(tokens));
+                            } else {
+                                this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`);
+                                this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
+                            }
+                        } else {
+                            this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`);
+                            this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
+                        }
                     }
+
                 } else if (this.checkIsArray(dataValue) && this.statementInForEachOverList()) {
                     token.type = TokenTypes.REGISTER;
                     token.value = "$" + this._newValue;

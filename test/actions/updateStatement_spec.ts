@@ -6,6 +6,8 @@ import {MockController} from "../testHelpers/mock_controller";
 import {UpdateStatement} from "../../src/actions/UpdateStatement";
 import {Parser} from "../../src/runtime/interpreter/Parser";
 import {T_NUMBER, T_OPCODE, T_REGISTER, T_REGISTERAT} from "../testHelpers/tokens";
+import {GfxInterpreter} from "../../src/core/GfxInterpreter";
+import {DialogCloseReason} from "../../src/ui/core/ModalFactory";
 
 describe('Update statement', () => {
 
@@ -87,7 +89,7 @@ describe('Update statement', () => {
     it("switches the where type to register if necessary", async () => {
         const state = new State(createAppStore(), null);
         const action = new UpdateStatement(1, [2, 1], "f1");
-        action.controller = new MockController(state);
+        action.controller = new MockController(state, null, new GfxInterpreter());
 
         const code = `
                 LOAD r1, 10
@@ -131,8 +133,62 @@ describe('Update statement', () => {
                 T_REGISTER("r2"),
                 T_REGISTERAT("f1", 5)
             ]);
+    });
 
+    it('user can decide to use a lists current value when used on a do inside a forEach on that list', async () => {
+        const action = new UpdateStatement(2, [1], "a");
+        const state = new State(createAppStore(), null);
+        action.controller = new MockController(state, () => DialogCloseReason.NO);
 
+        state.addDataField("a", [1, 2, 3, 4]);
+
+        const code = `LOAD r1, 10
+        FOREACH $a, a
+        DO 2
+        ADD r1, 2
+        ENDDO
+        ENDEACH`;
+
+        state.setCodeString(code);
+
+        await action.execute(null);
+
+        expect(state.store.state.code.code).to.deep.equal([
+            "LOAD r1, 10",
+            "FOREACH $a, a",
+            "DO $a",
+            "ADD r1, 2",
+            "ENDDO",
+            "ENDEACH"
+        ])
+    });
+
+    it('user can decide to use change do to forEach when using a list on a do inside a forEach on that list', async () => {
+        const action = new UpdateStatement(2, [1], "a");
+        const state = new State(createAppStore(), null);
+        action.controller = new MockController(state, () => DialogCloseReason.YES);
+
+        state.addDataField("a", [1, 2, 3, 4]);
+
+        const code = `LOAD r1, 10
+        FOREACH $a, a
+        DO 2
+        ADD r1, 2
+        ENDDO
+        ENDEACH`;
+
+        state.setCodeString(code);
+
+        await action.execute(null);
+
+        expect(state.store.state.code.code).to.deep.equal([
+            "LOAD r1, 10",
+            "FOREACH $a, a",
+            "FOREACH $a, a",
+            "ADD r1, 2",
+            "ENDEACH",
+            "ENDEACH"
+        ])
     });
 
 
