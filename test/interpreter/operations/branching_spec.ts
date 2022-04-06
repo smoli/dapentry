@@ -140,4 +140,23 @@ describe('Branching is done using jumps', () => {
         }).to.throw;
 
     });
+
+    xit("can use an if operation", async () => {
+       const code = `
+            LOAD r1, 1
+            LOAD r2, 20
+            JNE r1, 1, ELSE:
+                ADD r2, 20
+                JMP END:
+            ELSE:
+                ADD r2, 30
+            END:
+            ADD r2, 20
+       `;
+        const i = new Interpreter();
+        i.parse(code);
+        await i.run();
+
+        expect(i.getRegister("r2")).to.equal(60)
+    });
 });

@@ -1,8 +1,7 @@
 import {ActionResult, BaseAction} from "./BaseAction";
 import {LibraryEntry} from "../core/Library";
-import {Parser, TokenTypes} from "../runtime/interpreter/Parser";
 import {ASSERT} from "../core/Assertions";
-import {AppConfig} from "../core/AppConfig";
+import {DialogCloseReason} from "../ui/core/ModalFactory";
 
 export class LoadFromLibrary extends BaseAction {
     private _entryName: string;
@@ -40,6 +39,17 @@ export class LoadFromLibrary extends BaseAction {
     }
 
     protected async _execute(data: any): Promise<ActionResult | void> {
+
+        const dialog = this.controller.modalFactory.createConfirmationModal();
+        const r = await dialog.show({
+            text: "This replaces the current drawing. All unsaved changes will be lost",
+            yesButtonTextId: "Yes, load the drawing",
+            noButtonTextId: "No, keep current"
+        });
+
+        if (r.reason === DialogCloseReason.NO) {
+            return;
+        }
 
         const entry = this.state.getLibraryEntry(this._entryName)
 
