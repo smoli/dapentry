@@ -51,6 +51,15 @@ makeDesigner("intro-dataeditor", {...strippedLayout, hideLeftColumn: false, hide
     {
         radius: 100
     }
+);
+
+makeDesigner("intro-data-lists", {...strippedLayout, hideLeftColumn: false, hideStepList: true }, {
+    ...square,
+    poiAvailable: false
+}, `CIRCLECR Circle1,$styles.default,Canvas@center,radius`,
+    {
+        radius: 100
+    }
 )
 
 makeDesigner("intro-basic-recording", {...strippedLayout, hideLeftColumn: false, hideDataEditor: true }, {
