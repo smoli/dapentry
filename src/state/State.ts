@@ -11,6 +11,7 @@ import {UserInfo} from "./modules/Authentication";
 import {LayoutOptions} from "../core/layoutOptions";
 import {ASSERT} from "../core/Assertions";
 import {AspectRatio} from "../geometry/AspectRatio";
+import {ApplicationFeatures} from "../core/AppController";
 
 
 const mutations = {
@@ -30,7 +31,8 @@ const mutations = {
         toggleRightPanel: "ui/toggleRightPanel",
         toggleHeader: "ui/toggleHeader",
         toggleToolHints: "ui/toggleToolHints",
-        toggleFooter: "ui/toggleFooter"
+        toggleFooter: "ui/toggleFooter",
+        setFeatures: "ui/setFeatures"
     },
 
     tool: {
@@ -218,6 +220,10 @@ export class State {
 
     setAvailableTools(tools: Array<ToolNames>) {
         this.commit(mutations.tool.setAvailable, tools);
+    }
+
+    setFeatures(features: ApplicationFeatures) {
+        this.commit(mutations.ui.setFeatures, features);
     }
 
     switchTool(toolName: ToolNames, ...params: Array<any>) {
@@ -411,27 +417,22 @@ export class State {
 
     public toggleLeftPanel() {
         this.commit(mutations.ui.toggleLeftPanel);
-
     }
 
     public toggleRightPanel() {
         this.commit(mutations.ui.toggleRightPanel);
-
     }
 
     public toggleHeader() {
         this.commit(mutations.ui.toggleHeader);
-
     }
 
     public toggleToolHints() {
         this.commit(mutations.ui.toggleToolHints);
-
     }
+
     public toggleFooter() {
         this.commit(mutations.ui.toggleFooter);
-
     }
-
 
 }

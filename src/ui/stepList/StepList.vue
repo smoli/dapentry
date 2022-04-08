@@ -1,12 +1,13 @@
 <template>
   <section ref="scrollContainer" class="drawable-steplist-container">
     <h2 @click="toggleDisplay">{{ $t("ui.stepEditor") }}
-      <button @click="onLoopSelection"
+      <button @click="onLoopSelection" v-if="$store.state.ui.features.loopSteps"
               :disabled="noLinesSelected"
               class="drawable-ui-transparent"
       >Loop
       </button>
-      <ToggleButton transparent="true" :active="filter" @change="filter = !filter">Filter</ToggleButton>
+      <ToggleButton v-if="$store.state.ui.features.filterSteps"
+          transparent="true" :active="filter" @change="filter = !filter">Filter</ToggleButton>
     </h2>
 
     <div v-if="!showCode">
@@ -17,7 +18,7 @@
            @click="onStepClicked(line, $event)">
 <!--        <button v-if="line.blockBegin">&gt;</button>-->
         <span v-if="!line.filteredOut">{{ line.text }}</span>
-        <button v-if="!line.filteredOut" @click="onDeleteStep(line, $event)"
+        <button v-if="!line.filteredOut && $store.state.ui.features.deleteStep" @click="onDeleteStep(line, $event)"
                 class="drawable-steplist-step-delete drawable-ui-transparent">
           x
         </button>

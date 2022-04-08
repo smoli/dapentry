@@ -73,20 +73,32 @@ class PerformanceMeasure {
     }
 }
 
+export interface ApplicationFeatures {
+    poi?: boolean,
+    library?: boolean
+    loopSteps?: boolean
+    filterSteps?: boolean,
+    deleteStep?: boolean
+}
+
 export interface ApplicationOptions {
     aspectRatio?: AspectRatio,
     drawingHeight?: number,
     availableTools?: Array<ToolNames>,
-    poiAvailable?: boolean,
-    libraryAvailable?: boolean
+    features?: ApplicationFeatures
 }
 
 export const applicationDefaults: ApplicationOptions = {
     aspectRatio: AppConfig.Drawing.InitialAspectRatio,
     drawingHeight: AppConfig.Drawing.Height,
     availableTools: Object.values(ToolNames) as Array<ToolNames>,
-    poiAvailable: true,
-    libraryAvailable: true
+    features: {
+        poi: true,
+        library: true,
+        loopSteps: true,
+        filterSteps: true,
+        deleteStep: true
+    }
 }
 
 const toolsThatAllowSelection: Array<ToolNames> = [
@@ -133,8 +145,9 @@ export class AppController {
         }
 
         this._state.setAvailableTools(tools);
+        this._state.setFeatures(options.features);
 
-        this._poiAvailable = options.poiAvailable;
+        this._poiAvailable = options.features.poi;
         this._defaultDrawingHeight = options.drawingHeight;
 
         this._canvas = GrCanvas.create(options.aspectRatio, this._defaultDrawingHeight);
@@ -707,7 +720,7 @@ export class AppController {
     }
 
     public toggleLibrary() {
-        if (this._startupOptions.libraryAvailable) {
+        if (this._startupOptions.features.library) {
             this._state.toggleLibrary();
             this._persistence.saveLayout();
         }

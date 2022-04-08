@@ -1,12 +1,14 @@
 import {shallowRef} from "vue";
 import {ModalDialogHandler} from "../../ui/core/ModalDialogHandler";
 import {layoutDefaults, LayoutOptions} from "../../core/layoutOptions";
+import {ApplicationFeatures} from "../../core/AppController";
 
 
 export interface UIState {
     count: number,
     modalComponent: Array<{ component: any, handler: ModalDialogHandler }>,
-    layout: LayoutOptions
+    layout: LayoutOptions,
+    features: ApplicationFeatures
 
 }
 
@@ -17,9 +19,10 @@ export const uiState = {
 
     state(): UIState {
         return {
-            count: c ++,
+            count: c++,
             modalComponent: [],
-            layout: {...layoutDefaults}
+            layout: { ...layoutDefaults },
+            features: {}
         }
     },
 
@@ -34,7 +37,11 @@ export const uiState = {
         },
 
         setLayout(state: UIState, layout: LayoutOptions) {
-            Object.assign(state.layout, { ... layout });
+            Object.assign(state.layout, { ...layout });
+        },
+
+        setFeatures(state: UIState, features: ApplicationFeatures) {
+            Object.assign(state.features, { ...features });
         },
 
         toggleLibrary(state: UIState) {

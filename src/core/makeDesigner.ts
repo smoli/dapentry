@@ -77,7 +77,7 @@ export function makeDesigner(containerId: string,
     const state = new State(appStore, i18n);
     let library = null;
 
-    if (appOptions.libraryAvailable) {
+    if (appOptions.features.library) {
         library = new Library(state);
     }
 
