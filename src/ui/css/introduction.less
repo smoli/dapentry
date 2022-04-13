@@ -1,4 +1,9 @@
 @import "defaults";
+@import "introHeader";
+
+header {
+  margin-bottom: 3em;
+}
 
 body {
   display: flex;
@@ -33,49 +38,7 @@ a:hover {
 }
 
 
-header {
-  background-color: @ciMainColor;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding-left: 2em;
-  border-bottom: 1px solid darken(@ciMainColor, 2%);
-  box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.1);
-  margin-bottom: 3em;
-  box-sizing: border-box;
 
-  h1 {
-    display: inline-block;
-    flex: 1 1 auto;
-
-    span {
-      font-weight: normal;
-      margin-left: 0.2em;
-    }
-
-    span:before {
-      content: "-";
-      margin-right: 0.2em;
-    }
-  }
-
-  section {
-
-    color: black;
-    padding-right: 5em;
-
-    * {
-      margin-left: 1em;
-    }
-
-    a {
-      font-size: 1.2em;
-      color: black;
-    }
-
-  }
-
-}
 
 footer {
   display: flex;

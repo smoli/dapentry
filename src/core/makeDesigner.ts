@@ -33,7 +33,7 @@ export function makeDesigner(containerId: string,
                              layout: LayoutOptions = {},
                              appOptions: ApplicationOptions = applicationDefaults,
                              initialCode: string = "",
-                             initialFields: { [key:string]: number } = {}): AppController {
+                             initialFields: { [key:string]: (number|Array<number>) } = {}): AppController {
 
 
     const mount = document.getElementById(containerId);
@@ -63,7 +63,6 @@ export function makeDesigner(containerId: string,
                     method: propkey
                 });
             }
-
             return target[propkey];
         }
     }

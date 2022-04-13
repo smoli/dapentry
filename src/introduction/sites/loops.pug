@@ -8,19 +8,22 @@ html
 
         section(class="drawable-intro-content")
 
-            include ../includes/steps/dataeditor
 
-            include ../includes/steps/dataLists
+            include ../includes/steps/loops
+
+            include ../includes/steps/loopMoving
+
+            include ../includes/steps/forEach
+
 
         div(class="drawable-page-navigator")
-            a(class="drawable-previous" href="editingSteps.html")
+            a(class="drawable-previous" href="usingData.html")
                 h1 Previous
                 | Editing Steps
             a(class="drawable-next" href="loops.html")
                 h1 Next
-                | Loops and Guides
+                | Loops
 
         include ../includes/introFooter
 
         script(type="module" src="../introduction.ts")
-

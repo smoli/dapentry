@@ -1,0 +1,40 @@
+html
+    head
+        title Cheat Sheet | dapentry
+        meta(charset="UTF-8")
+        link(rel="stylesheet" href="../../ui/css/drawable.less")
+        link(rel="stylesheet" href="../../ui/css/cheatsheet.less")
+        style(type="text/css").
+            /* nunito-sans-regular - latin */
+            @font-face {
+                font-family: 'Nunito Sans';
+                font-style: normal;
+                font-weight: 400;
+                /*noinspection CssUnknownTarget*/
+                src: url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot'); /* IE9 Compat Modes */
+                /*noinspection CssUnknownTarget*/
+                src: local(''),
+                url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
+            }
+    body
+        header
+            h1 dapentry
+                span Cheat Sheet
+
+        div.drawable-cheat-sheet
+            div.drawable-cheat-sheet-column
+                include ../includes/cheat/shortcuts
+
+            div.drawable-cheat-sheet-column
+                include ../includes/cheat/steps
+                include ../includes/cheat/data
+
+            div.drawable-cheat-sheet-column
+                include ../includes/cheat/loops
+
+            div.drawable-cheat-sheet-column
+                include ../includes/cheat/styles
+                include ../includes/cheat/library
+
+
+

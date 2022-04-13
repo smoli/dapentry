@@ -1,0 +1,69 @@
+@import "defaults";
+@import "introHeader";
+
+body {
+  overflow:  auto;
+  box-sizing: content-box;
+}
+
+
+div.drawable-cheat-sheet {
+
+  display: flex;
+  flex-direction: row;
+
+
+  div.drawable-cheat-sheet-column {
+
+    display: flex;
+    flex-direction: column;
+
+    section {
+      align-self: start;
+      display: inline-block;
+      box-sizing: border-box;
+      max-width: 24vw;
+
+      h1 {
+        font-size: 1.4em;
+        margin-top: 2em;
+      }
+
+      h1:first-child {
+        margin-top: 0;
+      }
+
+      padding: 1em;
+
+      em {
+        display: inline-block;
+        box-sizing: content-box;
+        border: 0.1em solid #e8e8e8;
+        border-radius: 0.2em;
+        padding: 0.3em 0.7em 0.2em 0.5em;
+        background-color: #fdf5e9;
+        box-shadow: 0.1em 0.1em 1em 0 #e8e8e8;
+        font-weight: bold;
+        margin: 0.2em;
+      }
+
+      i {
+        color: black;
+        font-weight: bold;
+      }
+
+      li {
+        margin-top: 0.5em;
+        margin-bottom: 0.75em;
+      }
+
+      li:first-child {
+        margin-top: 0;
+      }
+
+      li:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
