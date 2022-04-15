@@ -141,7 +141,7 @@ export const AppConfig = {
     },
 
     API: {
-        baseUrl: "http://localhost:8000/api",
+        baseUrl: "https://api.dapentry.com",
         library: "library",
         names: "names",
         login: "login",
