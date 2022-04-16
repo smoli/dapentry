@@ -25,6 +25,11 @@
   </section>
   <section class="drawable-app-footer" v-if="!$store.state.ui.layout.hideFooter">
     <LayoutSwitcher/>
+    <span class="spacer">&nbsp;</span>
+    <a href="https://dapentry.com/imprint.html">Imprint</a>
+    <a href="https://dapentry.com/privacy.html">Privacy</a>
+    <a href="https://dapentry.com/imporint.html" target="dapentryCheatSheet">Cheat Sheet</a>
+    <a href="https://cheat.dapentry.com" target="dapentryCheatSheet">Cheat Sheet</a>
   </section>
 </template>
 

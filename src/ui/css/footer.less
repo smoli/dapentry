@@ -4,4 +4,24 @@
   padding: 1em 2em;
   height: @footerHeight;
 
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  .spacer {
+    display: inline-block;
+    flex: 0 1 100vw;
+    outline: 1px solid red;
+  }
+
+  a {
+    display: inline-block;
+    outline: 1px solid red;
+    flex-grow: 1;
+    color: @uiColor1;
+  }
+
+  a:active {
+    color: @uiColor1;
+  }
 }

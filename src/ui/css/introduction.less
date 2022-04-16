@@ -3,6 +3,13 @@
 
 header {
   margin-bottom: 3em;
+
+  a {
+    color: black;
+  }
+  a:hover  {
+    text-decoration: none;
+  }
 }
 
 body {
@@ -270,5 +277,44 @@ a.drawable-previous {
 
   h1:before {
     content: "<< ";
+  }
+}
+
+.welcome {
+  p {
+    max-width: 50vw;
+
+    strong {
+      display: inline;
+    }
+  }
+
+  a {
+    color: @highlightColor;
+  }
+
+  a.biglink {
+    display: block;
+    background-color: @ciMainColor;
+    color: black;
+    font-size: 2em;
+    font-weight: bold;
+    padding: 0.5em 1em;
+    border: 0.1em solid @uiColor1;
+    outline: 0.1em solid @ciMainColor;
+    box-shadow: 0.2em 0.2em 0.5em 0 rgba(0, 0, 0, 0.4);
+
+  }
+
+  header {
+    a {
+      color: black;
+    }
+  }
+
+  footer {
+    a {
+      color: @uiColor1;
+    }
   }
 }
