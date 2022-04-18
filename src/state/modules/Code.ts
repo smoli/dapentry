@@ -33,7 +33,7 @@ creationStatements[AppConfig.Runtime.Opcodes.Bezier.Create] = 1;
 creationStatements["LOAD"] = 1;
 
 
-function getDefaultState():CodeState {
+function getDefaultState(): CodeState {
     return {
         codeManager: new CodeManager(creationStatements),
         code: [],
@@ -48,6 +48,14 @@ export const codeState = {
     },
 
     getters: {
+        snapshot(state: CodeState): CodeState {
+            return {
+                codeManager: null,
+                code: [...state.code],
+                selectedLines: [...state.selectedLines]
+            }
+        },
+
         fullCode(state): Array<string> {
             return [...state.code];
         },
@@ -62,6 +70,13 @@ export const codeState = {
     },
 
     mutations: {
+        restore(state: CodeState, payload: CodeState) {
+            state.code = [...payload.code];
+            state.selectedLines = [...payload.selectedLines];
+            state.codeManager.clear();
+            state.codeManager.addStatements(state.code);
+        },
+
         reset(state: CodeState) {
             Object.assign(state, getDefaultState());
         },

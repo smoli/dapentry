@@ -110,6 +110,31 @@ function getDefaultState(): DataState {
     }
 }
 
+function copyState(state: DataState):DataState {
+    return {
+        fields: state.fields.map(f => {
+            const r = {
+                ...f
+            };
+
+            switch (f.type) {
+                case DataFieldType.List:
+                    r.value = [...(f.value as Array<number>)];
+                    break;
+
+                case DataFieldType.Table:
+                    r.value = [...(f.value as Array<any>).map(v => {
+                        return { ... v}
+                    })]
+                    break;
+
+            }
+
+            return r;
+        })
+    }
+}
+
 export const dataState = {
 
     state(): DataState {
@@ -117,6 +142,10 @@ export const dataState = {
     },
 
     getters: {
+        snapshot(state: DataState): DataState {
+          return copyState(state);
+        },
+
         dataCode(state: DataState) {
 
 
@@ -162,6 +191,10 @@ export const dataState = {
     },
 
     mutations: {
+
+        restore(state:DataState, payload:DataState) {
+            Object.assign(state, copyState(payload));
+        },
 
         reset(state: DataState) {
             Object.assign(state, getDefaultState());

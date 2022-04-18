@@ -45,6 +45,7 @@ const mutations = {
     },
 
     code: {
+        restore: "code/restore",
         reset: "code/reset",
         set: "code/setCode",
         add: "code/add",
@@ -59,6 +60,7 @@ const mutations = {
     },
 
     drawing: {
+        restore: "drawing/restore",
         reset: "drawing/reset",
         dimensions: "drawing/setDimensions",
         setObjects: "drawing/setObjects",
@@ -98,6 +100,7 @@ const mutations = {
 
 const getters = {
     code: {
+        snapshot: "code/snapshot",
         fullCode: "code/fullCode",
         annotatedSelection: "code/annotatedSelection"
     },
@@ -109,6 +112,7 @@ const getters = {
     },
 
     drawing: {
+        snapshot: "drawing/snapshot",
         object: "drawing/object",
         objects: "drawing/objects",
         isObjectSelected: "drawing/isObjectSelected",
@@ -127,10 +131,23 @@ const getters = {
 export class State {
     private readonly _store: Store<AppStore>;
     private readonly _i18n: I18n;
+    private _undoStack: Array<Array<{ restore: string, snapshot: any}>>
 
     constructor(store: Store<AppStore>, i18n: I18n) {
         this._store = store;
         this._i18n = i18n;
+        this._undoStack = [];
+    }
+
+    public undo() {
+        if (!this._undoStack.length) {
+            return;
+        }
+
+        const state = this._undoStack.pop();
+        state.forEach(s => {
+            this.commit(s.restore, s.snapshot, null, false);
+        })
     }
 
     get store(): Store<AppStore> {
@@ -150,7 +167,42 @@ export class State {
         return locale as string;
     }
 
-    protected commit(type: string, payload?: any, options?: CommitOptions) {
+    protected getSnapShotGetter(mutation:string):string {
+        const parts = mutation.split("/");
+        return parts[0] + "/" + "snapshot";
+    }
+
+    protected getRestoreMutation(mutation: string): string {
+        const parts = mutation.split("/");
+        return parts[0] + "/" + "restore";
+    }
+
+    protected commitTransaction(mutations: Array<{type: string, payload?: any, options?: CommitOptions}>,
+                                storeUndo: boolean = true) {
+        if (storeUndo) {
+            const undo = mutations.map(m => {
+                return {
+                    restore: this.getRestoreMutation(m.type),
+                    snapshot: this.get(this.getSnapShotGetter(m.type))
+                }
+            });
+            this.snapShot(undo);
+        }
+
+        mutations.forEach(m => {
+            this._store.commit(m.type, m.payload, m.options);
+        })
+    }
+
+    protected commit(type: string, payload?: any, options?: CommitOptions, storeUndo: boolean = true) {
+        if (storeUndo) {
+            this.snapShot([{
+                restore: this.getRestoreMutation(type),
+                snapshot: this.get(this.getSnapShotGetter(type)),
+                origin: type
+                }]
+                );
+        }
         this._store.commit(type, payload, options);
     }
 
@@ -203,15 +255,37 @@ export class State {
     }
 
     addCode(code: Array<string>) {
-        this.commit(mutations.code.add, code);
+        this.commit(mutations.code.add, code, null);
+    }
+
+    replaceStatements(replacements: Array<{ index: number, newStatements: Array<string>}>) {
+        this.commitTransaction(replacements.map(r => {
+            return {
+                type: mutations.code.replaceStatement,
+                payload: {
+                    index: r.index,
+                    newStatements: r.newStatements
+                }
+            }
+        }));
     }
 
     replaceStatement(index: number, ...newStatements: Array<string>) {
         this.commit(mutations.code.replaceStatement, { index, newStatements })
     }
 
+    wrapStatements(from: number, to: number, before: string, after: string) {
+        this.commitTransaction([{
+            type: mutations.code.insert,
+            payload: { insertAt: from, statements: [before] }
+        },{
+            type: mutations.code.insert,
+            payload: { insertAt: to + 2, statements: [after] }
+        }]);
+    }
+
     insertStatements(insertAt: number, ...statements: Array<string>) {
-        this.commit(mutations.code.insert, { insertAt, statements })
+        this.commit(mutations.code.insert, { insertAt, statements }, null)
     }
 
     removeStatement(index: number) {
@@ -248,45 +322,52 @@ export class State {
         this.commit(mutations.tool.setPreview, preview);
     }
 
+    private snapShot(undos : Array<{ restore: string, snapshot:any, origin?: string}>) {
+        if (undos.find(u => u.snapshot === undefined)) {
+            return;
+        }
+        this._undoStack.push(undos);
+    }
+
     setAspectRatio(ar: AspectRatio) {
-        this.commit(mutations.drawing.setAspectRatio, ar);
+        this.commit(mutations.drawing.setAspectRatio, ar, null);
     }
 
     setDrawingPreview(previewCode: string) {
-        this.commit(mutations.drawing.setPreview, previewCode);
+        this.commit(mutations.drawing.setPreview, previewCode, null, false);
     }
 
     setDrawingNameAndDescription(name: string, description: string) {
-        this.commit(mutations.drawing.setNameAndDescription, { name, description })
+        this.commit(mutations.drawing.setNameAndDescription, { name, description }, null, false)
     }
 
     setDrawingId(id: number) {
         ASSERT(id !== -1, "-1 is not a valid backend id");
-        this.commit(mutations.drawing.setId, id);
+        this.commit(mutations.drawing.setId, id, null, false);
     }
 
     setDrawingCreatedBy(id: number) {
-        this.commit(mutations.drawing.setCreatedBy, id);
+        this.commit(mutations.drawing.setCreatedBy, id, null, false);
     }
 
     setDrawingDimensions(width: number, height: number) {
-        this.commit(mutations.drawing.dimensions, { width, height });
+        this.commit(mutations.drawing.dimensions, { width, height }, null, false);
     }
 
     setObjectsOnDrawing(objects: Array<GrObject>) {
-        this.commit(mutations.drawing.setObjects, objects);
+        this.commit(mutations.drawing.setObjects, objects, null, false);
     }
 
     selectObject(object: GrObject) {
-        this.commit(mutations.drawing.selectObject, object);
+        this.commit(mutations.drawing.selectObject, object, null, false);
     }
 
     deselectObject(object: GrObject) {
-        this.commit(mutations.drawing.deselectObject, object);
+        this.commit(mutations.drawing.deselectObject, object, null, false);
     }
 
     deselectAll() {
-        this.commit(mutations.drawing.deselectAll);
+        this.commit(mutations.drawing.deselectAll, null, null, false);
     }
 
     isObjectSelected(object: GrObject) {
@@ -326,7 +407,7 @@ export class State {
     }
 
     addDataField(name: string, value: DataFieldValue,description: string = null, published: boolean = true) {
-        this.commit(mutations.data.addField, { name, value, description, published });
+        this.commit(mutations.data.addField, { name, value, description, published }, null);
     }
 
     addValueToDataField(name: string, value: ( number | string )) {
@@ -342,8 +423,16 @@ export class State {
     }
 
     renameTableColumn(name: string, oldColumn: string, newColumn: string) {
-        this.commit(mutations.data.renameTableColumn, { name, oldColumn, newColumn });
-        this.commit(mutations.code.renameTableColumn, { name, oldColumn, newColumn });
+        this.commitTransaction([
+            {
+                type: mutations.data.renameTableColumn,
+                payload: { name, oldColumn, newColumn }
+            },
+            {
+                type: mutations.code.renameTableColumn,
+                payload: { name, oldColumn, newColumn }
+            }
+        ]);
     }
 
     removeTableColumn(name: string, column: string) {
@@ -355,8 +444,16 @@ export class State {
     }
 
     renameDataField(oldName: string, newName: string) {
-        this.commit(mutations.data.renameField, { oldName, newName });
-        this.commit(mutations.code.renameRegister, { oldName, newName });
+        this.commitTransaction([
+            {
+                type: mutations.data.renameField,
+                payload: { oldName, newName }
+            },
+            {
+                type: mutations.code.renameRegister,
+                payload: { oldName, newName }
+            }
+        ]);
     }
 
     renameRegister(oldName: string, newName: string) {
@@ -397,6 +494,7 @@ export class State {
 
 
     resetAll() {
+        this._undoStack = [];
         this.commit(mutations.drawing.reset);
         this.commit(mutations.code.reset);
         this.commit(mutations.tool.reset);

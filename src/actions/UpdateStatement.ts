@@ -117,12 +117,24 @@ export class UpdateStatement extends BaseAction {
                                 token.value = "$" + this._newValue;
                                 newStatements.push(Parser.constructCodeLine(tokens));
                             } else {
-                                this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`);
-                                this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
+                                this.state.replaceStatements([
+                                        {
+                                            index: this._statementIndex,
+                                            newStatements: [`${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`]
+                                        },
+                                        { index: endIndex, newStatements: [AppConfig.Runtime.Opcodes.EndEach] }
+                                    ]
+                                );
                             }
                         } else {
-                            this.state.replaceStatement(this._statementIndex, `${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`);
-                            this.state.replaceStatement(endIndex, AppConfig.Runtime.Opcodes.EndEach);
+                            this.state.replaceStatements([
+                                    {
+                                        index: this._statementIndex,
+                                        newStatements: [`${AppConfig.Runtime.Opcodes.ForEach} $${this._newValue}, ${this._newValue}`]
+                                    },
+                                    { index: endIndex, newStatements: [AppConfig.Runtime.Opcodes.EndEach] }
+                                ]
+                            );
                         }
                     }
 

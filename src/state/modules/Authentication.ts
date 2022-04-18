@@ -26,9 +26,17 @@ export const authenticationState = {
     },
 
     getters: {
+        snapshot(state: AuthenticationState): AuthenticationState {
+            return {... state};
+        }
     },
 
     mutations: {
+
+        restore(state: AuthenticationState, payload: AuthenticationState) {
+            Object.assign(state, payload);
+        },
+
         authenticated(state: AuthenticationState, payload: { token: string, user: UserInfo }) {
             state.authenticated = true;
             state.token = payload.token;

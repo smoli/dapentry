@@ -42,6 +42,14 @@ export const drawingState = {
     },
 
     getters: {
+
+        snapshot(state: DrawingState): DrawingState {
+            return {
+                ...state,
+                dimensions: { ... state.dimensions }
+            }
+        },
+
         alreadyStoredOnBackend(state: DrawingState): boolean {
             return state.id !== -1;
         },
@@ -68,6 +76,11 @@ export const drawingState = {
     },
 
     mutations: {
+
+        restore(state: DrawingState, payload: DrawingState) {
+            Object.assign(state, payload);
+            Object.assign(state.dimensions, payload.dimensions);
+        },
 
         reset(state: DrawingState) {
             Object.assign(state, getDefaultState());

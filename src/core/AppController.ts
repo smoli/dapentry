@@ -163,6 +163,14 @@ export class AppController {
         this._state.setObjectsOnDrawing([this._canvas]);
     }
 
+    public async undo() {
+        this.state.undo();
+        await this._runCode();
+        this._updateDrawing();
+        this._updateSelection();
+
+    }
+
     async clearAll() {
         const dialog = this.modalFactory.createConfirmationModal();
 
@@ -637,7 +645,9 @@ export class AppController {
             event.preventDefault();
         }
 
-        if (event.code === AppConfig.Keys.NextStepCode) {
+        if (event.key === AppConfig.Keys.UndoKey && event[AppConfig.Keys.UndoModifier]) {
+            await this.undo();
+        } else if (event.code === AppConfig.Keys.NextStepCode) {
             event.stopPropagation();
             event.preventDefault();
             await this.nextStep();

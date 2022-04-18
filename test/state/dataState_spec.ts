@@ -36,7 +36,8 @@ describe('Data State', () => {
 
         expect(state.store.state.data.fields).to.deep.equal([
             {
-                name: "f1", value: 10, type: DataFieldType.Number,
+                name: "f1", value: 10,
+                type: DataFieldType.Number,
                 description: null,
                 published: true
             },

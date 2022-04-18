@@ -4,10 +4,6 @@ import {State} from "../../src/state/State";
 import {expect} from "chai";
 import {Persistence} from "../../src/state/Persistence";
 import {GrCircle} from "../../src/geometry/GrCircle";
-import exp = require("constants");
-import {Parser} from "../../src/runtime/interpreter/Parser";
-import {T_NUMBER, T_OPCODE, T_REGISTER} from "../testHelpers/tokens";
-import {DataFieldType} from "../../src/state/modules/Data";
 import {AspectRatio} from "../../src/geometry/AspectRatio";
 
 
