@@ -544,6 +544,10 @@ export class AppController {
         this._updateDrawing()
     }
 
+    public deselectAllObjects() {
+        this.state.deselectAll();
+    }
+
     public handleObjectSelection(object: GrObject) {
 
         const currentTool = this._state.store.state.tool.current;
@@ -582,7 +586,7 @@ export class AppController {
 
             o.markAsGuide(!o.isGuide);
             this._interpreter.markObjectAsGuide(o.uniqueName, o.isGuide);
-            if (o.type === ObjectType.List) {
+            if (o.type === ObjectType.List || o.isGuide === false) {
                 rerun = true;
             }
         });
