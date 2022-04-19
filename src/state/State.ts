@@ -63,6 +63,9 @@ const mutations = {
         restore: "drawing/restore",
         reset: "drawing/reset",
         dimensions: "drawing/setDimensions",
+        setGuides: "drawing/setGuides",
+        addGuide: "drawing/addGuide",
+        removeGuide: "drawing/removeGuide",
         setObjects: "drawing/setObjects",
         selectObject: "drawing/selectObject",
         deselectObject: "drawing/deselectObject",
@@ -356,6 +359,18 @@ export class State {
 
     setObjectsOnDrawing(objects: Array<GrObject>) {
         this.commit(mutations.drawing.setObjects, objects, null, false);
+    }
+
+    addGuide(name: string) {
+        this.commit(mutations.drawing.addGuide, name);
+    }
+
+    removeGuide(name: string) {
+        this.commit(mutations.drawing.removeGuide, name);
+    }
+
+    setGuides(guideNames: Array<string>) {
+        this.commit(mutations.drawing.setGuides, guideNames);
     }
 
     selectObject(object: GrObject) {

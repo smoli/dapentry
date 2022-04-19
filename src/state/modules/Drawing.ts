@@ -14,7 +14,7 @@ export interface DrawingState {
     dimensions: DrawingDimensions,
     aspectRatio: AspectRatio,
     objects: Array<GrObject>,
-    guides: Array<GrObject>,
+    guides: Array<string>,
     selection: Array<GrObject>,
     preview: string,
     name: string,
@@ -48,7 +48,9 @@ export const drawingState = {
         snapshot(state: DrawingState): DrawingState {
             return {
                 ...state,
-                dimensions: { ... state.dimensions }
+                guides: [... state.guides],
+                dimensions: { ... state.dimensions },
+                objects: []
             }
         },
 
@@ -82,10 +84,31 @@ export const drawingState = {
         restore(state: DrawingState, payload: DrawingState) {
             Object.assign(state, payload);
             Object.assign(state.dimensions, payload.dimensions);
+            state.guides = [...payload.guides];
+            state.objects = [];
         },
 
         reset(state: DrawingState) {
             Object.assign(state, getDefaultState());
+        },
+
+        addGuide(state: DrawingState, guideName: string) {
+            if (state.guides.indexOf(guideName) !== -1) {
+                return;
+            }
+            state.guides.push(guideName);
+        },
+
+        removeGuide(state: DrawingState, guideName: string) {
+            const i = state.guides.indexOf(guideName);
+            if (i === -1) {
+                return;
+            }
+            state.guides.splice(i, 1)
+        },
+
+        setGuides(state: DrawingState, guides: Array<string>) {
+            state.guides = [...guides];
         },
 
         setNameAndDescription(state: DrawingState, payload: { name: string, description: string} ) {

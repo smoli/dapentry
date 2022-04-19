@@ -14,6 +14,9 @@ export class LoadFromLibrary extends BaseAction {
 
 
     protected async load(entry:LibraryEntry) {
+        // FIXME: This needs to be one big transaction
+        //        Otherwise this will all be undoable step by step.
+
         entry.arguments.forEach(arg => {
             this.state.addDataField(arg.name, arg.default, arg.description, true);
         });

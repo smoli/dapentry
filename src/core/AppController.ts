@@ -225,6 +225,7 @@ export class AppController {
     protected async _runCode(): Promise<any> {
         try {
             this._interpreter.clearObjects(this._canvas);
+            this._interpreter.setGuides(this.state.store.state.drawing.guides);
             this._performance.reset();
             this._performance.now("start");
             this._interpreter.parse(this.state.fullCode);
@@ -573,8 +574,13 @@ export class AppController {
         }
     }
 
+    /**
+     * FIXME: This is only called from LoadFromLibrary atm.
+     *
+     * @param name
+     */
     public markObjectAsGuide(name: string) {
-        this._interpreter.markObjectAsGuide(name);
+        this.state.addGuide(name);
     }
 
     public async makeSelectedObjectsGuides() {
@@ -585,7 +591,12 @@ export class AppController {
             }
 
             o.markAsGuide(!o.isGuide);
-            this._interpreter.markObjectAsGuide(o.uniqueName, o.isGuide);
+            if (o.isGuide) {
+                this.state.addGuide(o.uniqueName);
+            } else {
+                this.state.removeGuide(o.uniqueName);
+            }
+
             if (o.type === ObjectType.List || o.isGuide === false) {
                 rerun = true;
             }

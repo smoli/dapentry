@@ -49,6 +49,11 @@ export class DeleteObjects extends BaseAction {
             }
         } else {
             this.state.removeStatement(statements[0]);
+            this._objects.forEach(o => {
+                if (o.isGuide) {
+                    this.state.removeGuide(o.uniqueName);
+                }
+            });
         }
     }
 }

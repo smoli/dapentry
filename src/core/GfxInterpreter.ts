@@ -218,6 +218,11 @@ export class GfxInterpreter extends Interpreter {
         this._guides = {};
     }
 
+    setGuides(guideNames: Array<string>) {
+        this.resetGuides();
+        guideNames.forEach(n => this._guides[n] = true);
+    }
+
     get objects(): Array<GrObject> {
         return Object.values(this._objects);
     }
