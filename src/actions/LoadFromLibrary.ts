@@ -6,39 +6,34 @@ import {DialogCloseReason} from "../ui/core/ModalFactory";
 export class LoadFromLibrary extends BaseAction {
     private _entryName: string;
 
-
     constructor(entryName: string) {
         super();
         this._entryName = entryName;
     }
 
+    protected async load(entry: LibraryEntry) {
+        this.state.transaction(() => {
+            entry.arguments.forEach(arg => {
+                this.state.addDataField(arg.name, arg.default, arg.description, true);
+            });
+            entry.fields.forEach(field => {
+                this.state.addDataField(field.name, field.default, field.description, false);
+            });
 
-    protected async load(entry:LibraryEntry) {
-        // FIXME: This needs to be one big transaction
-        //        Otherwise this will all be undoable step by step.
+            const code = entry.code.split("\n");
+            this.state.setCode(code);
 
-        entry.arguments.forEach(arg => {
-            this.state.addDataField(arg.name, arg.default, arg.description, true);
-        });
-        entry.fields.forEach(field => {
-            this.state.addDataField(field.name, field.default, field.description, false);
-        });
+            entry.objects.forEach(o => {
+                if (o.isGuide) {
+                    this.state.addGuide(o.name);
+                }
+            });
 
-        const code = entry.code.split("\n");
-        this.state.setCode(code);
-
-        entry.objects.forEach(o => {
-            if (o.isGuide) {
-                this.controller.markObjectAsGuide(o.name);
-            }
-        });
-
+            this.state.setDrawingId(entry.id);
+            this.state.setDrawingCreatedBy(entry.createdBy)
+            this.state.setDrawingNameAndDescription(entry.name, entry.description);
+        }, false);
         await this.controller.setAspectRatio(entry.aspectRatio)
-        this.state.setDrawingId(entry.id);
-        this.state.setDrawingCreatedBy(entry.createdBy)
-        this.state.setDrawingNameAndDescription(entry.name, entry.description);
-
-
     }
 
     protected async _execute(data: any): Promise<ActionResult | void> {

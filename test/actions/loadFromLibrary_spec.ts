@@ -7,13 +7,14 @@ import {DataFieldType} from "../../src/state/modules/Data";
 import {expect} from "chai";
 import {GfxInterpreter} from "../../src/core/GfxInterpreter";
 import {AspectRatio} from "../../src/geometry/AspectRatio";
+import {DialogCloseReason} from "../../src/ui/core/ModalFactory";
 
 describe('Load from library action', () => {
 
     it('loads a library entry as the current drawing', async () => {
         const action = new LoadFromLibrary("Star");
         const state = new State(createAppStore(), null);
-        action.controller = new MockController(state, null, new GfxInterpreter());
+        action.controller = new MockController(state, () => DialogCloseReason.YES, new GfxInterpreter());
 
         state.addLibraryEntry({
             "id": 9,

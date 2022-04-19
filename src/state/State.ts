@@ -134,12 +134,30 @@ const getters = {
 export class State {
     private readonly _store: Store<AppStore>;
     private readonly _i18n: I18n;
-    private _undoStack: Array<Array<{ restore: string, snapshot: any}>>
+    private _undoStack: Array<Array<{ restore: string, snapshot: any }>>
+    private _inTransaction: boolean = false;
+    private _transaction: Array<{ type: string, payload?: any, options?: CommitOptions }> = [];
 
     constructor(store: Store<AppStore>, i18n: I18n) {
         this._store = store;
         this._i18n = i18n;
         this._undoStack = [];
+    }
+
+    public transaction(contents: () => void, storeUndo: boolean = true) {
+        ASSERT(this._inTransaction === false, "Cannot nest transactions");
+        this._inTransaction = true;
+        this._transaction = [];
+        try {
+            contents();
+            this._inTransaction = false;
+            this.commitTransaction(this._transaction, storeUndo);
+        } catch (e) {
+            throw e;
+        } finally {
+            this._inTransaction = false;
+            this._transaction = [];
+        }
     }
 
     public undo() {
@@ -170,7 +188,7 @@ export class State {
         return locale as string;
     }
 
-    protected getSnapShotGetter(mutation:string):string {
+    protected getSnapShotGetter(mutation: string): string {
         const parts = mutation.split("/");
         return parts[0] + "/" + "snapshot";
     }
@@ -180,33 +198,39 @@ export class State {
         return parts[0] + "/" + "restore";
     }
 
-    protected commitTransaction(mutations: Array<{type: string, payload?: any, options?: CommitOptions}>,
+    protected commitTransaction(mutations: Array<{ type: string, payload?: any, options?: CommitOptions }>,
                                 storeUndo: boolean = true) {
-        if (storeUndo) {
-            const undo = mutations.map(m => {
-                return {
-                    restore: this.getRestoreMutation(m.type),
-                    snapshot: this.get(this.getSnapShotGetter(m.type))
-                }
-            });
-            this.snapShot(undo);
+        if (this._inTransaction) {
+            this._transaction.push(...mutations);
+        } else {
+            if (storeUndo) {
+                const undo = mutations.map(m => {
+                    return {
+                        restore: this.getRestoreMutation(m.type),
+                        snapshot: this.get(this.getSnapShotGetter(m.type))
+                    }
+                });
+                this.snapShot(undo);
+            }
+            mutations.forEach(m => {
+                this._store.commit(m.type, m.payload, m.options);
+            })
         }
-
-        mutations.forEach(m => {
-            this._store.commit(m.type, m.payload, m.options);
-        })
     }
 
     protected commit(type: string, payload?: any, options?: CommitOptions, storeUndo: boolean = true) {
-        if (storeUndo) {
-            this.snapShot([{
-                restore: this.getRestoreMutation(type),
-                snapshot: this.get(this.getSnapShotGetter(type)),
-                origin: type
-                }]
+        if (this._inTransaction) {
+            this._transaction.push({ type, payload, options });
+        } else {
+            if (storeUndo) {
+                this.snapShot([{
+                        restore: this.getRestoreMutation(type),
+                        snapshot: this.get(this.getSnapShotGetter(type))
+                    }]
                 );
+            }
+            this._store.commit(type, payload, options);
         }
-        this._store.commit(type, payload, options);
     }
 
     protected get(type: string, ...params): any {
@@ -261,7 +285,7 @@ export class State {
         this.commit(mutations.code.add, code, null);
     }
 
-    replaceStatements(replacements: Array<{ index: number, newStatements: Array<string>}>) {
+    replaceStatements(replacements: Array<{ index: number, newStatements: Array<string> }>) {
         this.commitTransaction(replacements.map(r => {
             return {
                 type: mutations.code.replaceStatement,
@@ -281,7 +305,7 @@ export class State {
         this.commitTransaction([{
             type: mutations.code.insert,
             payload: { insertAt: from, statements: [before] }
-        },{
+        }, {
             type: mutations.code.insert,
             payload: { insertAt: to + 2, statements: [after] }
         }]);
@@ -325,7 +349,7 @@ export class State {
         this.commit(mutations.tool.setPreview, preview);
     }
 
-    private snapShot(undos : Array<{ restore: string, snapshot:any, origin?: string}>) {
+    private snapShot(undos: Array<{ restore: string, snapshot: any, origin?: string }>) {
         if (undos.find(u => u.snapshot === undefined)) {
             return;
         }
@@ -421,7 +445,7 @@ export class State {
         this.commit(mutations.data.setData, fields);
     }
 
-    addDataField(name: string, value: DataFieldValue,description: string = null, published: boolean = true) {
+    addDataField(name: string, value: DataFieldValue, description: string = null, published: boolean = true) {
         this.commit(mutations.data.addField, { name, value, description, published }, null);
     }
 

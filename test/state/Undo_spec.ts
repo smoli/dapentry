@@ -136,4 +136,74 @@ describe('Undo', () => {
         ]);
     });
 
+    it("can take a bunch of calls and turn it ino a transaction", () => {
+        const store = createAppStore();
+        const state = new State(store, null);
+
+        state.transaction(() => {
+            state.addDataField("f1", 10);
+            state.addDataField("f2", "Hello");
+        });
+
+
+        expect(state.store.state.data.fields).to.deep.equal([
+            {
+                name: "f1", value: 10, type: DataFieldType.Number,
+                description: null,
+                published: true
+            },
+            {
+                name: "f2", value: "Hello", type: DataFieldType.String,
+                description: null,
+                published: true
+            }
+        ]);
+        expect(store.state.code.code).to.deep.equal([]);
+
+        state.transaction(() => {
+            state.addCode(["ADD f1, 20"])
+            state.addCode(["ADD f1, 30"])
+        });
+
+        expect(store.state.code.code).to.deep.equal([
+            "ADD f1, 20",
+            "ADD f1, 30"
+        ]);
+
+        state.replaceStatements([
+            { index: 0, newStatements: ["SUB f1, 20"]},
+            { index: 1, newStatements: ["SUB f1, 30"]}
+        ]);
+
+        expect(store.state.code.code).to.deep.equal([
+            "SUB f1, 20",
+            "SUB f1, 30"
+        ]);
+
+        state.undo();
+        expect(store.state.code.code).to.deep.equal([
+            "ADD f1, 20",
+            "ADD f1, 30"
+        ]);
+
+        state.undo();
+        expect(state.store.state.data.fields).to.deep.equal([
+            {
+                name: "f1", value: 10, type: DataFieldType.Number,
+                description: null,
+                published: true
+            },
+            {
+                name: "f2", value: "Hello", type: DataFieldType.String,
+                description: null,
+                published: true
+            }
+        ]);
+        expect(store.state.code.code).to.deep.equal([]);
+
+        state.undo();
+        expect(state.store.state.data.fields).to.deep.equal([]);
+        expect(store.state.code.code).to.deep.equal([]);
+    });
+
 });
