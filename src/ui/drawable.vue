@@ -23,14 +23,15 @@
       <LibraryList v-if="!$store.state.ui.layout.hideLibrary"></LibraryList>
     </div>
   </section>
-  <section class="drawable-app-footer" v-if="!$store.state.ui.layout.hideFooter">
+  <footer class="drawable-app-footer" v-if="!$store.state.ui.layout.hideFooter">
     <LayoutSwitcher/>
     <span class="spacer">&nbsp;</span>
-    <a href="https://dapentry.com/imprint.html">Imprint</a>
-    <a href="https://dapentry.com/privacy.html">Privacy</a>
-    <a href="https://dapentry.com/imporint.html" target="dapentryCheatSheet">Cheat Sheet</a>
-    <a href="https://cheat.dapentry.com" target="dapentryCheatSheet">Cheat Sheet</a>
-  </section>
+    <div>
+      <a href="https://cheat.dapentry.com" title="Imprint | New Page" target="dapentryCheatSheet">Cheat Sheet</a>
+      <a href="https://dapentry.com/imprint.html" title="Imprint | Leaves Designer">Imprint</a>
+      <a href="https://dapentry.com/privacy.html" title="Privacy | Leaves Designer">Privacy</a>
+    </div>
+  </footer>
 </template>
 
 <script lang="ts">
