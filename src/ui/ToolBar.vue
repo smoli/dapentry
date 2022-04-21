@@ -7,6 +7,8 @@
         <image v-if="extra.buttonContentSVG" v-html="extra.buttonContentSVG" />
       </button>
 
+      <span class="drawable-toolbar-separator"></span>
+
       <button v-for="tool in tools" :title="tool.tooltip"
               :class="{ 'drawable-tool-active': $store.state.tool.current === tool.name }"
               @click="onSwitchTool(tool.name)">
