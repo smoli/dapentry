@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import {ToolNames} from "../tools/ToolNames";
-import {ASSERT} from "../core/Assertions";
 import {Icons} from "./css/icons/icons";
 
 export default {
@@ -21,6 +20,10 @@ export default {
   inject: ["controller"],
 
   data() {
+    const extra = [
+      { buttonContent: "Ctrl-Z", name: '##UNDO##', buttonContentSVG: Icons.Undo, tooltip: "Undo" }
+    ];
+
     const tools = [
       { buttonContent: "C", name: ToolNames.Circle, buttonContentSVG: Icons.CircleTool, tooltip: "Draw a circle" },
       { buttonContent: "R", name: ToolNames.Rectangle, buttonContentSVG: Icons.RectangleTool, tooltip: "Draw a rectangle" },
@@ -33,14 +36,19 @@ export default {
     ];
 
     return {
-      tools: tools.filter(t => this.$store.state.tool.available.indexOf(t.name) !== -1)
+      tools: [
+          ...extra,
+          ...tools.filter(t => this.$store.state.tool.available.indexOf(t.name) !== -1)
+      ]
     }
 
   },
 
   methods: {
     onSwitchTool(toolName) {
-      if (this.$store.state.tool.current === toolName) {
+      if (toolName === "##UNDO##") {
+        this.controller.undo();
+      } else if (this.$store.state.tool.current === toolName) {
         this.controller.switchTool(null);
       } else {
         this.controller.switchTool(toolName);

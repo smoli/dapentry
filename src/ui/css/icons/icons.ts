@@ -102,5 +102,15 @@ export const Icons = {
    <line x1="40" y1="30" x2="40" y2="70" style="fill:rgb(180,180,180);stroke:black;stroke-width:7" marker-end="url(#arrowheade)" />
   <path d="M0 60 l 0 40 l 80 0 l 0 -40" style="fill: none;stroke:black;stroke-width:7" />
   <text x="40" y="20" style="font-family:sans-serif; font-size: 2em;font-weight:bold;text-anchor:middle">JS</text>
-</svg>`
+</svg>`,
+
+    Undo: `<svg viewbox="-10 -10 120 120">
+ <defs>  
+   <marker id="arrowheads" markerWidth="3" markerHeight="4"
+    refX="3" refY="2" orient="auto">
+      <polygon points="3 0, 3 4, 0 2" />
+    </marker>
+   </defs>
+   <path d="M20 17 A 45 25 0 1 1 30 83 " style="fill: none; stroke:black;stroke-width:7" marker-start="url(#arrowheads)"/>
+ </svg>`
 }
