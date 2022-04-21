@@ -1,6 +1,12 @@
 <template>
   <div class="drawable-toolbar">
     <div>
+      <button v-for="extra in extra" :title="extra.tooltip"
+          @click="onExecuteExtra(extra.name)"
+      >
+        <image v-if="extra.buttonContentSVG" v-html="extra.buttonContentSVG" />
+      </button>
+
       <button v-for="tool in tools" :title="tool.tooltip"
               :class="{ 'drawable-tool-active': $store.state.tool.current === tool.name }"
               @click="onSwitchTool(tool.name)">
@@ -21,7 +27,7 @@ export default {
 
   data() {
     const extra = [
-      { buttonContent: "Ctrl-Z", name: '##UNDO##', buttonContentSVG: Icons.Undo, tooltip: "Undo" }
+      { buttonContent: "Ctrl-Z", name: 'UNDO', buttonContentSVG: Icons.Undo, tooltip: "Undo" }
     ];
 
     const tools = [
@@ -36,19 +42,21 @@ export default {
     ];
 
     return {
-      tools: [
-          ...extra,
-          ...tools.filter(t => this.$store.state.tool.available.indexOf(t.name) !== -1)
-      ]
+      extra: extra,
+      tools: tools.filter(t => this.$store.state.tool.available.indexOf(t.name) !== -1)
     }
 
   },
 
   methods: {
+    onExecuteExtra(extraName) {
+        switch (extraName) {
+          case 'UNDO': this.controller.undo();
+        }
+    },
+
     onSwitchTool(toolName) {
-      if (toolName === "##UNDO##") {
-        this.controller.undo();
-      } else if (this.$store.state.tool.current === toolName) {
+      if (this.$store.state.tool.current === toolName) {
         this.controller.switchTool(null);
       } else {
         this.controller.switchTool(toolName);
