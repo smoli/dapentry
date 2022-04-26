@@ -1,0 +1,38 @@
+@import "defaults";
+@import "introHeader";
+@import "introFooter";
+
+body {
+  overflow: auto;
+}
+
+.tutorial {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  p  {
+    margin: 0.5em;
+    width: 60ch;
+  }
+
+  img {
+    margin: 0.5em;
+  }
+
+  h3 {
+    margin: 2.5em 0 0;
+  }
+
+  .demo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    svg, div {
+      display: inline-block;
+      margin: 0.5em
+    }
+  }
+}
