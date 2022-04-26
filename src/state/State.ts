@@ -418,15 +418,15 @@ export class State {
     }
 
     clearCodeSelection() {
-        this.commit(mutations.code.clearSelection);
+        this.commit(mutations.code.clearSelection, null, null, false);
     }
 
     setCodeSelection(selection: Array<number>) {
-        this.commit(mutations.code.setSelection, selection);
+        this.commit(mutations.code.setSelection, selection, null, false     );
     }
 
     addToCodeSelection(selection: Array<number>) {
-        this.commit(mutations.code.addToSelection, selection);
+        this.commit(mutations.code.addToSelection, selection, null, false);
     }
 
     get codeSelection(): Array<number> {
