@@ -1,0 +1,302 @@
+html
+    head
+        title A simple bar chart | dapentry
+        meta(charset="UTF-8")
+        link(rel="stylesheet" href="../../ui/css/drawable.less")
+        link(rel="stylesheet" href="../../ui/css/tutorial.less")
+        style(type="text/css").
+            /* nunito-sans-regular - latin */
+            @font-face {
+                font-family: 'Nunito Sans';
+                font-style: normal;
+                font-weight: 400;
+                /*noinspection CssUnknownTarget*/
+                src: url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot'); /* IE9 Compat Modes */
+                /*noinspection CssUnknownTarget*/
+                src: local(''),
+                url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
+            }
+    body
+        header
+            h1 dapentry
+                span dynamic visualisations
+
+        section.tutorial
+            h2 A simple bar chart
+            p.
+                We will create a simple bar chart. The purpose is to show the functionality of dapentry on
+                a familiar visualisation. Here is the final result:
+
+            div.demo
+                svg(id="drawing" height="15em")
+
+                div
+                    span You can change the values
+
+                    ul(id="demoValues")
+
+            p.
+                Things will be done in a way that may seem overly complicated. This is because,
+                one of the goals is to make the chart independent of the number of values and
+                the size of the drawing container.
+
+            h3 The Data
+
+            p
+                | Create a new data value by clicking the
+                |
+                img(src="../includes/cheat/DataPlus.png")
+                | -button.
+                br
+                strong Double click
+                |
+                | it and rename it to
+                |
+                em data
+
+            p
+                | Turn it into a list of values
+                | by clicking the
+                |
+                img(src="../includes/cheat/DataPlus.png")
+                | -button at the end a couple of times.
+
+            img(src="../includes/tutorials/barChart/createData.png")
+
+            h3 Base rectangle
+
+            p
+                | Now draw a
+                |
+                strong rectangle (R)
+                |.
+                |
+                | Draw it so it covers the whole canvas. Use the canvases
+                |
+                em snap points
+                |
+                | to be precise.
+
+            img(src="../includes/tutorials/barChart/createRectangle.png")
+
+            h3 The width of the bars
+
+            p
+                strong Scale (S)
+                |
+                | the rectangle to a vertical bar.
+                |
+                em Grab
+                |
+                | the right handle of the rectangle and move it somewhere to the left.
+                |
+                | The exact width is not important. We basically just want to create the scaling step.
+
+            img(src="../includes/tutorials/barChart/scaleToBar.png")
+
+            p
+                | Now create a second data value. Rename it to
+                |
+                em width
+                |.
+                |
+                | For the value we'll use the following expression:
+                |
+                em 1 / size(data)
+                |
+                | This is our actual scaling factor for the bars.
+
+            img(src="../includes/tutorials/barChart/createWidth.png")
+
+            p
+                strong Select the scale step (click)
+                |
+                | And then drag the
+                |
+                em width
+                |
+                | onto the
+                |
+                em x-factor
+                |
+                | of the scaling step.
+
+            img(src="../includes/tutorials/barChart/dragWidth.png")
+
+            p
+                | We now have determined the width of the bars in a way
+                | that all bars will always fit onto the drawing, no matter the size of the drawing
+                | or the number of data points.
+
+            h3  Looping
+
+            p
+                | Make the rectangle a
+                |
+                em guide-object
+                |
+                | by selecting it and hitting the
+                |
+                strong H-key
+
+            img(src="../includes/tutorials/barChart/makeGuide.png")
+
+            p
+                | Now shift the rectangle one width.
+                | Make sure, it is still selected. Use the
+                |
+                strong move (G)
+                | -tool
+                | and move the rectangles
+                |
+                em bottom-left
+                |
+                | handle onto its own
+                |
+                em bottom-right
+                |
+                | snap-point
+
+            img(src="../includes/tutorials/barChart/moveGuide.png")
+
+            p
+                | Now we create the actual bar.
+                |
+                em Select the scale step for the guide rectangle, so the next operations happens before the move.
+
+            img(src="../includes/tutorials/barChart/selectScaleStep.png")
+
+            p
+                | Create another
+                |
+                strong rectangle (R)
+                |
+                | Make it the same size as the guide by using the snap-points.
+
+            img(src="../includes/tutorials/barChart/createBar.png")
+
+            p
+                | Next, loop the last two steps -
+                | the creation of the bar and the move of the guide.
+                | Select them (hold Shift) and click the
+                |
+                strong loop
+                | -button.
+
+            img(src="../includes/tutorials/barChart/makeLoop.png")
+
+            p
+                | We now have 4 bars, since by default a loop repeats 4 times.
+
+            h3 Iterate over data
+
+            p
+                | Let's change the loop into an iteration over the data
+                |
+                em Drag and Drop
+                |
+                | the
+                |
+                strong data
+                |
+                | -field onto the iteration variable of the
+                |
+                strong do
+                | -step.
+
+            img(src="../includes/tutorials/barChart/makeForEach.png")
+
+            p
+                | Since we dragged the a value list onto the iteration
+                | value of the loop, the loop will automatically turn
+                | into an iteration over that list using
+                |
+                strong For Each
+
+            p
+                | Now there will always as many bars as there are data points.
+                | When you add a data point, a new bar will appear and the bars
+                | width will adjust so all bars will fit onto the drawing.
+
+            h3 Size the bars
+
+            p In this last step we will adjust the size according to the data.
+
+            p
+                | First create another data field. Call it
+                |
+                strong ratio
+                |
+                | and set it's value to
+                |
+                em 1 / max(data)
+                |
+                | This will be the base ratio by which we'll scale
+                | the bars. They will therefore always fit onto the
+                | drawing.
+
+            img(src="../includes/tutorials/barChart/createRatio.png")
+
+            p
+                | Now select the step within the loop were the actual bar is created
+
+            img(src="../includes/tutorials/barChart/selectBarStep.png")
+
+            p
+                em Scale
+                | the bar by grabbing the
+                |
+                strong top
+                | -handle and moving that down.
+                | again, how far you scale is not important
+                | we just need to create the scale-step.
+
+            img(src="../includes/tutorials/barChart/scaleBarDown.png")
+
+            p
+                em Select
+                |
+                | the scale-step we just created.
+
+            p
+                em Drag
+                |
+                | the data-field
+                | onto the y-factor
+
+            img(src="../includes/tutorials/barChart/scaleByData.png")
+
+            p
+                | You may have noticed, that the name used is for the scale factor
+                |
+                strong $
+                | data. This is done to disambiguate the list from its values. By this you can
+                | do nested loops where the inner loop either iterates over a list again or
+                | repeats by the value of each list item. This should be useful for more advanced
+                | visualisations.
+
+            p
+                | The bars are now way to big. So we multiply the scaling factor by the
+                |
+                em ratio
+                |
+                | we created before. With this, the largest bar will always use the complete height
+                | of the drawing.
+
+            img(src="../includes/tutorials/barChart/multiplyByRatio.png")
+
+            p
+                | We're done! A simple bar chart. Try changing values or adding some.
+                | The chart will adjust accordingly.
+
+            img(src="../includes/tutorials/barChart/barChartDone.gif")
+
+
+            script(src="../includes/tutorials/barChart/interactive/example.mjs" type="module")
+
+
+        include ../includes/introFooter
+
+
+
+

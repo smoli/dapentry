@@ -1,0 +1,47 @@
+
+
+footer {
+  display: flex;
+  flex-direction: row;
+  background-color: @uiColor3;
+  text-align: left;
+  box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.1);
+  color: @uiColor1;
+  margin: 10em 0 0;
+  padding: 2em;
+  box-sizing: border-box;
+  width: 100%;
+
+  > * {
+    flex: 1 0 10em;
+  }
+
+  > *:nth-child(2) {
+    flex: 1 10 auto;
+    text-align: center;
+  }
+
+  > *:nth-child(3) {
+    text-align: right;
+  }
+
+  a {
+    color: @uiColor1;
+    margin-left: 1em;
+  }
+
+  ul {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    li:nth-child(1) {
+      margin-top: 0;
+    }
+  }
+}
