@@ -661,6 +661,8 @@ export class AppController {
         }
 
         if (event.key === AppConfig.Keys.UndoKey && event[AppConfig.Keys.UndoModifier]) {
+            event.preventDefault();
+            event.stopPropagation();
             await this.undo();
         } else if (event.code === AppConfig.Keys.NextStepCode) {
             event.stopPropagation();
