@@ -212,7 +212,7 @@ describe('JS publisher', () => {
 
     describe("scaling statements", () => {
         it("exports scaling by factors", () => {
-            const code = `SCALE Rectangle1, 1.5, 1, "bottomLeft"`;
+            const code = `SCALE Rectangle1, 1.5, 1, Rectangle1@bottomLeft`;
             let js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([
@@ -221,7 +221,7 @@ describe('JS publisher', () => {
         });
 
         it("exports scaling to a point", () => {
-            const code = `SCALEP Rectangle1, "top", Canvas@top, "bottom"`;
+            const code = `SCALEP Rectangle1, Rectangle1@top, Canvas@top, Rectangle1@bottom`;
             let js = JSPublisher.getJSLine(code);
 
             expect(js).to.deep.equal([

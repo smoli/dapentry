@@ -278,26 +278,7 @@ describe('Undo (scope of app controller)', () => {
         ]);
         expect(state.store.state.code.selectedLines).to.deep.equal([0, 1]);
 
-        // Undo "Select all statements"
-        controller.undo();
-        expect(state.store.state.data.fields).to.deep.equal([
-            {
-                name: "f1", value: [10, 15, 17],
-                type: DataFieldType.List,
-                description: null,
-                published: true
-            },
-            {
-                name: "f2", value: 20, type: DataFieldType.Number,
-                description: null,
-                published: true
-            }
-        ]);
-        expect(state.store.state.code.code).to.deep.equal([
-            "CIRCLECR Circle1,$styles.default,(530.32, 289.95),177.00",
-            "RECTTL Rectangle1,$styles.default,(709.39, 635.20),81.66,54.44"
-        ]);
-        expect(state.store.state.code.selectedLines).to.deep.equal([]);
+
 
         // Undo "Add another value to the list"
         controller.undo();
@@ -318,7 +299,7 @@ describe('Undo (scope of app controller)', () => {
             "CIRCLECR Circle1,$styles.default,(530.32, 289.95),177.00",
             "RECTTL Rectangle1,$styles.default,(709.39, 635.20),81.66,54.44"
         ]);
-        expect(state.store.state.code.selectedLines).to.deep.equal([]);
+        expect(state.store.state.code.selectedLines).to.deep.equal([0, 1]);
 
         // Add a value to a field to make it a list
         controller.undo();
@@ -338,7 +319,7 @@ describe('Undo (scope of app controller)', () => {
             "CIRCLECR Circle1,$styles.default,(530.32, 289.95),177.00",
             "RECTTL Rectangle1,$styles.default,(709.39, 635.20),81.66,54.44"
         ]);
-        expect(state.store.state.code.selectedLines).to.deep.equal([]);
+        expect(state.store.state.code.selectedLines).to.deep.equal([0, 1]);
 
         // Undo "Add another statement"
         controller.undo();
@@ -383,12 +364,10 @@ describe('Undo (scope of app controller)', () => {
                 published: true
             }]);
         expect(state.store.state.code.code).to.deep.equal([]);
-        expect(state.store.state.code.code).to.deep.equal([]);
 
         // Undo "Add a field"
         controller.undo();
         expect(state.store.state.data.fields).to.deep.equal([]);
-        expect(state.store.state.code.code).to.deep.equal([]);
         expect(state.store.state.code.code).to.deep.equal([]);
     });
 

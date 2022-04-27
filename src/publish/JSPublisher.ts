@@ -354,37 +354,31 @@ export class JSPublisher {
                     `${getObjectVariable(tokens[1])}, ` +
                     `${getExpressionFromToken(tokens[2])}, ` +
                     `${getExpressionFromToken(tokens[3])}, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.x, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.y` +
+                    `${getXYFromToken(tokens[4])}` +
                     `);`)
                 break;
             case AppConfig.Runtime.Opcodes.Scale.FactorUniform:
                 r.push(`${MODULE}.scaleObjectUniform(` +
                     `${getObjectVariable(tokens[1])}, ` +
                     `${getExpressionFromToken(tokens[2])}, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[3])}.x, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[3])}.y` +
+                    `${getXYFromToken(tokens[3])}` +
                     `);`)
                 break;
             case AppConfig.Runtime.Opcodes.Scale.ToPoint:
                 r.push(`${MODULE}.scaleObjectToPoint(` +
                     `${getObjectVariable(tokens[1])}, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.x, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.y, ` +
+                    `${getXYFromToken(tokens[2])}, ` +
                     `${getXYFromToken(tokens[3])}, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.x, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.y` +
+                    `${getXYFromToken(tokens[4])}` +
                     `);`)
                 break;
 
             case AppConfig.Runtime.Opcodes.Scale.ToPointUniform:
                 r.push(`${MODULE}.scaleObjectToPointUniform(` +
                     `${getObjectVariable(tokens[1])}, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.x, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[2])}.y, ` +
+                    `${getXYFromToken(tokens[2])}, ` +
                     `${getXYFromToken(tokens[3])}, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.x, ` +
-                    `${getObjectVariable(tokens[1])}.${getLiteralFromStringToken(tokens[4])}.y` +
+                    `${getXYFromToken(tokens[4])}` +
                     `);`)
                 break;
 

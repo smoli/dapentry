@@ -32,7 +32,7 @@ describe('Scenarios 1', () => {
         LOAD corner, [3, 4, 5, 6, 7]
         LOAD width, 1 / size(corner)
         RECTPP Rectangle1,$styles.default,Canvas@topLeft,Canvas@bottomRight
-        SCALE Rectangle1, width, 1, "left"
+        SCALE Rectangle1, width, 1, Rectangle1@left
         FOREACH $corner, corner
             LINEPP Line1,$styles.default,Rectangle1@center,Rectangle1@right
             MOVETO Rectangle1@bottomLeft,Rectangle1@bottomRight

@@ -126,10 +126,10 @@ describe('A published drawing', () => {
     it("can handle expression in data and steps", () => {
         const code = `
             RECTPP Rectangle3,$styles.default,Canvas@topLeft,Canvas@bottomRight
-            SCALE Rectangle3, width, 1, "left"
+            SCALE Rectangle3, width, 1, Rectangle3@left
             FOREACH data
             RECTPP Rectangle4,$styles.default,Rectangle3@topLeft,Rectangle3@bottomRight
-            SCALE Rectangle4, 1, data * ratio, "bottom"
+            SCALE Rectangle4, 1, data * ratio, Rectangle4@bottom
             MOVETO Rectangle3@bottomLeft,Rectangle3@bottomRight
             ENDEACH        
         `;

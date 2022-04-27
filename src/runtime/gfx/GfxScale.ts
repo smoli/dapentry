@@ -70,7 +70,7 @@ export class GfxScale extends GfxOperation {
     }
 
     get pivot(): Point2D {
-        return this.target.pointsOfInterest(POIPurpose.SCALING)[POI[this._pivot.finalized(this.closure)]]
+        return this._pivot.finalized(this.closure);
     }
 
     async execute(): Promise<any> {
@@ -82,7 +82,7 @@ export class GfxScale extends GfxOperation {
         }
 
         if (this._targetPoint) {
-            let oldPoint = objToScale.pointsOfInterest(POIPurpose.SCALING)[POI[this.draggedPoint]];
+            let oldPoint = this.draggedPoint;
             let pivot = this.pivot;
             let target = this.targetPoint;
 

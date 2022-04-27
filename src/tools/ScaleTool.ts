@@ -170,18 +170,22 @@ export class ScaleTool extends Tool {
     }
 
     getResult(): any {
+        const pivot = `${this._object.uniqueName}@${POI[this._pivotPOI]}`;
+
+
         if (this._snapScalePoint?.object) {
+            const scalingPoint = `${this._object.uniqueName}@${POI[this._scalingPOI]}`;
             if (this._scaleMode == ScaleMode.UNIFORM) {
-                return `${AppConfig.Runtime.Opcodes.Scale.ToPointUniform} ${this._object.uniqueName}, "${POI[this._scalingPOI]}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, "${POI[this._pivotPOI]}"`;
+                return `${AppConfig.Runtime.Opcodes.Scale.ToPointUniform} ${this._object.uniqueName}, ${scalingPoint}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, ${pivot}`;
             } else {
-                return `${AppConfig.Runtime.Opcodes.Scale.ToPoint} ${this._object.uniqueName}, "${POI[this._scalingPOI]}", ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, "${POI[this._pivotPOI]}"`;
+                return `${AppConfig.Runtime.Opcodes.Scale.ToPoint} ${this._object.uniqueName}, ${scalingPoint}, ${this.makePointCodeFromSnapInfo(this._snapScalePoint)}, ${pivot}`;
             }
         }
 
         if (this._scaleMode == ScaleMode.UNIFORM) {
-            return `${AppConfig.Runtime.Opcodes.Scale.FactorUniform} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, "${POI[this._pivotPOI]}"`
+            return `${AppConfig.Runtime.Opcodes.Scale.FactorUniform} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, ${pivot}`
         } else if (this._finalX !== undefined && this._finalY !== undefined) {
-            return `${AppConfig.Runtime.Opcodes.Scale.Factor} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, ${this.makeCodeForNumber(this._finalY)}, "${POI[this._pivotPOI]}"`
+            return `${AppConfig.Runtime.Opcodes.Scale.Factor} ${this._object.name}, ${this.makeCodeForNumber(this._finalX)}, ${this.makeCodeForNumber(this._finalY)}, ${pivot}`
         }
     }
 }
