@@ -31,6 +31,7 @@ creationStatements[AppConfig.Runtime.Opcodes.Poly.Create] = 1;
 creationStatements[AppConfig.Runtime.Opcodes.Quad.Create] = 1;
 creationStatements[AppConfig.Runtime.Opcodes.Bezier.Create] = 1;
 creationStatements["LOAD"] = 1;
+creationStatements["TEXT"] = 1;
 
 
 function getDefaultState(): CodeState {
