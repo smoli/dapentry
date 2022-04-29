@@ -6,6 +6,7 @@ import {Point2D} from "../geometry/Point2D";
 import {makeScaleFactorsUniform, scaleToAPoint} from "../geometry/GeoMath";
 import {GrObjectList} from "../geometry/GrObjectList";
 import {GrPolygon} from "../geometry/GrPolygon";
+import {GrText} from "../geometry/GrText";
 
 export function distance(x1: number, y1: number, x2: number, y2: number): number {
     return Math.hypot(x2 - x1, y2 - y1);
@@ -63,6 +64,11 @@ export function linePointPoint(name: string, x1: number, y1: number, x2: number,
 
 export function linePointVectorLength(name: string, x1: number, y1: number, vx: number, vy: number, l: number):GrLine {
     return new GrLine(name, x1, y1, x1 + vx * l, y1 + vy * l);
+}
+
+// Text
+export function text(name: string, x: number, y: number, text: string):GrText {
+    return new GrText(name, x, y, text);
 }
 
 // Polygon

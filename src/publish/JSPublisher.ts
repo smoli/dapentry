@@ -324,6 +324,15 @@ export class JSPublisher {
                 ));
                 break;
 
+            case AppConfig.Runtime.Opcodes.Text:
+                r.push(...getObjectCreationStatement(
+                    tokens,
+                    "text",
+                    getXYFromToken(tokens[3]),
+                    getExpressionFromToken(tokens[4])
+                ));
+                break;
+
             case AppConfig.Runtime.Opcodes.Do:
                 r.push(getDoStartForTokens(tokens, JSPublisher.objectManager));
                 JSPublisher._loopStack.push(tokens);
@@ -466,6 +475,7 @@ export class JSPublisher {
             case AppConfig.Runtime.Opcodes.StrokeWidth:
                 r.push(`${getObjectVariable(tokens[1])}.style.strokeWidth = ${getExpressionFromToken(tokens[2])};`)
                 break;
+
 
             default:
                 UNREACHABLE(`Exporting of OPCODE "${opCode}" is not implemented.`);

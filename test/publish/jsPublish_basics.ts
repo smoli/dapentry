@@ -210,6 +210,19 @@ describe('JS publisher', () => {
        });
     });
 
+    describe("exports text statements", () => {
+       it("creates a text", () => {
+            const code = `TEXT Text2,$styles.textDefault,(500, 300), "Hello World"`;
+
+            const js = JSPublisher.getJSLine(code);
+
+            expect(js).to.deep.equal([
+                `__objects("Text2", dapentry.text("Text2", 500, 300, "Hello World"));`,
+                `__objects("Text2").style = dapentry.$styles.textDefault;`
+            ]);
+       });
+    });
+
     describe("scaling statements", () => {
         it("exports scaling by factors", () => {
             const code = `SCALE Rectangle1, 1.5, 1, Rectangle1@bottomLeft`;

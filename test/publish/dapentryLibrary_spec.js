@@ -12,13 +12,14 @@ import {
     rectanglePointPoint,
     rectangleTopLeft,
     rectangleTopRight,
+    text,
     scaleObject,
     scaleObjectUniform,
     scaleObjectToPoint, scaleObjectToPointUniform, moveObject, moveObjectAlongX, moveObjectAlongY, moveObjectToPoint
 } from "../../src/publish/operationHelpers";
 import {GrRectangle} from "../../src/geometry/GrRectangle";
 import {GrCircle} from "../../src/geometry/GrCircle";
-import {POI} from "../../src/geometry/GrObject";
+import {ObjectType, POI} from "../../src/geometry/GrObject";
 
 
 describe('dapentry library', () => {
@@ -119,6 +120,16 @@ describe('dapentry library', () => {
             expect(l.uniqueName).to.equal("l");
             expect(l.start).to.deep.equal({x: 100, y: 100});
             expect(l.end).to.deep.equal({x: 200, y: 150});
+        });
+    });
+
+    describe('provides functions to create text', () => {
+        it("creates a text at a given position", () => {
+           const t = text("t", 300, 500, "Hello, World");
+           expect(t.uniqueName).to.equal("t");
+           expect(t.type).to.equal(ObjectType.Text);
+           expect(t.x).to.equal(300);
+           expect(t.y).to.equal(500);
         });
     });
 
