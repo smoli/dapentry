@@ -1,29 +1,39 @@
 .drawable-app-footer {
   background: @uiColor3;
   color: @uiColor1;
-  padding: 1em 2em;
+  padding: 0em 2em;
   height: @footerHeight;
 
   display: flex;
   flex-direction: row;
 
   .spacer {
-    flex: 0 1 100%;
+    flex: 1 1 100%;
   }
 
-  a {
+  svg {
+    margin: 0 !important;
+  }
+  div {
+    padding: 0.75em;
     white-space: nowrap;
-    display: block;
-    flex: 1 0 10em;
-    color: @uiColor1;
-    text-decoration: none;
-    padding: 0.1em 0;
-  }
 
-  a:hover {
-    text-decoration: underline;
-  }
-  a:active {
-    color: @uiColor1;
+    a {
+      white-space: nowrap;
+      display: inline-block;
+      margin-left: 0.5em;
+      flex: 1 0 10em;
+      color: @uiColor1;
+      text-decoration: none;
+      padding: 0.1em 0;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    a:active {
+      color: @uiColor1;
+    }
   }
 }

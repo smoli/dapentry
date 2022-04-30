@@ -2,7 +2,7 @@
 
   <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1777 1000" height="4em" class="drawable-layout-switcher">
+      viewBox="0 0 1777 1000" height="3em" class="drawable-layout-switcher">
     <g>
       <g id="App">
         <path
