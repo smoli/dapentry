@@ -13,25 +13,28 @@ footer {
   width: 100%;
 
   > * {
+    display: block;
     flex: 1 0 10em;
   }
-
   > *:nth-child(2) {
-    flex: 1 10 auto;
     text-align: center;
   }
 
   > *:nth-child(3) {
     text-align: right;
+
+    a {
+      margin-left: 1em;
+    }
+
   }
 
   a {
     color: @uiColor1;
-    margin-left: 1em;
   }
 
   ul {
-    margin: 0;
+    margin: 0 !important;
     list-style: none;
     padding: 0;
 
