@@ -43,6 +43,10 @@ export default {
             <div class="drawable-form-validation-message">{{ validation.messageFor.confirmPassword }}</div>
           </fieldset>
         </form>
+        <p>By registering an account you agree to the
+            <a href="https://www.dapentry.com/termsofservice-en.html" target="termsofservice">Terms of Service</a> and the
+            <a href="https://www.dapentry.com/privacy-en.html" target="privacy">Privacy Policy</a>
+        </p>
         <p>Already have an account? <a class="drawable-action-link" @click="onDoLogin">Login</a></p>
       </div>
 
