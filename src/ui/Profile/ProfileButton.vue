@@ -3,7 +3,7 @@
     <div>
       <button @click="onTogglePopover" v-if="$store.state.auth.authenticated">Welcome, {{
           $store.state.auth.user.name
-        }} ({{ $store.state.auth.user.id }})
+        }}
       </button>
       <button v-if="!($store.state.auth.authenticated)" @click="onLogin">
         Login
@@ -11,7 +11,7 @@
     </div>
     <div v-if="popover" class="drawable-profile-popover">
       <ul>
-        <li v-if="!($store.state.auth.user.verified)">Please verify your email</li>
+<!--        <li v-if="!($store.state.auth.user.verified)">Please verify your email</li>-->
         <li @click="onLogout">Logout</li>
       </ul>
     </div>
