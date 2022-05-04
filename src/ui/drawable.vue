@@ -28,8 +28,8 @@
     <span class="spacer">&nbsp;</span>
     <div>
       <a href="https://cheat.dapentry.com" title="Imprint | New Page" target="dapentryCheatSheet">Cheat Sheet</a>
-      <a href="https://dapentry.com/imprint.html" title="Imprint | Leaves Designer">Imprint</a>
-      <a href="https://dapentry.com/privacy.html" title="Privacy | Leaves Designer">Privacy</a>
+      <a href="https://dapentry.com/imprint-en.html" title="Imprint | Leaves Designer">Imprint</a>
+      <a href="https://dapentry.com/privacy-en.html" title="Privacy | Leaves Designer">Privacy</a>
       <a href="https://dapentry.com/termsofservice.html" title="Terms of Service | Leaves Designer">Terms of Service</a>
     </div>
   </footer>
