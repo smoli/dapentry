@@ -10,7 +10,7 @@
     "build-cheat": "parcel build src/introduction/sites/cheatsheet.pug --dist-dir dist-cheat --no-source-maps",
     "build-lib": "parcel build src/publish/dapentryLib --no-source-maps",
     "build-web": "parcel build src/web/*.pug --dist-dir dist-web --no-source-maps  --no-optimize",
-    "build": "parcel build src/index.html  --no-scope-hoist --dist-dir dist-designer ",
+    "build": "parcel build src/index.html  --no-scope-hoist --no-source-maps --dist-dir dist-designer ",
     "test": "mocha -r ts-node/register -r node-fetch --recursive test/**/*.ts",
     "coverage": "nyc npm run test",
     "build:docs": "npx typedoc --entryPointStrategy expand ./src --out ./doc/reference"

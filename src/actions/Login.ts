@@ -11,8 +11,8 @@ export class Login extends BaseAction {
     protected async login(data: { email: string, password: string }) {
         const loginResult = await API.login(data.email, data.password);
         if (loginResult.status === ResponseStatus.OK) {
+            API.setAuthInfo(loginResult.data.token);
             const userResult = await API.getUser();
-
             this.state.authenticated(loginResult.data.token, userResult.data);
         } else {
             await this.showLogin({

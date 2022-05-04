@@ -731,6 +731,7 @@ export class AppController {
         this._state.logout();
         this._state.clearLibrary();
         this._persistence.removeAuthToken();
+        API.setAuthInfo(null);
     }
 
     public async login() {
