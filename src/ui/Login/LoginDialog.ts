@@ -1,6 +1,7 @@
 import {DialogCloseReason} from "../core/ModalFactory";
 import {ModalDialogHandler} from "../core/ModalDialogHandler";
 import {ValidationResult} from "../core/ValidationResult";
+import {I18n} from "vue-i18n";
 
 export default {
     template: `
@@ -136,10 +137,15 @@ export interface LoginDialogOptions {
 export class LoginDialogHandler extends ModalDialogHandler {
     private _options: LoginDialogOptions;
 
+    constructor(onShow: () => void, onClose: () => void, i18n: I18n) {
+        super(onShow, onClose, i18n);
+    }
+
 
     async show(options: LoginDialogOptions) {
         this._options = options;
-        return super.show();
+        return ModalDialogHandler.prototype.show.call(this);
+        // return super.show();
     }
 
     get initialErrorMessage(): string {
