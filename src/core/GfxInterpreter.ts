@@ -314,6 +314,8 @@ class GfxMake extends GfxOperation {
                 if (v instanceof ArrayIterator) {
                     v = v.array;
                 }
+            } else {
+                v = arg.value;
             }
             return this.makeFieldScopeCode(field.name, field.type, v);
         });
