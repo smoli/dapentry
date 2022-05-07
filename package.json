@@ -67,6 +67,7 @@
     "steps.html",
     "editingSteps.html",
     "usingData.html",
-    "loops.html"
+    "loops.html",
+    "barChart.html"
   ]
 }
