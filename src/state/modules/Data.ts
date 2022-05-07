@@ -33,6 +33,9 @@ function getFieldTypeFromValue(value: DataFieldValue): DataFieldType {
     }
 
     if (typeof value === "string") {
+        if (!isNaN(Number(value))) {
+            return DataFieldType.Number;
+        }
         return DataFieldType.String;
     }
 

@@ -40,14 +40,15 @@ export default {
 
       if (!isNaN(value)) {
         value = "" + Number(value);
+      } else {
+        try {
+          Parser.parseExpression(value);
+        } catch (e) {
+          this.validationMessage = "Invalid Syntax"
+          return;
+        }
       }
 
-      try {
-        Parser.parseExpression(value);
-      } catch (e) {
-        this.validationMessage = "Invalid Syntax"
-        return;
-      }
       event.target.setCustomValidity("");
       const errors = await this.controller.setDataFieldValue(this.field.name, value);
 
