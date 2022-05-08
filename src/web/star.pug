@@ -2,8 +2,8 @@ html
     head
         title A star | dapentry
         meta(charset="UTF-8")
-        link(rel="stylesheet" href="../../ui/css/drawable.less")
-        link(rel="stylesheet" href="../../ui/css/tutorial.less")
+        link(rel="stylesheet" href="../ui/css/drawable.less")
+        link(rel="stylesheet" href="../ui/css/tutorial.less")
         style(type="text/css").
             /* nunito-sans-regular - latin */
             @font-face {
@@ -11,10 +11,10 @@ html
                 font-style: normal;
                 font-weight: 400;
                 /*noinspection CssUnknownTarget*/
-                src: url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot'); /* IE9 Compat Modes */
+                src: url('../ui/css/fonts/nunito-sans-v11-latin-regular.eot'); /* IE9 Compat Modes */
                 /*noinspection CssUnknownTarget*/
                 src: local(''),
-                url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
+                url('../ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
             }
     body
         header
@@ -53,7 +53,7 @@ html
                 |
                 | is the most natural choice
 
-            img(src="../includes/tutorials/star/chooseAspectRatio11.png")
+            img(src="../introduction/includes/tutorials/star/chooseAspectRatio11.png")
 
             h3 A helper line for sweeping
 
@@ -67,7 +67,7 @@ html
                 |
                 em top.
 
-            img(src="../includes/tutorials/star/drawLine.png")
+            img(src="../introduction/includes/tutorials/star/drawLine.png")
 
             p
                 |
@@ -75,7 +75,7 @@ html
                 |
                 strong guide (h).
 
-            img(src="../includes/tutorials/star/makeHelper.png")
+            img(src="../introduction/includes/tutorials/star/makeHelper.png")
 
             h3 Starting the polygon
 
@@ -92,12 +92,12 @@ html
                 |
                 | Remember that you finish polygon drawing with a right click. This point defines the tip of the spokes.
 
-            img(src="../includes/tutorials/star/startPolygon.png")
+            img(src="../introduction/includes/tutorials/star/startPolygon.png")
 
             p
                 | Since the polygon only has one point, it will be represented with this symbol:
 
-            img(src="../includes/tutorials/star/singlePointPolygon.png")
+            img(src="../introduction/includes/tutorials/star/singlePointPolygon.png")
 
             h3 First rotation
 
@@ -121,12 +121,12 @@ html
                 | You can use an arbitrary angle. In a moment we will define the proper angle
                 | necessary to create the star shape.
 
-            img(src="../includes/tutorials/star/rotateOnce.png")
+            img(src="../introduction/includes/tutorials/star/rotateOnce.png")
 
             p
                 | Create a new data value by clicking the
                 |
-                img(src="../includes/cheat/DataPlus.png")
+                img(src="../introduction/includes/cheat/DataPlus.png")
                 | -button.
                 br
                 strong Double click
@@ -152,14 +152,14 @@ html
                 |
                 em 180 / spokes
 
-            img(src="../includes/tutorials/star/spokesAndAngle.png")
+            img(src="../introduction/includes/tutorials/star/spokesAndAngle.png")
 
             p
                 | Now we can use the computed angle for the first rotations step.
                 |
                 strong Select the rotation step
 
-            img(src="../includes/tutorials/star/selectRotationOne.png")
+            img(src="../introduction/includes/tutorials/star/selectRotationOne.png")
 
             p
                 | Next
@@ -174,7 +174,7 @@ html
                 |
                 em step editor
 
-            img(src="../includes/tutorials/star/dragAngle.png")
+            img(src="../introduction/includes/tutorials/star/dragAngle.png")
 
             h3 Second point of the polygon
 
@@ -199,7 +199,7 @@ html
                 | Since there's only on other object, the guide line, the polygon tool
                 | is now restricted to points on this line.
 
-            img(src="../includes/tutorials/star/glomping.png")
+            img(src="../introduction/includes/tutorials/star/glomping.png")
 
             p
                 | Choose an arbitrary point on the line by
@@ -210,7 +210,7 @@ html
                 |
                 strong clicking right.
 
-            img(src="../includes/tutorials/star/secondPolygonPoint.png")
+            img(src="../introduction/includes/tutorials/star/secondPolygonPoint.png")
 
             p
                 | Now create a third
@@ -233,7 +233,7 @@ html
                 |
                 em extend polygon step.
 
-            img(src="../includes/tutorials/star/dragSpokeRatio.png")
+            img(src="../introduction/includes/tutorials/star/dragSpokeRatio.png")
 
             h3 Second rotation
 
@@ -266,7 +266,7 @@ html
                 |
                 | and click the
 
-            img(src="../includes/tutorials/star/loopSteps.png")
+            img(src="../introduction/includes/tutorials/star/loopSteps.png")
 
             p
                 | The default loop value is 4 so if you have set the value for
@@ -290,16 +290,16 @@ html
                 | We're done! A star that reacts to changes on the number of spokes
                 | and the spoke ratio.
 
-            img(src="../includes/tutorials/star/dynamicStar.gif")
+            img(src="../introduction/includes/tutorials/star/dynamicStar.gif")
 
 
 
 
 
-            script(src="../includes/tutorials/star/interactive/example.mjs" type="module")
+            script(src="../introduction/includes/tutorials/star/interactive/example.mjs" type="module")
 
 
-        include ../includes/introFooter
+        include ../introduction/includes/introFooter
 
 
 

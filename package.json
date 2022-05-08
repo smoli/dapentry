@@ -6,6 +6,7 @@
     "start": "parcel ./src/index.html --no-hmr --no-cache",
     "start-intro": "parcel src/introduction/sites/*.pug --no-hmr --no-cache --port 2345",
     "start-publish": "parcel experiments/published.html --no-hmr --no-cache --port 3456",
+    "start-web": "parcel src/web/*.pug --no-hmr --no-cache --port 4567",
     "build-intro": "parcel build src/introduction/sites/*.pug --dist-dir dist-intro --no-source-maps",
     "build-cheat": "parcel build src/introduction/sites/cheatsheet.pug --dist-dir dist-cheat --no-source-maps",
     "build-lib": "parcel build src/publish/dapentryLib --no-source-maps",
@@ -68,6 +69,7 @@
     "editingSteps.html",
     "usingData.html",
     "loops.html",
-    "barChart.html"
+    "barChart.html",
+    "star.html"
   ]
 }

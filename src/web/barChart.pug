@@ -2,8 +2,8 @@ html
     head
         title A simple bar chart | dapentry
         meta(charset="UTF-8")
-        link(rel="stylesheet" href="../../ui/css/drawable.less")
-        link(rel="stylesheet" href="../../ui/css/tutorial.less")
+        link(rel="stylesheet" href="../ui/css/drawable.less")
+        link(rel="stylesheet" href="../ui/css/tutorial.less")
         style(type="text/css").
             /* nunito-sans-regular - latin */
             @font-face {
@@ -11,10 +11,10 @@ html
                 font-style: normal;
                 font-weight: 400;
                 /*noinspection CssUnknownTarget*/
-                src: url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot'); /* IE9 Compat Modes */
+                src: url('../ui/css/fonts/nunito-sans-v11-latin-regular.eot'); /* IE9 Compat Modes */
                 /*noinspection CssUnknownTarget*/
                 src: local(''),
-                url('../../ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('../../ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
+                url('../ui/css/fonts/nunito-sans-v11-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.woff') format('woff'), /* Modern Browsers */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('../ui/css/fonts/nunito-sans-v11-latin-regular.svg#NunitoSans') format('svg'); /* Legacy iOS */
             }
     body
         header
@@ -45,7 +45,7 @@ html
             p
                 | Create a new data value by clicking the
                 |
-                img(src="../includes/cheat/DataPlus.png")
+                img(src="../introduction/includes/cheat/DataPlus.png")
                 | -button.
                 br
                 strong Double click
@@ -58,10 +58,10 @@ html
                 | Turn it into a list of values
                 | by clicking the
                 |
-                img(src="../includes/cheat/DataPlus.png")
+                img(src="../introduction/includes/cheat/DataPlus.png")
                 | -button at the end a couple of times.
 
-            img(src="../includes/tutorials/barChart/createData.png")
+            img(src="../introduction/includes/tutorials/barChart/createData.png")
 
             h3 Base rectangle
 
@@ -77,7 +77,7 @@ html
                 |
                 | to be precise.
 
-            img(src="../includes/tutorials/barChart/createRectangle.png")
+            img(src="../introduction/includes/tutorials/barChart/createRectangle.png")
 
             h3 The width of the bars
 
@@ -92,7 +92,7 @@ html
                 |
                 | The exact width is not important. We basically just want to create the scaling step.
 
-            img(src="../includes/tutorials/barChart/scaleToBar.png")
+            img(src="../introduction/includes/tutorials/barChart/scaleToBar.png")
 
             p
                 | Now create a second data value. Rename it to
@@ -106,7 +106,7 @@ html
                 |
                 | This is our actual scaling factor for the bars.
 
-            img(src="../includes/tutorials/barChart/createWidth.png")
+            img(src="../introduction/includes/tutorials/barChart/createWidth.png")
 
             p
                 strong Select the scale step (click)
@@ -121,7 +121,7 @@ html
                 |
                 | of the scaling step.
 
-            img(src="../includes/tutorials/barChart/dragWidth.png")
+            img(src="../introduction/includes/tutorials/barChart/dragWidth.png")
 
             p
                 | We now have determined the width of the bars in a way
@@ -139,7 +139,7 @@ html
                 |
                 strong H-key
 
-            img(src="../includes/tutorials/barChart/makeGuide.png")
+            img(src="../introduction/includes/tutorials/barChart/makeGuide.png")
 
             p
                 | Now shift the rectangle one width.
@@ -157,14 +157,14 @@ html
                 |
                 | snap-point
 
-            img(src="../includes/tutorials/barChart/moveGuide.png")
+            img(src="../introduction/includes/tutorials/barChart/moveGuide.png")
 
             p
                 | Now we create the actual bar.
                 |
                 em Select the scale step for the guide rectangle, so the next operations happens before the move.
 
-            img(src="../includes/tutorials/barChart/selectScaleStep.png")
+            img(src="../introduction/includes/tutorials/barChart/selectScaleStep.png")
 
             p
                 | Create another
@@ -173,7 +173,7 @@ html
                 |
                 | Make it the same size as the guide by using the snap-points.
 
-            img(src="../includes/tutorials/barChart/createBar.png")
+            img(src="../introduction/includes/tutorials/barChart/createBar.png")
 
             p
                 | Next, loop the last two steps -
@@ -183,7 +183,7 @@ html
                 strong loop
                 | -button.
 
-            img(src="../includes/tutorials/barChart/makeLoop.png")
+            img(src="../introduction/includes/tutorials/barChart/makeLoop.png")
 
             p
                 | We now have 4 bars, since by default a loop repeats 4 times.
@@ -204,19 +204,30 @@ html
                 strong do
                 | -step.
 
-            img(src="../includes/tutorials/barChart/makeForEach.png")
+            img(src="../introduction/includes/tutorials/barChart/makeForEach.png")
 
             p
-                | Since we dragged the a value list onto the iteration
+                | Since we dragged the value list onto the iteration
                 | value of the loop, the loop will automatically turn
                 | into an iteration over that list using
                 |
                 strong For Each
 
             p
-                | Now there will always as many bars as there are data points.
+                | Now there will always be as many bars as there are data points.
                 | When you add a data point, a new bar will appear and the bars
                 | width will adjust so all bars will fit onto the drawing.
+
+            p
+                | You can try this
+                | by adding new values to the
+                |
+                em data-field
+                |
+                | using the
+                img(src="../introduction/includes/cheat/DataPlus.png")
+                | -button
+
 
             h3 Size the bars
 
@@ -235,12 +246,12 @@ html
                 | the bars. They will therefore always fit onto the
                 | drawing.
 
-            img(src="../includes/tutorials/barChart/createRatio.png")
+            img(src="../introduction/includes/tutorials/barChart/createRatio.png")
 
             p
                 | Now select the step within the loop were the actual bar is created
 
-            img(src="../includes/tutorials/barChart/selectBarStep.png")
+            img(src="../introduction/includes/tutorials/barChart/selectBarStep.png")
 
             p
                 em Scale
@@ -251,7 +262,7 @@ html
                 | again, how far you scale is not important
                 | we just need to create the scale-step.
 
-            img(src="../includes/tutorials/barChart/scaleBarDown.png")
+            img(src="../introduction/includes/tutorials/barChart/scaleBarDown.png")
 
             p
                 em Select
@@ -264,7 +275,7 @@ html
                 | the data-field
                 | onto the y-factor
 
-            img(src="../includes/tutorials/barChart/scaleByData.png")
+            img(src="../introduction/includes/tutorials/barChart/scaleByData.png")
 
             p
                 | You may have noticed, that the name used is for the scale factor
@@ -283,19 +294,19 @@ html
                 | we created before. With this, the largest bar will always use the complete height
                 | of the drawing.
 
-            img(src="../includes/tutorials/barChart/multiplyByRatio.png")
+            img(src="../introduction/includes/tutorials/barChart/multiplyByRatio.png")
 
             p
                 | We're done! A simple bar chart. Try changing values or adding some.
                 | The chart will adjust accordingly.
 
-            img(src="../includes/tutorials/barChart/barChartDone.gif")
+            img(src="../introduction/includes/tutorials/barChart/barChartDone.gif")
 
 
-            script(src="../includes/tutorials/barChart/interactive/example.mjs" type="module")
+            script(src="../introduction/includes/tutorials/barChart/interactive/example.mjs" type="module")
 
 
-        include ../includes/introFooter
+        include ../introduction/includes/introFooter
 
 
 
