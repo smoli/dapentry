@@ -7,12 +7,12 @@ html
 
         include ../introduction/includes/introHeader
 
-        h2 Data Driven Visualisations without Coding
+        h2.first Data Driven Visualisations without Coding
 
         p
             | Draw visualisations that change with data without the need to code.
 
-            | dapentry is still very alpha but in a state where it is basically usable.
+            | dapentry is still very alpha but in a state where it is usable.
             | Documentation is in the works.
 
         p
@@ -32,12 +32,35 @@ html
             |
             | for an overview of the features.
 
-        a(href="https://designer.dapentry.com" class="biglink") Try it here
+        a(href="https://designer.dapentry.com" class="biglink" target="dapentry_designer") Try it here
 
         p
-            | Drawings can be exported as a JavaScript file to use on your own website.
+            | Drawings can be exported as a JavaScript. The export contains all you need, no further
+            | dependencies are required.
             | Exported drawings support the data driven aspects. They provide a function
             | you pass the data.
+
+        p
+            | With this the drawing can easily be used on your own website:
+
+        img(src="exampleExportCode.png" width="331px")
+
+        p
+            | This example above will render a static image, but now it is easy to add interactivity for the user:
+
+        div.demo
+            svg(id="drawing" height="15em")
+
+            div
+                span You can change the values
+
+                ul(id="demoValues")
+
+        a(href="https://designer.dapentry.com" class="biglink" target="dapentry_designer") Try it here
+
+        br
+
+        h2 Credit to Bret Victor
 
         p
             | dapentry is based on the ideas in
@@ -51,7 +74,7 @@ html
             | and the accompanying
             |
             a(href="http://worrydream.com/#!/DrawingDynamicVisualizationsTalkAddendum") talk notes
-            | . Not all ideas are implemented yet.
+            | . Right now, not all ideas are implemented.
 
         h2 What's with the name?
 
@@ -77,5 +100,7 @@ html
             strong tree
             |
             | with emphasis on the first syllable.
+
+        script(src="../introduction/includes/tutorials/star/interactive/example.mjs" type="module")
 
         include ../introduction/includes/introFooter
