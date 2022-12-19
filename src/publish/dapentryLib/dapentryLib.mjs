@@ -341,7 +341,7 @@ const $f61df71a7558758c$export$d67e1898834e3885 = {
         }
     },
     API: {
-        baseUrl: "https://api.dapentry.com",
+        baseUrl: "https://api.dapentry.com/api",
         library: "library",
         names: "names",
         login: "login",
