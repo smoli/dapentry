@@ -1,9 +1,13 @@
-GFXBCTS
+Dapentry
 =======
 
 ## What is this?
 
 This is heavily based on - some might call it a clone of - [Drawing dynamic visualisations by Bret Victor](http://worrydream.com/DrawingDynamicVisualizationsTalkAddendum/)
+
+## Live Demo
+
+Live demo is here: https://dapentry.com/
 
 ## How to build and run
 
